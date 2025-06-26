@@ -2,7 +2,7 @@ CREATE TYPE user_role AS ENUM ('ROLE_USER', 'ROLE_ADMINISTRATOR');
 
 CREATE TABLE IF NOT EXISTS app_users
 (
-    id              SERIAL PRIMARY KEY,
+    user_id              SERIAL PRIMARY KEY,
     name            VARCHAR(255) NOT NULL,
     email           VARCHAR(255) NOT NULL,
     phone_number    VARCHAR(255),
@@ -12,13 +12,13 @@ CREATE TABLE IF NOT EXISTS app_users
 
 CREATE TABLE IF NOT EXISTS categories
 (
-    id              SERIAL PRIMARY KEY,
+    category_id              SERIAL PRIMARY KEY,
     name            VARCHAR(255) NULL
 );
 
 CREATE TABLE IF NOT EXISTS products
 (
-    id SERIAL PRIMARY KEY,
+    product_id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     discount_price DOUBLE PRECISION,
     price DOUBLE PRECISION,
@@ -30,5 +30,5 @@ CREATE TABLE IF NOT EXISTS products
 
 CREATE TABLE IF NOT EXISTS favorites
 (
-    id SERIAL PRIMARY KEY
+    favorite_id SERIAL PRIMARY KEY
 );

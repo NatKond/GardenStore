@@ -10,6 +10,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 public class CreateUserRequestDto {
+
     private String name;
 
     private String email;

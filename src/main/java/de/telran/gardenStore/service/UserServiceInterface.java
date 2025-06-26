@@ -10,5 +10,7 @@ public interface UserServiceInterface {
 
     User getUserById(Long id);
 
+    User createUser(User user);
+
     void deleteUserById(Long id);
 }

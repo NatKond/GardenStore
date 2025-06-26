@@ -25,6 +25,11 @@ public class UserServiceInterfaceImpl implements UserServiceInterface {
     }
 
     @Override
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }

@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS products
     product_id      SERIAL PRIMARY KEY,
     name            VARCHAR(255) NOT NULL,
     discount_price  DOUBLE PRECISION,
-    price           NUMERIC(10, 2) NOT NULL,
+    price           DOUBLE PRECISION NOT NULL,
     category_id     INTEGER NOT NULL,
     created_at      TIMESTAMPTZ DEFAULT now(),
     updated_at      TIMESTAMPTZ DEFAULT now(),

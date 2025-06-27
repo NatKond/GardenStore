@@ -1,6 +1,5 @@
 package de.telran.gardenStore.dto;
 
-import de.telran.gardenStore.enums.Role;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,7 +8,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode
 @Builder
-public class CreateUserRequestDto {
+public class UserCreateRequestDto {
 
     private String name;
 
@@ -18,6 +17,4 @@ public class CreateUserRequestDto {
     private String phoneNumber;
 
     private String passwordHash;
-
-    private Role role;
 }

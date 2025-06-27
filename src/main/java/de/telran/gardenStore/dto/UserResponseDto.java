@@ -1,5 +1,4 @@
 package de.telran.gardenStore.dto;
-
 import lombok.*;
 
 @AllArgsConstructor
@@ -13,4 +12,6 @@ public class UserResponseDto {
     private Long id;
 
     private String name;
+
+    private String email;
 }

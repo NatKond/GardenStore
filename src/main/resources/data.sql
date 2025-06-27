@@ -8,22 +8,36 @@ VALUES
     ('David Brown', 'david.brown@example.com', '+1222333444', 'hashed_password_4', 'ROLE_USER');
 
 TRUNCATE TABLE products RESTART IDENTITY;
-INSERT INTO products (name, discount_price, price, description, image_url)
+INSERT INTO products (name, discount_price, price,category_id, description, image_url)
 VALUES
-    ('Garden Trowel', 15.99, 19.99, 'Sturdy garden trowel with wooden handle', 'https://example.com/images/garden_trowel.jpg'),
-    ('Pruning Shears', 35.99, 39.99, 'Heavy-duty pruning shears for trimming bushes and small branches', 'https://example.com/images/pruning_shears.jpg'),
-    ('Gas Lawn Mower', 299.99, 349.99, 'Gas-powered lawn mower with 21-inch cutting deck', 'https://example.com/images/lawn_mower.jpg'),
-    ('New Gas Lawn Mower', 699.99, 849.99, 'Gas-powered lawn mower with 21-inch cutting deck', 'https://example.com/images/lawn_mower.jpg');
+('All-Purpose Plant Fertilizer', 8.99, 11.99, 1, 'Balanced NPK formula for all types of plants', 'https://example.com/images/fertilizer_all_purpose.jpg'),
+('Organic Tomato Feed', 10.49, 13.99, 1, 'Organic liquid fertilizer ideal for tomatoes and vegetables', 'https://example.com/images/fertilizer_tomato_feed.jpg'),
+('Slug & Snail Barrier Pellets', 5.75, 7.50, 2, 'Pet-safe barrier pellets to protect plants from slugs', 'https://example.com/images/protection_slug_pellets.jpg'),
+('Septic Tank Activator Powder', 12.95, 16.00, 2, 'Enzyme-based powder to maintain septic tank health', 'https://example.com/images/septic_tank_activator.jpg'),
+('Tulip Bulb Mix (10 pcs)', 6.99, 9.49, 3, 'Colorful tulip bulbs perfect for spring blooms', 'https://example.com/images/tulip_bulbs.jpg'),
+('Seed Pack - Carrots (Heirloom)', 2.95, 3.99, 3, 'Non-GMO heirloom carrot seeds for rich harvests', 'https://example.com/images/carrot_seeds.jpg'),
+('Electric Hedge Trimmer', 49.95, 64.99, 4, 'Cordless hedge trimmer with rechargeable battery', 'https://example.com/images/hedge_trimmer.jpg'),
+('Garden Tool Set (5 pcs)', 19.99, 24.99, 4, 'Essential hand tools set for everyday gardening', 'https://example.com/images/garden_tool_set.jpg'),
+('Ceramic Plant Pot - 8 inch', 14.50, 18.99, 5, 'Stylish ceramic pot with drainage hole', 'https://example.com/images/ceramic_pot.jpg'),
+('Hanging Planter Basket', 9.25, 12.50, 5, 'Woven hanging basket with metal chain', 'https://example.com/images/hanging_planter.jpg');
 
 TRUNCATE TABLE categories RESTART IDENTITY;
 INSERT INTO categories (name)
 VALUES
-    ('Garden Tools'),
-    ('Outdoor Power Equipment'),
-    ('Watering Equipment'),
-    ('Domestic Chemicals');
+    ('Fertilizer'),
+    ('Protective products and septic tanks'),
+    ('Planting material'),
+    ('Tools and equipment'),
+    ('Pots and planters');
 
 TRUNCATE TABLE favorites RESTART IDENTITY;
-INSERT INTO favorites DEFAULT VALUES;
-INSERT INTO favorites DEFAULT VALUES;
-INSERT INTO favorites DEFAULT VALUES;
+
+INSERT INTO favorites(user_id, product_id)
+VALUES
+    (1, 5),
+    (1, 10),
+    (2, 3),
+    (3, 1),
+    (3, 4),
+    (4, 9),
+    (4, 6);

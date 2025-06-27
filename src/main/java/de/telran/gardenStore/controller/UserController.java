@@ -1,47 +1,17 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.dto.CreateUserRequestDto;
+import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
-import de.telran.gardenStore.entity.User;
-import de.telran.gardenStore.service.UserServiceInterface;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-@RestController
-@RequestMapping("/user")
-public class UserController {
+public interface UserController {
 
-    private final UserServiceInterface userService;
+    List<UserResponseDto> getAllUsers();
 
-    private final ModelMapper modelMapper;
+    UserResponseDto getUserById(Long id);
 
-    @GetMapping
-    public List<UserResponseDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(user -> modelMapper.map(user, UserResponseDto.class)).collect(Collectors.toList());
-    }
+    UserResponseDto createUser(UserCreateRequestDto userRequest);
 
-    @GetMapping("/{id}")
-    public UserResponseDto getUserById(@PathVariable Long id) {
-        return modelMapper.map(userService.getUserById(id), UserResponseDto.class);
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public UserResponseDto createUser(@RequestBody CreateUserRequestDto userRequest) {
-        return modelMapper.map(
-                userService.createUser(
-                        modelMapper.map(userRequest, User.class)),
-                UserResponseDto.class);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id) {
-        userService.deleteUserById(id);
-    }
+    void deleteUserById(Long id);
 }

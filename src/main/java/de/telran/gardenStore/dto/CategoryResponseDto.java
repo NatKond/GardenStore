@@ -1,18 +1,17 @@
 package de.telran.gardenStore.dto;
 
-import de.telran.gardenStore.enums.Role;
 import lombok.*;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
+@Builder
+public class CategoryResponseDto {
     private Long id;
     private String name;
-    private String email;
-    private String phoneNumber;
-    private Role role;
+    private String description;
+    private String imageUrl;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -2,9 +2,11 @@ package de.telran.gardenStore.dto;
 
 import lombok.*;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@EqualsAndHashCode
 @Builder
 public class CategoryResponseDto {
     private Long id;

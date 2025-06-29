@@ -6,6 +6,7 @@ import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,40 +16,38 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
-public class CategoryControllerImpl implements de.telran.gardenStore.controller.CategoryController {
+public class CategoryControllerImpl implements CategoryController {
 
     private final CategoryService categoryService;
+    private final ModelMapper modelMapper;
 
     @Override
     @GetMapping
     public List<CategoryResponseDto> getAllCategories() {
         return categoryService.getAllCategories().stream()
-                .map(this::mapToDto)
+                .map(category -> modelMapper.map(category, CategoryResponseDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     @GetMapping("/{id}")
     public CategoryResponseDto getCategoryById(@PathVariable Long id) {
-        return mapToDto(categoryService.getCategoryById(id));
+        return modelMapper.map(categoryService.getCategoryById(id), CategoryResponseDto.class);
     }
-
 
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryResponseDto createCategory(@Valid @RequestBody CategoryCreateRequestDto dto) {
-        Category category = new Category();
-        category.setName(dto.getName());
-        return mapToDto(categoryService.createCategory(category));
+        Category category = modelMapper.map(dto, Category.class);
+        return modelMapper.map(categoryService.createCategory(category), CategoryResponseDto.class);
     }
 
     @Override
     @PutMapping("/{id}")
     public CategoryResponseDto updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryCreateRequestDto dto) {
-        Category category = new Category();
-        category.setName(dto.getName());
-        return mapToDto(categoryService.updateCategory(id, category));
+        Category category = modelMapper.map(dto, Category.class);
+        return modelMapper.map(categoryService.updateCategory(id, category), CategoryResponseDto.class);
     }
 
     @Override
@@ -56,12 +55,5 @@ public class CategoryControllerImpl implements de.telran.gardenStore.controller.
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
-    }
-
-    private CategoryResponseDto mapToDto(Category category) {
-        return CategoryResponseDto.builder()
-                .id(category.getCategoryId())
-                .name(category.getName())
-                .build();
     }
 }

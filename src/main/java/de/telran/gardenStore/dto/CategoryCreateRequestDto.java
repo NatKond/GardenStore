@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CategoryCreateRequestDto {
+
     @NotBlank(message = "Category name cannot be blank")
     private String name;
 }

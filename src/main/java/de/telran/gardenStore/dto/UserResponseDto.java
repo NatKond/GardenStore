@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class UserResponseDto {
 
-    private Long id;
+    private Long userId;
 
     private String name;
 

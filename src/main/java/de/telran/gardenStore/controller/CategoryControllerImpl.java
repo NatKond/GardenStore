@@ -43,6 +43,7 @@ public class CategoryControllerImpl implements CategoryController {
         return modelMapper.map(categoryService.createCategory(category), CategoryResponseDto.class);
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @Override
     @PutMapping("/{id}")
     public CategoryResponseDto updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryCreateRequestDto dto) {
@@ -52,7 +53,6 @@ public class CategoryControllerImpl implements CategoryController {
 
     @Override
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
     }

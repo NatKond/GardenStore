@@ -8,11 +8,10 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode
 @Builder
+@ToString
 public class CategoryResponseDto {
-    private Long id;
-    private String name;
 
-    public static CategoryResponseDtoBuilder builder() {
-        return new CategoryResponseDtoBuilder();
-    }
+    private Long categoryId;
+
+    private String name;
 }

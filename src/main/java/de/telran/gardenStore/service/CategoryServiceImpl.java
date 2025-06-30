@@ -24,7 +24,6 @@ public class CategoryServiceImpl implements de.telran.gardenStore.service.Catego
                 .orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
     }
 
-
     @Override
     public Category createCategory(Category category) {
         return categoryRepository.save(category);

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class CategoryControllerImpl implements CategoryController {
 
     private final CategoryService categoryService;
+
     private final ModelMapper modelMapper;
 
     @Override

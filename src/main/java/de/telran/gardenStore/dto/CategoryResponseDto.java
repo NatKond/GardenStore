@@ -9,10 +9,9 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 public class CategoryResponseDto {
+
     private Long id;
+
     private String name;
 
-    public static CategoryResponseDtoBuilder builder() {
-        return new CategoryResponseDtoBuilder();
-    }
 }

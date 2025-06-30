@@ -1,11 +1,13 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.color.ProfileDataException;
 import java.util.List;
 
 @Service
@@ -16,21 +18,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        return List.of();
+
+        return productRepository.findAll();
     }
 
     @Override
     public Product getProductById(Long id) {
-        return null;
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     }
 
     @Override
     public Product createProduct(Product product) {
-        return null;
+        return productRepository.save(product);
     }
 
     @Override
     public void deleteProductById(Long id) {
-
+        getProductById(id);
+        productRepository.deleteById(id);
     }
 }

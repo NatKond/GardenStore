@@ -3,7 +3,7 @@ package de.telran.gardenStore.controller;
 import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.entity.User;
-import de.telran.gardenStore.service.UserServiceInterface;
+import de.telran.gardenStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class UserControllerImp implements UserController{
 
-    private final UserServiceInterface userService;
+    private final UserService userService;
 
     private final ModelMapper modelMapper;
 

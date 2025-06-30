@@ -1,10 +1,9 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.User;
-
 import java.util.List;
 
-public interface UserServiceInterface {
+public interface UserService {
 
     List<User> getAllUsers();
 

@@ -1,15 +1,16 @@
 package de.telran.gardenStore.service;
 
-import de.telran.gardenStore.entity.User;
+import de.telran.gardenStore.entity.AppUser;
+
 import java.util.List;
 
 public interface UserService {
 
-    List<User> getAllUsers();
+    List<AppUser> getAllUsers();
 
-    User getUserById(Long id);
+    AppUser getUserById(Long id);
 
-    User createUser(User user);
+    AppUser createUser(AppUser appUser);
 
     void deleteUserById(Long id);
 }

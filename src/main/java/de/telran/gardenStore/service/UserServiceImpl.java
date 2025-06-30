@@ -1,6 +1,6 @@
 package de.telran.gardenStore.service;
 
-import de.telran.gardenStore.entity.User;
+import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.exception.UserNotFoundException;
 import de.telran.gardenStore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +15,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<User> getAllUsers() {
+    public List<AppUser> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+    public AppUser getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("AppUser with id " + id + " not found"));
     }
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public AppUser createUser(AppUser appUser) {
+        return userRepository.save(appUser);
     }
 
     @Override

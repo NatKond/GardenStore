@@ -1,10 +1,11 @@
 package de.telran.gardenStore.entity;
-
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Entity
-@Table(name = "categories")
+@Table(name = "products")
 @NoArgsConstructor
 @Setter
 @Getter
@@ -12,13 +13,30 @@ import lombok.*;
 @ToString
 @Builder
 @AllArgsConstructor
-public class Category {
+
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long categoryId;
+    private Long  productId ;
 
     private String name;
+
+    private Double discountPrice;
+
+    private Double price ;
+
+    private Long categoryId;
+
+    private Timestamp createdAt;
+
+    private Timestamp updatedAt;
+
+    private String description;
+
+    private String imageUrl;
+
+
 
 }

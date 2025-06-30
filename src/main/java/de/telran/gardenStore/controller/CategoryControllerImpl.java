@@ -31,9 +31,9 @@ public class CategoryControllerImpl implements CategoryController {
     }
 
     @Override
-    @GetMapping("/{id}")
-    public CategoryResponseDto getCategoryById(@PathVariable Long id) {
-        return modelMapper.map(categoryService.getCategoryById(id), CategoryResponseDto.class);
+    @GetMapping("/{categoryId}")
+    public CategoryResponseDto getCategoryById(@PathVariable Long categoryId) {
+        return modelMapper.map(categoryService.getCategoryById(categoryId), CategoryResponseDto.class);
     }
 
     @Override
@@ -44,17 +44,17 @@ public class CategoryControllerImpl implements CategoryController {
         return modelMapper.map(categoryService.createCategory(category), CategoryResponseDto.class);
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @Override
-    @PutMapping("/{id}")
-    public CategoryResponseDto updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryCreateRequestDto dto) {
+    @PutMapping("/{categoryId}")
+    public CategoryResponseDto updateCategory(@PathVariable Long categoryId, @Valid @RequestBody CategoryCreateRequestDto dto) {
         Category category = modelMapper.map(dto, Category.class);
-        return modelMapper.map(categoryService.updateCategory(id, category), CategoryResponseDto.class);
+        return modelMapper.map(categoryService.updateCategory(categoryId, category), CategoryResponseDto.class);
     }
 
     @Override
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategoryById(id);
+    @DeleteMapping("/{categoryId}")
+    public void deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategoryById(categoryId);
     }
 }

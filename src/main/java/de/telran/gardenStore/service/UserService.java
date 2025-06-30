@@ -8,9 +8,9 @@ public interface UserService {
 
     List<AppUser> getAllUsers();
 
-    AppUser getUserById(Long id);
+    AppUser getUserById(Long userId);
 
     AppUser createUser(AppUser appUser);
 
-    void deleteUserById(Long id);
+    void deleteUserById(Long userId);
 }

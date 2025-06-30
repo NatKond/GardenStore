@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS products
 (
     product_id      SERIAL PRIMARY KEY,
     name            VARCHAR(255) NOT NULL,
-    discount_price  DECIMAL,
-    price           DECIMAL NOT NULL,
+    discount_price  DOUBLE PRECISION,
+    price           DOUBLE PRECISION NOT NULL,
     category_id     INTEGER NOT NULL,
-    created_at      TIMESTAMPTZ DEFAULT now(),
-    updated_at      TIMESTAMPTZ DEFAULT now(),
+    created_at      TIMESTAMPTZ,
+    updated_at      TIMESTAMPTZ,
     description     TEXT,
     image_url       TEXT
 );

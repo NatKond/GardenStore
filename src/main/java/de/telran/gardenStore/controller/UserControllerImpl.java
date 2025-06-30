@@ -32,9 +32,9 @@ public class UserControllerImpl implements UserController{
     }
 
     @Override
-    @GetMapping("/{id}")
-    public UserResponseDto getUserById(@PathVariable @Positive Long id) {
-        return modelMapper.map(userService.getUserById(id), UserResponseDto.class);
+    @GetMapping("/{userId}")
+    public UserResponseDto getUserById(@PathVariable @Positive Long userId) {
+        return modelMapper.map(userService.getUserById(userId), UserResponseDto.class);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class UserControllerImpl implements UserController{
     }
 
     @Override
-    @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable @Positive Long id) {
-        userService.deleteUserById(id);
+    @DeleteMapping("/{userId}")
+    public void deleteUserById(@PathVariable @Positive Long userId) {
+        userService.deleteUserById(userId);
     }
 }

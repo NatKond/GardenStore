@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl implements de.telran.gardenStore.service.CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
@@ -19,11 +19,10 @@ public class CategoryServiceImpl implements de.telran.gardenStore.service.Catego
     }
 
     @Override
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
+    public Category getCategoryById(Long userId) {
+        return categoryRepository.findById(userId)
+                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + userId + " not found"));
     }
-
 
     @Override
     public Category createCategory(Category category) {
@@ -31,14 +30,14 @@ public class CategoryServiceImpl implements de.telran.gardenStore.service.Catego
     }
 
     @Override
-    public Category updateCategory(Long id, Category updatedCategory) {
-        Category existing = getCategoryById(id);
+    public Category updateCategory(Long userId, Category updatedCategory) {
+        Category existing = getCategoryById(userId);
         existing.setName(updatedCategory.getName());
         return categoryRepository.save(existing);
     }
 
     @Override
-    public void deleteCategoryById(Long id) {
-        categoryRepository.deleteById(id);
+    public void deleteCategoryById(Long userId) {
+        categoryRepository.deleteById(userId);
     }
 }

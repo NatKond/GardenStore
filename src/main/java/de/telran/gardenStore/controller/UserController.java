@@ -13,9 +13,9 @@ public interface UserController {
 
     List<UserResponseDto> getAllUsers();
 
-    UserResponseDto getUserById(@Positive Long id);
+    UserResponseDto getUserById(@Positive Long userId);
     
     UserResponseDto createUser(@Valid UserCreateRequestDto userRequest);
 
-    void deleteUserById(@Positive Long id);
+    void deleteUserById(@Positive Long userId);
 }

@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode
 @Builder
 public class UserCreateRequestDto {
 

@@ -5,10 +5,12 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@ToString
 public class UserResponseDto {
 
+    @EqualsAndHashCode.Include
     private Long userId;
 
     private String name;

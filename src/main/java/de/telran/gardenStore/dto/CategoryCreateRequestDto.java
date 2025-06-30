@@ -3,9 +3,10 @@ package de.telran.gardenStore.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 @Builder
 public class CategoryCreateRequestDto {
 

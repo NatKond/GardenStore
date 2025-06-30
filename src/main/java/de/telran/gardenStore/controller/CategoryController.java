@@ -9,11 +9,11 @@ public interface CategoryController {
 
     List<CategoryResponseDto> getAllCategories();
 
-    CategoryResponseDto getCategoryById(Long id);
+    CategoryResponseDto getCategoryById(Long categoryId);
 
     CategoryResponseDto createCategory(CategoryCreateRequestDto dto);
 
-    CategoryResponseDto updateCategory(Long id, CategoryCreateRequestDto dto);
+    CategoryResponseDto updateCategory(Long categoryId, CategoryCreateRequestDto dto);
 
-    void deleteCategory(Long id);
+    void deleteCategory(Long categoryId);
 }

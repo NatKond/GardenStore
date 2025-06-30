@@ -2,12 +2,9 @@ package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
-import de.telran.gardenStore.dto.UserCreateRequestDto;
-import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.entity.Product;
-import de.telran.gardenStore.entity.User;
 import de.telran.gardenStore.service.ProductService;
-import de.telran.gardenStore.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -18,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/products")
 
 public class ProductControllerImp implements ProductController{
 
@@ -40,8 +37,8 @@ public class ProductControllerImp implements ProductController{
 
     @Override
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
-    public ProductResponseDto createProduct(@RequestBody ProductCreateRequestDto productRequest) {
+    @PostMapping
+    public ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productRequest) {
         return modelMapper.map(
                 productService.createProduct(
                         modelMapper.map(productRequest, Product.class)),

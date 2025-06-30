@@ -8,14 +8,14 @@ Represents a system user.
 
 ## Fields
 
-| Field        | Type   | DB Column     | Description                    |
-|--------------|--------|---------------|--------------------------------|
-| userId       | Long   | user_id       | Primary Key                    |
-| name         | String | name          | Full name                      |
-| email        | String | email         | Unique, required               |
-| phoneNumber  | String | phone_number  | Required                       |
-| passwordHash | String | password_hash | Hashed password                |
-| role         | Enum   | role          | ROLE_USER / ROLE_ADMINISTRATOR |
+| Field       | Type   | DB Column     | Description                    |
+|-------------|--------|---------------|--------------------------------|
+| userId      | Long   | user_id       | Primary Key                    |
+| name        | String | name          | Full name                      |
+| email       | String | email         | Unique, required               |
+| phoneNumber | String | phone_number  | Required                       |
+| password    | String | password_hash | Hashed password                |
+| role        | Enum   | role          | ROLE_USER / ROLE_ADMINISTRATOR |
 
 ## DTOs
 

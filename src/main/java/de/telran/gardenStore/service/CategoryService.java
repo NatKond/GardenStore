@@ -5,11 +5,14 @@ import de.telran.gardenStore.entity.Category;
 import java.util.List;
 
 public interface CategoryService {
+
     List<Category> getAllCategories();
-    Category getCategoryById(Long id);
+
+    Category getCategoryById(Long userId);
+
     Category createCategory(Category category);
-    Category updateCategory(Long id, Category category);
 
+    Category updateCategory(Long userId, Category category);
 
-    void deleteCategoryById(Long id);
+    void deleteCategoryById(Long userId);
 }

@@ -6,13 +6,13 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@ToString
 public class CategoryResponseDto {
-    private Long id;
-    private String name;
 
-    public static CategoryResponseDtoBuilder builder() {
-        return new CategoryResponseDtoBuilder();
-    }
+    @EqualsAndHashCode.Include
+    private Long categoryId;
+
+    private String name;
 }

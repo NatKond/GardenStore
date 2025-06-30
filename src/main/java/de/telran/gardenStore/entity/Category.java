@@ -13,9 +13,12 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long categoryId;
+
     private String name;
 
 }

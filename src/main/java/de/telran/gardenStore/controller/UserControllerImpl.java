@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 @Validated
-public class UserControllerImp implements UserController{
+public class UserControllerImpl implements UserController{
 
     private final UserService userService;
 

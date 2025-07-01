@@ -2,7 +2,9 @@ package de.telran.gardenStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -23,15 +25,15 @@ public class Product {
 
     private String name;
 
-    private Double discountPrice;
+    private BigDecimal discountPrice;
 
-    private Double price ;
+    private BigDecimal price ;
 
     private Long categoryId;
 
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 
     private String description;
 

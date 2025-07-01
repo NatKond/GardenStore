@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.color.ProfileDataException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,6 +31,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public Product updateProduct(Long id, Product updatedProduct) {
+        Product existing = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        existing.setName(updatedProduct.getName());
+        existing.setDescription(updatedProduct.getDescription());
+        existing.setPrice(updatedProduct.getPrice());
+        existing.setDiscountPrice(updatedProduct.getDiscountPrice());
+        existing.setCategoryId(updatedProduct.getCategoryId());
+        existing.setImageUrl(updatedProduct.getImageUrl());
+        existing.setUpdatedAt(LocalDateTime.now());
+
+        return productRepository.save(existing);
     }
 
     @Override

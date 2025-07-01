@@ -1,7 +1,7 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
-import de.telran.gardenStore.entity.User;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +33,10 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public Favorite createFavorite(User user) {
-        return null;
+    public Favorite createFavorite(AppUser user) {
+        Favorite favorite = new Favorite();
+        favorite.setUserId(user.getUserId);
+        return favoriteRepository.save(favorite);
     }
 
     @Override

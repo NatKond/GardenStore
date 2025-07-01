@@ -13,5 +13,8 @@ import lombok.*;
 public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long favoriteId;
+    private Long userId;
+    private Long productId;
+
 }

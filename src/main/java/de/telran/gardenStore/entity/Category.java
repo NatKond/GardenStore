@@ -1,10 +1,10 @@
 package de.telran.gardenStore.entity;
-import de.telran.gardenStore.enums.Role;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "app_users")
+@Table(name = "categories")
 @NoArgsConstructor
 @Setter
 @Getter
@@ -12,21 +12,13 @@ import lombok.*;
 @ToString
 @Builder
 @AllArgsConstructor
-public class User {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long userId;
+    private Long categoryId;
 
     private String name;
 
-    private String email;
-
-    private String phoneNumber;
-
-    private String passwordHash;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
 }

@@ -27,8 +27,7 @@ VALUES
     ('Fertilizer'),
     ('Protective products and septic tanks'),
     ('Planting material'),
-    ('Tools and equipment'),
-    ('Pots and planters');
+    ('Tools and equipment');
 
 TRUNCATE TABLE favorites RESTART IDENTITY;
 

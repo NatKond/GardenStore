@@ -1,4 +1,5 @@
 package de.telran.gardenStore.dto;
+
 import lombok.*;
 
 @AllArgsConstructor
@@ -8,12 +9,10 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @ToString
-public class UserResponseDto {
+public class CategoryResponseDto {
 
     @EqualsAndHashCode.Include
-    private Long userId;
+    private Long categoryId;
 
     private String name;
-
-    private String email;
 }

@@ -1,9 +1,10 @@
 package de.telran.gardenStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,14 +32,14 @@ public class Product {
 
     private Long categoryId;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
     private String description;
 
     private String imageUrl;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }

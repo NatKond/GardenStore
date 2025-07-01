@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
@@ -44,7 +43,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public FavoriteResponseDto createFavorite(AppUser user) {
         Favorite favorite = new Favorite();
-        favorite.setUserId(user.getUserId);
+        favorite.setUserId(user.getUserId());
         favorite = favoriteRepository.save(favorite);
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }

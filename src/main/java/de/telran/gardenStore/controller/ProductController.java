@@ -8,9 +8,9 @@ import java.util.List;
 public interface ProductController {
     List<ProductResponseDto> getAllProducts();
 
-    ProductResponseDto getProductById(Long id);
+    ProductResponseDto getProductById(Long productId);
 
     ProductResponseDto createProduct(ProductCreateRequestDto productRequest);
 
-    void deleteProductById(Long id);
+    void deleteProductById(Long productId);
 }

@@ -1,6 +1,5 @@
 package de.telran.gardenStore.service;
 
-import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.repository.FavoriteRepository;
@@ -15,32 +14,24 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
 
-    //After the Installation of the Ultimate version check if
-    // the annotation @RequiredArgsConstructor works correctly
-    public FavoriteServiceImpl(FavoriteRepository favoriteRepository) {
-        this.favoriteRepository = favoriteRepository;
-    }
-
     @Override
     public List<Favorite> getAllFavorites() {
         return favoriteRepository.findAll();
     }
 
     @Override
-    public Favorite getFavoriteById(Long id) {
-        return favoriteRepository.findById(id).orElseThrow(()
-                -> new FavoriteNotFoundException("Favorite with id " + id + " not found"));
+    public Favorite getFavoriteById(Long favoriteId) {
+        return favoriteRepository.findById(favoriteId).orElseThrow(()
+                -> new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found"));
     }
 
     @Override
-    public Favorite createFavorite(AppUser user) {
-        Favorite favorite = new Favorite();
-        favorite.setUserId(user.getUserId);
+    public Favorite createFavorite(Favorite favorite) {
         return favoriteRepository.save(favorite);
     }
 
     @Override
-    public void deleteFavoriteById(Long id) {
-        favoriteRepository.deleteById(id);
+    public void deleteFavoriteById(Long favoriteId) {
+        favoriteRepository.deleteById(favoriteId);
     }
 }

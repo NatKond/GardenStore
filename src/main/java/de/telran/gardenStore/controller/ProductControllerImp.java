@@ -2,12 +2,8 @@ package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
-import de.telran.gardenStore.dto.UserCreateRequestDto;
-import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.entity.Product;
-import de.telran.gardenStore.entity.User;
 import de.telran.gardenStore.service.ProductService;
-import de.telran.gardenStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -33,9 +29,9 @@ public class ProductControllerImp implements ProductController{
     }
 
     @Override
-    @GetMapping("/{id}")
-    public ProductResponseDto getProductById(@PathVariable Long id) {
-        return modelMapper.map(productService.getProductById(id), ProductResponseDto.class);
+    @GetMapping("/{productId}")
+    public ProductResponseDto getProductById(@PathVariable Long productId) {
+        return modelMapper.map(productService.getProductById(productId), ProductResponseDto.class);
     }
 
     @Override
@@ -49,8 +45,8 @@ public class ProductControllerImp implements ProductController{
     }
 
     @Override
-    @DeleteMapping("/{id}")
-    public void deleteProductById(@PathVariable Long id) {
-        productService.deleteProductById(id);
+    @DeleteMapping("/{productId}")
+    public void deleteProductById(@PathVariable Long productId) {
+        productService.deleteProductById(productId);
     }
 }

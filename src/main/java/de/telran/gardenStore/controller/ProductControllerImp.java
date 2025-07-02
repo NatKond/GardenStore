@@ -53,7 +53,7 @@ public class ProductControllerImp implements ProductController {
                                             @RequestBody @Valid ProductCreateRequestDto productRequest) {
         return modelMapper.map(
                 productService.updateProduct(
-                        id,
+                        productId,
                         modelMapper.map(productRequest, Product.class)
                 ),
                 ProductResponseDto.class

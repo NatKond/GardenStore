@@ -1,6 +1,8 @@
 package de.telran.gardenStore.controller.advice;
 
 import de.telran.gardenStore.exception.CategoryNotFoundException;
+import de.telran.gardenStore.exception.FavoriteNotFoundException;
+import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.exception.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -26,7 +28,7 @@ public class AdviceController {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(exception = {CategoryNotFoundException.class, UserNotFoundException.class})
+    @ExceptionHandler(exception = {CategoryNotFoundException.class, UserNotFoundException.class, ProductNotFoundException.class, FavoriteNotFoundException.class})
     public String handlerException(RuntimeException exception) {
         exception.printStackTrace();
         return exception.getMessage();

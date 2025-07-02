@@ -3,12 +3,14 @@ package de.telran.gardenStore.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Data
 public class UserCreateRequestDto {
 
     @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 30, message = "User name should be from 2 to 30 characters")
     private String name;
 
     @NotBlank(message = "Email is required")

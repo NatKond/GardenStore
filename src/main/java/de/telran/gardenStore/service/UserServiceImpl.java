@@ -20,8 +20,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("AppUser with id " + id + " not found"));
+    public AppUser getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("AppUser with id " + userId + " not found"));
     }
 
     @Override
@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(Long id) {
-        getUserById(id);
-        userRepository.deleteById(id);
+    public void deleteUserById(Long userId) {
+        getUserById(userId);
+        userRepository.deleteById(userId);
     }
 }

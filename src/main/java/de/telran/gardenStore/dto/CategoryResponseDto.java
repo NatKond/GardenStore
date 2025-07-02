@@ -8,11 +8,11 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@ToString
 public class CategoryResponseDto {
 
     @EqualsAndHashCode.Include
-    private Long id;
+    private Long categoryId;
 
     private String name;
-
 }

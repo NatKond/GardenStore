@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@ToString
 public class UserResponseDto {
 
     @EqualsAndHashCode.Include

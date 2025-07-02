@@ -1,5 +1,7 @@
 package de.telran.gardenStore.controller.advice;
 
+import de.telran.gardenStore.exception.CategoryNotFoundException;
+import de.telran.gardenStore.exception.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,13 @@ public class AdviceController {
     public String handlerException(Exception exception) {
         exception.printStackTrace();
         return "Sorry, an error has occurred : " + exception.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(exception = {CategoryNotFoundException.class, UserNotFoundException.class})
+    public String handlerException(RuntimeException exception) {
+        exception.printStackTrace();
+        return exception.getMessage();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

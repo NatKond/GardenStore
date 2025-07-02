@@ -1,7 +1,7 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
-import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class FavoriteControllerImpl implements FavoriteController {
 
     private final FavoriteService favoriteService;
+
     private final ModelMapper modelMapper;
 
     @GetMapping
@@ -28,23 +29,23 @@ public class FavoriteControllerImpl implements FavoriteController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{favoriteId}")
     @Override
-    public FavoriteResponseDto getFavoriteById(@PathVariable Long id) {
-        Favorite favorite = favoriteService.getFavoriteById(id);
+    public FavoriteResponseDto getFavoriteById(@PathVariable Long favoriteId) {
+        Favorite favorite = favoriteService.getFavoriteById(favoriteId);
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 
     @PostMapping
     @Override
-    public FavoriteResponseDto createFavorite(@RequestBody AppUser user) {
-        Favorite favorite = favoriteService.createFavorite(user);
+    public FavoriteResponseDto createFavorite(FavoriteCreateRequestDto favoriteCreateRequestDto) {
+        Favorite favorite = favoriteService.createFavorite(modelMapper.map(favoriteCreateRequestDto, Favorite.class));
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{favoriteId}")
     @Override
-    public void deleteFavorite(@PathVariable Long id) {
-        favoriteService.deleteFavoriteById(id);
+    public void deleteFavorite(@PathVariable Long favoriteId) {
+        favoriteService.deleteFavoriteById(favoriteId);
     }
 }

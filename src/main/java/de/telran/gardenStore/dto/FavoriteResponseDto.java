@@ -10,7 +10,12 @@ import lombok.*;
 @Builder
 @ToString
 public class FavoriteResponseDto {
-    private Long userId;
-    private Long productId;
+
+    @EqualsAndHashCode.Include
     private Long favoriteId;
+
+    private Long userId;
+
+    private Long productId;
+
 }

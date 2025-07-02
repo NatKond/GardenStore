@@ -13,16 +13,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
     private ModelMapper modelMapper;
-
-    //After the Installation of the Ultimate version check if
-    // the annotation @RequiredArgsConstructor works correctly
-    public FavoriteServiceImpl(FavoriteRepository favoriteRepository) {
-        this.favoriteRepository = favoriteRepository;
-    }
 
     @Override
     public List<FavoriteResponseDto> getAllFavorites() {
@@ -49,8 +44,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public void deleteFavoriteById(Long id) {
-        favoriteRepository.deleteById(id);
+    public void deleteFavoriteById(Long favoriteId) {
+        favoriteRepository.deleteById(favoriteId);
     }
-
 }

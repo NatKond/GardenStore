@@ -4,15 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@NoArgsConstructor
+@Table(name = "favorites")
 @Setter
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "favorites")
 public class Favorite {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long favoriteId;
     private Long userId;
     private Long productId;

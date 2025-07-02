@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.modelmapper.convention.MatchingStrategies.STRICT;
+
 @Configuration
 @RequiredArgsConstructor
 public class MapperUtil {
@@ -20,6 +22,8 @@ public class MapperUtil {
     public ModelMapper modelMapper() {
 
         ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.getConfiguration().setMatchingStrategy(STRICT);
 
         Converter<String, String> passwordToHash = new Converter<>() {
             public String convert(MappingContext<String, String> context) {

@@ -7,8 +7,8 @@ import de.telran.gardenStore.entity.Favorite;
 import java.util.List;
 
 public interface FavoriteService {
-    List<FavoriteResponseDto> getAllFavorites();
-    FavoriteResponseDto getFavoriteById(Long id);
-    FavoriteResponseDto createFavorite(AppUser user);
+    List<Favorite> getAllFavorites();
+    Favorite getFavoriteById(Long id);
+    Favorite createFavorite(AppUser user);
     void deleteFavoriteById(Long id);
 }

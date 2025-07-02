@@ -16,7 +16,7 @@ public interface CategoryController {
 
     CategoryResponseDto createCategory(@Valid CategoryCreateRequestDto dto);
 
-    CategoryResponseDto updateCategory(@Positive Long categoryId, CategoryCreateRequestDto dto);
+    CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto dto);
 
-    void deleteCategory(Long categoryId);
+    void deleteCategory(@Positive Long categoryId);
 }

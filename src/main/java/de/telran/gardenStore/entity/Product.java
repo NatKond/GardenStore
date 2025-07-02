@@ -1,8 +1,11 @@
 package de.telran.gardenStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -19,24 +22,23 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long  productId ;
+    private Long productId;
 
     private String name;
 
-    private Double discountPrice;
+    private BigDecimal discountPrice;
 
-    private Double price ;
+    private BigDecimal price ;
 
     private Long categoryId;
-
-    private Timestamp createdAt;
-
-    private Timestamp updatedAt;
 
     private String description;
 
     private String imageUrl;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

@@ -2,15 +2,13 @@ package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
-import de.telran.gardenStore.dto.UserCreateRequestDto;
-import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.entity.Product;
-import de.telran.gardenStore.entity.User;
 import de.telran.gardenStore.service.ProductService;
-import de.telran.gardenStore.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +16,18 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
-
-public class ProductControllerImp implements ProductController{
+@RequestMapping("/products")
+public class ProductControllerImp implements ProductController {
 
     private final ProductService productService;
-
     private final ModelMapper modelMapper;
 
     @Override
     @GetMapping
     public List<ProductResponseDto> getAllProducts() {
-        return productService.getAllProducts().stream().map(product -> modelMapper.map(product, ProductResponseDto.class)).collect(Collectors.toList());
+        return productService.getAllProducts().stream()
+                .map(product -> modelMapper.map(product, ProductResponseDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -39,9 +37,10 @@ public class ProductControllerImp implements ProductController{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
-    public ProductResponseDto createProduct(@RequestBody ProductCreateRequestDto productRequest) {
+    @PostMapping
+    public ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productRequest) {
         return modelMapper.map(
                 productService.createProduct(
                         modelMapper.map(productRequest, Product.class)),
@@ -49,8 +48,24 @@ public class ProductControllerImp implements ProductController{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ProductResponseDto updateProduct(@PathVariable Long id,
+                                            @RequestBody @Valid ProductCreateRequestDto productRequest) {
+        return modelMapper.map(
+                productService.updateProduct(
+                        id,
+                        modelMapper.map(productRequest, Product.class)
+                ),
+                ProductResponseDto.class
+        );
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteProductById(@PathVariable Long id) {
         productService.deleteProductById(id);
     }
 }
+

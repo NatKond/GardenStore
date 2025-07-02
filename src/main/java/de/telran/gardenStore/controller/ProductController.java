@@ -13,7 +13,7 @@ public interface ProductController {
     List<ProductResponseDto> getAllProducts();
 
     @GetMapping("/{id}")
-    ProductResponseDto getProductById(@PathVariable Long id);
+    ProductResponseDto getProductById(@PathVariable Long productId);
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -21,11 +21,11 @@ public interface ProductController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    ProductResponseDto updateProduct(@PathVariable Long id,
+    ProductResponseDto updateProduct(@PathVariable Long productId,
                                      @RequestBody @Valid ProductCreateRequestDto productRequest);
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    void deleteProductById(@PathVariable Long id);
+    void deleteProductById(@PathVariable Long productId);
 }
 

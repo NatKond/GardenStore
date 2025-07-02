@@ -31,9 +31,9 @@ public class ProductControllerImp implements ProductController {
     }
 
     @Override
-    @GetMapping("/{id}")
-    public ProductResponseDto getProductById(@PathVariable Long id) {
-        return modelMapper.map(productService.getProductById(id), ProductResponseDto.class);
+    @GetMapping("/{productId}")
+    public ProductResponseDto getProductById(@PathVariable Long productId) {
+        return modelMapper.map(productService.getProductById(productId), ProductResponseDto.class);
     }
 
     @Override
@@ -47,10 +47,9 @@ public class ProductControllerImp implements ProductController {
                 ProductResponseDto.class);
     }
 
-    @Override
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
-    public ProductResponseDto updateProduct(@PathVariable Long id,
+    @PutMapping("/{productId}")
+    public ProductResponseDto updateProduct(@PathVariable Long productId,
                                             @RequestBody @Valid ProductCreateRequestDto productRequest) {
         return modelMapper.map(
                 productService.updateProduct(
@@ -63,9 +62,9 @@ public class ProductControllerImp implements ProductController {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public void deleteProductById(@PathVariable Long id) {
-        productService.deleteProductById(id);
+    @DeleteMapping("/{productId}")
+    public void deleteProductById(@PathVariable Long productId) {
+        productService.deleteProductById(productId);
     }
 }
 

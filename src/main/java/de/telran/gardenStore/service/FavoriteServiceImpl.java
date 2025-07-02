@@ -1,5 +1,6 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
@@ -29,17 +30,15 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public FavoriteResponseDto getFavoriteById(Long id) {
-        Favorite favorite = favoriteRepository.findById(id).orElseThrow(()
-                -> new FavoriteNotFoundException("Favorite with id " + id + " not found"));
+    public FavoriteResponseDto getFavoriteById(Long favoriteId) {
+        Favorite favorite = favoriteRepository.findById(favoriteId).orElseThrow(()
+                -> new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found"));
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 
     @Override
-    public FavoriteResponseDto createFavorite(AppUser user) {
-        Favorite favorite = new Favorite();
-        favorite.setUserId(user.getUserId());
-        favorite = favoriteRepository.save(favorite);
+    public FavoriteResponseDto createFavorite(FavoriteCreateRequestDto favoriteCreateRequestDto) {
+        favorite = favoriteRepository.save(modelMapper.map(favoriteCreateRequestDto, Favorite.class));
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 
@@ -47,4 +46,5 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void deleteFavoriteById(Long favoriteId) {
         favoriteRepository.deleteById(favoriteId);
     }
+
 }

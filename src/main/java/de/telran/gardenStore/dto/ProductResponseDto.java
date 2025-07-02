@@ -1,13 +1,19 @@
 package de.telran.gardenStore.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class ProductResponseDto {
 
+    @EqualsAndHashCode.Include
     private Long productId;
 
     private String name;

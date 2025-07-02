@@ -5,12 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode
-@Builder
+@Data
 public class UserCreateRequestDto {
 
     @NotBlank(message = "Name is required")

@@ -22,7 +22,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long  productId ;
+    private Long productId;
 
     private String name;
 
@@ -41,5 +41,4 @@ public class Product {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
 }

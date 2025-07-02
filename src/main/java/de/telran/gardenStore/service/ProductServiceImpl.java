@@ -4,10 +4,8 @@ import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,8 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Long id, Product updatedProduct) {
-        Product existing = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        Product existing = getProductById(id);
 
         existing.setName(updatedProduct.getName());
         existing.setDescription(updatedProduct.getDescription());
@@ -44,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
         existing.setDiscountPrice(updatedProduct.getDiscountPrice());
         existing.setCategoryId(updatedProduct.getCategoryId());
         existing.setImageUrl(updatedProduct.getImageUrl());
-        existing.setUpdatedAt(LocalDateTime.now());
 
         return productRepository.save(existing);
     }

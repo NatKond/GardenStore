@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.URL;
 
 @Data
 public class ProductCreateRequestDto {
+
     @NotBlank(message = "Name must not be blank")
     private String name;
 
@@ -27,5 +28,4 @@ public class ProductCreateRequestDto {
 
     @URL(message = "Image URL must be valid")
     private String imageUrl;
-
 }

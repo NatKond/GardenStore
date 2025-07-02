@@ -30,3 +30,5 @@ public class SecurityConfig {
         return NoOpPasswordEncoder.getInstance(); //без хеширования
     }
 }
+
+

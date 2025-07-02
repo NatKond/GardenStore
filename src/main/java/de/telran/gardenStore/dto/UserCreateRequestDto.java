@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Data
+@Builder
 public class UserCreateRequestDto {
 
     @NotBlank(message = "Name is required")

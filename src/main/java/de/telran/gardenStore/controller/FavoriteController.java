@@ -6,11 +6,9 @@ import java.util.List;
 
 public interface FavoriteController {
 
-    List<FavoriteResponseDto> getAllFavorites();
+    List<FavoriteResponseDto> getAllFavoritesByUser(Long userId);
 
-    FavoriteResponseDto getFavoriteById(Long favoriteId);
-
-    FavoriteResponseDto createFavorite(FavoriteCreateRequestDto favoriteCreateRequestDto);
+    FavoriteResponseDto createFavorite(Long userId, FavoriteCreateRequestDto favoriteCreateRequestDto);
 
     void deleteFavorite(Long favoriteId);
 }

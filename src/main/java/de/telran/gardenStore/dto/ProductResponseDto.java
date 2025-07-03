@@ -1,5 +1,6 @@
 package de.telran.gardenStore.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductResponseDto {
 
     @EqualsAndHashCode.Include

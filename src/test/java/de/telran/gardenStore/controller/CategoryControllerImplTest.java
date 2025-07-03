@@ -155,7 +155,7 @@ class CategoryControllerImplTest {
         when(modelMapper.map(category4, CategoryResponseDto.class)).thenReturn(categoryResponseDto4);
 
         mockMvc
-                .perform(get("/categories"))
+                .perform(get("/v1/categories"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
@@ -175,7 +175,7 @@ class CategoryControllerImplTest {
         when(modelMapper.map(category1, CategoryResponseDto.class)).thenReturn(categoryResponseDto1);
 
         mockMvc
-                .perform(get("/categories/{categoryId}", category1.getCategoryId()))
+                .perform(get("/v1/categories/{categoryId}", category1.getCategoryId()))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
@@ -191,7 +191,7 @@ class CategoryControllerImplTest {
         when(categoryService.getCategoryById(categoryId)).thenThrow(new CategoryNotFoundException("Category with id " + categoryId + " not found"));
 
         mockMvc
-                .perform(get("/categories/{categoryId}", categoryId))
+                .perform(get("/v1/categories/{categoryId}", categoryId))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -206,7 +206,7 @@ class CategoryControllerImplTest {
         when(modelMapper.map(categoryCreated, CategoryResponseDto.class)).thenReturn(categoryResponseCreatedDto);
 
         mockMvc
-                .perform(post("/categories")
+                .perform(post("/v1/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryCreateRequestDto)))
                         .andDo(print())
@@ -227,7 +227,7 @@ class CategoryControllerImplTest {
         when(modelMapper.map(categoryUpdated, CategoryResponseDto.class)).thenReturn(categoryResponseUpdatedDto);
 
         mockMvc
-                .perform(put("/categories/{category_id}", categoryUpdated.getCategoryId())
+                .perform(put("/v1/categories/{category_id}", categoryUpdated.getCategoryId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryUpdateRequestDto)))
                 .andDo(print())
@@ -243,7 +243,7 @@ class CategoryControllerImplTest {
         Long categoryId = category1.getCategoryId();
 
         mockMvc
-                .perform(delete("/categories/{category_id}", categoryId))
+                .perform(delete("/v1/categories/{category_id}", categoryId))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

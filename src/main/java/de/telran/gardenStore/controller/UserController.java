@@ -23,7 +23,7 @@ public interface UserController {
     UserResponseDto createUser(@RequestBody @Valid UserCreateRequestDto userRequest);
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PostMapping("/{userId}")
+    @PutMapping("/{userId}")
     UserResponseDto updateUser(@PathVariable @Positive Long userId, @RequestBody @Valid UserCreateRequestDto userRequest);
 
     @DeleteMapping("/{userId}")

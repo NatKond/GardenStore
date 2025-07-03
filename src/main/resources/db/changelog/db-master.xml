@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="tables/01-drop-tables.xml" relativeToChangelogFile="true" />
+    <include file="tables/02-create-tables.xml" relativeToChangelogFile="true" />
+    <include file="tables/03-add-constraints.xml" relativeToChangelogFile="true" />
+    <include file="data/04-truncate-tables.xml" relativeToChangelogFile="true" />
+    <include file="data/05-add-data.xml" relativeToChangelogFile="true" />
+</databaseChangeLog>

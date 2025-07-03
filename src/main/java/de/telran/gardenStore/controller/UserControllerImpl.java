@@ -34,7 +34,6 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-
     public UserResponseDto createUser(@RequestBody @Valid UserCreateRequestDto userRequest) {
         return modelMapper.map(
                 userService.createUser(

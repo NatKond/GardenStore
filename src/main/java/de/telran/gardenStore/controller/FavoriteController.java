@@ -8,14 +8,9 @@ import java.util.List;
 @RequestMapping("/v1/favorites")
 public interface FavoriteController {
 
-    @GetMapping
-    List<FavoriteResponseDto> getAllFavorites();
+    List<FavoriteResponseDto> getAllFavoritesByUser(Long userId);
 
-    @GetMapping("/{favoriteId}")
-    FavoriteResponseDto getFavoriteById(@PathVariable Long favoriteId);
-
-    @PostMapping
-    FavoriteResponseDto createFavorite(@RequestBody FavoriteCreateRequestDto favoriteCreateRequestDto);
+    FavoriteResponseDto createFavorite(Long userId, FavoriteCreateRequestDto favoriteCreateRequestDto);
 
     @DeleteMapping("/{favoriteId}")
     void deleteFavorite(@PathVariable Long favoriteId);

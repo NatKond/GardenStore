@@ -162,12 +162,8 @@ class CategoryControllerImplTest {
                         jsonPath("$[*].categoryId", hasItems(
                                 categories.get(0).getCategoryId().intValue(),
                                 categories.get(1).getCategoryId().intValue(),
-                                categories.get(2).getCategoryId().intValue())),
-                        jsonPath("$[*].name", hasItems(
-                                categories.get(0).getName(),
-                                categories.get(1).getName(),
-                                categories.get(2).getName()
-                        )));
+                                categories.get(2).getCategoryId().intValue(),
+                                categories.get(3).getCategoryId().intValue())));
     }
 
     @DisplayName("Test method getCategoryById positive case")

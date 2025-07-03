@@ -1,6 +1,8 @@
 package de.telran.gardenStore.exception;
 
-public class FavoriteNotFoundException extends RuntimeException{
+import jakarta.persistence.EntityNotFoundException;
+
+public class FavoriteNotFoundException extends EntityNotFoundException {
     public FavoriteNotFoundException(String message) {
         super(message);
     }

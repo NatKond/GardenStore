@@ -6,12 +6,12 @@ import lombok.*;
 @Entity
 @Table(name = "app_users")
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Builder
-@AllArgsConstructor
 public class AppUser {
 
     @Id

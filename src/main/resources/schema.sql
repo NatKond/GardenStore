@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS products
     discount_price  DOUBLE PRECISION,
     price           DOUBLE PRECISION NOT NULL,
     category_id     INTEGER NOT NULL,
-    created_at      TIMESTAMPTZ,
-    updated_at      TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ DEFAULT NOW(),
     description     TEXT,
     image_url       TEXT
 );

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/favorites")
 @RequiredArgsConstructor
 public class FavoriteControllerImpl implements FavoriteController {
 
@@ -20,7 +19,6 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     private final ModelMapper modelMapper;
 
-    @GetMapping
     @Override
     public List<FavoriteResponseDto> getAllFavorites() {
         List<Favorite> favorites = favoriteService.getAllFavorites();
@@ -29,23 +27,21 @@ public class FavoriteControllerImpl implements FavoriteController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{favoriteId}")
     @Override
-    public FavoriteResponseDto getFavoriteById(@PathVariable Long favoriteId) {
+    public FavoriteResponseDto getFavoriteById(Long favoriteId) {
         Favorite favorite = favoriteService.getFavoriteById(favoriteId);
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 
-    @PostMapping
     @Override
     public FavoriteResponseDto createFavorite(FavoriteCreateRequestDto favoriteCreateRequestDto) {
         Favorite favorite = favoriteService.createFavorite(modelMapper.map(favoriteCreateRequestDto, Favorite.class));
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 
-    @DeleteMapping("/{favoriteId}")
+
     @Override
-    public void deleteFavorite(@PathVariable Long favoriteId) {
+    public void deleteFavorite(Long favoriteId) {
         favoriteService.deleteFavoriteById(favoriteId);
     }
 }

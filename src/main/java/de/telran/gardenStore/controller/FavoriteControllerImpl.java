@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-
 @RequiredArgsConstructor
 public class FavoriteControllerImpl implements FavoriteController {
 

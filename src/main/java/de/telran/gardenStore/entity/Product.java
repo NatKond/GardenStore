@@ -1,4 +1,6 @@
 package de.telran.gardenStore.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,7 +30,7 @@ public class Product {
 
     private BigDecimal discountPrice;
 
-    private BigDecimal price ;
+    private BigDecimal price;
 
     private Long categoryId;
 
@@ -41,4 +43,12 @@ public class Product {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
+    private Category category;
 }
+

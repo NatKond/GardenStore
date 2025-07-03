@@ -11,6 +11,7 @@ import java.util.List;
 public interface FavoriteController {
 
     @GetMapping("/{userId}")
+
     List<FavoriteResponseDto> getAllFavoritesByUser(@PathVariable @Positive Long userId);
 
     @PostMapping("/{userId}")

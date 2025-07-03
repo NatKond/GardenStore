@@ -10,7 +10,11 @@ public interface UserService {
 
     AppUser getUserById(Long userId);
 
+    AppUser getUserByEmail(String email);
+
     AppUser createUser(AppUser appUser);
+
+    AppUser updateUser(Long id, AppUser appUser);
 
     void deleteUserById(Long userId);
 }

@@ -23,26 +23,23 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     private final ModelMapper modelMapper;
 
-    @GetMapping("/{userId}")
     @Override
-    public List<FavoriteResponseDto> getAllFavoritesByUser(Long userId) {
+    public List<FavoriteResponseDto> getAllFavoritesByUser(@Positive Long userId) {
         List<Favorite> favorites = favoriteService.getAllFavoritesByUser(userId);
         return favorites.stream()
                 .map(fav -> modelMapper.map(fav, FavoriteResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/{userId}")
     @Override
-    public FavoriteResponseDto createFavorite(@PathVariable Long userId, FavoriteCreateRequestDto favoriteCreateRequestDto) {
+    public FavoriteResponseDto createFavorite(@Positive Long userId, @Valid FavoriteCreateRequestDto favoriteCreateRequestDto) {
         favoriteCreateRequestDto.setUserId(userId);
         Favorite favorite = favoriteService.createFavorite(modelMapper.map(favoriteCreateRequestDto, Favorite.class));
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 
-
     @Override
-    public void deleteFavorite(Long favoriteId) {
+    public void deleteFavorite(@Positive Long favoriteId) {
         favoriteService.deleteFavoriteById(favoriteId);
     }
 }

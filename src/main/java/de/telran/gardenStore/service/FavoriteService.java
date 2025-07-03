@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    List<Favorite> getAllFavorites();
+    List<Favorite> getAllFavoritesByUser(Long userId);
 
     Favorite getFavoriteById(Long favoriteId);
 

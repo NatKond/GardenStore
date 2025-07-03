@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS products (
     discount_price DECIMAL,
     price DECIMAL NOT NULL,
     category_id INTEGER NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
     description TEXT,
     image_url TEXT
 );

@@ -3,12 +3,15 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,52 +28,100 @@ class ProductServiceImplTest {
     @InjectMocks
     private ProductServiceImpl productService;
 
+    private static Product fertilizer;
+    private static Product flowerPot;
+
+    @BeforeAll
+    static void setUp() {
+        fertilizer = Product.builder()
+                .productId(1L)
+                .name("Universal Fertilizer")
+                .price(BigDecimal.valueOf(15.99))
+                .discountPrice(BigDecimal.valueOf(12.99))
+                .categoryId(1L)
+                .description("High-quality universal fertilizer for all plants.")
+                .imageUrl("http://example.com/fertilizer.png")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        flowerPot = Product.builder()
+                .productId(2L)
+                .name("Ceramic Flower Pot")
+                .price(BigDecimal.valueOf(9.49))
+                .discountPrice(BigDecimal.valueOf(7.99))
+                .categoryId(2L)
+                .description("Decorative ceramic flower pot.")
+                .imageUrl("http://example.com/flowerpot.png")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
     @Test
     void getAllProducts_shouldReturnProducts() {
-        Product p1 = Product.builder().productId(1L).name("Apple").build();
-        Product p2 = Product.builder().productId(2L).name("Banana").build();
-        when(productRepository.findAll()).thenReturn(List.of(p1, p2));
+        when(productRepository.findAll()).thenReturn(List.of(fertilizer, flowerPot));
 
         List<Product> result = productService.getAllProducts();
 
-        assertThat(result).hasSize(2).containsExactly(p1, p2);
-        verify(productRepository, times(1)).findAll();
+        assertThat(result).hasSize(2).containsExactly(fertilizer, flowerPot);
+        verify(productRepository).findAll();
     }
 
     @Test
     void getProductById_shouldReturnProduct_whenExists() {
-        Product p = Product.builder().productId(1L).name("Test").build();
-        when(productRepository.findById(1L)).thenReturn(Optional.of(p));
+        when(productRepository.findById(1L)).thenReturn(Optional.of(fertilizer));
 
         Product result = productService.getProductById(1L);
 
-        assertThat(result).isEqualTo(p);
+        assertThat(result).isEqualTo(fertilizer);
         verify(productRepository).findById(1L);
     }
 
     @Test
     void getProductById_shouldThrow_whenNotFound() {
-        when(productRepository.findById(1L)).thenReturn(Optional.empty());
+        when(productRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(ProductNotFoundException.class, () -> productService.getProductById(1L));
+        assertThrows(ProductNotFoundException.class, () -> productService.getProductById(99L));
+        verify(productRepository).findById(99L);
     }
 
     @Test
     void createProduct_shouldSaveProduct() {
-        Product p = Product.builder().name("New Product").build();
-        Product saved = Product.builder().productId(1L).name("New Product").build();
-        when(productRepository.save(p)).thenReturn(saved);
+        Product gardenShovel = Product.builder()
+                .name("Garden Shovel")
+                .price(BigDecimal.valueOf(25.00))
+                .discountPrice(BigDecimal.valueOf(20.00))
+                .categoryId(3L)
+                .description("Durable steel garden shovel.")
+                .imageUrl("http://example.com/shovel.png")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
-        Product result = productService.createProduct(p);
+        Product savedShovel = Product.builder()
+                .productId(3L)
+                .name("Garden Shovel")
+                .price(BigDecimal.valueOf(25.00))
+                .discountPrice(BigDecimal.valueOf(20.00))
+                .categoryId(3L)
+                .description("Durable steel garden shovel.")
+                .imageUrl("http://example.com/shovel.png")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
-        assertThat(result).isEqualTo(saved);
-        verify(productRepository).save(p);
+        when(productRepository.save(gardenShovel)).thenReturn(savedShovel);
+
+        Product result = productService.createProduct(gardenShovel);
+
+        assertThat(result).isEqualTo(savedShovel);
+        verify(productRepository).save(gardenShovel);
     }
 
     @Test
     void deleteProductById_shouldDeleteProduct_whenExists() {
-        Product p = Product.builder().productId(1L).build();
-        when(productRepository.findById(1L)).thenReturn(Optional.of(p));
+        when(productRepository.findById(1L)).thenReturn(Optional.of(fertilizer));
 
         productService.deleteProductById(1L);
 
@@ -78,4 +129,5 @@ class ProductServiceImplTest {
         verify(productRepository).deleteById(1L);
     }
 }
+
 

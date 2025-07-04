@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,9 +32,6 @@ class CategoryServiceImplTest {
     private static Category category2;
     private static Category category3;
     private static Category category4;
-    private static Category categoryCreate;
-    private static Category categoryCreated;
-    private static Category categoryUpdated;
 
     @BeforeAll
     static void setUp() {
@@ -53,31 +51,16 @@ class CategoryServiceImplTest {
                 .build();
 
         category4 = Category.builder()
-                .categoryId(4L)
-                .name("Tools and equipment")
-                .build();
-
-        categoryCreate = Category.builder()
                 .name("Pots and planters")
-                .build();
-
-        categoryCreated = Category.builder()
-                .categoryId(5L)
-                .name("Pots and planters")
-                .build();
-
-        categoryUpdated = Category.builder()
-                .categoryId(1L)
-                .name("Soil and substrates")
                 .build();
     }
 
     @DisplayName("Test method getAllCategories")
     @Test
     void getAllCategories() {
-        List<Category> expected = List.of(category1, category2, category3, category4);
+        List<Category> expected = List.of(category1, category2, category3);
 
-        when(categoryRepositoryMock.findAll()).thenReturn(List.of(category1, category2, category3, category4));
+        when(categoryRepositoryMock.findAll()).thenReturn(List.of(category1, category2, category3));
 
         List<Category> actual = categoryService.getAllCategories();
 
@@ -105,45 +88,60 @@ class CategoryServiceImplTest {
     void getCategoryByIdNegativeCase() {
         Long categoryId = 6L;
 
-        when(categoryRepositoryMock.findById(categoryId)).thenThrow(new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+        when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> categoryService.getCategoryById(categoryId))
+                .isInstanceOf(CategoryNotFoundException.class)
+                .hasMessageContaining("Category with id 6 not found");
 
-        assertThrows(CategoryNotFoundException.class, () -> categoryService.getCategoryById(categoryId));
     }
 
     @DisplayName("Test method createCategory")
     @Test
     void createCategory() {
-        Category expected = categoryCreated;
+        Category categoryCreate = category4;
 
-        when(categoryRepositoryMock.save(categoryCreate)).thenReturn(expected);
+        Category categoryCreated = category4.toBuilder()
+                .categoryId(4L)
+                .build();
+
+        when(categoryRepositoryMock.save(categoryCreate)).thenReturn(categoryCreated);
 
         Category actual = categoryService.createCategory(categoryCreate);
 
         assertNotNull(actual);
-        assertEquals(expected, actual);
+        assertEquals(categoryCreated, actual);
         verify(categoryRepositoryMock).save(categoryCreate);
     }
 
     @DisplayName("Test method updateCategory")
     @Test
     void updateCategory() {
-        Category expected = categoryUpdated;
 
-        when(categoryRepositoryMock.findById(1L)).thenReturn(Optional.of(expected));
-        when(categoryRepositoryMock.save(expected)).thenReturn(expected);
+        Category categoryUpdated = category1.toBuilder()
+                .name("Soil and substrates")
+                .build();
 
-        Category actual = categoryService.updateCategory(expected.getCategoryId(), expected);
+        when(categoryRepositoryMock.findById(1L)).thenReturn(Optional.of(categoryUpdated));
+        when(categoryRepositoryMock.save(categoryUpdated)).thenReturn(categoryUpdated);
+
+        Category actual = categoryService.updateCategory(categoryUpdated.getCategoryId(), categoryUpdated);
 
         assertNotNull(actual);
-        assertEquals(expected, actual);
+        assertEquals(categoryUpdated, actual);
         verify(categoryRepositoryMock).findById(1L);
-        verify(categoryRepositoryMock).save(expected);
+        verify(categoryRepositoryMock).save(categoryUpdated);
     }
 
     @DisplayName("Test method deleteCategoryById")
     @Test
     void deleteCategoryById() {
-        categoryRepositoryMock.deleteById(1L);
-        verify(categoryRepositoryMock).deleteById(1L);
+        Category deletedCategory = category1;
+
+        when(categoryRepositoryMock.findById(deletedCategory.getCategoryId())).thenReturn(Optional.of(deletedCategory));
+
+        categoryService.deleteCategoryById(1L);
+
+        verify(categoryRepositoryMock).delete(deletedCategory);
+        verify(categoryRepositoryMock).findById(deletedCategory.getCategoryId());
     }
 }

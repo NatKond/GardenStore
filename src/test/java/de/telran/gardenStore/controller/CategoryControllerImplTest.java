@@ -6,7 +6,7 @@ import de.telran.gardenStore.dto.CategoryResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.service.CategoryService;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.hasItems;
 
 import java.util.List;
 
@@ -43,29 +42,17 @@ class CategoryControllerImplTest {
     @MockitoBean
     private ModelMapper modelMapper;
 
-    private static Category category1;
-    private static Category category2;
-    private static Category category3;
-    private static Category category4;
-    private static Category categoryCreate;
-    private static Category categoryCreated;
-    private static Category categoryUpdate;
-    private static Category categoryUpdated;
+    private Category category1;
+    private Category category2;
+    private Category category3;
+    private Category category4;
 
-    private static CategoryResponseDto categoryResponseDto1;
-    private static CategoryResponseDto categoryResponseDto2;
-    private static CategoryResponseDto categoryResponseDto3;
-    private static CategoryResponseDto categoryResponseDto4;
+    private CategoryResponseDto categoryResponseDto1;
+    private CategoryResponseDto categoryResponseDto2;
+    private CategoryResponseDto categoryResponseDto3;
 
-    private static CategoryCreateRequestDto categoryCreateRequestDto;
-    private static CategoryResponseDto categoryResponseCreatedDto;
-
-    private static CategoryCreateRequestDto categoryUpdateRequestDto;
-    private static CategoryResponseDto categoryResponseUpdatedDto;
-
-
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         category1 = Category.builder()
                 .categoryId(1L)
                 .name("Fertilizer")
@@ -82,26 +69,7 @@ class CategoryControllerImplTest {
                 .build();
 
         category4 = Category.builder()
-                .categoryId(4L)
-                .name("Tools and equipment")
-                .build();
-
-        categoryCreate = Category.builder()
                 .name("Pots and planters")
-                .build();
-
-        categoryCreated = Category.builder()
-                .categoryId(5L)
-                .name("Pots and planters")
-                .build();
-
-        categoryUpdate = Category.builder()
-                .name("Soil and substrates")
-                .build();
-
-        categoryUpdated = Category.builder()
-                .categoryId(1L)
-                .name("Soil and substrates")
                 .build();
 
         categoryResponseDto1 = CategoryResponseDto.builder()
@@ -118,60 +86,40 @@ class CategoryControllerImplTest {
                 .categoryId(category3.getCategoryId())
                 .name(category3.getName())
                 .build();
-
-        categoryResponseDto4 = CategoryResponseDto.builder()
-                .categoryId(category4.getCategoryId())
-                .name(category4.getName())
-                .build();
-
-        categoryCreateRequestDto = CategoryCreateRequestDto.builder()
-                .name(categoryCreate.getName())
-                .build();
-
-        categoryResponseCreatedDto = CategoryResponseDto.builder()
-                .categoryId(categoryCreated.getCategoryId())
-                .name(categoryCreated.getName())
-                .build();
-
-        categoryUpdateRequestDto = CategoryCreateRequestDto.builder()
-                .name(categoryUpdate.getName())
-                .build();
-
-        categoryResponseUpdatedDto = CategoryResponseDto.builder()
-                .categoryId(categoryUpdated.getCategoryId())
-                .name(categoryUpdated.getName())
-                .build();
     }
 
     @DisplayName("Test method getAllCategories")
     @Test
     void getAllCategories() throws Exception {
-        List<Category> categories = List.of(category1, category2, category3, category4);
+        List<Category> categories = List.of(category1, category2, category3);
+
+        List<CategoryResponseDto> categoriesDto = List.of(categoryResponseDto1, categoryResponseDto2, categoryResponseDto3);
 
         when(categoryService.getAllCategories()).thenReturn(categories);
+
         when(modelMapper.map(category1, CategoryResponseDto.class)).thenReturn(categoryResponseDto1);
         when(modelMapper.map(category2, CategoryResponseDto.class)).thenReturn(categoryResponseDto2);
         when(modelMapper.map(category3, CategoryResponseDto.class)).thenReturn(categoryResponseDto3);
-        when(modelMapper.map(category4, CategoryResponseDto.class)).thenReturn(categoryResponseDto4);
 
         mockMvc
                 .perform(get("/v1/categories"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$[*].categoryId", hasItems(
-                                categories.get(0).getCategoryId().intValue(),
-                                categories.get(1).getCategoryId().intValue(),
-                                categories.get(2).getCategoryId().intValue(),
-                                categories.get(3).getCategoryId().intValue())));
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(categoriesDto)));
     }
 
     @DisplayName("Test method getCategoryById positive case")
     @Test
     void getCategoryByIdPositiveCase() throws Exception {
-        CategoryResponseDto expected = categoryResponseDto1;
+        CategoryResponseDto categoryResponseDto1 = CategoryResponseDto.builder()
+                .categoryId(category1.getCategoryId())
+                .name(category1.getName())
+                .build();
 
         when(categoryService.getCategoryById(category1.getCategoryId())).thenReturn(category1);
+
         when(modelMapper.map(category1, CategoryResponseDto.class)).thenReturn(categoryResponseDto1);
 
         mockMvc
@@ -179,8 +127,9 @@ class CategoryControllerImplTest {
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$.categoryId").value(expected.getCategoryId()),
-                        jsonPath("$.name").value(expected.getName()));
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(categoryResponseDto1)));
+
     }
 
     @DisplayName("Test method getCategoryById negative case")
@@ -193,15 +142,35 @@ class CategoryControllerImplTest {
         mockMvc
                 .perform(get("/v1/categories/{categoryId}", categoryId))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpectAll(
+                        status().isNotFound(),
+                        jsonPath("$.exception").value("CategoryNotFoundException"),
+                        jsonPath("$.message").value("Category with id " + categoryId + " not found"),
+                        jsonPath("$.status").value(404));
+
     }
 
     @DisplayName("Test method createCategory")
     @Test
     void createCategory() throws Exception {
-        CategoryResponseDto expected = categoryResponseCreatedDto;
+
+        Category categoryCreate = category4;
+
+        Category categoryCreated = category4.toBuilder()
+                .categoryId(4L)
+                .build();
+
+        CategoryCreateRequestDto categoryCreateRequestDto = CategoryCreateRequestDto.builder()
+                .name(categoryCreate.getName())
+                .build();
+
+        CategoryResponseDto categoryResponseCreatedDto = CategoryResponseDto.builder()
+                .categoryId(categoryCreated.getCategoryId())
+                .name(categoryCreated.getName())
+                .build();
 
         when(categoryService.createCategory(categoryCreate)).thenReturn(categoryCreated);
+
         when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryCreate);
         when(modelMapper.map(categoryCreated, CategoryResponseDto.class)).thenReturn(categoryResponseCreatedDto);
 
@@ -209,20 +178,37 @@ class CategoryControllerImplTest {
                 .perform(post("/v1/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryCreateRequestDto)))
-                        .andDo(print())
-                        .andExpectAll(
-                                status().isCreated(),
-                                jsonPath("$.categoryId").value(expected.getCategoryId()),
-                                jsonPath("$.name").value(expected.getName()));
+                .andDo(print())
+                .andExpectAll(
+                        status().isCreated(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(categoryResponseCreatedDto)));
     }
 
     @DisplayName("Test method updateCategory")
     @Test
     void updateCategory() throws Exception {
-        CategoryResponseDto expected = categoryResponseUpdatedDto;
+
+        Category categoryUpdate = category1.toBuilder()
+                .name("Soil and substrates")
+                .build();
+
+        Category categoryUpdated = categoryUpdate.toBuilder()
+                .categoryId(1L)
+                .build();
+
+        CategoryCreateRequestDto categoryUpdateRequestDto = CategoryCreateRequestDto.builder()
+                .name(categoryUpdate.getName())
+                .build();
+
+        CategoryResponseDto categoryResponseUpdatedDto = CategoryResponseDto.builder()
+                .categoryId(categoryUpdated.getCategoryId())
+                .name(categoryUpdated.getName())
+                .build();
 
         when(categoryService.updateCategory(categoryUpdated.getCategoryId(), categoryUpdate)).thenReturn(categoryUpdated);
         when(categoryService.getCategoryById(categoryUpdated.getCategoryId())).thenReturn(categoryUpdated);
+
         when(modelMapper.map(categoryUpdateRequestDto, Category.class)).thenReturn(categoryUpdate);
         when(modelMapper.map(categoryUpdated, CategoryResponseDto.class)).thenReturn(categoryResponseUpdatedDto);
 
@@ -233,8 +219,8 @@ class CategoryControllerImplTest {
                 .andDo(print())
                 .andExpectAll(
                         status().isAccepted(),
-                        jsonPath("$.categoryId").value(expected.getCategoryId()),
-                        jsonPath("$.name").value(expected.getName()));
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(categoryResponseUpdatedDto)));
     }
 
     @DisplayName("Test method deleteCategory")

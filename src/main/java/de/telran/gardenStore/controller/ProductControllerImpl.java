@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/products")
-public class ProductControllerImp implements ProductController {
+@RequestMapping("/v1/products")
+public class ProductControllerImpl implements ProductController {
 
     private final ProductService productService;
     private final ModelMapper modelMapper;

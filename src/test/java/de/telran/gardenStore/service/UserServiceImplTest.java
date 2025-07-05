@@ -33,7 +33,6 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        // Инициализация тестовых данных перед каждым тестом
         user1 = AppUser.builder()
                 .userId(1L)
                 .name("Alice Johnson")
@@ -61,61 +60,51 @@ class UserServiceImplTest {
                 .build();
     }
 
-    @DisplayName("Получение всех пользователей - успешный сценарий")
+    @DisplayName("Get all users - successful scenario")
     @Test
     void getAllUsers_ReturnsAllUsers() {
-        // Подготовка: задаем поведение мок-репозитория
         when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
-        // Действие: вызываем тестируемый метод
         List<AppUser> actualUsers = userService.getAllUsers();
 
-        // Проверки:
-        assertNotNull(actualUsers, "Список пользователей не должен быть null");
-        assertEquals(2, actualUsers.size(), "Должно вернуться 2 пользователя");
-        assertTrue(actualUsers.containsAll(List.of(user1, user2)), "Должны вернуться все пользователи");
+        assertNotNull(actualUsers, "User list should not be null");
+        assertEquals(2, actualUsers.size(), "Should return 2 users");
+        assertTrue(actualUsers.containsAll(List.of(user1, user2)), "All users should be returned");
 
-        // Проверка вызова репозитория
         verify(userRepository, times(1)).findAll();
         verifyNoMoreInteractions(userRepository);
     }
 
-    @DisplayName("Получение пользователя по ID - пользователь существует")
+    @DisplayName("Get user by ID - user exists")
     @Test
     void getUserById_ExistingUser_ReturnsUser() {
-        // Подготовка
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 
-        // Действие
         AppUser actualUser = userService.getUserById(1L);
 
-        // Проверки
-        assertNotNull(actualUser, "Пользователь не должен быть null");
-        assertEquals(user1, actualUser, "Должен вернуться ожидаемый пользователь");
+        assertNotNull(actualUser, "User should not be null");
+        assertEquals(user1, actualUser, "Returned user should match the expected one");
 
-        // Проверка вызова репозитория
         verify(userRepository, times(1)).findById(1L);
         verifyNoMoreInteractions(userRepository);
     }
 
-    @DisplayName("Получение пользователя по ID - пользователь не существует")
+    @DisplayName("Get user by ID - user does not exist")
     @Test
     void getUserById_NonExistingUser_ThrowsException() {
-        // Подготовка
+
         Long userId = 99L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // Действие и проверка исключения
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(userId),
-                "Должно быть выброшено UserNotFoundException");
+                "UserNotFoundException should be thrown");
 
-        // Проверка вызова репозитория - ИЗМЕНЕНО НА findById
         verify(userRepository).findById(userId);
     }
-    @DisplayName("Создание пользователя - успешный сценарий")
+
+    @DisplayName("Create user - successful scenario")
     @Test
     void createUser_ValidUser_ReturnsSavedUser() {
-        // Подготовка
         AppUser savedUser = AppUser.builder()
                 .userId(3L)
                 .name(newUser.getName())
@@ -127,36 +116,31 @@ class UserServiceImplTest {
 
         when(userRepository.save(newUser)).thenReturn(savedUser);
 
-        // Действие
         AppUser actualUser = userService.createUser(newUser);
 
-        // Проверки
-        assertNotNull(actualUser, "Сохраненный пользователь не должен быть null");
-        assertEquals(savedUser.getUserId(), actualUser.getUserId(), "ID сохраненного пользователя должен совпадать");
-        assertEquals(savedUser.getName(), actualUser.getName(), "Имена должны совпадать");
+        assertNotNull(actualUser, "Saved user should not be null");
+        assertEquals(savedUser.getUserId(), actualUser.getUserId(), "Saved user ID should match");
+        assertEquals(savedUser.getName(), actualUser.getName(), "User names should match");
 
-        // Проверка вызова репозитория
         verify(userRepository, times(1)).save(newUser);
         verifyNoMoreInteractions(userRepository);
     }
 
-    @DisplayName("Удаление пользователя по ID - успешный сценарий")
+    @DisplayName("Delete user by ID - successful scenario")
     @Test
     void deleteUserById_ExistingUser_DeletesUser() {
-        // Подготовка
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
         doNothing().when(userRepository).delete(user1);
 
-        // Действие
         userService.deleteUserById(1L);
 
-        // Проверка вызовов репозитория
         verify(userRepository, times(1)).findById(1L);
         verify(userRepository, times(1)).delete(user1);
         verifyNoMoreInteractions(userRepository);
     }
 
-    @DisplayName("Test deleteUserById - non-existing user - throws exception")
+    @DisplayName("Delete user by ID - non-existing user - throws exception")
     @Test
     void deleteUserById_NonExistingUser_ThrowsException() {
         Long userId = 99L;

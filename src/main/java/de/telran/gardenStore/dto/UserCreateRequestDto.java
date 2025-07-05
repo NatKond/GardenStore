@@ -1,11 +1,10 @@
 package de.telran.gardenStore.dto;
 
-import de.telran.gardenStore.enums.Role;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class UserCreateRequestDto {
 
     @NotBlank(message = "Name is required")
@@ -22,5 +21,4 @@ public class UserCreateRequestDto {
     @NotBlank(message = "Password is required")
     @Pattern(regexp = "^\\w{5,}$", message = "Password should have at least 5 characters")
     private String password;
-
 }

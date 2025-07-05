@@ -1,7 +1,9 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.AppUser;
+import de.telran.gardenStore.enums.Role;
 import de.telran.gardenStore.exception.UserNotFoundException;
+import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
 import de.telran.gardenStore.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +41,7 @@ class UserServiceImplTest {
                 .email("alice.johnson@example.com")
                 .phoneNumber("+1234567890")
                 .passwordHash("12345")
+                .role(Role.ROLE_USER)
                 .build();
 
         user2 = AppUser.builder()
@@ -47,6 +50,7 @@ class UserServiceImplTest {
                 .email("bob.smith@example.com")
                 .phoneNumber("+1987654321")
                 .passwordHash("12345")
+                .role(Role.ROLE_USER)
                 .build();
 
         userToCreate = AppUser.builder()
@@ -54,6 +58,7 @@ class UserServiceImplTest {
                 .email("charlie.brown@example.com")
                 .phoneNumber("+1122334455")
                 .passwordHash("12345")
+                .role(Role.ROLE_USER)
                 .build();
 
         userCreated = AppUser.builder()
@@ -95,6 +100,8 @@ class UserServiceImplTest {
 
         assertNotNull(actual);
         assertEquals(user1, actual);
+        assertEquals(user1.getName(), actual.getName());
+        assertEquals(user1.getEmail(), actual.getEmail());
 
         verify(userRepository).findById(userId);
 
@@ -108,39 +115,88 @@ class UserServiceImplTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(UserNotFoundException.class, () -> userService.getUserById(userId));
-        assertEquals("User with id = " + userId + " not found", exception.getMessage());
+        assertEquals("User with id " + userId + " not found", exception.getMessage());
 
         verify(userRepository).findById(userId);
     }
 
-    @DisplayName("Create user : positive case")
+    @DisplayName("Create new user : positive case")
     @Test
-    void createUser() {
-
+    void createUserPositiveCase() {
         when(userRepository.save(userToCreate)).thenReturn(userCreated);
+        when(userRepository.findByEmail(userToCreate.getEmail())).thenReturn(Optional.empty());
 
-        AppUser actualUser = userService.createUser(userToCreate);
+        AppUser actual = userService.createUser(userToCreate);
 
-        assertNotNull(actualUser);
-        assertEquals(userCreated.getUserId(), actualUser.getUserId());
-        assertEquals(userCreated.getName(), actualUser.getName());
+        assertNotNull(actual);
+        assertEquals(userCreated.getUserId(), actual.getUserId());
+        assertEquals(userCreated.getName(), actual.getName());
+        assertEquals(userCreated.getEmail(), actual.getEmail());
 
         verify(userRepository).save(userToCreate);
     }
 
-    @DisplayName("Create user : negative case")
+    @DisplayName("Create new user : negative case")
     @Test
-    void updateUser() {
+    void createUserNegativeCase() {
 
-        when(userRepository.save(userToCreate)).thenReturn(userCreated);
+        AppUser userToCreate = this.userToCreate.toBuilder()
+                .email(user1.getEmail())
+                .build();
 
-        AppUser actualUser = userService.createUser(userToCreate);
+        when(userRepository.findByEmail(userToCreate.getEmail())).thenReturn(Optional.of(user1));
 
-        assertNotNull(actualUser);
-        assertEquals(userCreated.getUserId(), actualUser.getUserId());
-        assertEquals(userCreated.getName(), actualUser.getName());
+        RuntimeException exception = assertThrows(UserWithEmailAlreadyExistsException.class, () -> userService.createUser(userToCreate));
+        assertEquals("User with email " + userToCreate.getEmail() + " already exists.", exception.getMessage());
+    }
 
-        verify(userRepository).save(userToCreate);
+    @DisplayName("Update user : positive case")
+    @Test
+    void updateUserPositiveCase() {
+
+        String emailToUpdate = "charlie.brown777@example.com";
+
+        Long userId = userCreated.getUserId();
+
+        AppUser userToUpdate = userToCreate.toBuilder()
+                .email(emailToUpdate)
+                .build();
+
+        AppUser userUpdated = userToUpdate.toBuilder()
+                .userId(userId)
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userCreated));
+        when(userRepository.findByEmail(emailToUpdate)).thenReturn(Optional.empty());
+        when(userRepository.save(userUpdated)).thenReturn(userUpdated);
+
+        AppUser actual = userService.updateUser(userId, userToUpdate);
+
+        assertNotNull(actual);
+        assertEquals(userUpdated, actual);
+        assertEquals(userUpdated.getName(), actual.getName());
+        assertEquals(userUpdated.getEmail(), actual.getEmail());
+
+        verify(userRepository).save(userUpdated);
+    }
+
+    @DisplayName("Update user : negative case")
+    @Test
+    void updateUserNegativeCase() {
+
+        String emailToUpdate = "alice.johnson@example.com";
+
+        Long userId = userCreated.getUserId();
+
+        AppUser userToUpdate = userToCreate.toBuilder()
+                .email(emailToUpdate)
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userCreated));
+        when(userRepository.findByEmail(emailToUpdate)).thenReturn(Optional.of(user1));
+
+        RuntimeException exception = assertThrows(UserWithEmailAlreadyExistsException.class, () -> userService.updateUser(userId, userToUpdate));
+        assertEquals("User with email " + emailToUpdate + " already exists.", exception.getMessage());
     }
 
     @DisplayName("Delete user by ID : positive case")
@@ -152,9 +208,8 @@ class UserServiceImplTest {
 
         userService.deleteUserById(1L);
 
-        verify(userRepository, times(1)).findById(1L);
-        verify(userRepository, times(1)).delete(user1);
-        verifyNoMoreInteractions(userRepository);
+        verify(userRepository).findById(1L);
+        verify(userRepository).delete(user1);
     }
 
     @DisplayName("Delete user by ID : negative case")
@@ -164,7 +219,7 @@ class UserServiceImplTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(UserNotFoundException.class, () -> userService.deleteUserById(userId));
-        assertEquals("User with id = " + userId + " not found", exception.getMessage());
+        assertEquals("User with id " + userId + " not found", exception.getMessage());
 
         verify(userRepository).findById(userId);
         verify(userRepository, never()).delete(any());

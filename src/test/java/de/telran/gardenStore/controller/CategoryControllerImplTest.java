@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -47,7 +48,7 @@ public class CategoryControllerImplTest {
     private Category category1;
     private Category category2;
     private Category category3;
-    private Category categoryCreate;
+    private Category categoryToCreate;
 
     private CategoryResponseDto categoryResponseDto1;
     private CategoryResponseDto categoryResponseDto2;
@@ -71,7 +72,7 @@ public class CategoryControllerImplTest {
                 .name("Planting material")
                 .build();
 
-        categoryCreate = Category.builder()
+        categoryToCreate = Category.builder()
                 .name("Pots and planters")
                 .build();
 
@@ -91,11 +92,11 @@ public class CategoryControllerImplTest {
                 .build();
 
         categoryCreateRequestDto = CategoryCreateRequestDto.builder()
-                .name(categoryCreate.getName())
+                .name(categoryToCreate.getName())
                 .build();
     }
 
-    @DisplayName("Test method getAllCategories")
+    @DisplayName("GET /v1/categories - get all categories")
     @Test
     void getAllCategories() throws Exception {
         List<Category> categories = List.of(category1, category2, category3);
@@ -117,7 +118,7 @@ public class CategoryControllerImplTest {
                         content().json(objectMapper.writeValueAsString(categoriesDto)));
     }
 
-    @DisplayName("Test method getCategoryById positive case")
+    @DisplayName("GET /v1/categories/{categoryId} - get category by ID : positive case")
     @Test
     void getCategoryByIdPositiveCase() throws Exception {
 
@@ -135,7 +136,7 @@ public class CategoryControllerImplTest {
 
     }
 
-    @DisplayName("Test method getCategoryById negative case")
+    @DisplayName("GET /v1/categories/{categoryId} - get category by ID : negative case")
     @Test
     void getCategoryByIdNegativeCase() throws Exception {
         Long categoryId = 6L;
@@ -154,11 +155,11 @@ public class CategoryControllerImplTest {
 
     }
 
-    @DisplayName("Test method createCategory positive case")
+    @DisplayName("POST /v1/categories - Create new category : positive case")
     @Test
     void createCategoryPositiveCase() throws Exception {
 
-        Category categoryCreated = this.categoryCreate.toBuilder()
+        Category categoryCreated = this.categoryToCreate.toBuilder()
                 .categoryId(4L)
                 .build();
 
@@ -167,9 +168,9 @@ public class CategoryControllerImplTest {
                 .name(categoryCreated.getName())
                 .build();
 
-        when(categoryService.createCategory(categoryCreate)).thenReturn(categoryCreated);
+        when(categoryService.createCategory(categoryToCreate)).thenReturn(categoryCreated);
 
-        when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryCreate);
+        when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryToCreate);
         when(modelMapper.map(categoryCreated, CategoryResponseDto.class)).thenReturn(categoryResponseCreatedDto);
 
         mockMvc
@@ -183,13 +184,13 @@ public class CategoryControllerImplTest {
                         content().json(objectMapper.writeValueAsString(categoryResponseCreatedDto)));
     }
 
-    @DisplayName("Test method createCategory negative case")
+    @DisplayName("POST /v1/categories - Create new category : negative case")
     @Test
     void createCategoryNegativeCase() throws Exception {
 
-        when(categoryService.createCategory(categoryCreate)).thenThrow(new CategoryWithNameAlreadyExistsException("Category with name " + categoryCreate.getName() + " already exists."));
+        when(categoryService.createCategory(categoryToCreate)).thenThrow(new CategoryWithNameAlreadyExistsException("Category with name " + categoryToCreate.getName() + " already exists."));
 
-        when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryCreate);
+        when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryToCreate);
 
         mockMvc
                 .perform(post("/v1/categories")
@@ -200,11 +201,11 @@ public class CategoryControllerImplTest {
                         status().isConflict(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.exception").value("CategoryWithNameAlreadyExistsException"),
-                        jsonPath("$.message").value("Category with name " + categoryCreate.getName() + " already exists."),
+                        jsonPath("$.message").value("Category with name " + categoryToCreate.getName() + " already exists."),
                         jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
     }
 
-    @DisplayName("Test method updateCategory")
+    @DisplayName("PUT /v1/categories/{category_id} - Update category")
     @Test
     void updateCategory() throws Exception {
 
@@ -225,10 +226,9 @@ public class CategoryControllerImplTest {
                 .name(categoryUpdated.getName())
                 .build();
 
+        when(modelMapper.map(categoryUpdateRequestDto, Category.class)).thenReturn(categoryUpdate);
         when(categoryService.updateCategory(categoryUpdated.getCategoryId(), categoryUpdate)).thenReturn(categoryUpdated);
         when(categoryService.getCategoryById(categoryUpdated.getCategoryId())).thenReturn(categoryUpdated);
-
-        when(modelMapper.map(categoryUpdateRequestDto, Category.class)).thenReturn(categoryUpdate);
         when(modelMapper.map(categoryUpdated, CategoryResponseDto.class)).thenReturn(categoryResponseUpdatedDto);
 
         mockMvc
@@ -242,10 +242,13 @@ public class CategoryControllerImplTest {
                         content().json(objectMapper.writeValueAsString(categoryResponseUpdatedDto)));
     }
 
-    @DisplayName("Test method deleteCategory")
+    @DisplayName("DELETE /v1/categories/{category_id} - delete category by ID")
     @Test
     void deleteCategory() throws Exception {
         Long categoryId = category1.getCategoryId();
+
+        when(categoryService.getCategoryById(category1.getCategoryId())).thenReturn(category1);
+        doNothing().when(categoryService).deleteCategoryById(categoryId);
 
         mockMvc
                 .perform(delete("/v1/categories/{category_id}", categoryId))

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import org.hibernate.validator.constraints.URL;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class ProductCreateRequestDto {
 
     @NotBlank(message = "Name must not be blank")

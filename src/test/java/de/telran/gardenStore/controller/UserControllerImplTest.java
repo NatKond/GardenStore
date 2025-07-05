@@ -6,16 +6,18 @@ import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.enums.Role;
 import de.telran.gardenStore.exception.UserNotFoundException;
+import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
 import de.telran.gardenStore.service.UserService;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -24,7 +26,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
 
 @WebMvcTest(UserControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -36,24 +37,24 @@ class UserControllerImplTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
 
-    @MockBean
+    @MockitoBean
     private ModelMapper modelMapper;
 
-    private static AppUser user1;
-    private static AppUser user2;
-    private static AppUser newUser;
-    private static AppUser createdUser;
+    private AppUser user1;
+    private AppUser user2;
+    private AppUser userToCreate;
+    private AppUser userCreated;
 
-    private static UserResponseDto userResponseDto1;
-    private static UserResponseDto userResponseDto2;
-    private static UserCreateRequestDto userCreateRequestDto;
-    private static UserResponseDto userResponseCreatedDto;
+    private UserResponseDto userResponseDto1;
+    private UserResponseDto userResponseDto2;
+    private UserCreateRequestDto userCreateRequestDto;
+    private UserResponseDto userResponseCreatedDto;
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         user1 = AppUser.builder()
                 .userId(1L)
                 .name("Alice Johnson")
@@ -72,7 +73,7 @@ class UserControllerImplTest {
                 .role(Role.ROLE_USER)
                 .build();
 
-        newUser = AppUser.builder()
+        userToCreate = AppUser.builder()
                 .name("Charlie Brown")
                 .email("charlie.brown@example.com")
                 .phoneNumber("+1122334455")
@@ -80,13 +81,13 @@ class UserControllerImplTest {
                 .role(Role.ROLE_USER)
                 .build();
 
-        createdUser = AppUser.builder()
+        userCreated = AppUser.builder()
                 .userId(3L)
-                .name(newUser.getName())
-                .email(newUser.getEmail())
-                .phoneNumber(newUser.getPhoneNumber())
-                .passwordHash(newUser.getPasswordHash())
-                .role(newUser.getRole())
+                .name(userToCreate.getName())
+                .email(userToCreate.getEmail())
+                .phoneNumber(userToCreate.getPhoneNumber())
+                .passwordHash(userToCreate.getPasswordHash())
+                .role(userToCreate.getRole())
                 .build();
 
         userResponseDto1 = UserResponseDto.builder()
@@ -106,96 +107,164 @@ class UserControllerImplTest {
                 .build();
 
         userCreateRequestDto = UserCreateRequestDto.builder()
-                .name(newUser.getName())
-                .email(newUser.getEmail())
-                .phoneNumber(newUser.getPhoneNumber())
-                .password(newUser.getPasswordHash())
+                .name(userToCreate.getName())
+                .email(userToCreate.getEmail())
+                .phoneNumber(userToCreate.getPhoneNumber())
+                .password(userToCreate.getPasswordHash())
                 .build();
 
         userResponseCreatedDto = UserResponseDto.builder()
-                .userId(createdUser.getUserId())
-                .name(createdUser.getName())
-                .email(createdUser.getEmail())
-                .phoneNumber(createdUser.getPhoneNumber())
-                .role(createdUser.getRole().name())
+                .userId(userCreated.getUserId())
+                .name(userCreated.getName())
+                .email(userCreated.getEmail())
+                .phoneNumber(userCreated.getPhoneNumber())
+                .role(userCreated.getRole().name())
                 .build();
     }
 
     @Test
-    @DisplayName("GET /users - возвращает всех пользователей")
-    void getAllUsers_ReturnsAllUsers() throws Exception {
+    @DisplayName("GET /v1/users - get all users")
+    void getAllUsers() throws Exception {
 
         List<AppUser> users = List.of(user1, user2);
+        List<UserResponseDto> expected = List.of(userResponseDto1, userResponseDto2);
+
         when(userService.getAllUsers()).thenReturn(users);
         when(modelMapper.map(user1, UserResponseDto.class)).thenReturn(userResponseDto1);
         when(modelMapper.map(user2, UserResponseDto.class)).thenReturn(userResponseDto2);
 
-        mockMvc.perform(get("/user")
+        mockMvc.perform(get("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].userId").value(user1.getUserId()))
-                .andExpect(jsonPath("$[0].name").value(user1.getName()));
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
     }
 
     @Test
-    @DisplayName("GET /user{id} - возвращает пользователя по ID")
-    void getUserById_ExistingUser_ReturnsUser() throws Exception {
-        // Подготовка
-        when(userService.getUserById(1L)).thenReturn(user1);
+    @DisplayName("GET /v1/user/{userId} - get user by ID : positive case")
+    void getUserByIdPositiveCase() throws Exception {
+
+        Long userId = 1L;
+
+        when(userService.getUserById(userId)).thenReturn(user1);
         when(modelMapper.map(user1, UserResponseDto.class)).thenReturn(userResponseDto1);
 
-        // Выполнение и проверка
-        mockMvc.perform(get("/user/1")
+        mockMvc.perform(get("/v1/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value(user1.getUserId()))
-                .andExpect(jsonPath("$.name").value(user1.getName()))
-                .andExpect(jsonPath("$.email").value(user1.getEmail()));
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(userResponseDto1)));
     }
 
     @Test
-    @DisplayName("GET /user{id} - несуществующий пользователь - возвращает 404")
-    void getUserById_NonExistingUser_Returns404() throws Exception {
+    @DisplayName("GET /v1/user/{userId} - get user by ID : negative case")
+    void getUserByIdNegativeCase() throws Exception {
 
         Long userId = 99L;
-        when(userService.getUserById(userId)).thenThrow(new UserNotFoundException("User not found"));
+        when(userService.getUserById(userId)).thenThrow(new UserNotFoundException("User with id " + userId + " not found"));
 
-        mockMvc.perform(get("/user/" + userId)
+        mockMvc.perform(get("/v1/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpectAll(
+                        status().isNotFound(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.exception").value("UserNotFoundException"),
+                        jsonPath("$.message").value("User with id " + userId + " not found"),
+                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
     }
 
     @Test
-    @DisplayName("POST /user/register - создает нового пользователя")
-    void createUser_ValidRequest_ReturnsCreatedUser() throws Exception {
+    @DisplayName("POST /v1/users/register - Create new user : positive case")
+    void createUserPositiveCase() throws Exception {
 
-        when(modelMapper.map(userCreateRequestDto, AppUser.class)).thenReturn(newUser);
-        when(userService.createUser(newUser)).thenReturn(createdUser);
-        when(modelMapper.map(createdUser, UserResponseDto.class)).thenReturn(userResponseCreatedDto);
+        when(modelMapper.map(userCreateRequestDto, AppUser.class)).thenReturn(userToCreate);
+        when(userService.createUser(userToCreate)).thenReturn(userCreated);
+        when(modelMapper.map(userCreated, UserResponseDto.class)).thenReturn(userResponseCreatedDto);
 
-        mockMvc.perform(post("/user/register")
+        mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userCreateRequestDto)))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.userId").value(createdUser.getUserId()))
-                .andExpect(jsonPath("$.name").value(createdUser.getName()))
-                .andExpect(jsonPath("$.email").value(createdUser.getEmail()));
+                .andExpectAll(
+                        status().isCreated(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(userResponseCreatedDto)));
     }
 
     @Test
-    @DisplayName("DELETE /user{id} - удаляет пользователя")
+    @DisplayName("POST /v1/users/register - Create new user : negative case")
+    void createUserNegativeCase() throws Exception {
+
+        when(userService.createUser(userToCreate)).thenThrow(new UserWithEmailAlreadyExistsException("User with email " + userToCreate.getEmail() + " already exists"));
+        when(modelMapper.map(userCreateRequestDto, AppUser.class)).thenReturn(userToCreate);
+
+        mockMvc.perform(post("/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userCreateRequestDto)))
+                .andDo(print())
+                .andExpectAll(
+                        status().isConflict(),
+                        jsonPath("$.exception").value("UserWithEmailAlreadyExistsException"),
+                        jsonPath("$.message").value("User with email " + userToCreate.getEmail() + " already exists"),
+                        jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/users - Update user")
+    void updateUser() throws Exception {
+
+        String emailToUpdate = "charlie.brown777@example.com";
+
+        Long userId = userCreated.getUserId();
+
+        AppUser userToUpdate = userToCreate.toBuilder()
+                .email(emailToUpdate)
+                .build();
+
+        AppUser userUpdated = userToUpdate.toBuilder()
+                .userId(userId)
+                .build();
+
+        UserCreateRequestDto userUpdateRequestDto = this.userCreateRequestDto.toBuilder()
+                .email(emailToUpdate)
+                .build();
+
+        UserResponseDto userResponseUpdatedDto = this.userResponseCreatedDto.toBuilder()
+                .email(emailToUpdate)
+                .build();
+
+
+        when(modelMapper.map(userUpdateRequestDto, AppUser.class)).thenReturn(userToUpdate);
+        when(userService.updateUser(userId, userToUpdate)).thenReturn(userUpdated);
+        when(userService.getUserById(userId)).thenReturn(userUpdated);
+        when(modelMapper.map(userUpdated, UserResponseDto.class)).thenReturn(userResponseUpdatedDto);
+
+        mockMvc.perform(put("/v1/users/{userId}", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userUpdateRequestDto)))
+                .andDo(print())
+                .andExpectAll(
+                        status().isAccepted(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(userResponseUpdatedDto)));
+    }
+
+    @Test
+    @DisplayName("DELETE /v1/users/{userId} - delete user by ID")
     void deleteUserById_ExistingUser_Returns200() throws Exception {
         // Подготовка
         Long userId = 1L;
+
+        when(userService.getUserById(userId)).thenReturn(user1);
         doNothing().when(userService).deleteUserById(userId);
 
         // Выполнение и проверка
-        mockMvc.perform(delete("/user/" + userId)
+        mockMvc.perform(delete("/v1/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());

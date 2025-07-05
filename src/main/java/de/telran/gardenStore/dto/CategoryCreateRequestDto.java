@@ -6,7 +6,7 @@ import lombok.*;
 
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class CategoryCreateRequestDto {
 
     @NotBlank(message = "Category name cannot be blank")

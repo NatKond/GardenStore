@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/products")
-public class ProductControllerImp implements ProductController {
+@Validated
+public class ProductControllerImpl implements ProductController {
 
     private final ProductService productService;
 

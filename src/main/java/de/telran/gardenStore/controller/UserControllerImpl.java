@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,29 +16,24 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
 @Validated
-public class UserControllerImpl implements UserController{
+public class UserControllerImpl implements UserController {
 
     private final UserService userService;
 
     private final ModelMapper modelMapper;
 
     @Override
-    @GetMapping
     public List<UserResponseDto> getAllUsers() {
         return userService.getAllUsers().stream().map(appUser -> modelMapper.map(appUser, UserResponseDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    @GetMapping("/{userId}")
-    public UserResponseDto getUserById(@PathVariable @Positive Long userId) {
+    public UserResponseDto getUserById(@Positive Long userId) {
         return modelMapper.map(userService.getUserById(userId), UserResponseDto.class);
     }
 
     @Override
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
     public UserResponseDto createUser(@RequestBody @Valid UserCreateRequestDto userRequest) {
         return modelMapper.map(
                 userService.createUser(
@@ -48,8 +42,15 @@ public class UserControllerImpl implements UserController{
     }
 
     @Override
-    @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable @Positive Long userId) {
+    public UserResponseDto updateUser(@Positive Long userId, @Valid UserCreateRequestDto userRequest) {
+        return modelMapper.map(
+                userService.updateUser(userId,
+                        modelMapper.map(userRequest, AppUser.class)),
+                UserResponseDto.class);
+    }
+
+    @Override
+    public void deleteUserById(@Positive Long userId) {
         userService.deleteUserById(userId);
     }
 }

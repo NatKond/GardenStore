@@ -1,4 +1,7 @@
-TRUNCATE TABLE app_users RESTART IDENTITY;
+TRUNCATE TABLE app_users RESTART IDENTITY CASCADE;
+TRUNCATE TABLE products RESTART IDENTITY CASCADE;
+TRUNCATE TABLE categories RESTART IDENTITY CASCADE;
+
 
 INSERT INTO app_users (name, email, phone_number, password_hash, role)
 VALUES
@@ -7,7 +10,14 @@ VALUES
     ('Carol Lee', 'carol.lee@example.com', '+1122334455', '12345', 'ROLE_USER'),
     ('David Brown', 'david.brown@example.com', '+1222333444', '12345', 'ROLE_USER');
 
-TRUNCATE TABLE products RESTART IDENTITY;
+INSERT INTO categories (name)
+VALUES
+    ('Fertilizer'),
+    ('Protective products and septic tanks'),
+    ('Planting material'),
+    ('Tools and equipment'),
+    ('Pots and planters');
+
 INSERT INTO products (name, discount_price, price,category_id, description, image_url)
 VALUES
 ('All-Purpose Plant Fertilizer', 8.99, 11.99, 1, 'Balanced NPK formula for all types of plants', 'https://example.com/images/fertilizer_all_purpose.jpg'),
@@ -20,17 +30,6 @@ VALUES
 ('Garden Tool Set (5 pcs)', 19.99, 24.99, 4, 'Essential hand tools set for everyday gardening', 'https://example.com/images/garden_tool_set.jpg'),
 ('Ceramic Plant Pot - 8 inch', 14.50, 18.99, 5, 'Stylish ceramic pot with drainage hole', 'https://example.com/images/ceramic_pot.jpg'),
 ('Hanging Planter Basket', 9.25, 12.50, 5, 'Woven hanging basket with metal chain', 'https://example.com/images/hanging_planter.jpg');
-
-TRUNCATE TABLE categories RESTART IDENTITY;
-INSERT INTO categories (name)
-VALUES
-    ('Fertilizer'),
-    ('Protective products and septic tanks'),
-    ('Planting material'),
-    ('Tools and equipment'),
-    ('Pots and planters');
-
-TRUNCATE TABLE favorites RESTART IDENTITY;
 
 INSERT INTO favorites(user_id, product_id)
 VALUES

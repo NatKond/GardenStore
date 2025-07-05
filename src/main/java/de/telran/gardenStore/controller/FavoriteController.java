@@ -2,15 +2,23 @@ package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
-import java.util.List;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+@RequestMapping("/v1/favorites")
 public interface FavoriteController {
 
-    List<FavoriteResponseDto> getAllFavorites();
+    @GetMapping("/{userId}")
+    List<FavoriteResponseDto> getAllFavoritesByUser(@PathVariable @Positive Long userId);
 
-    FavoriteResponseDto getFavoriteById(Long favoriteId);
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{userId}")
+    FavoriteResponseDto createFavorite(@PathVariable @Positive Long userId,
+                                       @RequestBody @Valid FavoriteCreateRequestDto favoriteCreateRequestDto);
 
-    FavoriteResponseDto createFavorite(FavoriteCreateRequestDto favoriteCreateRequestDto);
-
-    void deleteFavorite(Long favoriteId);
+    @DeleteMapping("/{favoriteId}")
+    void deleteFavorite(@PathVariable @Positive Long favoriteId);
 }

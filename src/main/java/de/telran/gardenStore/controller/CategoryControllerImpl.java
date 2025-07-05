@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/categories")
 @RequiredArgsConstructor
 @Validated
 public class CategoryControllerImpl implements CategoryController {
@@ -26,7 +24,7 @@ public class CategoryControllerImpl implements CategoryController {
     private final ModelMapper modelMapper;
 
     @Override
-    @GetMapping
+
     public List<CategoryResponseDto> getAllCategories() {
         return categoryService.getAllCategories().stream()
                 .map(category -> modelMapper.map(category, CategoryResponseDto.class))
@@ -34,30 +32,24 @@ public class CategoryControllerImpl implements CategoryController {
     }
 
     @Override
-    @GetMapping("/{categoryId}")
-    public CategoryResponseDto getCategoryById(@PathVariable @Positive Long categoryId) {
+    public CategoryResponseDto getCategoryById(@Positive Long categoryId) {
         return modelMapper.map(categoryService.getCategoryById(categoryId), CategoryResponseDto.class);
     }
 
     @Override
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CategoryResponseDto createCategory(@RequestBody @Valid CategoryCreateRequestDto dto) {
+    public CategoryResponseDto createCategory(@Valid CategoryCreateRequestDto dto) {
         Category category = modelMapper.map(dto, Category.class);
         return modelMapper.map(categoryService.createCategory(category), CategoryResponseDto.class);
     }
 
-    @ResponseStatus(HttpStatus.ACCEPTED)
     @Override
-    @PutMapping("/{categoryId}")
-    public CategoryResponseDto updateCategory(@PathVariable @Positive Long categoryId, @Valid @RequestBody CategoryCreateRequestDto dto) {
+    public CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto dto) {
         Category category = modelMapper.map(dto, Category.class);
         return modelMapper.map(categoryService.updateCategory(categoryId, category), CategoryResponseDto.class);
     }
 
     @Override
-    @DeleteMapping("/{categoryId}")
-    public void deleteCategory(@PathVariable @Positive Long categoryId) {
+    public void deleteCategory(@Positive Long categoryId) {
         categoryService.deleteCategoryById(categoryId);
     }
 }

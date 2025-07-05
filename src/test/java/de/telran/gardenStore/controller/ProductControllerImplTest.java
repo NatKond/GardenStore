@@ -22,8 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -253,11 +252,12 @@ public class ProductControllerImplTest {
 
         Long productId = 1L;
 
-        when(productService.getProductById(productId)).thenReturn(product1);
         doNothing().when(productService).deleteProductById(productId);
 
         mockMvc.perform(delete("/v1/products/{productId}", productId))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        verify(productService).deleteProductById(productId);
     }
 }

@@ -1,8 +1,7 @@
 package de.telran.gardenStore.handler;
 
 import de.telran.gardenStore.dto.AppErrorResponse;
-import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
-import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
+import de.telran.gardenStore.exception.EntityAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -57,7 +56,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(exception = {UserWithEmailAlreadyExistsException.class, CategoryWithNameAlreadyExistsException.class})
+    @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<AppErrorResponse> handleUserWithEmailAlreadyExistsException(RuntimeException exception) {
 
         log.error(exception.getMessage(), exception);

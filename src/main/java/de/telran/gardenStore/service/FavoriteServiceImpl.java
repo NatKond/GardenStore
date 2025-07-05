@@ -3,10 +3,12 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -22,7 +24,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<Favorite> getAllFavoritesByUser(Long userId) {
         AppUser user = userService.getUserById(userId);
-        return favoriteRepository.getAllByUserId(userId);
+        return favoriteRepository.getAllByUserId(user.getUserId());
     }
 
     @Override
@@ -34,8 +36,11 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Favorite createFavorite(Favorite favorite) {
 
-        Product product = productService.getProductById(favorite.getProductId());
         AppUser user = userService.getUserById(favorite.getUserId());
+        Product product = productService.getProductById(favorite.getProductId());
+        if (favoriteRepository.findByUserIdAndProductId(user.getUserId(), product.getProductId()).isPresent()) {
+            throw new FavoriteAlreadyExistsException("Favorite with userId " + user.getUserId() + " and productId " + product.getProductId() + " already exists");
+        }
 
         return favoriteRepository.save(favorite);
     }

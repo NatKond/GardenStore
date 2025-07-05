@@ -19,14 +19,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoryControllerImpl.class)
@@ -242,17 +241,18 @@ public class CategoryControllerImplTest {
                         content().json(objectMapper.writeValueAsString(categoryResponseUpdatedDto)));
     }
 
-    @DisplayName("DELETE /v1/categories/{category_id} - delete category by ID")
+    @DisplayName("DELETE /v1/categories/{category_id} - Delete category by ID")
     @Test
     void deleteCategory() throws Exception {
         Long categoryId = category1.getCategoryId();
 
-        when(categoryService.getCategoryById(category1.getCategoryId())).thenReturn(category1);
         doNothing().when(categoryService).deleteCategoryById(categoryId);
 
         mockMvc
                 .perform(delete("/v1/categories/{category_id}", categoryId))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        verify(categoryService).deleteCategoryById(categoryId);
     }
 }

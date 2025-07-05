@@ -195,8 +195,8 @@ class UserControllerImplTest {
     @DisplayName("POST /v1/users/register - Create new user : negative case")
     void createUserNegativeCase() throws Exception {
 
-        when(userService.createUser(userToCreate)).thenThrow(new UserWithEmailAlreadyExistsException("User with email " + userToCreate.getEmail() + " already exists"));
         when(modelMapper.map(userCreateRequestDto, AppUser.class)).thenReturn(userToCreate);
+        when(userService.createUser(userToCreate)).thenThrow(new UserWithEmailAlreadyExistsException("User with email " + userToCreate.getEmail() + " already exists"));
 
         mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -255,13 +255,12 @@ class UserControllerImplTest {
         // Подготовка
         Long userId = 1L;
 
-        when(userService.getUserById(userId)).thenReturn(user1);
         doNothing().when(userService).deleteUserById(userId);
 
-        // Выполнение и проверка
         mockMvc.perform(delete("/v1/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+        verify(userService).deleteUserById(userId);
     }
 }

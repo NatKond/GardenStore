@@ -4,19 +4,27 @@ import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@Validated
+@RequestMapping("/v1/categories")
 public interface CategoryController {
 
+    @GetMapping
     List<CategoryResponseDto> getAllCategories();
 
-    CategoryResponseDto getCategoryById(@Positive Long categoryId);
+    @GetMapping("/{categoryId}")
+    CategoryResponseDto getCategoryById(@PathVariable @Positive Long categoryId);
 
-    CategoryResponseDto createCategory(@Valid CategoryCreateRequestDto dto);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    CategoryResponseDto createCategory(@RequestBody @Valid CategoryCreateRequestDto dto);
 
-    CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto dto);
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PutMapping("/{categoryId}")
+    CategoryResponseDto updateCategory(@PathVariable @Positive Long categoryId, @RequestBody @Valid CategoryCreateRequestDto dto);
 
-    void deleteCategory(@Positive Long categoryId);
+    @DeleteMapping("/{categoryId}")
+    void deleteCategory(@PathVariable @Positive Long categoryId);
 }

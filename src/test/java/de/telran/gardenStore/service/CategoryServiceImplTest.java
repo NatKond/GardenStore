@@ -31,7 +31,7 @@ class CategoryServiceImplTest {
     private static Category category2;
     private static Category category3;
     private static Category category4;
-    private static Category categoryToCreate;
+    private static Category categoryCreate;
     private static Category categoryCreated;
     private static Category categoryUpdated;
 
@@ -82,6 +82,7 @@ class CategoryServiceImplTest {
         List<Category> actual = categoryService.getAllCategories();
 
         assertNotNull(actual);
+        assertEquals(3, actual.size());
         assertEquals(expected, actual);
         verify(categoryRepositoryMock).findAll();
     }
@@ -97,6 +98,7 @@ class CategoryServiceImplTest {
 
         assertNotNull(actual);
         assertEquals(expected, actual);
+        assertEquals(expected.getName(), actual.getName());
         verify(categoryRepositoryMock).findById(1L);
     }
 
@@ -105,9 +107,10 @@ class CategoryServiceImplTest {
     void getCategoryByIdNegativeCase() {
         Long categoryId = 6L;
 
-        when(categoryRepositoryMock.findById(categoryId)).thenThrow(new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+        when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.empty());
+        RuntimeException runtimeException = assertThrows(CategoryNotFoundException.class, () -> categoryService.getCategoryById(categoryId));
+        assertEquals("Category with id " + categoryId + " not found", runtimeException.getMessage());
 
-        assertThrows(CategoryNotFoundException.class, () -> categoryService.getCategoryById(categoryId));
     }
 
     @DisplayName("Create category : negative case")
@@ -126,24 +129,64 @@ class CategoryServiceImplTest {
 
     @DisplayName("Delete category by ID : positive case")
     @Test
-    void updateCategory() {
-        Category expected = categoryUpdated;
+    void updateCategoryPositiveCase() {
 
-        when(categoryRepositoryMock.findById(1L)).thenReturn(Optional.of(expected));
-        when(categoryRepositoryMock.save(expected)).thenReturn(expected);
+        String updatedName = "Soil and substrates";
 
-        Category actual = categoryService.updateCategory(expected.getCategoryId(), expected);
+        Long categoryId = 1L;
+
+        Category categoryUpdate = Category.builder()
+                .name(updatedName)
+                .build();
+
+        Category categoryUpdated = Category.builder()
+                .categoryId(categoryId)
+                .name(updatedName)
+                .build();
+
+        when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.of(category1));
+        when(categoryRepositoryMock.save(categoryUpdated)).thenReturn(categoryUpdated);
+        when(categoryRepositoryMock.findCategoryByName(updatedName)).thenReturn(Optional.empty());
+
+        Category actual = categoryService.updateCategory(categoryId, categoryUpdate);
 
         assertNotNull(actual);
-        assertEquals(expected, actual);
-        verify(categoryRepositoryMock).findById(1L);
-        verify(categoryRepositoryMock).save(expected);
+        assertEquals(categoryUpdated, actual);
+        assertEquals(categoryUpdated.getName(), actual.getName());
+
+        verify(categoryRepositoryMock).findById(categoryUpdated.getCategoryId());
+        verify(categoryRepositoryMock).save(categoryUpdated);
+    }
+
+    @DisplayName("Test method updateCategory negative case")
+    @Test
+    void updateCategoryNegativeCase() {
+
+        String updatedName = "Planting material";
+
+        Long categoryId = 1L;
+
+        Category categoryUpdate = Category.builder()
+                .name(updatedName)
+                .build();
+
+        when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.of(category1));
+        when(categoryRepositoryMock.findCategoryByName(updatedName)).thenReturn(Optional.of(category3));
+
+        RuntimeException exception = assertThrows(CategoryWithNameAlreadyExistsException.class, () -> categoryService.updateCategory(categoryId, categoryUpdate));
+        assertEquals("Category with name " + updatedName + " already exists.", exception.getMessage());
     }
 
     @DisplayName("Test method deleteCategoryById")
     @Test
     void deleteCategoryById() {
-        categoryRepositoryMock.deleteById(1L);
-        verify(categoryRepositoryMock).deleteById(1L);
+        Category deletedCategory = category1;
+
+        when(categoryRepositoryMock.findById(deletedCategory.getCategoryId())).thenReturn(Optional.of(deletedCategory));
+
+        categoryService.deleteCategoryById(1L);
+
+        verify(categoryRepositoryMock).delete(deletedCategory);
+        verify(categoryRepositoryMock).findById(deletedCategory.getCategoryId());
     }
 }

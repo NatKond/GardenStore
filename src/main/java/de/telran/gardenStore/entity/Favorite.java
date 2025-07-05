@@ -1,5 +1,6 @@
 package de.telran.gardenStore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,4 +23,17 @@ public class Favorite {
     private Long userId;
 
     private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private AppUser appUser;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }
+

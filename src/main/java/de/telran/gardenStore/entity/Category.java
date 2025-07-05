@@ -3,6 +3,8 @@ package de.telran.gardenStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @NoArgsConstructor
@@ -20,5 +22,13 @@ public class Category {
     private Long categoryId;
 
     private String name;
+
+    @OneToMany(mappedBy = "category",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Product> productList;
+
 
 }

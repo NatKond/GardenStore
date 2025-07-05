@@ -31,23 +31,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser createUser(AppUser appUser) {
-        if (userRepository.findByEmail(appUser.getEmail()).isPresent()) {
-            throw new UserWithEmailAlreadyExistsException("User with email " + appUser.getEmail() + " already exists.");
-        }
-        return userRepository.save(appUser);
+    public AppUser createUser(AppUser newUser) {
+        emailCheck(newUser.getEmail());
+        return userRepository.save(newUser);
     }
 
     @Override
-    public AppUser updateUser(Long userId, AppUser appUser) {
-
+    public AppUser updateUser(Long userId, AppUser updatedUser) {
         AppUser existing = getUserById(userId);
 
-        existing.setName(appUser.getName());
-        existing.setEmail(appUser.getEmail());
-        existing.setPhoneNumber(appUser.getPhoneNumber());
-        existing.setPasswordHash(appUser.getPasswordHash());
-        existing.setRole(appUser.getRole());
+        if (!existing.getEmail().equals(updatedUser.getEmail())) {
+            emailCheck(updatedUser.getEmail());
+        }
+
+        existing.setName(updatedUser.getName());
+        existing.setEmail(updatedUser.getEmail());
+        existing.setPhoneNumber(updatedUser.getPhoneNumber());
+        existing.setPasswordHash(updatedUser.getPasswordHash());
+        existing.setRole(updatedUser.getRole());
 
         return userRepository.save(existing);
     }
@@ -55,5 +56,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long userId) {
         userRepository.delete(getUserById(userId));
+    }
+
+    private void emailCheck(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserWithEmailAlreadyExistsException("User with email " + email + " already exists.");
+        }
     }
 }

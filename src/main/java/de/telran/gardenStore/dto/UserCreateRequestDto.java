@@ -18,7 +18,6 @@ public class UserCreateRequestDto {
     @Email(message = "Should be a well-formed email address")
     private String email;
 
-    @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\+?\\d{10,15}$", message = "Phone number should have at least 10 characters")
     private String phoneNumber;
 

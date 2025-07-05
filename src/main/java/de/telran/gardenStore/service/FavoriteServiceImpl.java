@@ -21,6 +21,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public List<Favorite> getAllFavoritesByUser(Long userId) {
+        AppUser user = userService.getUserById(userId);
         return favoriteRepository.getAllByUserId(userId);
     }
 
@@ -34,7 +35,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     public Favorite createFavorite(Favorite favorite) {
 
         Product product = productService.getProductById(favorite.getProductId());
-
         AppUser user = userService.getUserById(favorite.getUserId());
 
         return favoriteRepository.save(favorite);

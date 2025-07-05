@@ -1,13 +1,15 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.Product;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 public interface ProductService {
-
-    List<Product> getAllProducts();
-
+    Page<Product> getAllProducts(Long category, Boolean discount,
+                                 BigDecimal minPrice, BigDecimal maxPrice,
+                                 String[] sort, int page, int size);
     Product getProductById(Long productId);
 
     Product createProduct(Product product);

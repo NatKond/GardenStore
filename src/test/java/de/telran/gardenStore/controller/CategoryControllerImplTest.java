@@ -5,6 +5,7 @@ import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
+import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.service.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,11 +47,12 @@ class CategoryControllerImplTest {
     private Category category1;
     private Category category2;
     private Category category3;
-    private Category category4;
+    private Category categoryCreate;
 
     private CategoryResponseDto categoryResponseDto1;
     private CategoryResponseDto categoryResponseDto2;
     private CategoryResponseDto categoryResponseDto3;
+    private CategoryCreateRequestDto categoryCreateRequestDto;
 
     @BeforeEach
     void setUp() {
@@ -68,7 +71,7 @@ class CategoryControllerImplTest {
                 .name("Planting material")
                 .build();
 
-        category4 = Category.builder()
+        categoryCreate = Category.builder()
                 .name("Pots and planters")
                 .build();
 
@@ -85,6 +88,10 @@ class CategoryControllerImplTest {
         categoryResponseDto3 = CategoryResponseDto.builder()
                 .categoryId(category3.getCategoryId())
                 .name(category3.getName())
+                .build();
+
+        categoryCreateRequestDto = CategoryCreateRequestDto.builder()
+                .name(categoryCreate.getName())
                 .build();
     }
 
@@ -113,10 +120,6 @@ class CategoryControllerImplTest {
     @DisplayName("Test method getCategoryById positive case")
     @Test
     void getCategoryByIdPositiveCase() throws Exception {
-        CategoryResponseDto categoryResponseDto1 = CategoryResponseDto.builder()
-                .categoryId(category1.getCategoryId())
-                .name(category1.getName())
-                .build();
 
         when(categoryService.getCategoryById(category1.getCategoryId())).thenReturn(category1);
 
@@ -144,24 +147,19 @@ class CategoryControllerImplTest {
                 .andDo(print())
                 .andExpectAll(
                         status().isNotFound(),
+                        content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.exception").value("CategoryNotFoundException"),
                         jsonPath("$.message").value("Category with id " + categoryId + " not found"),
-                        jsonPath("$.status").value(404));
+                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
 
     }
 
-    @DisplayName("Test method createCategory")
+    @DisplayName("Test method createCategory positive case")
     @Test
-    void createCategory() throws Exception {
+    void createCategoryPositiveCase() throws Exception {
 
-        Category categoryCreate = category4;
-
-        Category categoryCreated = category4.toBuilder()
+        Category categoryCreated = this.categoryCreate.toBuilder()
                 .categoryId(4L)
-                .build();
-
-        CategoryCreateRequestDto categoryCreateRequestDto = CategoryCreateRequestDto.builder()
-                .name(categoryCreate.getName())
                 .build();
 
         CategoryResponseDto categoryResponseCreatedDto = CategoryResponseDto.builder()
@@ -183,6 +181,27 @@ class CategoryControllerImplTest {
                         status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(categoryResponseCreatedDto)));
+    }
+
+    @DisplayName("Test method createCategory negative case")
+    @Test
+    void createCategoryNegativeCase() throws Exception {
+
+        when(categoryService.createCategory(categoryCreate)).thenThrow(new CategoryWithNameAlreadyExistsException("Category with name " + categoryCreate.getName() + " already exists."));
+
+        when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryCreate);
+
+        mockMvc
+                .perform(post("/v1/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(categoryCreateRequestDto)))
+                .andDo(print())
+                .andExpectAll(
+                        status().isConflict(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.exception").value("CategoryWithNameAlreadyExistsException"),
+                        jsonPath("$.message").value("Category with name " + categoryCreate.getName() + " already exists."),
+                        jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
     }
 
     @DisplayName("Test method updateCategory")

@@ -4,8 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class CategoryCreateRequestDto {
 
     @NotBlank(message = "Category name cannot be blank")

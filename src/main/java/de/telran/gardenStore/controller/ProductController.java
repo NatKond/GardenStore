@@ -25,6 +25,7 @@ public interface ProductController {
     ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productRequest);
 
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{productId}")
     ProductResponseDto updateProduct(@PathVariable @Positive Long productId,
                                      @RequestBody @Valid ProductCreateRequestDto productRequest);

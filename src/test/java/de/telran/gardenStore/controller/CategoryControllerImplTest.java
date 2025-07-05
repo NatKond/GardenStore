@@ -96,7 +96,7 @@ public class CategoryControllerImplTest {
                 .build();
     }
 
-    @DisplayName("GET /v1/categories - get all categories")
+    @DisplayName("GET /v1/categories - Get all categories")
     @Test
     void getAllCategories() throws Exception {
         List<Category> categories = List.of(category1, category2, category3);
@@ -118,7 +118,7 @@ public class CategoryControllerImplTest {
                         content().json(objectMapper.writeValueAsString(categoriesDto)));
     }
 
-    @DisplayName("GET /v1/categories/{categoryId} - get category by ID : positive case")
+    @DisplayName("GET /v1/categories/{categoryId} - Get category by ID : positive case")
     @Test
     void getCategoryByIdPositiveCase() throws Exception {
 
@@ -136,7 +136,7 @@ public class CategoryControllerImplTest {
 
     }
 
-    @DisplayName("GET /v1/categories/{categoryId} - get category by ID : negative case")
+    @DisplayName("GET /v1/categories/{categoryId} - Get category by ID : negative case")
     @Test
     void getCategoryByIdNegativeCase() throws Exception {
         Long categoryId = 6L;

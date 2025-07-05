@@ -138,7 +138,7 @@ public class ProductControllerImplTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products - get all products")
+    @DisplayName("GET /v1/products - Get all products")
     void getAllProducts() throws Exception {
 
         List<Product> products = List.of(product1, product2);
@@ -158,7 +158,7 @@ public class ProductControllerImplTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products/{productId} - get product by ID : positive case")
+    @DisplayName("GET /v1/products/{productId} - Get product by ID : positive case")
     void getProductByIdPositiveCase() throws Exception {
         Long productId = 1L;
 
@@ -175,7 +175,7 @@ public class ProductControllerImplTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products/{productId} : negative case")
+    @DisplayName("GET /v1/products/{productId} Get product by ID : negative case")
     void getProductByIdNegativeCase() throws Exception {
         Long productId = 999L;
 
@@ -248,7 +248,7 @@ public class ProductControllerImplTest {
     }
 
     @Test
-    @DisplayName("DELETE /v1/products/{id} - delete product by ID")
+    @DisplayName("DELETE /v1/products/{id} - Delete product by ID")
     void deleteProduct_ShouldDeleteProduct() throws Exception {
 
         Long productId = 1L;

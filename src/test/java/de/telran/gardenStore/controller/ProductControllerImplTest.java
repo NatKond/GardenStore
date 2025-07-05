@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false) // Отключаем security фильтры для тестов
-class ProductControllerImplTest {
+public class ProductControllerImplTest {
 
     @Autowired
     private MockMvc mockMvc; // Для имитации HTTP запросов

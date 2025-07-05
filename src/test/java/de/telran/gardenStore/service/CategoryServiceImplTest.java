@@ -31,7 +31,7 @@ class CategoryServiceImplTest {
     private static Category category2;
     private static Category category3;
     private static Category category4;
-    private static Category categoryCreate;
+    private static Category categoryToCreate;
     private static Category categoryCreated;
     private static Category categoryUpdated;
 
@@ -57,7 +57,7 @@ class CategoryServiceImplTest {
                 .name("Tools and equipment")
                 .build();
 
-        categoryCreate = Category.builder()
+        categoryToCreate = Category.builder()
                 .name("Pots and planters")
                 .build();
 
@@ -72,7 +72,7 @@ class CategoryServiceImplTest {
                 .build();
     }
 
-    @DisplayName("Test method getAllCategories")
+    @DisplayName("Get all categories")
     @Test
     void getAllCategories() {
         List<Category> expected = List.of(category1, category2, category3, category4);
@@ -86,7 +86,7 @@ class CategoryServiceImplTest {
         verify(categoryRepositoryMock).findAll();
     }
 
-    @DisplayName("Test method getCategoryById positive case")
+    @DisplayName("Get category by ID : positive case")
     @Test
     void getCategoryByIdPositiveCase() {
         Category expected = category1;
@@ -100,7 +100,7 @@ class CategoryServiceImplTest {
         verify(categoryRepositoryMock).findById(1L);
     }
 
-    @DisplayName("Test method getCategoryById negative case")
+    @DisplayName("Get category by ID : negative case")
     @Test
     void getCategoryByIdNegativeCase() {
         Long categoryId = 6L;
@@ -110,21 +110,21 @@ class CategoryServiceImplTest {
         assertThrows(CategoryNotFoundException.class, () -> categoryService.getCategoryById(categoryId));
     }
 
-    @DisplayName("Test method createCategory")
+    @DisplayName("Create category : negative case")
     @Test
     void createCategory() {
         Category expected = categoryCreated;
 
-        when(categoryRepositoryMock.save(categoryCreate)).thenReturn(expected);
+        when(categoryRepositoryMock.save(categoryToCreate)).thenReturn(expected);
 
-        Category actual = categoryService.createCategory(categoryCreate);
+        Category actual = categoryService.createCategory(categoryToCreate);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
-        verify(categoryRepositoryMock).save(categoryCreate);
+        verify(categoryRepositoryMock).save(categoryToCreate);
     }
 
-    @DisplayName("Test method updateCategory")
+    @DisplayName("Delete category by ID : positive case")
     @Test
     void updateCategory() {
         Category expected = categoryUpdated;

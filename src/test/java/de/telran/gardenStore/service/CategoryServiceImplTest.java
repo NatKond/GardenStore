@@ -101,7 +101,7 @@ class CategoryServiceImplTest {
         assertEquals("Category with id " + categoryId + " not found", runtimeException.getMessage());
     }
 
-    @DisplayName("Create category : positive case")
+    @DisplayName("Create new category : positive case")
     @Test
     void createCategoryPositiveCase() {
         Category expected = categoryCreated;
@@ -117,7 +117,7 @@ class CategoryServiceImplTest {
         verify(categoryRepositoryMock).save(categoryToCreate);
     }
 
-    @DisplayName("Create category : negative case")
+    @DisplayName("Create new category : negative case")
     @Test
     void createCategoryNegativeCase() {
         Category categoryToCreate = Category.builder()

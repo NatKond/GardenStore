@@ -24,7 +24,8 @@ public interface UserController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{userId}")
-    UserResponseDto updateUser(@PathVariable @Positive Long userId, @RequestBody @Valid UserCreateRequestDto userRequest);
+    UserResponseDto updateUser(@PathVariable @Positive Long userId,
+                               @RequestBody @Valid UserCreateRequestDto userRequest);
 
     @DeleteMapping("/{userId}")
     void deleteUserById(@PathVariable @Positive Long userId);

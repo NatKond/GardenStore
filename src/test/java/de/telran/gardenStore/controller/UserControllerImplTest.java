@@ -81,13 +81,8 @@ class UserControllerImplTest {
                 .role(Role.ROLE_USER)
                 .build();
 
-        userCreated = AppUser.builder()
+        userCreated = userToCreate.toBuilder()
                 .userId(3L)
-                .name(userToCreate.getName())
-                .email(userToCreate.getEmail())
-                .phoneNumber(userToCreate.getPhoneNumber())
-                .passwordHash(userToCreate.getPasswordHash())
-                .role(userToCreate.getRole())
                 .build();
 
         userResponseDto1 = UserResponseDto.builder()
@@ -230,11 +225,11 @@ class UserControllerImplTest {
                 .userId(userId)
                 .build();
 
-        UserCreateRequestDto userUpdateRequestDto = this.userCreateRequestDto.toBuilder()
+        UserCreateRequestDto userUpdateRequestDto = userCreateRequestDto.toBuilder()
                 .email(emailToUpdate)
                 .build();
 
-        UserResponseDto userResponseUpdatedDto = this.userResponseCreatedDto.toBuilder()
+        UserResponseDto userResponseUpdatedDto = userResponseCreatedDto.toBuilder()
                 .email(emailToUpdate)
                 .build();
 

@@ -97,6 +97,7 @@ class CategoryServiceImplTest {
         Long categoryId = 99L;
 
         when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.empty());
+
         RuntimeException runtimeException = assertThrows(CategoryNotFoundException.class, () -> categoryService.getCategoryById(categoryId));
         assertEquals("Category with id " + categoryId + " not found", runtimeException.getMessage());
     }
@@ -185,9 +186,11 @@ class CategoryServiceImplTest {
     void deleteCategoryByIdPositiveCase() {
         Category deletedCategory = category1;
 
+        Long categoryId = 1L;
+
         when(categoryRepositoryMock.findById(deletedCategory.getCategoryId())).thenReturn(Optional.of(deletedCategory));
 
-        categoryService.deleteCategoryById(1L);
+        categoryService.deleteCategoryById(categoryId);
 
         verify(categoryRepositoryMock).delete(deletedCategory);
         verify(categoryRepositoryMock).findById(deletedCategory.getCategoryId());

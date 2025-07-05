@@ -3,7 +3,8 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +16,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,105 +29,136 @@ class ProductServiceImplTest {
     @InjectMocks
     private ProductServiceImpl productService;
 
-    private static Product fertilizer;
-    private static Product flowerPot;
+    private Product product1;
+    private Product product2;
+    private Product productToCreate;
+    private Product productCreated;
 
-    @BeforeAll
-    static void setUp() {
-        fertilizer = Product.builder()
+    @BeforeEach
+     void setUp() {
+        product1 = Product.builder()
                 .productId(1L)
-                .name("Universal Fertilizer")
-                .price(BigDecimal.valueOf(15.99))
-                .discountPrice(BigDecimal.valueOf(12.99))
+                .name("All-Purpose Plant Fertilizer")
+                .discountPrice(new BigDecimal("8.99"))
+                .price(new BigDecimal("11.99"))
                 .categoryId(1L)
-                .description("High-quality universal fertilizer for all plants.")
-                .imageUrl("http://example.com/fertilizer.png")
+                .description("Balanced NPK formula for all types of plants")
+                .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        flowerPot = Product.builder()
+        product2 = Product.builder()
                 .productId(2L)
-                .name("Ceramic Flower Pot")
-                .price(BigDecimal.valueOf(9.49))
-                .discountPrice(BigDecimal.valueOf(7.99))
-                .categoryId(2L)
-                .description("Decorative ceramic flower pot.")
-                .imageUrl("http://example.com/flowerpot.png")
+                .name("Organic Tomato Feed")
+                .discountPrice(new BigDecimal("10.49"))
+                .price(new BigDecimal("13.99"))
+                .categoryId(1L)
+                .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
+                .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .build();
+
+        productToCreate = Product.builder()
+                .name("Slug & Snail Barrier Pellets")
+                .discountPrice(new BigDecimal("5.75"))
+                .price(new BigDecimal("7.50"))
+                .categoryId(2L)
+                .description("Pet-safe barrier pellets to protect plants from slugs")
+                .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        productCreated = productToCreate.toBuilder()
+                .productId(3L)
                 .build();
     }
 
+    @DisplayName("Get all products")
     @Test
-    void getAllProducts_shouldReturnProducts() {
-        when(productRepository.findAll()).thenReturn(List.of(fertilizer, flowerPot));
+    void getAllProducts() {
+        List<Product> expected = List.of(product1, product2);
 
-        List<Product> result = productService.getAllProducts();
+        when(productRepository.findAll()).thenReturn(expected);
 
-        assertThat(result).hasSize(2).containsExactly(fertilizer, flowerPot);
+        List<Product> actual = productService.getAllProducts();
+
+        assertNotNull(actual);
+        assertEquals(2, actual.size());
+        assertEquals(expected, actual);
         verify(productRepository).findAll();
     }
 
+    @DisplayName("Get product by ID : positive case")
     @Test
-    void getProductById_shouldReturnProduct_whenExists() {
-        when(productRepository.findById(1L)).thenReturn(Optional.of(fertilizer));
+    void getProductByIdPositiveCase() {
+        Long productId = 1L;
 
-        Product result = productService.getProductById(1L);
+        Product expected = product1;
 
-        assertThat(result).isEqualTo(fertilizer);
-        verify(productRepository).findById(1L);
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product1));
+
+        Product actual = productService.getProductById(productId);
+
+        assertEquals(expected, actual);
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getPrice(), actual.getPrice());
+        assertEquals(expected.getCategoryId(), actual.getCategoryId());
+        verify(productRepository).findById(productId);
     }
 
+    @DisplayName("Get product by ID : negative case")
     @Test
-    void getProductById_shouldThrow_whenNotFound() {
-        when(productRepository.findById(99L)).thenReturn(Optional.empty());
+    void getProductByIdNegativeCase() {
+        Long productId = 999L;
 
-        assertThrows(ProductNotFoundException.class, () -> productService.getProductById(99L));
-        verify(productRepository).findById(99L);
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        RuntimeException runtimeException = assertThrows(ProductNotFoundException.class, () -> productService.getProductById(productId));
+        assertEquals("Product with id " + productId + " not found", runtimeException.getMessage());
     }
 
+    @DisplayName("Create new product")
     @Test
-    void createProduct_shouldSaveProduct() {
-        Product gardenShovel = Product.builder()
-                .name("Garden Shovel")
-                .price(BigDecimal.valueOf(25.00))
-                .discountPrice(BigDecimal.valueOf(20.00))
-                .categoryId(3L)
-                .description("Durable steel garden shovel.")
-                .imageUrl("http://example.com/shovel.png")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+    void createProduct() {
+        Product expected = productCreated;
 
-        Product savedShovel = Product.builder()
-                .productId(3L)
-                .name("Garden Shovel")
-                .price(BigDecimal.valueOf(25.00))
-                .discountPrice(BigDecimal.valueOf(20.00))
-                .categoryId(3L)
-                .description("Durable steel garden shovel.")
-                .imageUrl("http://example.com/shovel.png")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        when(productRepository.save(productToCreate)).thenReturn(productCreated);
 
-        when(productRepository.save(gardenShovel)).thenReturn(savedShovel);
+        Product actual = productService.createProduct(productToCreate);
 
-        Product result = productService.createProduct(gardenShovel);
-
-        assertThat(result).isEqualTo(savedShovel);
-        verify(productRepository).save(gardenShovel);
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        verify(productRepository).save(productToCreate);
     }
 
+    @DisplayName("Delete product by ID : positive case")
     @Test
-    void deleteProductById_shouldDeleteProduct_whenExists() {
-        when(productRepository.findById(1L)).thenReturn(Optional.of(fertilizer));
+    void deleteProductByIdPositiveCase() {
+        Product deletedProduct = product1;
 
-        productService.deleteProductById(1L);
+        Long productId = 1L;
 
-        verify(productRepository).findById(1L);
-        verify(productRepository).deleteById(1L);
+        when(productRepository.findById(productId)).thenReturn(Optional.of(deletedProduct));
+
+        productService.deleteProductById(productId);
+
+        verify(productRepository).findById(productId);
+        verify(productRepository).delete(deletedProduct);
+    }
+
+    @DisplayName("Delete product by ID : negative case")
+    @Test
+    void deleteProductByIdNegativeCase() {
+
+        Long productId = 999L;
+
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        RuntimeException runtimeException = assertThrows(ProductNotFoundException.class, () -> productService.getProductById(productId));
+        assertEquals("Product with id " + productId + " not found", runtimeException.getMessage());
     }
 }
 

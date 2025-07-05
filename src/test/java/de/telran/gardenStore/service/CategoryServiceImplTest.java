@@ -55,9 +55,8 @@ class CategoryServiceImplTest {
                 .name("Pots and planters")
                 .build();
 
-        categoryCreated = Category.builder()
+        categoryCreated = categoryToCreate.toBuilder()
                 .categoryId(4L)
-                .name("Pots and planters")
                 .build();
     }
 
@@ -71,7 +70,7 @@ class CategoryServiceImplTest {
         List<Category> actual = categoryService.getAllCategories();
 
         assertNotNull(actual);
-        assertEquals(3, actual.size());
+        assertEquals(expected.size(), actual.size());
         assertEquals(expected, actual);
         verify(categoryRepositoryMock).findAll();
     }
@@ -79,16 +78,18 @@ class CategoryServiceImplTest {
     @DisplayName("Get category by ID : positive case")
     @Test
     void getCategoryByIdPositiveCase() {
+        Long categoryId = category1.getCategoryId();
+
         Category expected = category1;
 
-        when(categoryRepositoryMock.findById(expected.getCategoryId())).thenReturn(Optional.of(expected));
+        when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.of(expected));
 
-        Category actual = categoryService.getCategoryById(expected.getCategoryId());
+        Category actual = categoryService.getCategoryById(categoryId);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
         assertEquals(expected.getName(), actual.getName());
-        verify(categoryRepositoryMock).findById(1L);
+        verify(categoryRepositoryMock).findById(categoryId);
     }
 
     @DisplayName("Get category by ID : negative case")

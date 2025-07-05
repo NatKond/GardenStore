@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class FavoriteCreateRequestDto {
 
     @Positive(message = "UserId should be positive")

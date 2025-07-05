@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="13-insert-initial-data" author="nkond" runAlways="true">
+        <insert tableName="app_users">
+            <column name="name" value="Alice Johnson"/>
+            <column name="email" value="alice.johnson@example.com"/>
+            <column name="phone_number" value="+1234567890"/>
+            <column name="password_hash" value="12345"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="app_users">
+            <column name="name" value="Bob Smith"/>
+            <column name="email" value="bob.smith@example.com"/>
+            <column name="phone_number" value="+1987654321"/>
+            <column name="password_hash" value="12345"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="app_users">
+            <column name="name" value="Carol Lee"/>
+            <column name="email" value="carol.lee@example.com"/>
+            <column name="phone_number" value="+1122334455"/>
+            <column name="password_hash" value="12345"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="app_users">
+            <column name="name" value="David Brown"/>
+            <column name="email" value="david.brown@example.com"/>
+            <column name="phone_number" value="+1222333444"/>
+            <column name="password_hash" value="12345"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Fertilizer"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Protective products and septic tanks"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Planting material"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Tools and equipment"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Pots and planters"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="name" value="All-Purpose Plant Fertilizer"/>
+            <column name="discount_price" value="8.99"/>
+            <column name="price" value="11.99"/>
+            <column name="category_id" value="1"/>
+            <column name="description" value="Balanced NPK formula for all types of plants"/>
+            <column name="image_url" value="https://example.com/images/fertilizer_all_purpose.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Organic Tomato Feed"/>
+            <column name="discount_price" value="10.49"/>
+            <column name="price" value="13.99"/>
+            <column name="category_id" value="1"/>
+            <column name="description" value="Organic liquid fertilizer ideal for tomatoes and vegetables"/>
+            <column name="image_url" value="https://example.com/images/fertilizer_tomato_feed.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Slug &amp; Snail Barrier Pellets"/> <column name="discount_price" value="5.75"/>
+            <column name="price" value="7.50"/>
+            <column name="category_id" value="2"/>
+            <column name="description" value="Pet-safe barrier pellets to protect plants from slugs"/>
+            <column name="image_url" value="https://example.com/images/protection_slug_pellets.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Septic Tank Activator Powder"/>
+            <column name="discount_price" value="12.95"/>
+            <column name="price" value="16.00"/>
+            <column name="category_id" value="2"/>
+            <column name="description" value="Enzyme-based powder to maintain septic tank health"/>
+            <column name="image_url" value="https://example.com/images/septic_tank_activator.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Tulip Bulb Mix (10 pcs)"/>
+            <column name="discount_price" value="6.99"/>
+            <column name="price" value="9.49"/>
+            <column name="category_id" value="3"/>
+            <column name="description" value="Colorful tulip bulbs perfect for spring blooms"/>
+            <column name="image_url" value="https://example.com/images/tulip_bulbs.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Seed Pack - Carrots (Heirloom)"/>
+            <column name="discount_price" value="2.95"/>
+            <column name="price" value="3.99"/>
+            <column name="category_id" value="3"/>
+            <column name="description" value="Non-GMO heirloom carrot seeds for rich harvests"/>
+            <column name="image_url" value="https://example.com/images/carrot_seeds.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Electric Hedge Trimmer"/>
+            <column name="discount_price" value="49.95"/>
+            <column name="price" value="64.99"/>
+            <column name="category_id" value="4"/>
+            <column name="description" value="Cordless hedge trimmer with rechargeable battery"/>
+            <column name="image_url" value="https://example.com/images/hedge_trimmer.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Garden Tool Set (5 pcs)"/>
+            <column name="discount_price" value="19.99"/>
+            <column name="price" value="24.99"/>
+            <column name="category_id" value="4"/>
+            <column name="description" value="Essential hand tools set for everyday gardening"/>
+            <column name="image_url" value="https://example.com/images/garden_tool_set.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Ceramic Plant Pot - 8 inch"/>
+            <column name="discount_price" value="14.50"/>
+            <column name="price" value="18.99"/>
+            <column name="category_id" value="5"/>
+            <column name="description" value="Stylish ceramic pot with drainage hole"/>
+            <column name="image_url" value="https://example.com/images/ceramic_pot.jpg"/>
+        </insert>
+        <insert tableName="products">
+            <column name="name" value="Hanging Planter Basket"/>
+            <column name="discount_price" value="9.25"/>
+            <column name="price" value="12.50"/>
+            <column name="category_id" value="5"/>
+            <column name="description" value="Woven hanging basket with metal chain"/>
+            <column name="image_url" value="https://example.com/images/hanging_planter.jpg"/>
+        </insert>
+
+        <insert tableName="favorites">
+            <column name="user_id" value="1"/>
+            <column name="product_id" value="5"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="1"/>
+            <column name="product_id" value="10"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="2"/>
+            <column name="product_id" value="3"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="3"/>
+            <column name="product_id" value="1"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="3"/>
+            <column name="product_id" value="4"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="4"/>
+            <column name="product_id" value="9"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="4"/>
+            <column name="product_id" value="6"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

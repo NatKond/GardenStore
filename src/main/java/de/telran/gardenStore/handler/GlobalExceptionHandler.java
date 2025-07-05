@@ -1,7 +1,7 @@
 package de.telran.gardenStore.handler;
 
 import de.telran.gardenStore.dto.AppErrorResponse;
-import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
+import de.telran.gardenStore.exception.EntityAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -43,25 +43,31 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<AppErrorResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
+
         log.error(exception.getMessage(), exception);
+
         AppErrorResponse errorResponse = AppErrorResponse.builder()
                 .exception(exception.getClass().getSimpleName())
                 .message(exception.getMessage())
                 .status(HttpStatus.NOT_FOUND.value())
                 .timestamp(LocalDateTime.now())
                 .build();
+
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UserWithEmailAlreadyExistsException.class)
-    public ResponseEntity<AppErrorResponse> handleUserWithEmailAlreadyExistsException(UserWithEmailAlreadyExistsException exception) {
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity<AppErrorResponse> handleUserWithEmailAlreadyExistsException(RuntimeException exception) {
+
         log.error(exception.getMessage(), exception);
+
         AppErrorResponse errorResponse = AppErrorResponse.builder()
                 .exception(exception.getClass().getSimpleName())
                 .message(exception.getMessage())
                 .status(HttpStatus.CONFLICT.value())
                 .timestamp(LocalDateTime.now())
                 .build();
+
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 

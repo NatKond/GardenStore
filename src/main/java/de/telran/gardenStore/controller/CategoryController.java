@@ -23,7 +23,8 @@ public interface CategoryController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{categoryId}")
-    CategoryResponseDto updateCategory(@PathVariable @Positive Long categoryId, @RequestBody @Valid CategoryCreateRequestDto dto);
+    CategoryResponseDto updateCategory(@PathVariable @Positive Long categoryId,
+                                       @RequestBody @Valid CategoryCreateRequestDto dto);
 
     @DeleteMapping("/{categoryId}")
     void deleteCategory(@PathVariable @Positive Long categoryId);

@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-@Builder
+@Builder(toBuilder = true)
 public class AppUser {
 
     @Id

@@ -1,4 +1,5 @@
 package de.telran.gardenStore.dto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @AllArgsConstructor
@@ -6,8 +7,9 @@ import lombok.*;
 @Setter
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
+@Builder(toBuilder = true)
 @ToString
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponseDto {
 
     @EqualsAndHashCode.Include

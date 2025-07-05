@@ -4,17 +4,25 @@ import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @RequestMapping("/v1/products")
 public interface ProductController {
 
     @GetMapping
-    List<ProductResponseDto> getAllProducts();
+    Page<ProductResponseDto> getAllProducts( // Изменено с List на Page
+                                             @RequestParam(required = false) Long category,
+                                             @RequestParam(required = false) Boolean discount,
+                                             @RequestParam(required = false) BigDecimal minPrice,
+                                             @RequestParam(required = false) BigDecimal maxPrice,
+                                             @RequestParam(required = false, defaultValue = "productId,asc") String[] sort,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size);
 
     @GetMapping("/{productId}")
     ProductResponseDto getProductById(@PathVariable @Positive Long productId);
@@ -33,4 +41,3 @@ public interface ProductController {
     @DeleteMapping("/{productId}")
     void deleteProductById(@PathVariable @Positive Long productId);
 }
-

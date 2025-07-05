@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
+@Builder(toBuilder = true)
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FavoriteResponseDto {

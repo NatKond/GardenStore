@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/v1/user")
+@RequestMapping("/v1/users")
 public interface UserController {
 
     @GetMapping
@@ -24,7 +24,8 @@ public interface UserController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{userId}")
-    UserResponseDto updateUser(@PathVariable @Positive Long userId, @RequestBody @Valid UserCreateRequestDto userRequest);
+    UserResponseDto updateUser(@PathVariable @Positive Long userId,
+                               @RequestBody @Valid UserCreateRequestDto userRequest);
 
     @DeleteMapping("/{userId}")
     void deleteUserById(@PathVariable @Positive Long userId);

@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     private void emailCheck(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new UserWithEmailAlreadyExistsException("User with email " + email + " already exists.");
+            throw new UserWithEmailAlreadyExistsException("User with email " + email + " already exists");
         }
     }
 }

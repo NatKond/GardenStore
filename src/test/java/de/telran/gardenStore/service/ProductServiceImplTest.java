@@ -1,5 +1,6 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
@@ -29,6 +30,9 @@ class ProductServiceImplTest {
     @InjectMocks
     private ProductServiceImpl productService;
 
+    private Category category1;
+    private Category category2;
+
     private Product product1;
     private Product product2;
     private Product productToCreate;
@@ -36,12 +40,23 @@ class ProductServiceImplTest {
 
     @BeforeEach
      void setUp() {
+
+        category1 = Category.builder()
+                .categoryId(1L)
+                .name("Fertilizer")
+                .build();
+
+        category2 = Category.builder()
+                .categoryId(2L)
+                .name("Protective products and septic tanks")
+                .build();
+
         product1 = Product.builder()
                 .productId(1L)
                 .name("All-Purpose Plant Fertilizer")
                 .discountPrice(new BigDecimal("8.99"))
                 .price(new BigDecimal("11.99"))
-                .categoryId(1L)
+                .category(category1)
                 .description("Balanced NPK formula for all types of plants")
                 .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
                 .createdAt(LocalDateTime.now())
@@ -53,7 +68,7 @@ class ProductServiceImplTest {
                 .name("Organic Tomato Feed")
                 .discountPrice(new BigDecimal("10.49"))
                 .price(new BigDecimal("13.99"))
-                .categoryId(1L)
+                .category(category1)
                 .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
                 .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
                 .createdAt(LocalDateTime.now())
@@ -64,7 +79,7 @@ class ProductServiceImplTest {
                 .name("Slug & Snail Barrier Pellets")
                 .discountPrice(new BigDecimal("5.75"))
                 .price(new BigDecimal("7.50"))
-                .categoryId(2L)
+                .category(category2)
                 .description("Pet-safe barrier pellets to protect plants from slugs")
                 .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
                 .createdAt(LocalDateTime.now())
@@ -105,7 +120,7 @@ class ProductServiceImplTest {
         assertEquals(expected, actual);
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());
-        assertEquals(expected.getCategoryId(), actual.getCategoryId());
+        assertEquals(expected.getCategory(), actual.getCategory());
         verify(productRepository).findById(productId);
     }
 

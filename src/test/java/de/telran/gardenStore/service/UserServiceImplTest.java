@@ -147,7 +147,7 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(userToCreate.getEmail())).thenReturn(Optional.of(user1));
 
         RuntimeException exception = assertThrows(UserWithEmailAlreadyExistsException.class, () -> userService.createUser(userToCreate));
-        assertEquals("User with email " + userToCreate.getEmail() + " already exists.", exception.getMessage());
+        assertEquals("User with email " + userToCreate.getEmail() + " already exists", exception.getMessage());
     }
 
     @DisplayName("Update user : positive case")
@@ -196,7 +196,7 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(emailToUpdate)).thenReturn(Optional.of(user1));
 
         RuntimeException exception = assertThrows(UserWithEmailAlreadyExistsException.class, () -> userService.updateUser(userId, userToUpdate));
-        assertEquals("User with email " + emailToUpdate + " already exists.", exception.getMessage());
+        assertEquals("User with email " + emailToUpdate + " already exists", exception.getMessage());
     }
 
     @DisplayName("Delete user by ID : positive case")

@@ -32,8 +32,6 @@ public class Product {
 
     private BigDecimal price;
 
-    private Long categoryId;
-
     private String description;
 
     private String imageUrl;
@@ -44,9 +42,7 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            optional = false
-    )
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnore
     private Category category;

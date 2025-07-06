@@ -4,8 +4,6 @@ import de.telran.gardenStore.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "app_users")
 @NoArgsConstructor
@@ -32,11 +30,4 @@ public class AppUser {
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
-
-    @OneToMany(mappedBy = "appUser",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private List<Favorite> favoriteList;
 }

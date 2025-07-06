@@ -1,6 +1,7 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.AppUser;
+import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
@@ -37,6 +38,15 @@ class FavoriteServiceImplTest {
     @InjectMocks
     private FavoriteServiceImpl favoriteService;
 
+    private Category category1;
+    private Category category2;
+
+    private Product product1;
+    private Product product2;
+    private Product product3;
+
+    private AppUser user1;
+
     private Favorite favorite1;
     private Favorite favorite2;
 
@@ -45,22 +55,61 @@ class FavoriteServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        category1 = Category.builder()
+                .categoryId(1L)
+                .name("Fertilizer")
+                .build();
+
+        category2 = Category.builder()
+                .categoryId(2L)
+                .name("Protective products and septic tanks")
+                .build();
+
+        product1 = Product.builder()
+                .productId(1L)
+                .name("All-Purpose Plant Fertilizer")
+                .discountPrice(new BigDecimal("8.99"))
+                .price(new BigDecimal("11.99"))
+                .category(category1)
+                .build();
+
+        product2 = Product.builder()
+                .productId(2L)
+                .name("Organic Tomato Feed")
+                .discountPrice(new BigDecimal("10.49"))
+                .price(new BigDecimal("13.99"))
+                .category(category1)
+                .build();
+
+        product3 = Product.builder()
+                .productId(3L)
+                .name("Slug & Snail Barrier Pellets")
+                .discountPrice(new BigDecimal("5.75"))
+                .price(new BigDecimal("7.50"))
+                .category(category2)
+                .build();
+
+        user1 = AppUser.builder()
+                .userId(1L)
+                .name("Alice Johnson")
+                .email("alice.johnson@example.com")
+                .build();
 
         favorite1 = Favorite.builder()
                 .favoriteId(1L)
-                .userId(1L)
-                .productId(5L)
+                .user(user1)
+                .product(product1)
                 .build();
 
         favorite2 = Favorite.builder()
                 .favoriteId(2L)
-                .userId(1L)
-                .productId(10L)
+                .user(user1)
+                .product(product2)
                 .build();
 
         favoriteToCreate = Favorite.builder()
-                .userId(1L)
-                .productId(1L)
+                .user(user1)
+                .product(product3)
                 .build();
 
         favoriteCreated = favoriteToCreate.toBuilder()
@@ -69,19 +118,20 @@ class FavoriteServiceImplTest {
     }
 
     @Test
-    @DisplayName("Get all categories by userId")
+    @DisplayName("Get all favorites by userId")
     void getAllFavoritesPositiveCase() {
         List<Favorite> expected = Arrays.asList(favorite1, favorite2);
-        Long userId = 1L;
+        Long userId = user1.getUserId();
 
-        when(favoriteRepository.getAllByUserId(userId)).thenReturn(expected);
+        when(userService.getUserById(userId)).thenReturn(user1);
+        when(favoriteRepository.getAllByUser(user1)).thenReturn(expected);
 
         List<Favorite> actual = favoriteService.getAllFavoritesByUser(userId);
 
         assertNotNull(actual);
         assertEquals(2, actual.size());
         assertEquals(expected, actual);
-        verify(favoriteRepository).getAllByUserId(userId);
+        verify(favoriteRepository).getAllByUser(user1);
     }
 
     @Test
@@ -117,34 +167,18 @@ class FavoriteServiceImplTest {
     void testCreateFavoritePositiveCase() {
         Favorite expected = favoriteCreated;
 
-        AppUser user = AppUser.builder()
-                .userId(1L)
-                .name("Alice Johnson")
-                .email("alice.johnson@example.com")
-                .phoneNumber("+1234567890")
-                .passwordHash("12345")
-                .build();
-        Product product = Product.builder()
-                .productId(1L)
-                .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
-                .categoryId(1L)
-                .description("Balanced NPK formula for all types of plants")
-                .build();
+        when(productService.getProductById(favoriteCreated.getProduct().getProductId())).thenReturn(product3);
+        when(userService.getUserById(favoriteCreated.getUser().getUserId())).thenReturn(user1);
 
-        when(productService.getProductById(favoriteCreated.getProductId())).thenReturn(product);
-        when(userService.getUserById(favoriteCreated.getUserId())).thenReturn(user);
-
-        when(favoriteRepository.findByUserIdAndProductId(favoriteToCreate.getUserId(), favoriteToCreate.getProductId())).thenReturn(Optional.empty());
+        when(favoriteRepository.findByUserAndProduct(favoriteToCreate.getUser(), favoriteToCreate.getProduct())).thenReturn(Optional.empty());
         when(favoriteRepository.save(favoriteToCreate)).thenReturn(favoriteCreated);
 
         Favorite actual = favoriteService.createFavorite(favoriteToCreate);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
-        assertEquals(expected.getUserId(), actual.getUserId());
-        assertEquals(expected.getProductId(), actual.getProductId());
+        assertEquals(expected.getUser(), actual.getUser());
+        assertEquals(expected.getProduct(), actual.getProduct());
         verify(favoriteRepository).save(favoriteToCreate);
     }
 
@@ -152,29 +186,13 @@ class FavoriteServiceImplTest {
     @DisplayName("Create new favorite : negative case")
     void testCreateFavoriteNegativeCase() {
 
-        AppUser user = AppUser.builder()
-                .userId(1L)
-                .name("Alice Johnson")
-                .email("alice.johnson@example.com")
-                .phoneNumber("+1234567890")
-                .passwordHash("12345")
-                .build();
-        Product product = Product.builder()
-                .productId(1L)
-                .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
-                .categoryId(1L)
-                .description("Balanced NPK formula for all types of plants")
-                .build();
-
-        when(productService.getProductById(favoriteCreated.getProductId())).thenReturn(product);
-        when(userService.getUserById(favoriteCreated.getUserId())).thenReturn(user);
-        when(favoriteRepository.findByUserIdAndProductId(favoriteToCreate.getUserId(), favoriteToCreate.getProductId())).thenReturn(Optional.of(favoriteCreated));
+        when(productService.getProductById(favoriteCreated.getProduct().getProductId())).thenReturn(product3);
+        when(userService.getUserById(favoriteCreated.getUser().getUserId())).thenReturn(user1);
+        when(favoriteRepository.findByUserAndProduct(favoriteToCreate.getUser(), favoriteToCreate.getProduct())).thenReturn(Optional.of(favoriteCreated));
 
         RuntimeException runtimeException = assertThrows(FavoriteAlreadyExistsException.class, () -> favoriteService.createFavorite(favoriteToCreate));
-        assertEquals("Favorite with userId " + favoriteToCreate.getUserId() + " and productId " + favoriteToCreate.getProductId() + " already exists", runtimeException.getMessage());
-        verify(favoriteRepository).findByUserIdAndProductId(favoriteToCreate.getUserId(), favoriteToCreate.getProductId());
+        assertEquals("Favorite with userId " + favoriteToCreate.getUser().getUserId() + " and productId " + favoriteToCreate.getProduct().getProductId() + " already exists", runtimeException.getMessage());
+        verify(favoriteRepository).findByUserAndProduct(favoriteToCreate.getUser(), favoriteToCreate.getProduct());
     }
 
     @Test

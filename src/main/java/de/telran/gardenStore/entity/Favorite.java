@@ -20,19 +20,12 @@ public class Favorite {
     @EqualsAndHashCode.Include
     private Long favoriteId;
 
-    private Long userId;
-
-    private Long productId;
-    @ManyToOne(fetch = FetchType.LAZY,
-            optional = false
-    )
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private AppUser appUser;
+    private AppUser user;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            optional = false
-    )
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 }

@@ -3,7 +3,10 @@ package de.telran.gardenStore.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
+import de.telran.gardenStore.entity.AppUser;
+import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Favorite;
+import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.service.FavoriteService;
@@ -19,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -41,6 +45,15 @@ class FavoriteControllerImplTest {
     @MockitoBean
     private ModelMapper modelMapper;
 
+    private Category category1;
+    private Category category2;
+
+    private Product product1;
+    private Product product2;
+    private Product product3;
+
+    private AppUser user1;
+
     private Favorite favorite1;
     private Favorite favorite2;
 
@@ -54,21 +67,61 @@ class FavoriteControllerImplTest {
 
     @BeforeEach
     void setUp() {
+        category1 = Category.builder()
+                .categoryId(1L)
+                .name("Fertilizer")
+                .build();
+
+        category2 = Category.builder()
+                .categoryId(2L)
+                .name("Protective products and septic tanks")
+                .build();
+
+        product1 = Product.builder()
+                .productId(1L)
+                .name("All-Purpose Plant Fertilizer")
+                .discountPrice(new BigDecimal("8.99"))
+                .price(new BigDecimal("11.99"))
+                .category(category1)
+                .build();
+
+        product2 = Product.builder()
+                .productId(2L)
+                .name("Organic Tomato Feed")
+                .discountPrice(new BigDecimal("10.49"))
+                .price(new BigDecimal("13.99"))
+                .category(category1)
+                .build();
+
+        product3 = Product.builder()
+                .productId(3L)
+                .name("Slug & Snail Barrier Pellets")
+                .discountPrice(new BigDecimal("5.75"))
+                .price(new BigDecimal("7.50"))
+                .category(category2)
+                .build();
+
+        user1 = AppUser.builder()
+                .userId(1L)
+                .name("Alice Johnson")
+                .email("alice.johnson@example.com")
+                .build();
+
         favorite1 = Favorite.builder()
                 .favoriteId(1L)
-                .userId(1L)
-                .productId(5L)
+                .user(user1)
+                .product(product1)
                 .build();
 
         favorite2 = Favorite.builder()
                 .favoriteId(2L)
-                .userId(1L)
-                .productId(10L)
+                .user(user1)
+                .product(product2)
                 .build();
 
         favoriteToCreate = Favorite.builder()
-                .userId(1L)
-                .productId(1L)
+                .user(user1)
+                .product(product3)
                 .build();
 
         favoriteCreated = favoriteToCreate.toBuilder()
@@ -76,32 +129,32 @@ class FavoriteControllerImplTest {
                 .build();
 
         favoriteResponseDto1 = FavoriteResponseDto.builder()
-                .productId(favorite1.getProductId())
-                .userId(favorite1.getUserId())
-                .productId(favorite1.getProductId())
+                .favoriteId(favorite1.getFavoriteId())
+                .productId(favorite1.getProduct().getProductId())
+                .userId(favorite1.getUser().getUserId())
                 .build();
 
         favoriteResponseDto2 = FavoriteResponseDto.builder()
-                .productId(favorite2.getProductId())
-                .userId(favorite2.getUserId())
-                .productId(favorite2.getProductId())
+                .favoriteId(favorite2.getFavoriteId())
+                .productId(favorite2.getProduct().getProductId())
+                .userId(favorite2.getUser().getUserId())
                 .build();
 
         favoriteCreateRequestDto = FavoriteCreateRequestDto.builder()
-                .userId(favoriteToCreate.getUserId())
-                .productId(favoriteToCreate.getProductId())
+                .userId(favoriteToCreate.getUser().getUserId())
+                .productId(favoriteToCreate.getProduct().getProductId())
                 .build();
 
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()
-                .productId(favoriteCreated.getProductId())
-                .userId(favoriteCreated.getUserId())
-                .productId(favoriteCreated.getProductId())
+                .productId(favoriteCreated.getProduct().getProductId())
+                .userId(favoriteCreated.getUser().getUserId())
+                .productId(favoriteCreated.getProduct().getProductId())
                 .build();
 
     }
 
     @Test
-    @DisplayName("GET /v1/favorites/{userId} - Get all categories by userId")
+    @DisplayName("GET /v1/favorites/{userId} - Get all favorites by userId")
     void getAllFavorites() throws Exception {
 
         Long userId = 1L;
@@ -122,10 +175,10 @@ class FavoriteControllerImplTest {
     }
 
     @Test
-    @DisplayName("POST /v1/favorites - Create new favorite : Positive Case")
+    @DisplayName("POST /v1/favorites - Create new favorite : positive Case")
     void createFavoritePositiveCase() throws Exception {
 
-        Long userId = favoriteToCreate.getUserId();
+        Long userId = favoriteToCreate.getUser().getUserId();
 
         when(modelMapper.map(favoriteCreateRequestDto, Favorite.class)).thenReturn(favoriteToCreate);
         when(favoriteService.createFavorite(favoriteToCreate)).thenReturn(favoriteCreated);
@@ -143,14 +196,14 @@ class FavoriteControllerImplTest {
     }
 
     @Test
-    @DisplayName("POST /v1/favorites - Create new favorite : Negative Case")
+    @DisplayName("POST /v1/favorites - Create new favorite : negative Case")
     void createFavoriteNegativeCase() throws Exception {
 
-        Long userId = favoriteToCreate.getUserId();
+        Long userId = favoriteToCreate.getUser().getUserId();
 
         when(modelMapper.map(favoriteCreateRequestDto, Favorite.class)).thenReturn(favoriteToCreate);
         when(favoriteService.createFavorite(favoriteToCreate))
-                .thenThrow(new FavoriteAlreadyExistsException("Favorite with userId " + favoriteToCreate.getUserId() + " and productId " + favoriteToCreate.getProductId() + " already exists"));
+                .thenThrow(new FavoriteAlreadyExistsException("Favorite with userId " + favoriteToCreate.getUser().getUserId() + " and productId " + favoriteToCreate.getProduct().getProductId() + " already exists"));
 
         mockMvc.perform(post("/v1/favorites/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +212,7 @@ class FavoriteControllerImplTest {
                         status().isConflict(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.exception").value("FavoriteAlreadyExistsException"),
-                        jsonPath("$.message").value("Favorite with userId " + favoriteToCreate.getUserId() + " and productId " + favoriteToCreate.getProductId() + " already exists"),
+                        jsonPath("$.message").value("Favorite with userId " + favoriteToCreate.getUser().getUserId() + " and productId " + favoriteToCreate.getProduct().getProductId() + " already exists"),
                         jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
     }
 
@@ -176,7 +229,7 @@ class FavoriteControllerImplTest {
     }
 
     @Test
-    @DisplayName("DELETE /v1/favorites/{favoriteId} - Delete favorite by ID : positive case")
+    @DisplayName("DELETE /v1/favorites/{favoriteId} - Delete favorite by ID : negative case")
     void deleteFavoriteNegativeCase() throws Exception {
 
         Long favoriteId = 999L;

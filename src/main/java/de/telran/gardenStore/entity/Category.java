@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class Category {
 
@@ -20,5 +20,4 @@ public class Category {
     private Long categoryId;
 
     private String name;
-
 }

@@ -33,7 +33,6 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     @Override
     public FavoriteResponseDto createFavorite(@Positive Long userId, @Valid FavoriteCreateRequestDto favoriteCreateRequestDto) {
-
         favoriteCreateRequestDto.setUserId(userId);
         Favorite favorite = favoriteService.createFavorite(modelMapper.map(favoriteCreateRequestDto, Favorite.class));
         return modelMapper.map(favorite, FavoriteResponseDto.class);

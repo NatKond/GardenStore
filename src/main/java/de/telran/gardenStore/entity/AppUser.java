@@ -1,4 +1,5 @@
 package de.telran.gardenStore.entity;
+
 import de.telran.gardenStore.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +12,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-@Builder
+@Builder(toBuilder = true)
 public class AppUser {
 
     @Id

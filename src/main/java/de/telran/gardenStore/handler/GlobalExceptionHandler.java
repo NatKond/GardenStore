@@ -1,11 +1,12 @@
 package de.telran.gardenStore.handler;
 
 import de.telran.gardenStore.dto.AppErrorResponse;
-import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
+import de.telran.gardenStore.exception.EntityAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.MappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -43,25 +44,50 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<AppErrorResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
+
         log.error(exception.getMessage(), exception);
+
         AppErrorResponse errorResponse = AppErrorResponse.builder()
                 .exception(exception.getClass().getSimpleName())
                 .message(exception.getMessage())
                 .status(HttpStatus.NOT_FOUND.value())
                 .timestamp(LocalDateTime.now())
                 .build();
+
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UserWithEmailAlreadyExistsException.class)
-    public ResponseEntity<AppErrorResponse> handleUserWithEmailAlreadyExistsException(UserWithEmailAlreadyExistsException exception) {
+    @ExceptionHandler(MappingException.class)
+    public ResponseEntity<AppErrorResponse> handleMappingException(MappingException exception) {
+
+        Throwable rootCause = exception.getCause();
+        if (rootCause instanceof EntityNotFoundException) {
+            return handleEntityNotFoundException((EntityNotFoundException) rootCause);
+        }
+
         log.error(exception.getMessage(), exception);
+
+        AppErrorResponse errorResponse = AppErrorResponse.builder()
+                    .exception(rootCause.getClass().getSimpleName())
+                    .message(rootCause.getMessage())
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity<AppErrorResponse> handleUserWithEmailAlreadyExistsException(RuntimeException exception) {
+
+        log.error(exception.getMessage(), exception);
+
         AppErrorResponse errorResponse = AppErrorResponse.builder()
                 .exception(exception.getClass().getSimpleName())
                 .message(exception.getMessage())
                 .status(HttpStatus.CONFLICT.value())
                 .timestamp(LocalDateTime.now())
                 .build();
+
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 

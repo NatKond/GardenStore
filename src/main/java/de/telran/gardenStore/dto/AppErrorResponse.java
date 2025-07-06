@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@Builder
+@Builder(toBuilder = true)
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppErrorResponse {

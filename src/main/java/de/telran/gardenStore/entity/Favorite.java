@@ -1,5 +1,6 @@
 package de.telran.gardenStore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-@Builder
+@Builder(toBuilder = true)
 public class Favorite {
 
     @Id
@@ -19,7 +20,13 @@ public class Favorite {
     @EqualsAndHashCode.Include
     private Long favoriteId;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private AppUser user;
 
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }
+

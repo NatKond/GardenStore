@@ -1,83 +1,74 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.dto.ProductFilter;
+import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
     private final ProductRepository productRepository;
 
+    private final CategoryService categoryService;
+
+    private final EntityManager entityManager;
+
     @Override
-    public Page<Product> getAllProducts(Long category, Boolean discount,
-                                        BigDecimal minPrice, BigDecimal maxPrice,
-                                        String[] sort, int page, int size) {
-        // Создаем список для хранения всех спецификаций
-        List<Specification<Product>> specifications = new ArrayList<>();
+    public List<Product> getAllProducts(ProductFilter productFilter) {
 
-        // Фильтрация по категории
-        if (category != null) {
-            specifications.add((root, query, cb) ->
-                    cb.equal(root.get("categoryId"), category));
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = criteriaQuery.from(Product.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (productFilter.getCategoryId() != null) {
+            Category category = categoryService.getCategoryById(productFilter.getCategoryId());
+            predicates.add(criteriaBuilder.equal(root.get("category"), category));
         }
 
-        // Фильтрация по наличию скидки
-        if (discount != null) {
-            specifications.add(discount ?
-                    (root, query, cb) -> cb.isNotNull(root.get("discountPrice")) :
-                    (root, query, cb) -> cb.isNull(root.get("discountPrice")));
+        if (productFilter.getDiscount() != null) {
+            predicates.add(productFilter.getDiscount() ?
+                    criteriaBuilder.isNotNull(root.get("discountPrice")) :
+                    criteriaBuilder.isNull(root.get("discountPrice")));
         }
 
-        // Фильтрация по минимальной цене
-        if (minPrice != null) {
-            specifications.add((root, query, cb) ->
-                    cb.greaterThanOrEqualTo(root.get("price"), minPrice));
+        if (productFilter.getMaxPrice() != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), productFilter.getMaxPrice()));
         }
 
-        // Фильтрация по максимальной цене
-        if (maxPrice != null) {
-            specifications.add((root, query, cb) ->
-                    cb.lessThanOrEqualTo(root.get("price"), maxPrice));
+        if (productFilter.getMinPrice() != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), productFilter.getMinPrice()));
         }
 
-        // Комбинируем все спецификации через AND
-        Specification<Product> combinedSpec = specifications.stream()
-                .reduce(Specification::and)
-                .orElse((root, query, cb) -> cb.conjunction());
-
-        // Парсинг параметров сортировки
-        Sort sorting = parseSortParameter(sort);
-
-        Pageable pageable = PageRequest.of(page, size, sorting);
-        return productRepository.findAll(combinedSpec, pageable);
-    }
-    private Sort parseSortParameter(String[] sortParams) {
-        if (sortParams == null || sortParams.length == 0) {
-            return Sort.by(Sort.Direction.ASC, "productId");
-        }
-
-        List<Sort.Order> orders = new ArrayList<>();
-        for (String param : sortParams) {
-            String[] parts = param.split(",");
-            if (parts.length != 2) {
-                throw new IllegalArgumentException("Invalid sort parameter format. Expected 'field,direction'");
+        if (productFilter.getSortBy() != null && productFilter.getSortDirection() != null) {
+            if (productFilter.getSortDirection().equals(false)) {
+                criteriaQuery.orderBy(criteriaBuilder.asc(root.get(productFilter.getSortBy())));
+            } else {
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(productFilter.getSortBy())));
             }
-            orders.add(new Sort.Order(Sort.Direction.fromString(parts[1]), parts[0]));
+        } else {
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("productId")));
         }
 
-        return Sort.by(orders);
+        if (!predicates.isEmpty()) {
+            criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+        }
+
+        return entityManager.createQuery(criteriaQuery.select(root)).getResultList();
     }
 
     @Override

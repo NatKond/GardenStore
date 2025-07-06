@@ -3,6 +3,7 @@ package de.telran.gardenStore.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
+import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.service.ProductService;
@@ -43,6 +44,8 @@ public class ProductControllerImplTest {
     @MockitoBean
     private ModelMapper modelMapper; // Мок маппера DTO
 
+    Category category1;
+    Category category2;
 
     private Product product1;
     private Product product2;
@@ -57,12 +60,22 @@ public class ProductControllerImplTest {
     @BeforeEach
     void setUp() {
 
+        category1 = Category.builder()
+                .categoryId(1L)
+                .name("Fertilizer")
+                .build();
+
+        category2 = Category.builder()
+                .categoryId(2L)
+                .name("Protective products and septic tanks")
+                .build();
+
         product1 = Product.builder()
                 .productId(1L)
                 .name("All-Purpose Plant Fertilizer")
                 .discountPrice(new BigDecimal("8.99"))
                 .price(new BigDecimal("11.99"))
-                .categoryId(1L)
+                .category(category1)
                 .description("Balanced NPK formula for all types of plants")
                 .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
                 .createdAt(LocalDateTime.now())
@@ -74,7 +87,7 @@ public class ProductControllerImplTest {
                 .name("Organic Tomato Feed")
                 .discountPrice(new BigDecimal("10.49"))
                 .price(new BigDecimal("13.99"))
-                .categoryId(1L)
+                .category(category1)
                 .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
                 .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
                 .createdAt(LocalDateTime.now())
@@ -85,7 +98,7 @@ public class ProductControllerImplTest {
                 .name("Slug & Snail Barrier Pellets")
                 .discountPrice(new BigDecimal("5.75"))
                 .price(new BigDecimal("7.50"))
-                .categoryId(2L)
+                .category(category2)
                 .description("Pet-safe barrier pellets to protect plants from slugs")
                 .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
                 .createdAt(LocalDateTime.now())
@@ -101,7 +114,7 @@ public class ProductControllerImplTest {
                 .name(product1.getName())
                 .price(product1.getPrice())
                 .discountPrice(product1.getDiscountPrice())
-                .categoryId(product1.getCategoryId())
+                .categoryId(product1.getCategory().getCategoryId())
                 .description(product1.getDescription())
                 .imageUrl(product1.getImageUrl())
                 .build();
@@ -111,7 +124,7 @@ public class ProductControllerImplTest {
                 .name(product2.getName())
                 .price(product2.getPrice())
                 .discountPrice(product2.getDiscountPrice())
-                .categoryId(product2.getCategoryId())
+                .categoryId(product2.getCategory().getCategoryId())
                 .description(product2.getDescription())
                 .imageUrl(product2.getImageUrl())
                 .build();
@@ -120,7 +133,7 @@ public class ProductControllerImplTest {
                 .name(productToCreate.getName())
                 .price(productToCreate.getPrice())
                 .discountPrice(productToCreate.getDiscountPrice())
-                .categoryId(productToCreate.getCategoryId())
+                .categoryId(productToCreate.getCategory().getCategoryId())
                 .description(productToCreate.getDescription())
                 .imageUrl(productToCreate.getImageUrl())
                 .build();
@@ -130,7 +143,7 @@ public class ProductControllerImplTest {
                 .name(productCreated.getName())
                 .price(productCreated.getPrice())
                 .discountPrice(productCreated.getDiscountPrice())
-                .categoryId(productCreated.getCategoryId())
+                .categoryId(productCreated.getCategory().getCategoryId())
                 .description(productCreated.getDescription())
                 .imageUrl(productCreated.getImageUrl())
                 .build();
@@ -211,7 +224,7 @@ public class ProductControllerImplTest {
     }
 
     @Test
-    @DisplayName("PUT /v1/products/{id} - Update product")
+    @DisplayName("PUT /v1/products/{productId} - Update product")
     void updateProduct() throws Exception {
         Long productId = 3L;
 
@@ -247,7 +260,7 @@ public class ProductControllerImplTest {
     }
 
     @Test
-    @DisplayName("DELETE /v1/products/{id} - Delete product by ID")
+    @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
     void deleteProduct_ShouldDeleteProduct() throws Exception {
 
         Long productId = 1L;

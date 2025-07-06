@@ -24,7 +24,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<Favorite> getAllFavoritesByUser(Long userId) {
         AppUser user = userService.getUserById(userId);
-        return favoriteRepository.getAllByUserId(user.getUserId());
+        return favoriteRepository.getAllByUser(user);
     }
 
     @Override
@@ -36,11 +36,12 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Favorite createFavorite(Favorite favorite) {
 
-        AppUser user = userService.getUserById(favorite.getUserId());
-        Product product = productService.getProductById(favorite.getProductId());
-        if (favoriteRepository.findByUserIdAndProductId(user.getUserId(), product.getProductId()).isPresent()) {
+        AppUser user = userService.getUserById(favorite.getUser().getUserId());
+        Product product = productService.getProductById(favorite.getProduct().getProductId());
+        if (favoriteRepository.findByUserAndProduct(user, product).isPresent()) {
             throw new FavoriteAlreadyExistsException("Favorite with userId " + user.getUserId() + " and productId " + product.getProductId() + " already exists");
         }
+        favorite.setUser(user);
 
         return favoriteRepository.save(favorite);
     }

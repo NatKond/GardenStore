@@ -118,7 +118,7 @@ class UserControllerImplTest {
     }
 
     @Test
-    @DisplayName("GET /v1/users - get all users")
+    @DisplayName("GET /v1/users - Get all users")
     void getAllUsers() throws Exception {
 
         List<AppUser> users = List.of(user1, user2);
@@ -138,7 +138,7 @@ class UserControllerImplTest {
     }
 
     @Test
-    @DisplayName("GET /v1/user/{userId} - get user by ID : positive case")
+    @DisplayName("GET /v1/user/{userId} - Get user by ID : positive case")
     void getUserByIdPositiveCase() throws Exception {
 
         Long userId = 1L;
@@ -156,7 +156,7 @@ class UserControllerImplTest {
     }
 
     @Test
-    @DisplayName("GET /v1/user/{userId} - get user by ID : negative case")
+    @DisplayName("GET /v1/user/{userId} - Get user by ID : negative case")
     void getUserByIdNegativeCase() throws Exception {
 
         Long userId = 99L;
@@ -250,7 +250,7 @@ class UserControllerImplTest {
     }
 
     @Test
-    @DisplayName("DELETE /v1/users/{userId} - delete user by ID")
+    @DisplayName("DELETE /v1/users/{userId} - Delete user by ID")
     void deleteUserById_ExistingUser_Returns200() throws Exception {
         // Подготовка
         Long userId = 1L;

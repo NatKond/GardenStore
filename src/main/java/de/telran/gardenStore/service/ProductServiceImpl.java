@@ -1,6 +1,4 @@
 package de.telran.gardenStore.service;
-
-import de.telran.gardenStore.dto.ProductFilter;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
@@ -13,6 +11,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private final EntityManager entityManager;
 
     @Override
-    public List<Product> getAllProducts(ProductFilter productFilter) {
+    public List<Product> getAllProducts(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
@@ -35,30 +34,30 @@ public class ProductServiceImpl implements ProductService {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (productFilter.getCategoryId() != null) {
-            Category category = categoryService.getCategoryById(productFilter.getCategoryId());
+        if (categoryId != null) {
+            Category category = categoryService.getCategoryById(categoryId);
             predicates.add(criteriaBuilder.equal(root.get("category"), category));
         }
 
-        if (productFilter.getDiscount() != null) {
-            predicates.add(productFilter.getDiscount() ?
+        if (discount != null) {
+            predicates.add(discount ?
                     criteriaBuilder.isNotNull(root.get("discountPrice")) :
                     criteriaBuilder.isNull(root.get("discountPrice")));
         }
 
-        if (productFilter.getMaxPrice() != null) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), productFilter.getMaxPrice()));
+        if (maxPrice != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
         }
 
-        if (productFilter.getMinPrice() != null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), productFilter.getMinPrice()));
+        if (minPrice != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
         }
 
-        if (productFilter.getSortBy() != null && productFilter.getSortDirection() != null) {
-            if (productFilter.getSortDirection().equals(false)) {
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get(productFilter.getSortBy())));
+        if (sortBy != null && sortDirection != null) {
+            if (sortDirection.equals(false)) {
+                criteriaQuery.orderBy(criteriaBuilder.asc(root.get(sortBy)));
             } else {
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(productFilter.getSortBy())));
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(sortBy)));
             }
         } else {
             criteriaQuery.orderBy(criteriaBuilder.asc(root.get("productId")));

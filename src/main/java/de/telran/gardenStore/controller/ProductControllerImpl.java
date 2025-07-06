@@ -1,17 +1,18 @@
 package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
-import de.telran.gardenStore.dto.ProductFilter;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,18 +25,19 @@ public class ProductControllerImpl implements ProductController {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<ProductResponseDto> getAllProducts(ProductFilter productFilter){
-         //(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection){
-//        ProductFilter productFilter = ProductFilter.builder()
-//                .categoryId(categoryId)
-//                .discount(discount)
-//                .maxPrice(maxPrice)
-//                .minPrice(minPrice)
-//                .sortBy(sortBy)
-//                .sortDirection(sortDirection)
-//                .build();
+    public List<ProductResponseDto> getAllProducts(@Positive Long categoryId,
+                                                   Boolean discount,
+                                                   @Positive BigDecimal minPrice,
+                                                   @Positive BigDecimal maxPrice,
+                                                   @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
+                                                   String sortBy,
+                                                   Boolean sortDirection){
 
-        List<Product> products = productService.getAllProducts(productFilter);
+        if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
+            throw new IllegalArgumentException("Min price cannot be greater than max price.");
+        }
+
+        List<Product> products = productService.getAllProducts(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection);
 
         return products.stream().map(product -> modelMapper.map(product, ProductResponseDto.class)).collect(Collectors.toList());
     }

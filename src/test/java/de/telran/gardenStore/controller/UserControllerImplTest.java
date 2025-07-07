@@ -1,6 +1,7 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.entity.AppUser;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
-class UserControllerImplTest {
+class UserControllerImplTest extends AbstractTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,79 +44,79 @@ class UserControllerImplTest {
     @MockitoBean
     private ModelMapper modelMapper;
 
-    private AppUser user1;
-    private AppUser user2;
-    private AppUser userToCreate;
-    private AppUser userCreated;
+//    private AppUser user1;
+//    private AppUser user2;
+//    private AppUser userToCreate;
+//    private AppUser userCreated;
+//
+//    private UserResponseDto userResponseDto1;
+//    private UserResponseDto userResponseDto2;
+//    private UserCreateRequestDto userCreateRequestDto;
+//    private UserResponseDto userResponseCreatedDto;
 
-    private UserResponseDto userResponseDto1;
-    private UserResponseDto userResponseDto2;
-    private UserCreateRequestDto userCreateRequestDto;
-    private UserResponseDto userResponseCreatedDto;
-
-    @BeforeEach
-    void setUp() {
-        user1 = AppUser.builder()
-                .userId(1L)
-                .name("Alice Johnson")
-                .email("alice.johnson@example.com")
-                .phoneNumber("+1234567890")
-                .passwordHash("12345")
-                .role(Role.ROLE_USER)
-                .build();
-
-        user2 = AppUser.builder()
-                .userId(2L)
-                .name("Bob Smith")
-                .email("bob.smith@example.com")
-                .phoneNumber("+1987654321")
-                .passwordHash("12345")
-                .role(Role.ROLE_USER)
-                .build();
-
-        userToCreate = AppUser.builder()
-                .name("Charlie Brown")
-                .email("charlie.brown@example.com")
-                .phoneNumber("+1122334455")
-                .passwordHash("12345")
-                .role(Role.ROLE_USER)
-                .build();
-
-        userCreated = userToCreate.toBuilder()
-                .userId(3L)
-                .build();
-
-        userResponseDto1 = UserResponseDto.builder()
-                .userId(user1.getUserId())
-                .name(user1.getName())
-                .email(user1.getEmail())
-                .phoneNumber(user1.getPhoneNumber())
-                .role(user1.getRole().name())
-                .build();
-
-        userResponseDto2 = UserResponseDto.builder()
-                .userId(user2.getUserId())
-                .name(user2.getName())
-                .email(user2.getEmail())
-                .phoneNumber(user2.getPhoneNumber())
-                .role(user2.getRole().name())
-                .build();
-
-        userCreateRequestDto = UserCreateRequestDto.builder()
-                .name(userToCreate.getName())
-                .email(userToCreate.getEmail())
-                .phoneNumber(userToCreate.getPhoneNumber())
-                .password(userToCreate.getPasswordHash())
-                .build();
-
-        userResponseCreatedDto = UserResponseDto.builder()
-                .userId(userCreated.getUserId())
-                .name(userCreated.getName())
-                .email(userCreated.getEmail())
-                .phoneNumber(userCreated.getPhoneNumber())
-                .role(userCreated.getRole().name())
-                .build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        user1 = AppUser.builder()
+//                .userId(1L)
+//                .name("Alice Johnson")
+//                .email("alice.johnson@example.com")
+//                .phoneNumber("+1234567890")
+//                .passwordHash("12345")
+//                .role(Role.ROLE_USER)
+//                .build();
+//
+//        user2 = AppUser.builder()
+//                .userId(2L)
+//                .name("Bob Smith")
+//                .email("bob.smith@example.com")
+//                .phoneNumber("+1987654321")
+//                .passwordHash("12345")
+//                .role(Role.ROLE_USER)
+//                .build();
+//
+//        userToCreate = AppUser.builder()
+//                .name("Charlie Brown")
+//                .email("charlie.brown@example.com")
+//                .phoneNumber("+1122334455")
+//                .passwordHash("12345")
+//                .role(Role.ROLE_USER)
+//                .build();
+//
+//        userCreated = userToCreate.toBuilder()
+//                .userId(3L)
+//                .build();
+//
+//        userResponseDto1 = UserResponseDto.builder()
+//                .userId(user1.getUserId())
+//                .name(user1.getName())
+//                .email(user1.getEmail())
+//                .phoneNumber(user1.getPhoneNumber())
+//                .role(user1.getRole().name())
+//                .build();
+//
+//        userResponseDto2 = UserResponseDto.builder()
+//                .userId(user2.getUserId())
+//                .name(user2.getName())
+//                .email(user2.getEmail())
+//                .phoneNumber(user2.getPhoneNumber())
+//                .role(user2.getRole().name())
+//                .build();
+//
+//        userCreateRequestDto = UserCreateRequestDto.builder()
+//                .name(userToCreate.getName())
+//                .email(userToCreate.getEmail())
+//                .phoneNumber(userToCreate.getPhoneNumber())
+//                .password(userToCreate.getPasswordHash())
+//                .build();
+//
+//        userResponseCreatedDto = UserResponseDto.builder()
+//                .userId(userCreated.getUserId())
+//                .name(userCreated.getName())
+//                .email(userCreated.getEmail())
+//                .phoneNumber(userCreated.getPhoneNumber())
+//                .role(userCreated.getRole().name())
+//                .build();
+//    }
 
     @Test
     @DisplayName("GET /v1/users - Get all users")

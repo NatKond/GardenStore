@@ -1,5 +1,6 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CategoryServiceImplTest {
+class CategoryServiceImplTest extends AbstractTest {
 
     @Mock
     private CategoryRepository categoryRepositoryMock;
@@ -28,37 +29,37 @@ class CategoryServiceImplTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
-    private Category category1;
-    private Category category2;
-    private Category category3;
-    private Category categoryToCreate;
-    private Category categoryCreated;
+//    private Category category1;
+//    private Category category2;
+//    private Category category3;
+//    private Category categoryToCreate;
+//    private Category categoryCreated;
 
-    @BeforeEach
-    void setUp() {
-        category1 = Category.builder()
-                .categoryId(1L)
-                .name("Fertilizer")
-                .build();
-
-        category2 = Category.builder()
-                .categoryId(2L)
-                .name("Protective products and septic tanks")
-                .build();
-
-        category3 = Category.builder()
-                .categoryId(3L)
-                .name("Planting material")
-                .build();
-
-        categoryToCreate = Category.builder()
-                .name("Pots and planters")
-                .build();
-
-        categoryCreated = categoryToCreate.toBuilder()
-                .categoryId(4L)
-                .build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        category1 = Category.builder()
+//                .categoryId(1L)
+//                .name("Fertilizer")
+//                .build();
+//
+//        category2 = Category.builder()
+//                .categoryId(2L)
+//                .name("Protective products and septic tanks")
+//                .build();
+//
+//        category3 = Category.builder()
+//                .categoryId(3L)
+//                .name("Planting material")
+//                .build();
+//
+//        categoryToCreate = Category.builder()
+//                .name("Pots and planters")
+//                .build();
+//
+//        categoryCreated = categoryToCreate.toBuilder()
+//                .categoryId(4L)
+//                .build();
+//    }
 
     @DisplayName("Get all categories")
     @Test

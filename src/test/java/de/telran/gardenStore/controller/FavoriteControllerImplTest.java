@@ -1,6 +1,7 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.AppUser;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(FavoriteControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
-class FavoriteControllerImplTest {
+class FavoriteControllerImplTest  extends AbstractTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,113 +46,113 @@ class FavoriteControllerImplTest {
     @MockitoBean
     private ModelMapper modelMapper;
 
-    private Category category1;
-    private Category category2;
+//    private Category category1;
+//    private Category category2;
+//
+//    private Product product1;
+//    private Product product2;
+//    private Product product3;
+//
+//    private AppUser user1;
+//
+//    private Favorite favorite1;
+//    private Favorite favorite2;
+//
+//    private Favorite favoriteToCreate;
+//    private Favorite favoriteCreated;
+//
+//    private FavoriteCreateRequestDto favoriteCreateRequestDto;
+//    private FavoriteResponseDto favoriteResponseDto1;
+//    private FavoriteResponseDto favoriteResponseDto2;
+//    private FavoriteResponseDto favoriteResponseCreatedDto;
 
-    private Product product1;
-    private Product product2;
-    private Product product3;
-
-    private AppUser user1;
-
-    private Favorite favorite1;
-    private Favorite favorite2;
-
-    private Favorite favoriteToCreate;
-    private Favorite favoriteCreated;
-
-    private FavoriteCreateRequestDto favoriteCreateRequestDto;
-    private FavoriteResponseDto favoriteResponseDto1;
-    private FavoriteResponseDto favoriteResponseDto2;
-    private FavoriteResponseDto favoriteResponseCreatedDto;
-
-    @BeforeEach
-    void setUp() {
-        category1 = Category.builder()
-                .categoryId(1L)
-                .name("Fertilizer")
-                .build();
-
-        category2 = Category.builder()
-                .categoryId(2L)
-                .name("Protective products and septic tanks")
-                .build();
-
-        product1 = Product.builder()
-                .productId(1L)
-                .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
-                .category(category1)
-                .build();
-
-        product2 = Product.builder()
-                .productId(2L)
-                .name("Organic Tomato Feed")
-                .discountPrice(new BigDecimal("10.49"))
-                .price(new BigDecimal("13.99"))
-                .category(category1)
-                .build();
-
-        product3 = Product.builder()
-                .productId(3L)
-                .name("Slug & Snail Barrier Pellets")
-                .discountPrice(new BigDecimal("5.75"))
-                .price(new BigDecimal("7.50"))
-                .category(category2)
-                .build();
-
-        user1 = AppUser.builder()
-                .userId(1L)
-                .name("Alice Johnson")
-                .email("alice.johnson@example.com")
-                .build();
-
-        favorite1 = Favorite.builder()
-                .favoriteId(1L)
-                .user(user1)
-                .product(product1)
-                .build();
-
-        favorite2 = Favorite.builder()
-                .favoriteId(2L)
-                .user(user1)
-                .product(product2)
-                .build();
-
-        favoriteToCreate = Favorite.builder()
-                .user(user1)
-                .product(product3)
-                .build();
-
-        favoriteCreated = favoriteToCreate.toBuilder()
-                .favoriteId(3L)
-                .build();
-
-        favoriteResponseDto1 = FavoriteResponseDto.builder()
-                .favoriteId(favorite1.getFavoriteId())
-                .productId(favorite1.getProduct().getProductId())
-                .userId(favorite1.getUser().getUserId())
-                .build();
-
-        favoriteResponseDto2 = FavoriteResponseDto.builder()
-                .favoriteId(favorite2.getFavoriteId())
-                .productId(favorite2.getProduct().getProductId())
-                .userId(favorite2.getUser().getUserId())
-                .build();
-
-        favoriteCreateRequestDto = FavoriteCreateRequestDto.builder()
-                .userId(favoriteToCreate.getUser().getUserId())
-                .productId(favoriteToCreate.getProduct().getProductId())
-                .build();
-
-        favoriteResponseCreatedDto = FavoriteResponseDto.builder()
-                .productId(favoriteCreated.getProduct().getProductId())
-                .userId(favoriteCreated.getUser().getUserId())
-                .productId(favoriteCreated.getProduct().getProductId())
-                .build();
-
-    }
+//    @BeforeEach
+//    void setUp() {
+//        category1 = Category.builder()
+//                .categoryId(1L)
+//                .name("Fertilizer")
+//                .build();
+//
+//        category2 = Category.builder()
+//                .categoryId(2L)
+//                .name("Protective products and septic tanks")
+//                .build();
+//
+//        product1 = Product.builder()
+//                .productId(1L)
+//                .name("All-Purpose Plant Fertilizer")
+//                .discountPrice(new BigDecimal("8.99"))
+//                .price(new BigDecimal("11.99"))
+//                .category(category1)
+//                .build();
+//
+//        product2 = Product.builder()
+//                .productId(2L)
+//                .name("Organic Tomato Feed")
+//                .discountPrice(new BigDecimal("10.49"))
+//                .price(new BigDecimal("13.99"))
+//                .category(category1)
+//                .build();
+//
+//        product3 = Product.builder()
+//                .productId(3L)
+//                .name("Slug & Snail Barrier Pellets")
+//                .discountPrice(new BigDecimal("5.75"))
+//                .price(new BigDecimal("7.50"))
+//                .category(category2)
+//                .build();
+//
+//        user1 = AppUser.builder()
+//                .userId(1L)
+//                .name("Alice Johnson")
+//                .email("alice.johnson@example.com")
+//                .build();
+//
+//        favorite1 = Favorite.builder()
+//                .favoriteId(1L)
+//                .user(user1)
+//                .product(product1)
+//                .build();
+//
+//        favorite2 = Favorite.builder()
+//                .favoriteId(2L)
+//                .user(user1)
+//                .product(product2)
+//                .build();
+//
+//        favoriteToCreate = Favorite.builder()
+//                .user(user1)
+//                .product(product3)
+//                .build();
+//
+//        favoriteCreated = favoriteToCreate.toBuilder()
+//                .favoriteId(3L)
+//                .build();
+//
+//        favoriteResponseDto1 = FavoriteResponseDto.builder()
+//                .favoriteId(favorite1.getFavoriteId())
+//                .productId(favorite1.getProduct().getProductId())
+//                .userId(favorite1.getUser().getUserId())
+//                .build();
+//
+//        favoriteResponseDto2 = FavoriteResponseDto.builder()
+//                .favoriteId(favorite2.getFavoriteId())
+//                .productId(favorite2.getProduct().getProductId())
+//                .userId(favorite2.getUser().getUserId())
+//                .build();
+//
+//        favoriteCreateRequestDto = FavoriteCreateRequestDto.builder()
+//                .userId(favoriteToCreate.getUser().getUserId())
+//                .productId(favoriteToCreate.getProduct().getProductId())
+//                .build();
+//
+//        favoriteResponseCreatedDto = FavoriteResponseDto.builder()
+//                .productId(favoriteCreated.getProduct().getProductId())
+//                .userId(favoriteCreated.getUser().getUserId())
+//                .productId(favoriteCreated.getProduct().getProductId())
+//                .build();
+//
+//    }
 
     @Test
     @DisplayName("GET /v1/favorites/{userId} - Get all favorites by userId")

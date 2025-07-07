@@ -1,6 +1,7 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
 import de.telran.gardenStore.entity.Category;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(CategoryControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CategoryControllerImplTest {
+public class CategoryControllerImplTest extends AbstractTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,56 +45,56 @@ public class CategoryControllerImplTest {
     @MockitoBean
     private ModelMapper modelMapper;
 
-    private Category category1;
-    private Category category2;
-    private Category category3;
-    private Category categoryToCreate;
+//    private Category category1;
+//    private Category category2;
+//    private Category category3;
+//    private Category categoryToCreate;
 
-    private CategoryResponseDto categoryResponseDto1;
-    private CategoryResponseDto categoryResponseDto2;
-    private CategoryResponseDto categoryResponseDto3;
-    private CategoryCreateRequestDto categoryCreateRequestDto;
+//    private CategoryResponseDto categoryResponseDto1;
+//    private CategoryResponseDto categoryResponseDto2;
+//    private CategoryResponseDto categoryResponseDto3;
+//    private CategoryCreateRequestDto categoryCreateRequestDto;
 
-    @BeforeEach
-    void setUp() {
-        category1 = Category.builder()
-                .categoryId(1L)
-                .name("Fertilizer")
-                .build();
-
-        category2 = Category.builder()
-                .categoryId(2L)
-                .name("Protective products and septic tanks")
-                .build();
-
-        category3 = Category.builder()
-                .categoryId(3L)
-                .name("Planting material")
-                .build();
-
-        categoryToCreate = Category.builder()
-                .name("Pots and planters")
-                .build();
-
-        categoryResponseDto1 = CategoryResponseDto.builder()
-                .categoryId(category1.getCategoryId())
-                .name(category1.getName())
-                .build();
-
-        categoryResponseDto2 = CategoryResponseDto.builder()
-                .categoryId(category2.getCategoryId())
-                .name(category2.getName())
-                .build();
-
-        categoryResponseDto3 = CategoryResponseDto.builder()
-                .categoryId(category3.getCategoryId())
-                .name(category3.getName())
-                .build();
-
-        categoryCreateRequestDto = CategoryCreateRequestDto.builder()
-                .name(categoryToCreate.getName())
-                .build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        category1 = Category.builder()
+//                .categoryId(1L)
+//                .name("Fertilizer")
+//                .build();
+//
+//        category2 = Category.builder()
+//                .categoryId(2L)
+//                .name("Protective products and septic tanks")
+//                .build();
+//
+//        category3 = Category.builder()
+//                .categoryId(3L)
+//                .name("Planting material")
+//                .build();
+//
+//        categoryToCreate = Category.builder()
+//                .name("Pots and planters")
+//                .build();
+//
+//        categoryResponseDto1 = CategoryResponseDto.builder()
+//                .categoryId(category1.getCategoryId())
+//                .name(category1.getName())
+//                .build();
+//
+//        categoryResponseDto2 = CategoryResponseDto.builder()
+//                .categoryId(category2.getCategoryId())
+//                .name(category2.getName())
+//                .build();
+//
+//        categoryResponseDto3 = CategoryResponseDto.builder()
+//                .categoryId(category3.getCategoryId())
+//                .name(category3.getName())
+//                .build();
+//
+//        categoryCreateRequestDto = CategoryCreateRequestDto.builder()
+//                .name(categoryToCreate.getName())
+//                .build();
+//    }
 
     @DisplayName("GET /v1/categories - Get all categories")
     @Test

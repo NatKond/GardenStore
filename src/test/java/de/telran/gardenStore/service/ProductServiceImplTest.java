@@ -1,5 +1,6 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
@@ -27,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceImplTest {
+class ProductServiceImplTest extends AbstractTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -47,66 +48,66 @@ class ProductServiceImplTest {
     @InjectMocks
     private ProductServiceImpl productService;
 
-    private Category category1;
-    private Category category2;
+//    private Category category1;
+//    private Category category2;
+//
+//    private Product product1;
+//    private Product product2;
+//    private Product productToCreate;
+//    private Product productCreated;
 
-    private Product product1;
-    private Product product2;
-    private Product productToCreate;
-    private Product productCreated;
-
-    @BeforeEach
-     void setUp() {
-
-        category1 = Category.builder()
-                .categoryId(1L)
-                .name("Fertilizer")
-                .build();
-
-        category2 = Category.builder()
-                .categoryId(2L)
-                .name("Protective products and septic tanks")
-                .build();
-
-        product1 = Product.builder()
-                .productId(1L)
-                .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
-                .category(category1)
-                .description("Balanced NPK formula for all types of plants")
-                .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        product2 = Product.builder()
-                .productId(2L)
-                .name("Organic Tomato Feed")
-                .discountPrice(new BigDecimal("10.49"))
-                .price(new BigDecimal("13.99"))
-                .category(category1)
-                .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
-                .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        productToCreate = Product.builder()
-                .name("Slug & Snail Barrier Pellets")
-                .discountPrice(new BigDecimal("5.75"))
-                .price(new BigDecimal("7.50"))
-                .category(category2)
-                .description("Pet-safe barrier pellets to protect plants from slugs")
-                .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        productCreated = productToCreate.toBuilder()
-                .productId(3L)
-                .build();
-    }
+//    @BeforeEach
+//     void setUp() {
+//
+//        category1 = Category.builder()
+//                .categoryId(1L)
+//                .name("Fertilizer")
+//                .build();
+//
+//        category2 = Category.builder()
+//                .categoryId(2L)
+//                .name("Protective products and septic tanks")
+//                .build();
+//
+//        product1 = Product.builder()
+//                .productId(1L)
+//                .name("All-Purpose Plant Fertilizer")
+//                .discountPrice(new BigDecimal("8.99"))
+//                .price(new BigDecimal("11.99"))
+//                .category(category1)
+//                .description("Balanced NPK formula for all types of plants")
+//                .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
+//                .createdAt(LocalDateTime.now())
+//                .updatedAt(LocalDateTime.now())
+//                .build();
+//
+//        product2 = Product.builder()
+//                .productId(2L)
+//                .name("Organic Tomato Feed")
+//                .discountPrice(new BigDecimal("10.49"))
+//                .price(new BigDecimal("13.99"))
+//                .category(category1)
+//                .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
+//                .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
+//                .createdAt(LocalDateTime.now())
+//                .updatedAt(LocalDateTime.now())
+//                .build();
+//
+//        productToCreate = Product.builder()
+//                .name("Slug & Snail Barrier Pellets")
+//                .discountPrice(new BigDecimal("5.75"))
+//                .price(new BigDecimal("7.50"))
+//                .category(category2)
+//                .description("Pet-safe barrier pellets to protect plants from slugs")
+//                .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
+//                .createdAt(LocalDateTime.now())
+//                .updatedAt(LocalDateTime.now())
+//                .build();
+//
+//        productCreated = productToCreate.toBuilder()
+//                .productId(3L)
+//                .build();
+//    }
 
     @DisplayName("Get all products")
     @Test

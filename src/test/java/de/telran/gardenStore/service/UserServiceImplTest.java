@@ -1,5 +1,6 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.enums.Role;
 import de.telran.gardenStore.exception.UserNotFoundException;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserServiceImplTest extends AbstractTest {
 
     @Mock
     private UserRepository userRepository;
@@ -28,48 +29,48 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private AppUser user1;
-    private AppUser user2;
-    private AppUser userToCreate;
-    private AppUser userCreated;
+//    private AppUser user1;
+//    private AppUser user2;
+//    private AppUser userToCreate;
+//    private AppUser userCreated;
 
-    @BeforeEach
-    void setUp() {
-        user1 = AppUser.builder()
-                .userId(1L)
-                .name("Alice Johnson")
-                .email("alice.johnson@example.com")
-                .phoneNumber("+1234567890")
-                .passwordHash("12345")
-                .role(Role.ROLE_USER)
-                .build();
-
-        user2 = AppUser.builder()
-                .userId(2L)
-                .name("Bob Smith")
-                .email("bob.smith@example.com")
-                .phoneNumber("+1987654321")
-                .passwordHash("12345")
-                .role(Role.ROLE_USER)
-                .build();
-
-        userToCreate = AppUser.builder()
-                .name("Charlie Brown")
-                .email("charlie.brown@example.com")
-                .phoneNumber("+1122334455")
-                .passwordHash("12345")
-                .role(Role.ROLE_USER)
-                .build();
-
-        userCreated = AppUser.builder()
-                .userId(3L)
-                .name(userToCreate.getName())
-                .email(userToCreate.getEmail())
-                .phoneNumber(userToCreate.getPhoneNumber())
-                .passwordHash(userToCreate.getPasswordHash())
-                .role(userToCreate.getRole())
-                .build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        user1 = AppUser.builder()
+//                .userId(1L)
+//                .name("Alice Johnson")
+//                .email("alice.johnson@example.com")
+//                .phoneNumber("+1234567890")
+//                .passwordHash("12345")
+//                .role(Role.ROLE_USER)
+//                .build();
+//
+//        user2 = AppUser.builder()
+//                .userId(2L)
+//                .name("Bob Smith")
+//                .email("bob.smith@example.com")
+//                .phoneNumber("+1987654321")
+//                .passwordHash("12345")
+//                .role(Role.ROLE_USER)
+//                .build();
+//
+//        userToCreate = AppUser.builder()
+//                .name("Charlie Brown")
+//                .email("charlie.brown@example.com")
+//                .phoneNumber("+1122334455")
+//                .passwordHash("12345")
+//                .role(Role.ROLE_USER)
+//                .build();
+//
+//        userCreated = AppUser.builder()
+//                .userId(3L)
+//                .name(userToCreate.getName())
+//                .email(userToCreate.getEmail())
+//                .phoneNumber(userToCreate.getPhoneNumber())
+//                .passwordHash(userToCreate.getPasswordHash())
+//                .role(userToCreate.getRole())
+//                .build();
+//    }
 
     @DisplayName("Get all users")
     @Test

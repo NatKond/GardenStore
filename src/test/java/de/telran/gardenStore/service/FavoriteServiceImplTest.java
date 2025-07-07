@@ -1,5 +1,6 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Favorite;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class FavoriteServiceImplTest {
+class FavoriteServiceImplTest extends AbstractTest {
 
     @Mock
     private FavoriteRepository favoriteRepository;
@@ -38,84 +39,84 @@ class FavoriteServiceImplTest {
     @InjectMocks
     private FavoriteServiceImpl favoriteService;
 
-    private Category category1;
-    private Category category2;
+//    private Category category1;
+//    private Category category2;
+//
+//    private Product product1;
+//    private Product product2;
+//    private Product product3;
+//
+//    private AppUser user1;
+//
+//    private Favorite favorite1;
+//    private Favorite favorite2;
+//
+//    private Favorite favoriteToCreate;
+//    private Favorite favoriteCreated;
 
-    private Product product1;
-    private Product product2;
-    private Product product3;
-
-    private AppUser user1;
-
-    private Favorite favorite1;
-    private Favorite favorite2;
-
-    private Favorite favoriteToCreate;
-    private Favorite favoriteCreated;
-
-    @BeforeEach
-    void setUp() {
-        category1 = Category.builder()
-                .categoryId(1L)
-                .name("Fertilizer")
-                .build();
-
-        category2 = Category.builder()
-                .categoryId(2L)
-                .name("Protective products and septic tanks")
-                .build();
-
-        product1 = Product.builder()
-                .productId(1L)
-                .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
-                .category(category1)
-                .build();
-
-        product2 = Product.builder()
-                .productId(2L)
-                .name("Organic Tomato Feed")
-                .discountPrice(new BigDecimal("10.49"))
-                .price(new BigDecimal("13.99"))
-                .category(category1)
-                .build();
-
-        product3 = Product.builder()
-                .productId(3L)
-                .name("Slug & Snail Barrier Pellets")
-                .discountPrice(new BigDecimal("5.75"))
-                .price(new BigDecimal("7.50"))
-                .category(category2)
-                .build();
-
-        user1 = AppUser.builder()
-                .userId(1L)
-                .name("Alice Johnson")
-                .email("alice.johnson@example.com")
-                .build();
-
-        favorite1 = Favorite.builder()
-                .favoriteId(1L)
-                .user(user1)
-                .product(product1)
-                .build();
-
-        favorite2 = Favorite.builder()
-                .favoriteId(2L)
-                .user(user1)
-                .product(product2)
-                .build();
-
-        favoriteToCreate = Favorite.builder()
-                .user(user1)
-                .product(product3)
-                .build();
-
-        favoriteCreated = favoriteToCreate.toBuilder()
-                .favoriteId(3L)
-                .build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        category1 = Category.builder()
+//                .categoryId(1L)
+//                .name("Fertilizer")
+//                .build();
+//
+//        category2 = Category.builder()
+//                .categoryId(2L)
+//                .name("Protective products and septic tanks")
+//                .build();
+//
+//        product1 = Product.builder()
+//                .productId(1L)
+//                .name("All-Purpose Plant Fertilizer")
+//                .discountPrice(new BigDecimal("8.99"))
+//                .price(new BigDecimal("11.99"))
+//                .category(category1)
+//                .build();
+//
+//        product2 = Product.builder()
+//                .productId(2L)
+//                .name("Organic Tomato Feed")
+//                .discountPrice(new BigDecimal("10.49"))
+//                .price(new BigDecimal("13.99"))
+//                .category(category1)
+//                .build();
+//
+//        product3 = Product.builder()
+//                .productId(3L)
+//                .name("Slug & Snail Barrier Pellets")
+//                .discountPrice(new BigDecimal("5.75"))
+//                .price(new BigDecimal("7.50"))
+//                .category(category2)
+//                .build();
+//
+//        user1 = AppUser.builder()
+//                .userId(1L)
+//                .name("Alice Johnson")
+//                .email("alice.johnson@example.com")
+//                .build();
+//
+//        favorite1 = Favorite.builder()
+//                .favoriteId(1L)
+//                .user(user1)
+//                .product(product1)
+//                .build();
+//
+//        favorite2 = Favorite.builder()
+//                .favoriteId(2L)
+//                .user(user1)
+//                .product(product2)
+//                .build();
+//
+//        favoriteToCreate = Favorite.builder()
+//                .user(user1)
+//                .product(product3)
+//                .build();
+//
+//        favoriteCreated = favoriteToCreate.toBuilder()
+//                .favoriteId(3L)
+//                .build();
+//    }
 
     @Test
     @DisplayName("Get all favorites by userId")

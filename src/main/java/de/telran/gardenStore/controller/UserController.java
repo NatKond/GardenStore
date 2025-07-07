@@ -2,6 +2,7 @@ package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.dto.UserShortResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface UserController {
 
     @GetMapping
-    List<UserResponseDto> getAllUsers();
+    List<UserShortResponseDto> getAllUsers();
 
     @GetMapping("/{userId}")
     UserResponseDto getUserById(@PathVariable @Positive Long userId);
@@ -25,7 +26,7 @@ public interface UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{userId}")
     UserResponseDto updateUser(@PathVariable @Positive Long userId,
-                               @RequestBody @Valid UserCreateRequestDto userRequest);
+                                    @RequestBody @Valid UserCreateRequestDto userRequest);
 
     @DeleteMapping("/{userId}")
     void deleteUserById(@PathVariable @Positive Long userId);

@@ -51,7 +51,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategoryById(Long categoryId) {
-        categoryRepository.delete(getCategoryById(categoryId));
+        Category category = getCategoryById(categoryId);
+
+        if (!category.getProducts().isEmpty()) {
+            throw new IllegalStateException("Cannot delete category '" + category.getName() + "' because it contains products.");
+        }
+
+        categoryRepository.delete(category);
     }
 
     private void nameCheck(String name) {

@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.entity.Product;
@@ -8,13 +9,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,7 +21,8 @@ import java.util.stream.Collectors;
 public class ProductControllerImpl implements ProductController {
 
     private final ProductService productService;
-    private final ModelMapper modelMapper;
+
+    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductResponseDto> productConverter;
 
     @Override
     public List<ProductResponseDto> getAllProducts(@Positive Long categoryId,
@@ -31,36 +31,29 @@ public class ProductControllerImpl implements ProductController {
                                                    @Positive BigDecimal maxPrice,
                                                    @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
                                                    String sortBy,
-                                                   Boolean sortDirection){
+                                                   Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("Min price cannot be greater than max price.");
         }
-
-        List<Product> products = productService.getAllProducts(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection);
-
-        return products.stream().map(product -> modelMapper.map(product, ProductResponseDto.class)).collect(Collectors.toList());
+        return productConverter.convertEntityListToDtoList(productService.getAllProducts(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection));
     }
 
     @Override
     public ProductResponseDto getProductById(@Positive Long productId) {
-        Product product = productService.getProductById(productId);
-        return modelMapper.map(product, ProductResponseDto.class);
+        return productConverter.convertEntityToDto(productService.getProductById(productId));
     }
 
     @Override
     public ProductResponseDto createProduct(@Valid ProductCreateRequestDto productRequest) {
-        Product product = modelMapper.map(productRequest, Product.class);
-        Product savedProduct = productService.createProduct(product);
-        return modelMapper.map(savedProduct, ProductResponseDto.class);
+        return productConverter.convertEntityToDto(productService.createProduct(
+                productConverter.convertDtoToEntity(productRequest)));
     }
 
     @Override
     public ProductResponseDto updateProduct(@Positive Long productId, @Valid ProductCreateRequestDto productRequest) {
-
-        Product product = modelMapper.map(productRequest, Product.class);
-        Product updatedProduct = productService.updateProduct(productId, product);
-        return modelMapper.map(updatedProduct, ProductResponseDto.class);
+        return productConverter.convertEntityToDto(productService.updateProduct(productId,
+                productConverter.convertDtoToEntity(productRequest)));
     }
 
     @Override

@@ -1,18 +1,16 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.dto.UserCreateRequestDto;
-import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.converter.Converter;
+import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,32 +19,30 @@ public class UserControllerImpl implements UserController {
 
     private final UserService userService;
 
-    private final ModelMapper modelMapper;
+    private final Converter<AppUser, UserCreateRequestDto, UserResponseDto, UserShortResponseDto> userConverter;
+    //private final UserConverter userConverter;
+
 
     @Override
-    public List<UserResponseDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(appUser -> modelMapper.map(appUser, UserResponseDto.class)).collect(Collectors.toList());
+    public List<UserShortResponseDto> getAllUsers() {
+        return userConverter.convertEntityListToDtoList(userService.getAllUsers());
     }
 
     @Override
     public UserResponseDto getUserById(@Positive Long userId) {
-        return modelMapper.map(userService.getUserById(userId), UserResponseDto.class);
+        return userConverter.convertEntityToDto(userService.getUserById(userId));
     }
 
     @Override
-    public UserResponseDto createUser(@RequestBody @Valid UserCreateRequestDto userRequest) {
-        return modelMapper.map(
-                userService.createUser(
-                        modelMapper.map(userRequest, AppUser.class)),
-                UserResponseDto.class);
+    public UserResponseDto createUser(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto) {
+        return userConverter.convertEntityToDto(
+                userService.createUser(userConverter.convertDtoToEntity(userCreateRequestDto)));
     }
 
     @Override
     public UserResponseDto updateUser(@Positive Long userId, @Valid UserCreateRequestDto userRequest) {
-        return modelMapper.map(
-                userService.updateUser(userId,
-                        modelMapper.map(userRequest, AppUser.class)),
-                UserResponseDto.class);
+        return userConverter.convertEntityToDto(
+                userService.updateUser(userId, userConverter.convertDtoToEntity(userRequest)));
     }
 
     @Override

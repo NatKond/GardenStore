@@ -1,9 +1,6 @@
 package de.telran.gardenStore.dto;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +10,8 @@ import java.util.List;
 @Builder(toBuilder = true)
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserResponseDto {
+public class UserShortResponseDto {
+
     @EqualsAndHashCode.Include
     private Long userId;
 
@@ -24,6 +22,4 @@ public class UserResponseDto {
     private String phoneNumber;
 
     private String role;
-
-    private List<FavoriteResponseDto> favorites;
 }

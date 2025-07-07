@@ -2,7 +2,7 @@ package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.gardenStore.dto.UserCreateRequestDto;
-import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.dto.UserShortResponseDto;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.enums.Role;
 import de.telran.gardenStore.exception.UserNotFoundException;
@@ -48,10 +48,10 @@ class UserControllerImplTest {
     private AppUser userToCreate;
     private AppUser userCreated;
 
-    private UserResponseDto userResponseDto1;
-    private UserResponseDto userResponseDto2;
+    private UserShortResponseDto userShortResponseDto1;
+    private UserShortResponseDto userShortResponseDto2;
     private UserCreateRequestDto userCreateRequestDto;
-    private UserResponseDto userResponseCreatedDto;
+    private UserShortResponseDto userResponseCreatedDto;
 
     @BeforeEach
     void setUp() {
@@ -85,7 +85,7 @@ class UserControllerImplTest {
                 .userId(3L)
                 .build();
 
-        userResponseDto1 = UserResponseDto.builder()
+        userShortResponseDto1 = UserShortResponseDto.builder()
                 .userId(user1.getUserId())
                 .name(user1.getName())
                 .email(user1.getEmail())
@@ -93,7 +93,7 @@ class UserControllerImplTest {
                 .role(user1.getRole().name())
                 .build();
 
-        userResponseDto2 = UserResponseDto.builder()
+        userShortResponseDto2 = UserShortResponseDto.builder()
                 .userId(user2.getUserId())
                 .name(user2.getName())
                 .email(user2.getEmail())
@@ -108,7 +108,7 @@ class UserControllerImplTest {
                 .password(userToCreate.getPasswordHash())
                 .build();
 
-        userResponseCreatedDto = UserResponseDto.builder()
+        userResponseCreatedDto = UserShortResponseDto.builder()
                 .userId(userCreated.getUserId())
                 .name(userCreated.getName())
                 .email(userCreated.getEmail())
@@ -122,11 +122,11 @@ class UserControllerImplTest {
     void getAllUsers() throws Exception {
 
         List<AppUser> users = List.of(user1, user2);
-        List<UserResponseDto> expected = List.of(userResponseDto1, userResponseDto2);
+        List<UserShortResponseDto> expected = List.of(userShortResponseDto1, userShortResponseDto2);
 
         when(userService.getAllUsers()).thenReturn(users);
-        when(modelMapper.map(user1, UserResponseDto.class)).thenReturn(userResponseDto1);
-        when(modelMapper.map(user2, UserResponseDto.class)).thenReturn(userResponseDto2);
+        when(modelMapper.map(user1, UserShortResponseDto.class)).thenReturn(userShortResponseDto1);
+        when(modelMapper.map(user2, UserShortResponseDto.class)).thenReturn(userShortResponseDto2);
 
         mockMvc.perform(get("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -144,7 +144,7 @@ class UserControllerImplTest {
         Long userId = 1L;
 
         when(userService.getUserById(userId)).thenReturn(user1);
-        when(modelMapper.map(user1, UserResponseDto.class)).thenReturn(userResponseDto1);
+        when(modelMapper.map(user1, UserShortResponseDto.class)).thenReturn(userShortResponseDto1);
 
         mockMvc.perform(get("/v1/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -152,7 +152,7 @@ class UserControllerImplTest {
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(userResponseDto1)));
+                        content().json(objectMapper.writeValueAsString(userShortResponseDto1)));
     }
 
     @Test
@@ -179,7 +179,7 @@ class UserControllerImplTest {
 
         when(modelMapper.map(userCreateRequestDto, AppUser.class)).thenReturn(userToCreate);
         when(userService.createUser(userToCreate)).thenReturn(userCreated);
-        when(modelMapper.map(userCreated, UserResponseDto.class)).thenReturn(userResponseCreatedDto);
+        when(modelMapper.map(userCreated, UserShortResponseDto.class)).thenReturn(userResponseCreatedDto);
 
         mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -229,7 +229,7 @@ class UserControllerImplTest {
                 .email(emailToUpdate)
                 .build();
 
-        UserResponseDto userResponseUpdatedDto = userResponseCreatedDto.toBuilder()
+        UserShortResponseDto userResponseUpdatedDto = userResponseCreatedDto.toBuilder()
                 .email(emailToUpdate)
                 .build();
 
@@ -237,7 +237,7 @@ class UserControllerImplTest {
         when(modelMapper.map(userUpdateRequestDto, AppUser.class)).thenReturn(userToUpdate);
         when(userService.updateUser(userId, userToUpdate)).thenReturn(userUpdated);
         when(userService.getUserById(userId)).thenReturn(userUpdated);
-        when(modelMapper.map(userUpdated, UserResponseDto.class)).thenReturn(userResponseUpdatedDto);
+        when(modelMapper.map(userUpdated, UserShortResponseDto.class)).thenReturn(userResponseUpdatedDto);
 
         mockMvc.perform(put("/v1/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON)

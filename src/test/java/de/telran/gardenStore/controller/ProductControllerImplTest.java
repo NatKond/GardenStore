@@ -1,6 +1,7 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.entity.Category;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false) // Отключаем security фильтры для тестов
-public class ProductControllerImplTest {
+public class ProductControllerImplTest extends AbstractTest {
 
     @Autowired
     private MockMvc mockMvc; // Для имитации HTTP запросов
@@ -44,110 +45,110 @@ public class ProductControllerImplTest {
     @MockitoBean
     private ModelMapper modelMapper; // Мок маппера DTO
 
-    Category category1;
-    Category category2;
+//    Category category1;
+//    Category category2;
 
-    private Product product1;
-    private Product product2;
-    private Product productToCreate;
-    private Product productCreated;
+//    private Product product1;
+//    private Product product2;
+//    private Product productToCreate;
+//    private Product productCreated;
 
-    private ProductCreateRequestDto productCreateRequestDto;
-    private ProductResponseDto productResponseDto1;
-    private ProductResponseDto productResponseDto2;
-    private ProductResponseDto productResponseCreatedDto;
+//    private ProductCreateRequestDto productCreateRequestDto;
+//    private ProductResponseDto productResponseDto1;
+//    private ProductResponseDto productResponseDto2;
+//    private ProductResponseDto productResponseCreatedDto;
 
-    @BeforeEach
-    void setUp() {
-
-        category1 = Category.builder()
-                .categoryId(1L)
-                .name("Fertilizer")
-                .build();
-
-        category2 = Category.builder()
-                .categoryId(2L)
-                .name("Protective products and septic tanks")
-                .build();
-
-        product1 = Product.builder()
-                .productId(1L)
-                .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
-                .category(category1)
-                .description("Balanced NPK formula for all types of plants")
-                .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        product2 = Product.builder()
-                .productId(2L)
-                .name("Organic Tomato Feed")
-                .discountPrice(new BigDecimal("10.49"))
-                .price(new BigDecimal("13.99"))
-                .category(category1)
-                .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
-                .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        productToCreate = Product.builder()
-                .name("Slug & Snail Barrier Pellets")
-                .discountPrice(new BigDecimal("5.75"))
-                .price(new BigDecimal("7.50"))
-                .category(category2)
-                .description("Pet-safe barrier pellets to protect plants from slugs")
-                .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        productCreated = productToCreate.toBuilder()
-                .productId(3L)
-                .build();
-
-        productResponseDto1 = ProductResponseDto.builder()
-                .productId(product1.getProductId())
-                .name(product1.getName())
-                .price(product1.getPrice())
-                .discountPrice(product1.getDiscountPrice())
-                .categoryId(product1.getCategory().getCategoryId())
-                .description(product1.getDescription())
-                .imageUrl(product1.getImageUrl())
-                .build();
-
-        productResponseDto2 = ProductResponseDto.builder()
-                .productId(product2.getProductId())
-                .name(product2.getName())
-                .price(product2.getPrice())
-                .discountPrice(product2.getDiscountPrice())
-                .categoryId(product2.getCategory().getCategoryId())
-                .description(product2.getDescription())
-                .imageUrl(product2.getImageUrl())
-                .build();
-
-        productCreateRequestDto = ProductCreateRequestDto.builder()
-                .name(productToCreate.getName())
-                .price(productToCreate.getPrice())
-                .discountPrice(productToCreate.getDiscountPrice())
-                .categoryId(productToCreate.getCategory().getCategoryId())
-                .description(productToCreate.getDescription())
-                .imageUrl(productToCreate.getImageUrl())
-                .build();
-
-        productResponseCreatedDto = ProductResponseDto.builder()
-                .productId(productCreated.getProductId())
-                .name(productCreated.getName())
-                .price(productCreated.getPrice())
-                .discountPrice(productCreated.getDiscountPrice())
-                .categoryId(productCreated.getCategory().getCategoryId())
-                .description(productCreated.getDescription())
-                .imageUrl(productCreated.getImageUrl())
-                .build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//
+//        category1 = Category.builder()
+//                .categoryId(1L)
+//                .name("Fertilizer")
+//                .build();
+//
+//        category2 = Category.builder()
+//                .categoryId(2L)
+//                .name("Protective products and septic tanks")
+//                .build();
+//
+//        product1 = Product.builder()
+//                .productId(1L)
+//                .name("All-Purpose Plant Fertilizer")
+//                .discountPrice(new BigDecimal("8.99"))
+//                .price(new BigDecimal("11.99"))
+//                .category(category1)
+//                .description("Balanced NPK formula for all types of plants")
+//                .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
+//                .createdAt(LocalDateTime.now())
+//                .updatedAt(LocalDateTime.now())
+//                .build();
+//
+//        product2 = Product.builder()
+//                .productId(2L)
+//                .name("Organic Tomato Feed")
+//                .discountPrice(new BigDecimal("10.49"))
+//                .price(new BigDecimal("13.99"))
+//                .category(category1)
+//                .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
+//                .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
+//                .createdAt(LocalDateTime.now())
+//                .updatedAt(LocalDateTime.now())
+//                .build();
+//
+//        productToCreate = Product.builder()
+//                .name("Slug & Snail Barrier Pellets")
+//                .discountPrice(new BigDecimal("5.75"))
+//                .price(new BigDecimal("7.50"))
+//                .category(category2)
+//                .description("Pet-safe barrier pellets to protect plants from slugs")
+//                .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
+//                .createdAt(LocalDateTime.now())
+//                .updatedAt(LocalDateTime.now())
+//                .build();
+//
+//        productCreated = productToCreate.toBuilder()
+//                .productId(3L)
+//                .build();
+//
+//        productResponseDto1 = ProductResponseDto.builder()
+//                .productId(product1.getProductId())
+//                .name(product1.getName())
+//                .price(product1.getPrice())
+//                .discountPrice(product1.getDiscountPrice())
+//                .categoryId(product1.getCategory().getCategoryId())
+//                .description(product1.getDescription())
+//                .imageUrl(product1.getImageUrl())
+//                .build();
+//
+//        productResponseDto2 = ProductResponseDto.builder()
+//                .productId(product2.getProductId())
+//                .name(product2.getName())
+//                .price(product2.getPrice())
+//                .discountPrice(product2.getDiscountPrice())
+//                .categoryId(product2.getCategory().getCategoryId())
+//                .description(product2.getDescription())
+//                .imageUrl(product2.getImageUrl())
+//                .build();
+//
+//        productCreateRequestDto = ProductCreateRequestDto.builder()
+//                .name(productToCreate.getName())
+//                .price(productToCreate.getPrice())
+//                .discountPrice(productToCreate.getDiscountPrice())
+//                .categoryId(productToCreate.getCategory().getCategoryId())
+//                .description(productToCreate.getDescription())
+//                .imageUrl(productToCreate.getImageUrl())
+//                .build();
+//
+//        productResponseCreatedDto = ProductResponseDto.builder()
+//                .productId(productCreated.getProductId())
+//                .name(productCreated.getName())
+//                .price(productCreated.getPrice())
+//                .discountPrice(productCreated.getDiscountPrice())
+//                .categoryId(productCreated.getCategory().getCategoryId())
+//                .description(productCreated.getDescription())
+//                .imageUrl(productCreated.getImageUrl())
+//                .build();
+//    }
 
     @Test
     @DisplayName("GET /v1/products - Get all products")

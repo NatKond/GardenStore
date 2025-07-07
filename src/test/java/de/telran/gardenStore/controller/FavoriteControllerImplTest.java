@@ -2,19 +2,15 @@ package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.gardenStore.AbstractTest;
+import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
-import de.telran.gardenStore.entity.AppUser;
-import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Favorite;
-import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.service.FavoriteService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -44,115 +39,7 @@ class FavoriteControllerImplTest  extends AbstractTest {
     private FavoriteService favoriteService;
 
     @MockitoBean
-    private ModelMapper modelMapper;
-
-//    private Category category1;
-//    private Category category2;
-//
-//    private Product product1;
-//    private Product product2;
-//    private Product product3;
-//
-//    private AppUser user1;
-//
-//    private Favorite favorite1;
-//    private Favorite favorite2;
-//
-//    private Favorite favoriteToCreate;
-//    private Favorite favoriteCreated;
-//
-//    private FavoriteCreateRequestDto favoriteCreateRequestDto;
-//    private FavoriteResponseDto favoriteResponseDto1;
-//    private FavoriteResponseDto favoriteResponseDto2;
-//    private FavoriteResponseDto favoriteResponseCreatedDto;
-
-//    @BeforeEach
-//    void setUp() {
-//        category1 = Category.builder()
-//                .categoryId(1L)
-//                .name("Fertilizer")
-//                .build();
-//
-//        category2 = Category.builder()
-//                .categoryId(2L)
-//                .name("Protective products and septic tanks")
-//                .build();
-//
-//        product1 = Product.builder()
-//                .productId(1L)
-//                .name("All-Purpose Plant Fertilizer")
-//                .discountPrice(new BigDecimal("8.99"))
-//                .price(new BigDecimal("11.99"))
-//                .category(category1)
-//                .build();
-//
-//        product2 = Product.builder()
-//                .productId(2L)
-//                .name("Organic Tomato Feed")
-//                .discountPrice(new BigDecimal("10.49"))
-//                .price(new BigDecimal("13.99"))
-//                .category(category1)
-//                .build();
-//
-//        product3 = Product.builder()
-//                .productId(3L)
-//                .name("Slug & Snail Barrier Pellets")
-//                .discountPrice(new BigDecimal("5.75"))
-//                .price(new BigDecimal("7.50"))
-//                .category(category2)
-//                .build();
-//
-//        user1 = AppUser.builder()
-//                .userId(1L)
-//                .name("Alice Johnson")
-//                .email("alice.johnson@example.com")
-//                .build();
-//
-//        favorite1 = Favorite.builder()
-//                .favoriteId(1L)
-//                .user(user1)
-//                .product(product1)
-//                .build();
-//
-//        favorite2 = Favorite.builder()
-//                .favoriteId(2L)
-//                .user(user1)
-//                .product(product2)
-//                .build();
-//
-//        favoriteToCreate = Favorite.builder()
-//                .user(user1)
-//                .product(product3)
-//                .build();
-//
-//        favoriteCreated = favoriteToCreate.toBuilder()
-//                .favoriteId(3L)
-//                .build();
-//
-//        favoriteResponseDto1 = FavoriteResponseDto.builder()
-//                .favoriteId(favorite1.getFavoriteId())
-//                .productId(favorite1.getProduct().getProductId())
-//                .userId(favorite1.getUser().getUserId())
-//                .build();
-//
-//        favoriteResponseDto2 = FavoriteResponseDto.builder()
-//                .favoriteId(favorite2.getFavoriteId())
-//                .productId(favorite2.getProduct().getProductId())
-//                .userId(favorite2.getUser().getUserId())
-//                .build();
-//
-//        favoriteCreateRequestDto = FavoriteCreateRequestDto.builder()
-//                .userId(favoriteToCreate.getUser().getUserId())
-//                .productId(favoriteToCreate.getProduct().getProductId())
-//                .build();
-//
-//        favoriteResponseCreatedDto = FavoriteResponseDto.builder()
-//                .productId(favoriteCreated.getProduct().getProductId())
-//                .userId(favoriteCreated.getUser().getUserId())
-//                .productId(favoriteCreated.getProduct().getProductId())
-//                .build();
-//
-//    }
+    private Converter<Favorite, FavoriteCreateRequestDto, FavoriteResponseDto,FavoriteResponseDto> favoriteConverter;
 
     @Test
     @DisplayName("GET /v1/favorites/{userId} - Get all favorites by userId")
@@ -165,8 +52,7 @@ class FavoriteControllerImplTest  extends AbstractTest {
         List<FavoriteResponseDto> expected = List.of(favoriteResponseDto1, favoriteResponseDto2);
 
         when(favoriteService.getAllFavoritesByUser(userId)).thenReturn(favorites);
-        when(modelMapper.map(favorite1, FavoriteResponseDto.class)).thenReturn(favoriteResponseDto1);
-        when(modelMapper.map(favorite2, FavoriteResponseDto.class)).thenReturn(favoriteResponseDto2);
+        when(favoriteConverter.convertEntityListToDtoList(favorites)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/favorites/{userId}", userId))
                 .andExpectAll(
@@ -181,9 +67,9 @@ class FavoriteControllerImplTest  extends AbstractTest {
 
         Long userId = favoriteToCreate.getUser().getUserId();
 
-        when(modelMapper.map(favoriteCreateRequestDto, Favorite.class)).thenReturn(favoriteToCreate);
+        when(favoriteConverter.convertDtoToEntity(favoriteCreateRequestDto)).thenReturn(favoriteToCreate);
         when(favoriteService.createFavorite(favoriteToCreate)).thenReturn(favoriteCreated);
-        when(modelMapper.map(favoriteCreated, FavoriteResponseDto.class)).thenReturn(favoriteResponseCreatedDto);
+        when(favoriteConverter.convertEntityToDto(favoriteCreated)).thenReturn(favoriteResponseCreatedDto);
 
         mockMvc.perform(post("/v1/favorites/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -191,7 +77,7 @@ class FavoriteControllerImplTest  extends AbstractTest {
                 .andExpectAll(
                         status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(favoriteCreateRequestDto)));
+                        content().json(objectMapper.writeValueAsString(favoriteResponseCreatedDto)));
 
 
     }
@@ -202,7 +88,7 @@ class FavoriteControllerImplTest  extends AbstractTest {
 
         Long userId = favoriteToCreate.getUser().getUserId();
 
-        when(modelMapper.map(favoriteCreateRequestDto, Favorite.class)).thenReturn(favoriteToCreate);
+        when(favoriteConverter.convertDtoToEntity(favoriteCreateRequestDto)).thenReturn(favoriteToCreate);
         when(favoriteService.createFavorite(favoriteToCreate))
                 .thenThrow(new FavoriteAlreadyExistsException("Favorite with userId " + favoriteToCreate.getUser().getUserId() + " and productId " + favoriteToCreate.getProduct().getProductId() + " already exists"));
 

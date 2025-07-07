@@ -20,8 +20,6 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
 
     private final Converter<AppUser, UserCreateRequestDto, UserResponseDto, UserShortResponseDto> userConverter;
-    //private final UserConverter userConverter;
-
 
     @Override
     public List<UserShortResponseDto> getAllUsers() {

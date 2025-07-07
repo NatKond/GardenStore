@@ -2,16 +2,16 @@ package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.gardenStore.AbstractTest;
+import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
+import de.telran.gardenStore.dto.CategoryShortResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.service.CategoryService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,71 +43,18 @@ public class CategoryControllerImplTest extends AbstractTest {
     private CategoryService categoryService;
 
     @MockitoBean
-    private ModelMapper modelMapper;
-
-//    private Category category1;
-//    private Category category2;
-//    private Category category3;
-//    private Category categoryToCreate;
-
-//    private CategoryResponseDto categoryResponseDto1;
-//    private CategoryResponseDto categoryResponseDto2;
-//    private CategoryResponseDto categoryResponseDto3;
-//    private CategoryCreateRequestDto categoryCreateRequestDto;
-
-//    @BeforeEach
-//    void setUp() {
-//        category1 = Category.builder()
-//                .categoryId(1L)
-//                .name("Fertilizer")
-//                .build();
-//
-//        category2 = Category.builder()
-//                .categoryId(2L)
-//                .name("Protective products and septic tanks")
-//                .build();
-//
-//        category3 = Category.builder()
-//                .categoryId(3L)
-//                .name("Planting material")
-//                .build();
-//
-//        categoryToCreate = Category.builder()
-//                .name("Pots and planters")
-//                .build();
-//
-//        categoryResponseDto1 = CategoryResponseDto.builder()
-//                .categoryId(category1.getCategoryId())
-//                .name(category1.getName())
-//                .build();
-//
-//        categoryResponseDto2 = CategoryResponseDto.builder()
-//                .categoryId(category2.getCategoryId())
-//                .name(category2.getName())
-//                .build();
-//
-//        categoryResponseDto3 = CategoryResponseDto.builder()
-//                .categoryId(category3.getCategoryId())
-//                .name(category3.getName())
-//                .build();
-//
-//        categoryCreateRequestDto = CategoryCreateRequestDto.builder()
-//                .name(categoryToCreate.getName())
-//                .build();
-//    }
+    private Converter<Category, CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> categoryConverter;
 
     @DisplayName("GET /v1/categories - Get all categories")
     @Test
     void getAllCategories() throws Exception {
-        List<Category> categories = List.of(category1, category2, category3);
+        List<Category> categories = List.of(category1, category2);
 
-        List<CategoryResponseDto> categoriesDto = List.of(categoryResponseDto1, categoryResponseDto2, categoryResponseDto3);
+        List<CategoryShortResponseDto> categoriesDto = List.of(categoryShortResponseDto1, categoryShortResponseDto2);
 
         when(categoryService.getAllCategories()).thenReturn(categories);
 
-        when(modelMapper.map(category1, CategoryResponseDto.class)).thenReturn(categoryResponseDto1);
-        when(modelMapper.map(category2, CategoryResponseDto.class)).thenReturn(categoryResponseDto2);
-        when(modelMapper.map(category3, CategoryResponseDto.class)).thenReturn(categoryResponseDto3);
+        when(categoryConverter.convertEntityListToDtoList(categories)).thenReturn(categoriesDto);
 
         mockMvc
                 .perform(get("/v1/categories"))
@@ -124,7 +71,7 @@ public class CategoryControllerImplTest extends AbstractTest {
 
         when(categoryService.getCategoryById(category1.getCategoryId())).thenReturn(category1);
 
-        when(modelMapper.map(category1, CategoryResponseDto.class)).thenReturn(categoryResponseDto1);
+        when(categoryConverter.convertEntityToDto(category1)).thenReturn(categoryResponseDto1);
 
         mockMvc
                 .perform(get("/v1/categories/{categoryId}", category1.getCategoryId()))
@@ -169,9 +116,8 @@ public class CategoryControllerImplTest extends AbstractTest {
                 .build();
 
         when(categoryService.createCategory(categoryToCreate)).thenReturn(categoryCreated);
-
-        when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryToCreate);
-        when(modelMapper.map(categoryCreated, CategoryResponseDto.class)).thenReturn(categoryResponseCreatedDto);
+        when(categoryConverter.convertDtoToEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
+        when(categoryConverter.convertEntityToDto(categoryCreated)).thenReturn(categoryResponseCreatedDto);
 
         mockMvc
                 .perform(post("/v1/categories")
@@ -188,9 +134,8 @@ public class CategoryControllerImplTest extends AbstractTest {
     @Test
     void createCategoryNegativeCase() throws Exception {
 
+        when(categoryConverter.convertDtoToEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
         when(categoryService.createCategory(categoryToCreate)).thenThrow(new CategoryWithNameAlreadyExistsException("Category with name " + categoryToCreate.getName() + " already exists."));
-
-        when(modelMapper.map(categoryCreateRequestDto, Category.class)).thenReturn(categoryToCreate);
 
         mockMvc
                 .perform(post("/v1/categories")
@@ -226,10 +171,10 @@ public class CategoryControllerImplTest extends AbstractTest {
                 .name(categoryUpdated.getName())
                 .build();
 
-        when(modelMapper.map(categoryUpdateRequestDto, Category.class)).thenReturn(categoryUpdate);
+        when(categoryConverter.convertDtoToEntity(categoryUpdateRequestDto)).thenReturn(categoryUpdate);
         when(categoryService.updateCategory(categoryUpdated.getCategoryId(), categoryUpdate)).thenReturn(categoryUpdated);
         when(categoryService.getCategoryById(categoryUpdated.getCategoryId())).thenReturn(categoryUpdated);
-        when(modelMapper.map(categoryUpdated, CategoryResponseDto.class)).thenReturn(categoryResponseUpdatedDto);
+        when(categoryConverter.convertEntityToDto(categoryUpdated)).thenReturn(categoryResponseUpdatedDto);
 
         mockMvc
                 .perform(put("/v1/categories/{category_id}", categoryUpdated.getCategoryId())

@@ -157,7 +157,7 @@ public class ProductControllerImplTest {
 
         List<ProductResponseDto> expected = List.of(productResponseDto1, productResponseDto2);
 
-        when(productService.getAllProducts()).thenReturn(products);
+        when(productService.getAllProducts(null, null, null, null, null, null)).thenReturn(products);
         when(modelMapper.map(product1, ProductResponseDto.class)).thenReturn(productResponseDto1);
         when(modelMapper.map(product2, ProductResponseDto.class)).thenReturn(productResponseDto2);
 

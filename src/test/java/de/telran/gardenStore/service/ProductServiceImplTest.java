@@ -4,6 +4,11 @@ import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +31,18 @@ class ProductServiceImplTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private EntityManager entityManager;
+
+    @Mock
+    private CriteriaBuilder criteriaBuilder;
+    @Mock
+    private CriteriaQuery<Product> criteriaQuery;
+    @Mock
+    private Root<Product> root;
+    @Mock
+    private TypedQuery<Product> typedQuery;
 
     @InjectMocks
     private ProductServiceImpl productService;
@@ -96,14 +113,20 @@ class ProductServiceImplTest {
     void getAllProducts() {
         List<Product> expected = List.of(product1, product2);
 
-        when(productRepository.findAll()).thenReturn(expected);
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(Product.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(Product.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(expected);
+        //when(productRepository.findAll()).thenReturn(expected);
 
-        List<Product> actual = productService.getAllProducts();
+        List<Product> actual = productService.getAllProducts(null, null, null, null, null, null);
 
         assertNotNull(actual);
         assertEquals(2, actual.size());
         assertEquals(expected, actual);
-        verify(productRepository).findAll();
+        //verify(productRepository).findAll();
     }
 
     @DisplayName("Get product by ID : positive case")

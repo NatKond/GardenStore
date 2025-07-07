@@ -3,27 +3,17 @@ package de.telran.gardenStore.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder(toBuilder = true)
+@Builder
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserResponseDto {
+public class CategoryShortResponseDto {
     @EqualsAndHashCode.Include
-    private Long userId;
+    private Long categoryId;
 
     private String name;
-
-    private String email;
-
-    private String phoneNumber;
-
-    private String role;
-
-    private List<FavoriteResponseDto> favorites;
 }

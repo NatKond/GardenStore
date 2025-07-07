@@ -5,7 +5,6 @@ import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.repository.CategoryRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,44 +28,12 @@ class CategoryServiceImplTest extends AbstractTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
-//    private Category category1;
-//    private Category category2;
-//    private Category category3;
-//    private Category categoryToCreate;
-//    private Category categoryCreated;
-
-//    @BeforeEach
-//    void setUp() {
-//        category1 = Category.builder()
-//                .categoryId(1L)
-//                .name("Fertilizer")
-//                .build();
-//
-//        category2 = Category.builder()
-//                .categoryId(2L)
-//                .name("Protective products and septic tanks")
-//                .build();
-//
-//        category3 = Category.builder()
-//                .categoryId(3L)
-//                .name("Planting material")
-//                .build();
-//
-//        categoryToCreate = Category.builder()
-//                .name("Pots and planters")
-//                .build();
-//
-//        categoryCreated = categoryToCreate.toBuilder()
-//                .categoryId(4L)
-//                .build();
-//    }
-
     @DisplayName("Get all categories")
     @Test
     void getAllCategories() {
-        List<Category> expected = List.of(category1, category2, category3);
+        List<Category> expected = List.of(category1, category2);
 
-        when(categoryRepositoryMock.findAll()).thenReturn(List.of(category1, category2, category3));
+        when(categoryRepositoryMock.findAll()).thenReturn(List.of(category1, category2));
 
         List<Category> actual = categoryService.getAllCategories();
 
@@ -124,10 +91,10 @@ class CategoryServiceImplTest extends AbstractTest {
     @Test
     void createCategoryNegativeCase() {
         Category categoryToCreate = Category.builder()
-                .name("Planting material")
+                .name("Protective products and septic tanks")
                 .build();
 
-        when(categoryRepositoryMock.findCategoryByName(categoryToCreate.getName())).thenReturn(Optional.of(category3));
+        when(categoryRepositoryMock.findCategoryByName(categoryToCreate.getName())).thenReturn(Optional.of(category2));
 
         RuntimeException exception = assertThrows(CategoryWithNameAlreadyExistsException.class, () -> categoryService.createCategory(categoryToCreate));
         assertEquals("Category with name " + categoryToCreate.getName() + " already exists.", exception.getMessage());
@@ -168,7 +135,7 @@ class CategoryServiceImplTest extends AbstractTest {
     @Test
     void updateCategoryNegativeCase() {
 
-        String nameToUpdate = "Planting material";
+        String nameToUpdate = "Protective products and septic tanks";
 
         Long categoryId = 1L;
 
@@ -177,7 +144,7 @@ class CategoryServiceImplTest extends AbstractTest {
                 .build();
 
         when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.of(category1));
-        when(categoryRepositoryMock.findCategoryByName(nameToUpdate)).thenReturn(Optional.of(category3));
+        when(categoryRepositoryMock.findCategoryByName(nameToUpdate)).thenReturn(Optional.of(category2));
 
         RuntimeException exception = assertThrows(CategoryWithNameAlreadyExistsException.class, () -> categoryService.updateCategory(categoryId, categoryUpdate));
         assertEquals("Category with name " + nameToUpdate + " already exists.", exception.getMessage());
@@ -186,9 +153,9 @@ class CategoryServiceImplTest extends AbstractTest {
     @DisplayName("Delete category by ID : positive case")
     @Test
     void deleteCategoryByIdPositiveCase() {
-        Category deletedCategory = category1;
+        Category deletedCategory = categoryCreated;
 
-        Long categoryId = 1L;
+        Long categoryId = 3L;
 
         when(categoryRepositoryMock.findById(deletedCategory.getCategoryId())).thenReturn(Optional.of(deletedCategory));
 

@@ -2,6 +2,7 @@ package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
+import de.telran.gardenStore.dto.CategoryShortResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface CategoryController {
 
     @GetMapping
-    List<CategoryResponseDto> getAllCategories();
+    List<CategoryShortResponseDto> getAllCategories();
 
     @GetMapping("/{categoryId}")
     CategoryResponseDto getCategoryById(@PathVariable @Positive Long categoryId);

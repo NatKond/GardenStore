@@ -1,5 +1,6 @@
 package de.telran.gardenStore.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -16,8 +17,10 @@ public class FavoriteResponseDto {
     @EqualsAndHashCode.Include
     private Long favoriteId;
 
+    @JsonIgnore
     private Long userId;
 
-    private Long productId;
+    private ProductResponseDto product;
+    //private Long productId;
 
 }

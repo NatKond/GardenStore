@@ -1,18 +1,18 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
+import de.telran.gardenStore.dto.CategoryShortResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.service.CategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,31 +21,28 @@ public class CategoryControllerImpl implements CategoryController {
 
     private final CategoryService categoryService;
 
-    private final ModelMapper modelMapper;
+    private final Converter<Category, CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> categoryConverter;
 
     @Override
 
-    public List<CategoryResponseDto> getAllCategories() {
-        return categoryService.getAllCategories().stream()
-                .map(category -> modelMapper.map(category, CategoryResponseDto.class))
-                .collect(Collectors.toList());
+    public List<CategoryShortResponseDto> getAllCategories() {
+        return categoryConverter.convertEntityListToDtoList(categoryService.getAllCategories());
     }
 
     @Override
     public CategoryResponseDto getCategoryById(@Positive Long categoryId) {
-        return modelMapper.map(categoryService.getCategoryById(categoryId), CategoryResponseDto.class);
+        return categoryConverter.convertEntityToDto(categoryService.getCategoryById(categoryId));
     }
 
     @Override
-    public CategoryResponseDto createCategory(@Valid CategoryCreateRequestDto dto) {
-        Category category = modelMapper.map(dto, Category.class);
-        return modelMapper.map(categoryService.createCategory(category), CategoryResponseDto.class);
+    public CategoryResponseDto createCategory(@Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+        return categoryConverter.convertEntityToDto(categoryService.createCategory(
+                categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
-    public CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto dto) {
-        Category category = modelMapper.map(dto, Category.class);
-        return modelMapper.map(categoryService.updateCategory(categoryId, category), CategoryResponseDto.class);
+    public CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+        return categoryConverter.convertEntityToDto(categoryService.updateCategory(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override

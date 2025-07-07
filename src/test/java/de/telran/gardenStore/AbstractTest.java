@@ -10,12 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractTest {
 
     protected Category category1;
     protected Category category2;
-    protected Category category3;
     protected Category categoryToCreate;
     protected Category categoryCreated;
 
@@ -35,9 +36,9 @@ public abstract class AbstractTest {
     protected Favorite favoriteToCreate;
     protected Favorite favoriteCreated;
 
+    protected CategoryShortResponseDto categoryShortResponseDto1;
+    protected CategoryShortResponseDto categoryShortResponseDto2;
     protected CategoryResponseDto categoryResponseDto1;
-    protected CategoryResponseDto categoryResponseDto2;
-    protected CategoryResponseDto categoryResponseDto3;
     protected CategoryCreateRequestDto categoryCreateRequestDto;
     protected CategoryResponseDto categoryResponseCreatedDto;
 
@@ -46,8 +47,9 @@ public abstract class AbstractTest {
     protected ProductCreateRequestDto productCreateRequestDto;
     protected ProductResponseDto productResponseCreatedDto;
 
+    protected UserShortResponseDto userShortResponseDto1;
+    protected UserShortResponseDto userShortResponseDto2;
     protected UserResponseDto userResponseDto1;
-    protected UserResponseDto userResponseDto2;
     protected UserCreateRequestDto userCreateRequestDto;
     protected UserResponseDto userResponseCreatedDto;
 
@@ -59,10 +61,10 @@ public abstract class AbstractTest {
     @BeforeEach
     void setUp() {
         initEntities();
-        initCategoryDtos();
         initProductDtos();
-        initUserDtos();
+        initCategoryDtos();
         initFavoriteDtos();
+        initUserDtos();
     }
 
     private void initEntities() {
@@ -76,17 +78,13 @@ public abstract class AbstractTest {
                 .name("Protective products and septic tanks")
                 .build();
 
-        category3 = Category.builder()
-                .categoryId(3L)
-                .name("Planting material")
-                .build();
-
         categoryToCreate = Category.builder()
-                .name("Pots and planters")
+                .name("Planting material")
+                .products(new ArrayList<>())
                 .build();
 
         categoryCreated = categoryToCreate.toBuilder()
-                .categoryId(4L)
+                .categoryId(3L)
                 .build();
 
         product1 = Product.builder()
@@ -102,7 +100,7 @@ public abstract class AbstractTest {
                 .build();
 
         product2 = Product.builder()
-                .productId(2L)
+                .productId(1L)
                 .name("Organic Tomato Feed")
                 .discountPrice(new BigDecimal("10.49"))
                 .price(new BigDecimal("13.99"))
@@ -112,6 +110,8 @@ public abstract class AbstractTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+
+        category1.setProducts(List.of(product1, product2));
 
         product3 = Product.builder()
                 .productId(3L)
@@ -125,11 +125,13 @@ public abstract class AbstractTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
+        category2.setProducts(List.of(product3));
+
         productToCreate = Product.builder()
                 .name("Garden Tool Set (5 pcs)")
                 .discountPrice(new BigDecimal("19.99"))
                 .price(new BigDecimal("24.99"))
-                .category(category3)
+                .category(category2)
                 .description("Essential hand tools set for everyday gardening")
                 .imageUrl("https://example.com/images/garden_tool_set.jpg")
                 .createdAt(LocalDateTime.now())
@@ -155,6 +157,7 @@ public abstract class AbstractTest {
                 .email("bob.smith@example.com")
                 .phoneNumber("+1987654321")
                 .passwordHash("12345")
+                .favorites(new ArrayList<>())
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -182,6 +185,8 @@ public abstract class AbstractTest {
                 .product(product2)
                 .build();
 
+        user1.setFavorites(List.of(favorite1, favorite2));
+
         favoriteToCreate = Favorite.builder()
                 .user(user1)
                 .product(product3)
@@ -193,19 +198,20 @@ public abstract class AbstractTest {
     }
 
     private void initCategoryDtos() {
-        categoryResponseDto1 = CategoryResponseDto.builder()
+        categoryShortResponseDto1 = CategoryShortResponseDto.builder()
                 .categoryId(category1.getCategoryId())
                 .name(category1.getName())
                 .build();
 
-        categoryResponseDto2 = CategoryResponseDto.builder()
+        categoryShortResponseDto2 = CategoryShortResponseDto.builder()
                 .categoryId(category2.getCategoryId())
                 .name(category2.getName())
                 .build();
 
-        categoryResponseDto3 = CategoryResponseDto.builder()
-                .categoryId(category3.getCategoryId())
-                .name(category3.getName())
+        categoryResponseDto1 = CategoryResponseDto.builder()
+                .categoryId(category1.getCategoryId())
+                .name(category1.getName())
+                .products(List.of(productResponseDto1, productResponseDto2))
                 .build();
 
         categoryCreateRequestDto = CategoryCreateRequestDto.builder()
@@ -260,7 +266,7 @@ public abstract class AbstractTest {
     }
 
     private void initUserDtos() {
-        userResponseDto1 = UserResponseDto.builder()
+        userShortResponseDto1 = UserShortResponseDto.builder()
                 .userId(user1.getUserId())
                 .name(user1.getName())
                 .email(user1.getEmail())
@@ -268,12 +274,21 @@ public abstract class AbstractTest {
                 .role(user1.getRole().name())
                 .build();
 
-        userResponseDto2 = UserResponseDto.builder()
+        userShortResponseDto2 = UserShortResponseDto.builder()
                 .userId(user2.getUserId())
                 .name(user2.getName())
                 .email(user2.getEmail())
                 .phoneNumber(user2.getPhoneNumber())
                 .role(user2.getRole().name())
+                .build();
+
+        userResponseDto1 = UserResponseDto.builder()
+                .userId(user1.getUserId())
+                .name(user1.getName())
+                .email(user1.getEmail())
+                .phoneNumber(user1.getPhoneNumber())
+                .favorites(List.of(favoriteResponseDto1, favoriteResponseDto2))
+                .role(user1.getRole().name())
                 .build();
 
         userCreateRequestDto = UserCreateRequestDto.builder()
@@ -289,19 +304,20 @@ public abstract class AbstractTest {
                 .email(userCreated.getEmail())
                 .phoneNumber(userCreated.getPhoneNumber())
                 .role(userCreated.getRole().name())
+                .favorites(new ArrayList<>())
                 .build();
     }
 
     private void initFavoriteDtos() {
         favoriteResponseDto1 = FavoriteResponseDto.builder()
                 .favoriteId(favorite1.getFavoriteId())
-                .productId(favorite1.getProduct().getProductId())
+                .product(productResponseDto1)
                 .userId(favorite1.getUser().getUserId())
                 .build();
 
         favoriteResponseDto2 = FavoriteResponseDto.builder()
                 .favoriteId(favorite2.getFavoriteId())
-                .productId(favorite2.getProduct().getProductId())
+                .product(productResponseDto2)
                 .userId(favorite2.getUser().getUserId())
                 .build();
 
@@ -312,7 +328,7 @@ public abstract class AbstractTest {
 
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()
                 .favoriteId(favoriteCreated.getFavoriteId())
-                .productId(favoriteCreated.getProduct().getProductId())
+                .product(productResponseCreatedDto)
                 .userId(favoriteCreated.getUser().getUserId())
                 .build();
     }

@@ -10,7 +10,7 @@ import java.util.Map;
 @Builder(toBuilder = true)
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AppErrorResponse {
+public class ApiErrorResponse {
 
     private String exception;
 

@@ -9,6 +9,7 @@ import de.telran.gardenStore.service.CategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/v1/categories")
 @Validated
 public class CategoryControllerImpl implements CategoryController {
 
@@ -24,28 +26,36 @@ public class CategoryControllerImpl implements CategoryController {
     private final Converter<Category, CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> categoryConverter;
 
     @Override
+    @GetMapping
     public List<CategoryShortResponseDto> getAllCategories() {
         return categoryConverter.convertEntityListToDtoList(categoryService.getAllCategories());
     }
 
     @Override
-    public CategoryResponseDto getCategoryById(@Positive Long categoryId) {
+    @GetMapping("/{categoryId}")
+    public CategoryResponseDto getCategoryById(@PathVariable @Positive Long categoryId) {
         return categoryConverter.convertEntityToDto(categoryService.getCategoryById(categoryId));
     }
 
     @Override
-    public CategoryResponseDto createCategory(@Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoryResponseDto createCategory(@RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
         return categoryConverter.convertEntityToDto(categoryService.createCategory(
                 categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
-    public CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PutMapping("/{categoryId}")
+    public CategoryResponseDto updateCategory(@PathVariable @Positive Long categoryId,
+                                              @RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
         return categoryConverter.convertEntityToDto(categoryService.updateCategory(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
-    public void deleteCategory(@Positive Long categoryId) {
+    @DeleteMapping("/{categoryId}")
+    public void deleteCategory(@PathVariable @Positive Long categoryId) {
         categoryService.deleteCategoryById(categoryId);
     }
 }

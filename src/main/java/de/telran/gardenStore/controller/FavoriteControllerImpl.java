@@ -9,12 +9,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/v1/favorites")
 @RequiredArgsConstructor
 @Validated
 public class FavoriteControllerImpl implements FavoriteController {
@@ -24,19 +26,24 @@ public class FavoriteControllerImpl implements FavoriteController {
     private final Converter<Favorite, FavoriteCreateRequestDto, FavoriteResponseDto,FavoriteResponseDto> favoriteConverter;
 
     @Override
-    public List<FavoriteResponseDto> getAllFavoritesByUser(@Positive Long userId) {
+    @GetMapping("/{userId}")
+    public List<FavoriteResponseDto> getAllFavoritesByUser(@PathVariable @Positive Long userId) {
         return favoriteConverter.convertEntityListToDtoList(favoriteService.getAllFavoritesByUser(userId));
     }
 
     @Override
-    public FavoriteResponseDto createFavorite(@Positive Long userId, @Valid FavoriteCreateRequestDto favoriteCreateRequestDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{userId}")
+    public FavoriteResponseDto createFavorite(@PathVariable @Positive Long userId,
+                                              @RequestBody @Valid FavoriteCreateRequestDto favoriteCreateRequestDto) {
         favoriteCreateRequestDto.setUserId(userId);
         return favoriteConverter.convertEntityToDto(favoriteService.createFavorite(
                 favoriteConverter.convertDtoToEntity(favoriteCreateRequestDto)));
     }
 
     @Override
-    public void deleteFavorite(@Positive Long favoriteId) {
+    @DeleteMapping("/{favoriteId}")
+    public void deleteFavorite(@PathVariable @Positive Long favoriteId) {
         favoriteService.deleteFavoriteById(favoriteId);
     }
 }

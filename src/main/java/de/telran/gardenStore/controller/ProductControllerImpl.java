@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/v1/products")
 @Validated
 public class ProductControllerImpl implements ProductController {
 
@@ -26,13 +29,14 @@ public class ProductControllerImpl implements ProductController {
     private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Override
-    public List<ProductShortResponseDto> getAllProducts(@Positive Long categoryId,
-                                                        Boolean discount,
-                                                        @Positive BigDecimal minPrice,
-                                                        @Positive BigDecimal maxPrice,
-                                                        @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
-                                                        String sortBy,
-                                                        Boolean sortDirection) {
+    @GetMapping
+    public List<ProductShortResponseDto> getAllProducts(@RequestParam(required = false) @Positive Long categoryId,
+                                                        @RequestParam(required = false) Boolean discount,
+                                                        @RequestParam(required = false) @Positive BigDecimal minPrice,
+                                                        @RequestParam(required = false) @Positive BigDecimal maxPrice,
+                                                        @RequestParam(required = false)
+                                                            @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
+                                                        @RequestParam(required = false) Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("Min price cannot be greater than max price.");
@@ -41,24 +45,34 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ProductResponseDto getProductById(@Positive Long productId) {
+    @GetMapping("/{productId}")
+    public ProductResponseDto getProductById(@PathVariable @Positive Long productId) {
         return productConverter.convertEntityToDto(productService.getProductById(productId));
     }
 
     @Override
-    public ProductResponseDto createProduct(@Valid ProductCreateRequestDto productRequest) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productRequest) {
         return productConverter.convertEntityToDto(productService.createProduct(
                 productConverter.convertDtoToEntity(productRequest)));
     }
 
     @Override
-    public ProductResponseDto updateProduct(@Positive Long productId, @Valid ProductCreateRequestDto productRequest) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PutMapping("/{productId}")
+    public ProductResponseDto updateProduct(@PathVariable @Positive Long productId,
+                                            @RequestBody @Valid ProductCreateRequestDto productRequest) {
         return productConverter.convertEntityToDto(productService.updateProduct(productId,
                 productConverter.convertDtoToEntity(productRequest)));
     }
 
     @Override
-    public void deleteProductById(@Positive Long productId) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{productId}")
+    public void deleteProductById(@PathVariable @Positive Long productId) {
         productService.deleteProductById(productId);
     }
 }

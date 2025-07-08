@@ -5,6 +5,7 @@ import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.service.ProductService;
@@ -38,7 +39,7 @@ public class ProductControllerImplTest extends AbstractTest {
     private ProductService productService;
 
     @MockitoBean
-    private Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductResponseDto> productConverter;
+    private Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Test
     @DisplayName("GET /v1/products - Get all products")
@@ -46,7 +47,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
         List<Product> products = List.of(product1, product2);
 
-        List<ProductResponseDto> expected = List.of(productResponseDto1, productResponseDto2);
+        List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2);
 
         when(productService.getAllProducts(null, null, null, null, null, null)).thenReturn(products);
         when(productConverter.convertEntityListToDtoList(products)).thenReturn(expected);

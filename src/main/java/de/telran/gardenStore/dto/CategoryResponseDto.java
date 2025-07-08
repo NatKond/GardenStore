@@ -20,5 +20,5 @@ public class CategoryResponseDto {
 
     private String name;
 
-    List<ProductResponseDto> products;
+    List<ProductShortResponseDto> products;
 }

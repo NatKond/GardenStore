@@ -3,6 +3,8 @@ package de.telran.gardenStore.controller;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
+import de.telran.gardenStore.dto.UserCreateRequestDto;
+import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.service.ProductService;
 import jakarta.validation.Valid;
@@ -45,15 +47,15 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ProductResponseDto createProduct(@Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.createProduct(
-                productConverter.convertDtoToEntity(productRequest)));
+    public ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productCreateRequestDto) {
+        return productConverter.convertEntityToDto(
+                productService.createProduct(productConverter.convertDtoToEntity(productCreateRequestDto)));
     }
 
     @Override
     public ProductResponseDto updateProduct(@Positive Long productId, @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.updateProduct(productId,
-                productConverter.convertDtoToEntity(productRequest)));
+        return productConverter.convertEntityToDto(
+                productService.updateProduct(productId, productConverter.convertDtoToEntity(productRequest)));
     }
 
     @Override

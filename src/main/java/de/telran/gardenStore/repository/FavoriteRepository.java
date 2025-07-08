@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
+
     List<Favorite> getAllByUser(AppUser user);
 
     Optional<Favorite> findByUserAndProduct(AppUser user,Product product);

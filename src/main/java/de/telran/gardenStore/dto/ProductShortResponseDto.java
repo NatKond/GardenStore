@@ -1,8 +1,9 @@
 package de.telran.gardenStore.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,17 +11,19 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder(toBuilder = true)
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FavoriteResponseDto {
-
+public class ProductShortResponseDto {
     @EqualsAndHashCode.Include
-    private Long favoriteId;
+    private Long productId;
 
-    @JsonIgnore
-    private Long userId;
+    private String name;
 
-    private ProductShortResponseDto product;
-    //private Long productId;
+    private String description;
+
+    private BigDecimal price;
+
+    private BigDecimal discountPrice;
+
+    private Long categoryId;
 
 }

@@ -44,13 +44,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(existing);
     }
 
-    private void checkCategoryNameIsUnique(String name) {
-        if (categoryRepository.findCategoryByName(name).isPresent()) {
-            throw new CategoryWithNameAlreadyExistsException("Category with name " + name + " already exists.");
-        }
-    }
-
-
     @Override
     public void deleteCategoryById(Long categoryId) {
         Category category = getCategoryById(categoryId);
@@ -60,6 +53,12 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         categoryRepository.delete(category);
+    }
+
+    private void checkCategoryNameIsUnique(String name) {
+        if (categoryRepository.findCategoryByName(name).isPresent()) {
+            throw new CategoryWithNameAlreadyExistsException("Category with name " + name + " already exists.");
+        }
     }
     
 }

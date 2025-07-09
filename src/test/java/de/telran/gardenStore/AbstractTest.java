@@ -42,10 +42,12 @@ public abstract class AbstractTest {
     protected CategoryCreateRequestDto categoryCreateRequestDto;
     protected CategoryResponseDto categoryResponseCreatedDto;
 
+    protected ProductShortResponseDto productShortResponseDto1;
+    protected ProductShortResponseDto productShortResponseDto2;
     protected ProductResponseDto productResponseDto1;
-    protected ProductResponseDto productResponseDto2;
     protected ProductCreateRequestDto productCreateRequestDto;
     protected ProductResponseDto productResponseCreatedDto;
+    protected ProductShortResponseDto productShortResponseCreatedDto;
 
     protected UserShortResponseDto userShortResponseDto1;
     protected UserShortResponseDto userShortResponseDto2;
@@ -211,7 +213,7 @@ public abstract class AbstractTest {
         categoryResponseDto1 = CategoryResponseDto.builder()
                 .categoryId(category1.getCategoryId())
                 .name(category1.getName())
-                .products(List.of(productResponseDto1, productResponseDto2))
+                .products(List.of(productShortResponseDto1, productShortResponseDto2))
                 .build();
 
         categoryCreateRequestDto = CategoryCreateRequestDto.builder()
@@ -225,6 +227,24 @@ public abstract class AbstractTest {
     }
 
     private void initProductDtos() {
+        productShortResponseDto1 = ProductShortResponseDto.builder()
+                .productId(product1.getProductId())
+                .name(product1.getName())
+                .price(product1.getPrice())
+                .discountPrice(product1.getDiscountPrice())
+                .categoryId(product1.getCategory().getCategoryId())
+                .description(product1.getDescription())
+                .build();
+
+        productShortResponseDto2 = ProductShortResponseDto.builder()
+                .productId(product2.getProductId())
+                .name(product2.getName())
+                .price(product2.getPrice())
+                .discountPrice(product2.getDiscountPrice())
+                .categoryId(product2.getCategory().getCategoryId())
+                .description(product2.getDescription())
+                .build();
+
         productResponseDto1 = ProductResponseDto.builder()
                 .productId(product1.getProductId())
                 .name(product1.getName())
@@ -233,16 +253,6 @@ public abstract class AbstractTest {
                 .categoryId(product1.getCategory().getCategoryId())
                 .description(product1.getDescription())
                 .imageUrl(product1.getImageUrl())
-                .build();
-
-        productResponseDto2 = ProductResponseDto.builder()
-                .productId(product2.getProductId())
-                .name(product2.getName())
-                .price(product2.getPrice())
-                .discountPrice(product2.getDiscountPrice())
-                .categoryId(product2.getCategory().getCategoryId())
-                .description(product2.getDescription())
-                .imageUrl(product2.getImageUrl())
                 .build();
 
         productCreateRequestDto = ProductCreateRequestDto.builder()
@@ -262,6 +272,15 @@ public abstract class AbstractTest {
                 .categoryId(productCreated.getCategory().getCategoryId())
                 .description(productCreated.getDescription())
                 .imageUrl(productCreated.getImageUrl())
+                .build();
+
+        productShortResponseCreatedDto = ProductShortResponseDto.builder()
+                .productId(productCreated.getProductId())
+                .name(productCreated.getName())
+                .price(productCreated.getPrice())
+                .discountPrice(productCreated.getDiscountPrice())
+                .categoryId(productCreated.getCategory().getCategoryId())
+                .description(productCreated.getDescription())
                 .build();
     }
 
@@ -311,13 +330,13 @@ public abstract class AbstractTest {
     private void initFavoriteDtos() {
         favoriteResponseDto1 = FavoriteResponseDto.builder()
                 .favoriteId(favorite1.getFavoriteId())
-                .product(productResponseDto1)
+                .product(productShortResponseDto1)
                 .userId(favorite1.getUser().getUserId())
                 .build();
 
         favoriteResponseDto2 = FavoriteResponseDto.builder()
                 .favoriteId(favorite2.getFavoriteId())
-                .product(productResponseDto2)
+                .product(productShortResponseDto2)
                 .userId(favorite2.getUser().getUserId())
                 .build();
 
@@ -328,7 +347,7 @@ public abstract class AbstractTest {
 
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()
                 .favoriteId(favoriteCreated.getFavoriteId())
-                .product(productResponseCreatedDto)
+                .product(productShortResponseCreatedDto)
                 .userId(favoriteCreated.getUser().getUserId())
                 .build();
     }

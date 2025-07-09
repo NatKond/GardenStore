@@ -20,7 +20,7 @@ public class FavoriteResponseDto {
     @JsonIgnore
     private Long userId;
 
-    private ProductResponseDto product;
+    private ProductShortResponseDto product;
     //private Long productId;
 
 }

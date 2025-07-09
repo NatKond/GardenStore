@@ -2,6 +2,7 @@ package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -16,13 +17,13 @@ import java.util.List;
 public interface ProductController {
 
     @GetMapping
-    List<ProductResponseDto> getAllProducts(@RequestParam(required = false) @Positive Long category,
-                                            @RequestParam(required = false) Boolean discount,
-                                            @RequestParam(required = false) @Positive BigDecimal minPrice,
-                                            @RequestParam(required = false) @Positive BigDecimal maxPrice,
-                                            @RequestParam(required = false)
-                                            @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
-                                            @RequestParam(required = false) Boolean sortDirection);
+    List<ProductShortResponseDto> getAllProducts(@RequestParam(required = false) @Positive Long category,
+                                                 @RequestParam(required = false) Boolean discount,
+                                                 @RequestParam(required = false) @Positive BigDecimal minPrice,
+                                                 @RequestParam(required = false) @Positive BigDecimal maxPrice,
+                                                 @RequestParam(required = false)
+                                                 @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
+                                                 @RequestParam(required = false) Boolean sortDirection);
 
     @GetMapping("/{productId}")
     ProductResponseDto getProductById(@PathVariable @Positive Long productId);

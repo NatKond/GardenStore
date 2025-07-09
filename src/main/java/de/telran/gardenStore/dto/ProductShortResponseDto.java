@@ -3,22 +3,27 @@ package de.telran.gardenStore.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
-@ToString
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryResponseDto {
-
+public class ProductShortResponseDto {
     @EqualsAndHashCode.Include
-    private Long categoryId;
+    private Long productId;
 
     private String name;
 
-    List<ProductShortResponseDto> products;
+    private String description;
+
+    private BigDecimal price;
+
+    private BigDecimal discountPrice;
+
+    private Long categoryId;
+
 }

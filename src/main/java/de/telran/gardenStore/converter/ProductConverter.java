@@ -2,6 +2,7 @@ package de.telran.gardenStore.converter;
 
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ProductConverter implements Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductResponseDto> {
+public class ProductConverter implements Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> {
 
     private final ModelMapper modelMapper;
 
@@ -41,7 +42,7 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
     }
 
     @Override
-    public List<ProductResponseDto> convertEntityListToDtoList(List<Product> products) {
-        return Converter.convertList(products, this::convertEntityToDto);
+    public List<ProductShortResponseDto> convertEntityListToDtoList(List<Product> products) {
+        return Converter.convertList(products, (product) -> modelMapper.map(product, ProductShortResponseDto.class));
     }
 }

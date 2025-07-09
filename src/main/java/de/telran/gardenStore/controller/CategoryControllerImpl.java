@@ -24,7 +24,6 @@ public class CategoryControllerImpl implements CategoryController {
     private final Converter<Category, CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> categoryConverter;
 
     @Override
-
     public List<CategoryShortResponseDto> getAllCategories() {
         return categoryConverter.convertEntityListToDtoList(categoryService.getAllCategories());
     }

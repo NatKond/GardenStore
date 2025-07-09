@@ -3,8 +3,7 @@ package de.telran.gardenStore.controller;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
-import de.telran.gardenStore.dto.UserCreateRequestDto;
-import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.service.ProductService;
 import jakarta.validation.Valid;
@@ -24,16 +23,16 @@ public class ProductControllerImpl implements ProductController {
 
     private final ProductService productService;
 
-    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductResponseDto> productConverter;
+    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Override
-    public List<ProductResponseDto> getAllProducts(@Positive Long categoryId,
-                                                   Boolean discount,
-                                                   @Positive BigDecimal minPrice,
-                                                   @Positive BigDecimal maxPrice,
-                                                   @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
-                                                   String sortBy,
-                                                   Boolean sortDirection) {
+    public List<ProductShortResponseDto> getAllProducts(@Positive Long categoryId,
+                                                        Boolean discount,
+                                                        @Positive BigDecimal minPrice,
+                                                        @Positive BigDecimal maxPrice,
+                                                        @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
+                                                        String sortBy,
+                                                        Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("Min price cannot be greater than max price.");

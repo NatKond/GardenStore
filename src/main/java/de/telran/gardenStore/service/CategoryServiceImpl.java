@@ -27,13 +27,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryByName(String name) {
-        return categoryRepository.findCategoryByName(name).orElseThrow(() -> new CategoryNotFoundException("Category with name " + name + " not found"));
-    }
-
-    @Override
     public Category createCategory(Category category) {
-        nameCheck(category.getName());
+        checkCategoryNameIsUnique(category.getName());
         return categoryRepository.save(category);
     }
 
@@ -42,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category existing = getCategoryById(categoryId);
         if (!existing.getName().equals(updatedCategory.getName())) {
-            nameCheck(updatedCategory.getName());
+            checkCategoryNameIsUnique(updatedCategory.getName());
         }
 
         existing.setName(updatedCategory.getName());
@@ -60,9 +55,10 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(category);
     }
 
-    private void nameCheck(String name) {
+    private void checkCategoryNameIsUnique(String name) {
         if (categoryRepository.findCategoryByName(name).isPresent()) {
             throw new CategoryWithNameAlreadyExistsException("Category with name " + name + " already exists.");
         }
     }
+    
 }

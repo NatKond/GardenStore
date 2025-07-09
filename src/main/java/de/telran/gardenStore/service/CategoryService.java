@@ -10,7 +10,6 @@ public interface CategoryService {
 
     Category getCategoryById(Long categoryId);
 
-    Category getCategoryByName(String name);
 
     Category createCategory(Category category);
 

@@ -46,15 +46,15 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ProductResponseDto createProduct(@Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.createProduct(
-                productConverter.convertDtoToEntity(productRequest)));
+    public ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productCreateRequestDto) {
+        return productConverter.convertEntityToDto(
+                productService.createProduct(productConverter.convertDtoToEntity(productCreateRequestDto)));
     }
 
     @Override
     public ProductResponseDto updateProduct(@Positive Long productId, @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.updateProduct(productId,
-                productConverter.convertDtoToEntity(productRequest)));
+        return productConverter.convertEntityToDto(
+                productService.updateProduct(productId, productConverter.convertDtoToEntity(productRequest)));
     }
 
     @Override

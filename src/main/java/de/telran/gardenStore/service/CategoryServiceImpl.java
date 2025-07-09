@@ -34,24 +34,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Long categoryId, Category updatedCategory) {
-
         Category existing = getCategoryById(categoryId);
         if (!existing.getName().equals(updatedCategory.getName())) {
             checkCategoryNameIsUnique(updatedCategory.getName());
         }
-
         existing.setName(updatedCategory.getName());
+
         return categoryRepository.save(existing);
     }
 
     @Override
     public void deleteCategoryById(Long categoryId) {
         Category category = getCategoryById(categoryId);
-
         if (!category.getProducts().isEmpty()) {
-            throw new IllegalStateException("Cannot delete category '" + category.getName() + "' because it contains products.");
+            throw new IllegalStateException("Cannot delete category " + category.getName() + " because it contains products.");
         }
-
         categoryRepository.delete(category);
     }
 
@@ -60,5 +57,5 @@ public class CategoryServiceImpl implements CategoryService {
             throw new CategoryWithNameAlreadyExistsException("Category with name " + name + " already exists.");
         }
     }
-    
+
 }

@@ -64,16 +64,13 @@ class FavoriteControllerImplTest  extends AbstractTest {
     @Test
     @DisplayName("POST /v1/favorites - Create new favorite : positive Case")
     void createFavoritePositiveCase() throws Exception {
-
         Long userId = favoriteToCreate.getUser().getUserId();
+        Long productId = favoriteToCreate.getProduct().getProductId();
 
-        when(favoriteConverter.convertDtoToEntity(favoriteCreateRequestDto)).thenReturn(favoriteToCreate);
-        when(favoriteService.createFavorite(favoriteToCreate)).thenReturn(favoriteCreated);
+        when(favoriteService.createFavorite(userId, productId)).thenReturn(favoriteCreated);
         when(favoriteConverter.convertEntityToDto(favoriteCreated)).thenReturn(favoriteResponseCreatedDto);
 
-        mockMvc.perform(post("/v1/favorites/{userId}", userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(favoriteCreateRequestDto)))
+        mockMvc.perform(post("/v1/favorites?userId={userId}&productId={productId}", userId, productId))
                 .andExpectAll(
                         status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON),
@@ -85,16 +82,13 @@ class FavoriteControllerImplTest  extends AbstractTest {
     @Test
     @DisplayName("POST /v1/favorites - Create new favorite : negative Case")
     void createFavoriteNegativeCase() throws Exception {
-
         Long userId = favoriteToCreate.getUser().getUserId();
+        Long productId = favoriteToCreate.getProduct().getProductId();
 
-        when(favoriteConverter.convertDtoToEntity(favoriteCreateRequestDto)).thenReturn(favoriteToCreate);
-        when(favoriteService.createFavorite(favoriteToCreate))
+        when(favoriteService.createFavorite(userId, productId))
                 .thenThrow(new FavoriteAlreadyExistsException("Favorite with userId " + favoriteToCreate.getUser().getUserId() + " and productId " + favoriteToCreate.getProduct().getProductId() + " already exists"));
 
-        mockMvc.perform(post("/v1/favorites/{userId}", userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(favoriteCreateRequestDto)))
+        mockMvc.perform(post("/v1/favorites?userId={userId}&productId={productId}", userId, productId))
                 .andExpectAll(
                         status().isConflict(),
                         content().contentType(MediaType.APPLICATION_JSON),

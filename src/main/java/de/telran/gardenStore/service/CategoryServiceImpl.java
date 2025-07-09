@@ -27,12 +27,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryByName(String name) {
-        return categoryRepository.findCategoryByName(name)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name " + name + " not found."));
-    }
-
-    @Override
     public Category createCategory(Category category) {
         checkCategoryNameIsUnique(category.getName());
         return categoryRepository.save(category);

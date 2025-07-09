@@ -55,7 +55,6 @@ public abstract class AbstractTest {
 
     protected FavoriteResponseDto favoriteResponseDto1;
     protected FavoriteResponseDto favoriteResponseDto2;
-    protected FavoriteCreateRequestDto favoriteCreateRequestDto;
     protected FavoriteResponseDto favoriteResponseCreatedDto;
 
     @BeforeEach
@@ -319,11 +318,6 @@ public abstract class AbstractTest {
                 .favoriteId(favorite2.getFavoriteId())
                 .product(productResponseDto2)
                 .userId(favorite2.getUser().getUserId())
-                .build();
-
-        favoriteCreateRequestDto = FavoriteCreateRequestDto.builder()
-                .userId(favoriteToCreate.getUser().getUserId())
-                .productId(favoriteToCreate.getProduct().getProductId())
                 .build();
 
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()

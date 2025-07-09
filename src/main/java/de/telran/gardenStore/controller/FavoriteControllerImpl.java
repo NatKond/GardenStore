@@ -5,7 +5,6 @@ import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.service.FavoriteService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
@@ -29,10 +28,8 @@ public class FavoriteControllerImpl implements FavoriteController {
     }
 
     @Override
-    public FavoriteResponseDto createFavorite(@Positive Long userId, @Valid FavoriteCreateRequestDto favoriteCreateRequestDto) {
-        favoriteCreateRequestDto.setUserId(userId);
-        return favoriteConverter.convertEntityToDto(favoriteService.createFavorite(
-                favoriteConverter.convertDtoToEntity(favoriteCreateRequestDto)));
+    public FavoriteResponseDto createFavorite(@Positive Long userId, @Positive Long productId) {
+        return favoriteConverter.convertEntityToDto(favoriteService.createFavorite(userId, productId));
     }
 
     @Override

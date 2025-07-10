@@ -15,28 +15,44 @@ Represents a user's shopping cart.
 
 ## DTOs
 
-### CartCreateRequestDto
-
-```json
-{
-  "userId": 2
-}
-```
-
 ### CartResponseDto
 
 ```json
 {
   "cartId": 1,
-  "userId": 2
+  "userId": 2,
+  "cartItems": [
+    {
+      "quantity": 2,
+      "product": {
+        "productId": 5,
+        "name": "string",
+        "description": "string",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
+    },
+    {
+      "quantity": 1,
+      "product": {
+        "productId": 5,
+        "name": "string",
+        "description": "string",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
+    }
+  ]
 }
 ```
 
 ## Endpoints
 
-| Method | URL                | Role Required | Description     |
-|--------|--------------------|---------------|-----------------|
-| GET    | `/cart/{cartId}`   | USER          | Get cart by ID  |
-| GET    | `/cart`            | ADMIN         | Get all carts   |
-| POST   | `/cart`            | USER          | Create new cart |
-| DELETE | `/cart/{icartIdd}` | ADMIN         | Delete cart     |
+| Method | URL                       | Role Required  | Description           |
+|--------|---------------------------|----------------|-----------------------|
+| GET    | `/v1/cart/{userId}`       | USER           | Get cart by userId    |
+| POST   | `/v1/cart/items`          | USER           | Add item to cart      |
+| PUT    | `/v1/cart/items/{itemId}` | USER           | Update item in cart   |
+| DELETE | `/v1/cart/items/{itemId}` | USER           | Remove item from cart |
+
+

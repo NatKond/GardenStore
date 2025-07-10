@@ -8,16 +8,16 @@ A customer's order.
 
 ## Fields
 
-| Field           | Type          | DB Column        | Description                                                   |
-|-----------------|---------------|------------------|---------------------------------------------------------------|
-| orderId         | Long          | order_id         | Primary key                                                   |
-| userId          | Long          | user_id          | Foreign key to `users(user_id)`                               |
-| createdAt       | LocalDateTime | created_at       | Timestamp of order creation                                   |
-| deliveryAddress | String        | delivery_address | Delivery address                                              |
-| contactPhone    | String        | contact_phone    | Customer contact phone                                        |
-| deliveryMethod  | String        | delivery_method  | Delivery method                                               |
-| status          | Enum          | status           | Order status NEW / PROCESSING/ SHIPPED / DELIVERED / CANCELED |
-| updatedAt       | LocalDateTime | updated_at       | Last update timestamp                                         |
+| Field           | Type          | DB Column        | Description                                                  |
+|-----------------|---------------|------------------|--------------------------------------------------------------|
+| orderId         | Long          | order_id         | Primary key                                                  |
+| userId          | Long          | user_id          | Foreign key to `users(user_id)`                              |
+| createdAt       | LocalDateTime | created_at       | Timestamp of order creation                                  |
+| deliveryAddress | String        | delivery_address | Delivery address                                             |
+| contactPhone    | String        | contact_phone    | Customer contact phone                                       |
+| deliveryMethod  | String        | delivery_method  | Delivery method                                              |
+| status          | Enum          | status           | Order status CREATED / PAID / SHIPPED / DELIVERED / CANCELED |
+| updatedAt       | LocalDateTime | updated_at       | Last update timestamp                                        |
 
 ## DTOs
 

@@ -44,5 +44,5 @@ Represents a user's favorite product.
 | Method | URL                          | Role Required  | Description                     |
 |--------|------------------------------|----------------|---------------------------------|
 | GET    | `/v1/favorites/{userId}`     | USER           | Get favorites product by userId |
-| POST   | `/v1/favorites`              | USER           | Add to favorites                |
+| POST   | `/v1/favorites/{userId}`     | USER           | Add to favorites                |
 | DELETE | `/v1/favorites/{favoriteId}` | USER           | Remove from favorites           |

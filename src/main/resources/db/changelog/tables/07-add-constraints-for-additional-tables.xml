@@ -31,7 +31,7 @@
         <sql>
             ALTER TABLE orders
                 ADD CONSTRAINT chk_orders_status
-                    CHECK (status IN ('CREATED', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED'));
+                    CHECK (status IN ('CREATED', 'AWAITING_PAYMENT', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED'));
         </sql>
     </changeSet>
 

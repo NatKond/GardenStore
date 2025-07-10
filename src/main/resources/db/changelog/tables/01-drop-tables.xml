@@ -4,28 +4,28 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="01-drop-favorites-table" author="natkond">
+    <changeSet id="01-drop-favorites-table" author="nkond">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="favorites"/>
         </preConditions>
         <dropTable tableName="favorites" cascadeConstraints="true"/>
     </changeSet>
 
-    <changeSet id="02-drop-products-table" author="natkond">
+    <changeSet id="02-drop-products-table" author="nkond">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="products"/>
         </preConditions>
         <dropTable tableName="products" cascadeConstraints="true"/>
     </changeSet>
 
-    <changeSet id="03-drop-categories-table" author="natkond">
+    <changeSet id="03-drop-categories-table" author="nkond">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="categories"/>
         </preConditions>
         <dropTable tableName="categories" cascadeConstraints="true"/>
     </changeSet>
 
-    <changeSet id="04-drop-app_users-table" author="natkond">
+    <changeSet id="04-drop-app_users-table" author="nkond">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="app_users"/>
         </preConditions>

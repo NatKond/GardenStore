@@ -18,7 +18,7 @@
     <changeSet id="15-create-cart_items-table" author="nkond">
         <createTable tableName="cart_items">
             <column name="cart_item_id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" primaryKeyName="pk_cart_items>" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="pk_cart_items" nullable="false"/>
             </column>
             <column name="cart_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -35,7 +35,7 @@
     <changeSet id="16-create-orders-table" author="nkond">
         <createTable tableName="orders">
             <column name="order_id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" primaryKeyName="pk_cart_items>" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="pk_order" nullable="false"/>
             </column>
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -55,10 +55,10 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="16-create-order_items-table" author="nkond">
+    <changeSet id="17-create-order_items-table" author="nkond">
         <createTable tableName="order_items">
             <column name="order_item_id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" primaryKeyName="pk_order_items>" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="pk_order_items" nullable="false"/>
             </column>
             <column name="order_id" type="BIGINT">
                 <constraints nullable="false"/>

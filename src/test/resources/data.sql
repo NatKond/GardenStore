@@ -33,8 +33,8 @@ TRUNCATE TABLE favorites RESTART IDENTITY;
 
 INSERT INTO favorites(user_id, product_id)
 VALUES
-    (1, 5),
-    (1, 10),
+    (1, 1),
+    (1, 2),
     (2, 3),
     (3, 1),
     (3, 4),

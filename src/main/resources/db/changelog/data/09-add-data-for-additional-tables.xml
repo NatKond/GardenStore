@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="26-insert-initial-data" author="nkond" runAlways="true">
+        <insert tableName="carts">
+            <column name="cart_id" valueNumeric="1"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="carts">
+            <column name="cart_id" valueNumeric="2"/>
+            <column name="user_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="carts">
+            <column name="cart_id" valueNumeric="3"/>
+            <column name="user_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="carts">
+            <column name="cart_id" valueNumeric="4"/>
+            <column name="user_id" valueNumeric="4"/>
+        </insert>
+
+        <insert tableName="cart_items">
+            <column name="cart_id" valueNumeric="1"/>
+            <column name="product_id" valueNumeric="1"/>
+            <column name="quantity" valueNumeric="2"/>
+        </insert>
+        <insert tableName="cart_items">
+            <column name="cart_id" valueNumeric="1"/>
+            <column name="product_id" valueNumeric="2"/>
+            <column name="quantity" valueNumeric="1"/>
+        </insert>
+        <insert tableName="cart_items">
+            <column name="cart_id" valueNumeric="2"/>
+            <column name="product_id" valueNumeric="3"/>
+            <column name="quantity" valueNumeric="3"/>
+        </insert>
+        <insert tableName="cart_items">
+            <column name="cart_id" valueNumeric="3"/>
+            <column name="product_id" valueNumeric="4"/>
+            <column name="quantity" valueNumeric="1"/>
+        </insert>
+        <insert tableName="cart_items">
+            <column name="cart_id" valueNumeric="4"/>
+            <column name="product_id" valueNumeric="6"/>
+            <column name="quantity" valueNumeric="4"/>
+        </insert>
+
+        <insert tableName="orders">
+            <column name="order_id" valueNumeric="1"/>
+            <column name="user_id" valueNumeric="1"/>
+            <column name="delivery_address" value="123 Garden Street"/>
+            <column name="contact_phone" value="+1234567890"/>
+            <column name="delivery_method" value="COURIER"/>
+            <column name="status" value="PAID"/>
+        </insert>
+        <insert tableName="orders">
+            <column name="order_id" valueNumeric="2"/>
+            <column name="user_id" valueNumeric="2"/>
+            <column name="delivery_address" value="456 Green Ave"/>
+            <column name="contact_phone" value="+1987654321"/>
+            <column name="delivery_method" value="PICKUP"/>
+            <column name="status" value="CREATED"/>
+        </insert>
+
+        <insert tableName="order_items">
+            <column name="order_id" valueNumeric="1"/>
+            <column name="product_id" valueNumeric="1"/>
+            <column name="quantity" valueNumeric="2"/>
+            <column name="price_at_purchase" valueNumeric="8.99"/>
+        </insert>
+        <insert tableName="order_items">
+            <column name="order_id" valueNumeric="1"/>
+            <column name="product_id" valueNumeric="2"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="price_at_purchase" valueNumeric="10.49"/>
+        </insert>
+        <insert tableName="order_items">
+            <column name="order_id" valueNumeric="2"/>
+            <column name="product_id" valueNumeric="3"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="price_at_purchase" valueNumeric="5.75"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

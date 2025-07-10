@@ -1,8 +1,6 @@
 package de.telran.gardenStore.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.Order;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;

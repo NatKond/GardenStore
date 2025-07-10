@@ -37,9 +37,8 @@ Represents a user's favorite product.
 
 ## Endpoints
 
-| Method | URL                       | Role Required  | Description                |
-|--------|---------------------------|----------------|----------------------------|
-| GET    | `/favorites`              | USER           | Get user favorite          |
-| GET    | `/favorites/{favoriteId}` | USER           | Get favorite product by id |
-| POST   | `/favorites`              | USER           | Add to favorites           |
-| DELETE | `/favorites/{favoriteId}` | USER           | Remove from favorites      |
+| Method | URL                          | Role Required  | Description                     |
+|--------|------------------------------|----------------|---------------------------------|
+| GET    | `/v1/favorites/{userId}`     | USER           | Get favorites product by userId |
+| POST   | `/v1/favorites`              | USER           | Add to favorites                |
+| DELETE | `/v1/favorites/{favoriteId}` | USER           | Remove from favorites           |

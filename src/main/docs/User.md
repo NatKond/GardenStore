@@ -51,11 +51,11 @@ Represents a system user.
 
 ## Endpoints
 
-| Method | URL                | Role Required | Description         |
-|--------|--------------------|---------------|---------------------|
-| POST   | `/users/register`  | —             | Register user       |
-| POST   | `/users/login`     | —             | Authenticate user   |
-| GET    | `/users`           | ADMIN         | Get all users       |
-| GET    | `/users/{userId}`  | USER / ADMIN  | Get user by ID      |
-| PUT    | `/users/{userId}`  | USER / ADMIN  | Update user profile |
-| DELETE | `/users/{userId}`  | USER / ADMIN  | Delete user         |
+| Method | URL                  | Role Required | Description         |
+|--------|----------------------|---------------|---------------------|
+| POST   | `/v1/users/register` | —             | Register user       |
+| POST   | `/v1/users/login`    | —             | Authenticate user   |
+| GET    | `/v1/users`          | ADMIN         | Get all users       |
+| GET    | `/v1/users/{userId}` | USER / ADMIN  | Get user by ID      |
+| PUT    | `/v1/users/{userId}` | USER / ADMIN  | Update user profile |
+| DELETE | `/v1/users/{userId}` | USER / ADMIN  | Delete user         |

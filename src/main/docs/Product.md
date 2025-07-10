@@ -54,10 +54,10 @@ Represents a product in the catalog.
 
 ## Endpoints
 
-| Method | URL                     | Role Required | Description             |
-|--------|-------------------------|---------------|-------------------------|
-| GET    | `/products`             | —             | Get all products        |
-| GET    | `/products/{productId}` | —             | Get product by ID       |
-| POST   | `/products`             | ADMIN         | Create new product      |
-| PUT    | `/products/{productId}` | ADMIN         | Update product          |
-| DELETE | `/products/{productId}` | ADMIN         | Delete product          |
+| Method | URL                        | Role Required | Description             |
+|--------|----------------------------|---------------|-------------------------|
+| GET    | `/v1/products`             | —             | Get all products        |
+| GET    | `/v1/products/{productId}` | —             | Get product by ID       |
+| POST   | `/v1/products`             | ADMIN         | Create new product      |
+| PUT    | `/v1/products/{productId}` | ADMIN         | Update product          |
+| DELETE | `/v1/products/{productId}` | ADMIN         | Delete product          |

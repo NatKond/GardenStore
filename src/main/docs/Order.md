@@ -28,11 +28,11 @@ A customer's order.
   "userId": 3,
   "deliveryAddress": "string",
   "deliveryMethod": "string",
-  "order_items": [
+  "orderItems": [
     {
       "productId": 1,
       "quantity": 2,
-      "priceAtPurchase": 99.99
+      "priceAtPurchase": 8.99
     }
   ]
 }
@@ -46,25 +46,30 @@ A customer's order.
   "userId": 3,
   "deliveryAddress": "string",
   "deliveryMethod": "string",
-  "order_items": [
+  "orderItems": [
     {
       "productId": 1,
       "quantity": 2,
-      "priceAtPurchase": 99.99
+      "priceAtPurchase": 8.99
+    },
+    {
+      "productId": 2,
+      "quantity": 1,
+      "priceAtPurchase": 10.49
     }
   ],
-  "status": "NEW",
-  "createdAt": "2024-01-01T12:00:00",
-  "updatedAt": "2024-01-01T12:00:00"
+  "status": "CREATED"
 }
 ```
 
 ## Endpoints
 
-| Method | URL                 | Role Required  | Description      |
-|--------|---------------------|----------------|------------------|
-| GET    | `/orders/history`   | USER/ADMIN     | Get user orders  |
-| GET    | `/orders/{orderId}` | USER/ADMIN     | Get order by ID  |
-| POST   | `/orders`           | USER           | Create new order |
-| PUT    | `/orders/{orderId}` | USER/ADMIN     | Update order     |
-| DELETE | `/orders/{orderId}` | USER/ADMIN     | Cancel order     |
+| Method | URL                              | Role Required | Description                             |
+|--------|----------------------------------|---------------|-----------------------------------------|
+| GET    | `/v1/orders/history`             | USER/ADMIN    | Get all user orders                     |
+| GET    | `/v1/orders/{orderId}`           | USER/ADMIN    | Get order by ID                         |
+| POST   | `/v1/orders`                     | USER          | Create new order                        |
+| POST   | `/v1/orders/items`               | USER          | Add item to order                       |
+| PUT    | `/v1/orders/items/{orderItemId}` | USER          | Change item in order                    |
+| DELETE | `/v1/orders/items/{orderItemId}` | USER          | Delete items from order                 |
+| DELETE | `/v1/orders/{orderId}`           | USER/ADMIN    | Cancel order : mark order as CANCELLED. |

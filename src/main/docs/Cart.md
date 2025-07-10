@@ -34,9 +34,11 @@ Represents a user's shopping cart.
 
 ## Endpoints
 
-| Method | URL                | Role Required | Description     |
-|--------|--------------------|---------------|-----------------|
-| GET    | `/cart/{cartId}`   | USER          | Get cart by ID  |
-| GET    | `/cart`            | ADMIN         | Get all carts   |
-| POST   | `/cart`            | USER          | Create new cart |
-| DELETE | `/cart/{icartIdd}` | ADMIN         | Delete cart     |
+| Method | URL                       | Role Required  | Description           |
+|--------|---------------------------|----------------|-----------------------|
+| GET    | `/v1/cart/{userId}`       | USER           | Get cart by userId    |
+| POST   | `/v1/cart/items`          | USER           | Add item to cart      |
+| PUT    | `/v1/cart/items/{itemId}` | USER           | Update item in cart   |
+| DELETE | `/v1/cart/items/{itemId}` | USER           | Remove item from cart |
+
+

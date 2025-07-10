@@ -42,9 +42,8 @@ A product included in an order.
 
 ## Endpoints
 
-| Method | URL                           | Role Required  | Description             |
-|--------|-------------------------------|----------------|-------------------------|
-| GET    | `/orders/{orderId}/items`     | USER/ADMIN     | Get items from order    |
-| POST   | `/orders/{orderId}/items`     | USER/ADMIN     | Add item to order       |
-| PUT    | `/orders/items/{orderItemId}` | USER/ADMIN     | Change item in order    |
-| DELETE | `/orders/items/{orderItemId}` | USER/ADMIN     | Delete items from order |
+| Method | URL                              | Role Required  | Description             |
+|--------|----------------------------------|----------------|-------------------------|
+| POST   | `/v1/orders/items`               | USER/ADMIN     | Add item to order       |
+| PUT    | `/v1/orders/items/{orderItemId}` | USER/ADMIN     | Change item in order    |
+| DELETE | `/v1/orders/items/{orderItemId}` | USER/ADMIN     | Delete items from order |

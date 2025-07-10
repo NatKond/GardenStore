@@ -34,10 +34,9 @@ Represents a product category.
 
 ## Endpoints
 
-| Method | URL                          | Role Required | Description          |
-|--------|------------------------------|---------------|----------------------|
-| GET    | `/categories`                | —             | Get all categories   |
-| GET    | `/categories/{categoryId}`   | —             | Get categories by id |
-| POST   | `/categories`                | ADMIN         | Create category      |
-| PUT    | `/categories/{icategoryIdd}` | ADMIN         | Update category      |
-| DELETE | `/categories/{categoryId}`   | ADMIN         | Delete category      |
+| Method | URL                           | Role Required | Description          |
+|--------|-------------------------------|---------------|----------------------|
+| GET    | `/v1/categories`              | —             | Get all categories   |
+| POST   | `/v1/categories`              | ADMIN         | Create category      |
+| PUT    | `/v1/categories/{categoryId}` | ADMIN         | Update category      |
+| DELETE | `/v1/categories/{categoryId}` | ADMIN         | Delete category      |

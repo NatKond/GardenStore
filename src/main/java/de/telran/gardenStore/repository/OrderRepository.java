@@ -1,6 +1,6 @@
 package de.telran.gardenStore.repository;
 
-import jakarta.persistence.criteria.Order;
+import de.telran.gardenStore.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -15,20 +15,34 @@ Represents a user's shopping cart.
 
 ## DTOs
 
-### CartCreateRequestDto
-
-```json
-{
-  "userId": 2
-}
-```
-
 ### CartResponseDto
 
 ```json
 {
   "cartId": 1,
-  "userId": 2
+  "userId": 2,
+  "cartItems": [
+    {
+      "quantity": 2,
+      "product": {
+        "productId": 5,
+        "name": "string",
+        "description": "string",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
+    },
+    {
+      "quantity": 1,
+      "product": {
+        "productId": 5,
+        "name": "string",
+        "description": "string",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
+    }
+  ]
 }
 ```
 

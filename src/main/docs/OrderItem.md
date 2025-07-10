@@ -22,10 +22,8 @@ A product included in an order.
 
 ```json
 {
-  "orderId": 1,
   "productId": 1,
-  "quantity": 2,
-  "priceAtPurchase": 99.99
+  "quantity": 2
 }
 ```
 
@@ -34,9 +32,15 @@ A product included in an order.
 ```json
 {
   "orderId": 1,
-  "productId": 1,
   "quantity": 2,
-  "priceAtPurchase": 99.99
+  "priceAtPurchase": 99.99,
+  "product": {
+    "productId": 1,
+    "name": "string",
+    "description": "string",
+    "price": 9.49,
+    "discountPrice": 6.99
+  }
 }
 ```
 

@@ -21,7 +21,6 @@ Items added to a shopping cart.
 
 ```json
 {
-  "cartId": 1,
   "productId": 1,
   "quantity": 2
 }
@@ -33,8 +32,14 @@ Items added to a shopping cart.
 {
   "cartItemId": 1,
   "cartId": 1,
-  "productId": 1,
-  "quantity": 2
+  "quantity": 2,
+  "product": {
+    "productId": 5,
+    "name": "string",
+    "description": "string",
+    "price": 9.49,
+    "discountPrice": 6.99
+  }
 }
 ```
 

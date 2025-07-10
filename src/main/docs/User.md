@@ -23,10 +23,10 @@ Represents a system user.
 
 ```json
 {
-  "name": "string",
-  "email": "string",
-  "phoneNumber": "string",
-  "password": "string"
+  "name": "Frank Green",
+  "email": "frank.green@example.com",
+  "phoneNumber": "+1444555666",
+  "password": "12345"
 }
 ```
 
@@ -35,13 +35,38 @@ Represents a system user.
 ```json
 {
   "userId": 1,
-  "name": "string",
+  "name": "Alice Johnson",
+  "email": "alice.johnson@example.com",
+  "phoneNumber": "+1234567890",
+  "role": "ROLE_USER",
+  "favorites": [
+    {
+      "favoriteId": 1,
+      "product": {
+        "productId": 5,
+        "name": "Tulip Bulb Mix (10 pcs)",
+        "description": "Colorful tulip bulbs perfect for spring blooms",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
+    }
+  ]
+}
+```
+
+### UserShortResponseDto
+
+```json
+{
+  "userId": 1,
+  "name": "Alice Johnson",
+  "email": "alice.johnson@example.com",
+  "phoneNumber": "+1234567890",
   "role": "ROLE_USER"
 }
 ```
 
 ### LoginRequest
-
 ```json
 {
   "email": "string",

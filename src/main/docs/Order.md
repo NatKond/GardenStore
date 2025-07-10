@@ -38,6 +38,18 @@ A customer's order.
 }
 ```
 
+### OrderShortResponseDto
+
+```json
+{
+  "orderId": 1,
+  "userId": 3,
+  "deliveryAddress": "string",
+  "deliveryMethod": "string",
+  "status": "CREATED"
+}
+```
+
 ### OrderResponseDto
 
 ```json
@@ -48,14 +60,26 @@ A customer's order.
   "deliveryMethod": "string",
   "orderItems": [
     {
-      "productId": 1,
       "quantity": 2,
-      "priceAtPurchase": 8.99
+      "priceAtPurchase": 8.99,
+      "product": {
+        "productId": 1,
+        "name": "string",
+        "description": "string",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
     },
     {
-      "productId": 2,
       "quantity": 1,
-      "priceAtPurchase": 10.49
+      "priceAtPurchase": 10.49,
+      "product": {
+        "productId": 1,
+        "name": "string",
+        "description": "string",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
     }
   ],
   "status": "CREATED"

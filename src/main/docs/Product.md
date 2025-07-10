@@ -52,6 +52,17 @@ Represents a product in the catalog.
 }
 ```
 
+### ProductShortResponseDto
+
+```json
+{
+  "productId": 1,
+  "name": "string",
+  "description": "string",
+  "price": 11.99,
+  "discountPrice": 8.99
+}
+```
 ## Endpoints
 
 | Method | URL                        | Role Required | Description             |

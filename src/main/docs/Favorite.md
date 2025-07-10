@@ -20,7 +20,6 @@ Represents a user's favorite product.
 
 ```json
 {
-  "userId": 3,
   "productId": 1
 }
 ```
@@ -30,8 +29,13 @@ Represents a user's favorite product.
 ```json
 {
   "favoriteId": 1,
-  "userId": 3,
-  "productId": 1
+  "product": {
+    "productId": 5,
+    "name": "string",
+    "description": "string",
+    "price": 9.49,
+    "discountPrice": 6.99
+  }
 }
 ```
 

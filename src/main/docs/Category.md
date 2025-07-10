@@ -23,7 +23,7 @@ Represents a product category.
 }
 ```
 
-### CategoryResponseDto
+### CategoryShortResponseDto
 
 ```json
 {
@@ -31,12 +31,36 @@ Represents a product category.
   "name": "string"
 }
 ```
+### CategoryResponseDto
+```json
+{
+  "categoryId": 1,
+  "name": "string",
+  "products": [
+    {
+      "productId": 1,
+      "name": "string",
+      "description": "string",
+      "price": 11.99,
+      "discountPrice": 8.99
+    },
+    {
+      "productId": 2,
+      "name": "string",
+      "description": "string",
+      "price": 13.99,
+      "discountPrice": 10.49
+    }
+  ]
+}
+```
 
 ## Endpoints
 
-| Method | URL                           | Role Required | Description          |
-|--------|-------------------------------|---------------|----------------------|
-| GET    | `/v1/categories`              | —             | Get all categories   |
-| POST   | `/v1/categories`              | ADMIN         | Create category      |
-| PUT    | `/v1/categories/{categoryId}` | ADMIN         | Update category      |
-| DELETE | `/v1/categories/{categoryId}` | ADMIN         | Delete category      |
+| Method | URL                            | Role Required | Description        |
+|--------|--------------------------------|---------------|--------------------|
+| GET    | `/v1/categories`               | —             | Get all categories |
+| GET    | `/v1/categories/{category_id}` | —             | Get category by Id |
+| POST   | `/v1/categories`               | ADMIN         | Create category    |
+| PUT    | `/v1/categories/{categoryId}`  | ADMIN         | Update category    |
+| DELETE | `/v1/categories/{categoryId}`  | ADMIN         | Delete category    |

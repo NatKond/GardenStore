@@ -4,6 +4,8 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 public class UserCreateRequestDto {
 

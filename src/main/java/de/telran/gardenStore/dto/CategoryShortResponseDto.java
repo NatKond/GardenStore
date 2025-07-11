@@ -5,11 +5,9 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryShortResponseDto {
     @EqualsAndHashCode.Include

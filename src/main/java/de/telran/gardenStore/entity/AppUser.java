@@ -3,17 +3,14 @@ package de.telran.gardenStore.entity;
 import de.telran.gardenStore.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 @Entity
 @Table(name = "app_users")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Builder(toBuilder = true)
 public class AppUser {
 
@@ -35,4 +32,5 @@ public class AppUser {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Favorite> favorites;
+
 }

@@ -7,12 +7,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "categories")
-@NoArgsConstructor
-@Setter
-@Getter
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Builder(toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Category {
 

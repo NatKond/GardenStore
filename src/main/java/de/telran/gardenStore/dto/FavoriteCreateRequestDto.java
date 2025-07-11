@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 public class FavoriteCreateRequestDto {
 

@@ -8,10 +8,8 @@ import lombok.*;
 @Table(name = "favorites")
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Builder(toBuilder = true)
 public class Favorite {
 

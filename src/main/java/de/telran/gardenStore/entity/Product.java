@@ -11,16 +11,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
+@Data
 @NoArgsConstructor
-@Setter
-@Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Builder(toBuilder = true)
 @AllArgsConstructor
 
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GardenStoreApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(GardenStoreApplication.class, args);
 	}
 

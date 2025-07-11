@@ -1,10 +1,12 @@
 package de.telran.gardenStore.dto;
 
-import org.hibernate.mapping.List;
-
+import lombok.Data;
+//import org.hibernate.mapping.List;
+import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data
 public class OrderResponseDto {
     private Long orderId;
     private Long userId;

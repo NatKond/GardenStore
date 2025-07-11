@@ -7,11 +7,9 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryResponseDto {
 

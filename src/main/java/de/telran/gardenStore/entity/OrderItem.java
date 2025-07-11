@@ -1,16 +1,14 @@
 package de.telran.gardenStore.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.math.BigDecimal;
-import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "order_items")
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem {

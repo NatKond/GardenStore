@@ -22,7 +22,6 @@ public class Favorite {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private AppUser user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

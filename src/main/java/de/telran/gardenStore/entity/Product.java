@@ -44,7 +44,6 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
     private Category category;
 }
 

@@ -7,32 +7,40 @@ import de.telran.gardenStore.exception.CartItemNotFoundException;
 import de.telran.gardenStore.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CartItemServiceImpl implements CartItemService {
 
     private final CartItemRepository cartItemRepository;
+
     private final ProductService productService;
 
     @Override
-    public CartItem addCartItem(Cart cart, Long productId) {
-        CartItem existingItem = cartItemRepository
-                .findByCartIdAndProductId(cart.getId(), productId)
-                .orElse(null);
+    public CartItem getById(Long cartItemId) {
+        return cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new CartItemNotFoundException(
+                        "CartItem with id " + cartItemId + " not found"
+                ));
+    }
 
-        if (existingItem != null) {
+    @Override
+    public CartItem addCartItem(Cart cart, Long productId) {
+        Optional<CartItem> existingItemOptional = cartItemRepository
+                .findByCartIdAndProductId(cart.getCartId(), productId);
+
+        if (existingItemOptional.isPresent()) {
+            CartItem existingItem = existingItemOptional.get();
             existingItem.setQuantity(existingItem.getQuantity() + 1);
             return cartItemRepository.save(existingItem);
         } else {
             Product product = productService.getProductById(productId);
-
-            CartItem newItem = new CartItem();
-            newItem.setCart(cart);
-            newItem.setProduct(product);
-            newItem.setQuantity(1);
-
-            return cartItemRepository.save(newItem);
+            return cartItemRepository.save(CartItem.builder()
+                    .cart(cart)
+                    .product(product)
+                    .quantity(1)
+                    .build());
         }
     }
 
@@ -48,13 +56,7 @@ public class CartItemServiceImpl implements CartItemService {
         cartItemRepository.delete(getById(cartItemId));
     }
 
-    @Override
-    public CartItem getById(Long cartItemId) {
-        return cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new CartItemNotFoundException(
-                        "CartItem with id " + cartItemId + " not found"
-                ));
-    }
+
 }
 
 

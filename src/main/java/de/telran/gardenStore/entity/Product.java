@@ -12,18 +12,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "products")
 @NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
-@Builder(toBuilder = true)
 @AllArgsConstructor
-
+@Data
+@Builder(toBuilder = true)
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long productId;
 
     private String name;
@@ -42,9 +37,10 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
     private Category category;
 }
 

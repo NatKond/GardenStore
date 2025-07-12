@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="18-add-constrains-for-carts-table" author="nkond">
+        <addForeignKeyConstraint baseTableName="carts" baseColumnNames="user_id"
+                                 constraintName="fk_cart_on_user"
+                                 referencedTableName="app_users" referencedColumnNames="user_id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="19-add-constrains-for-cart_items-table" author="nkond">
+        <addForeignKeyConstraint baseTableName="cart_items" baseColumnNames="cart_id"
+                                 constraintName="fk_carts_items_on_cart"
+                                 referencedTableName="carts" referencedColumnNames="cart_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="cart_items" baseColumnNames="product_id"
+                                 constraintName="fk_cart_items_on_product"
+                                 referencedTableName="products" referencedColumnNames="product_id"
+                                 onDelete="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="20-add-constrains-for-orders-table" author="nkond">
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="user_id"
+                                 constraintName="fk_orders_on_user"
+                                 referencedTableName="app_users" referencedColumnNames="user_id"
+                                 onDelete="RESTRICT"/>
+        <sql>
+            ALTER TABLE orders
+                ADD CONSTRAINT chk_orders_status
+                    CHECK (status IN ('CREATED', 'AWAITING_PAYMENT', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="21-add-constrains-for-order_items-table" author="nkond">
+        <addForeignKeyConstraint baseTableName="order_items" baseColumnNames="order_id"
+                                 constraintName="fk_order_items_on_order"
+                                 referencedTableName="orders" referencedColumnNames="order_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="order_items" baseColumnNames="product_id"
+                                 constraintName="fk_order_items_on_product"
+                                 referencedTableName="products" referencedColumnNames="product_id"
+                                 onDelete="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="22-add-unique-constraint-to-cart_items" author="nkond">
+        <addUniqueConstraint
+                tableName="cart_items"
+                columnNames="cart_id, product_id"
+                constraintName="uc_cart_items_cart_product"/>
+    </changeSet>
+
+    <changeSet id="23-add-unique-constraint-to-order_items" author="nkond">
+        <addUniqueConstraint
+                tableName="order_items"
+                columnNames="order_id, product_id"
+                constraintName="uc_order_items_order_product"/>
+    </changeSet>
+
+    <changeSet id="24-add-check-quantity" author="nkond">
+        <sql>
+            ALTER TABLE cart_items
+                ADD CONSTRAINT chk_cart_items_quantity CHECK (quantity > 0);
+            ALTER TABLE order_items
+                ADD CONSTRAINT chk_order_items_quantity CHECK (quantity > 0);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -11,10 +11,7 @@ import java.util.List;
 @Table(name = "app_users")
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
+@Data
 @Builder(toBuilder = true)
 public class AppUser {
 
@@ -34,7 +31,15 @@ public class AppUser {
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Cart cart;
+
 }

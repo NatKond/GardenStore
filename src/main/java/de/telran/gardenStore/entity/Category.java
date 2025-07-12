@@ -9,22 +9,19 @@ import java.util.List;
 @Entity
 @Table(name = "categories")
 @NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
+@Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long categoryId;
 
     private String name;
 
-    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     List<Product> products = new ArrayList<>();
 }

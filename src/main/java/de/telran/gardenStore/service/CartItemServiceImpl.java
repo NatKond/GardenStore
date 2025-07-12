@@ -18,7 +18,7 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public CartItem addCartItem(Cart cart, Long productId) {
         CartItem existingItem = cartItemRepository
-                .findByCartIdAndProductId(cart.getId(), productId)
+                .findByCartIdAndProductId(cart.getCartId(), productId)
                 .orElse(null);
 
         if (existingItem != null) {
@@ -27,10 +27,11 @@ public class CartItemServiceImpl implements CartItemService {
         } else {
             Product product = productService.getProductById(productId);
 
-            CartItem newItem = new CartItem();
-            newItem.setCart(cart);
-            newItem.setProduct(product);
-            newItem.setQuantity(1);
+            CartItem newItem = CartItem.builder()
+                    .cart(cart)
+                    .product(product)
+                    .quantity(1)
+                    .build();
 
             return cartItemRepository.save(newItem);
         }
@@ -56,6 +57,9 @@ public class CartItemServiceImpl implements CartItemService {
                 ));
     }
 }
+
+
+
 
 
 

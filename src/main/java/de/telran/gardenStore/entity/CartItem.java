@@ -4,15 +4,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "cart_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cartItemId")
-    private Long id;
+    private Long cartItemId;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -26,6 +27,8 @@ public class CartItem {
 
     private Integer quantity;
 }
+
+
 
 
 

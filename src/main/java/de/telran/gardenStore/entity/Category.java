@@ -3,6 +3,7 @@ package de.telran.gardenStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,5 +23,5 @@ public class Category {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    List<Product> products;
+    List<Product> products = new ArrayList<>();
 }

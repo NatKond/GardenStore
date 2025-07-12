@@ -1,13 +1,16 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
 import de.telran.gardenStore.repository.CartRepository;
+import de.telran.gardenStore.repository.CartItemRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import de.telran.gardenStore.exception.CartAlreadyExistsException;
-
+import de.telran.gardenStore.exception.CartNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,8 @@ import java.util.Optional;
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
+
+    private final CartItemRepository cartItemRepository;
 
     private final CartItemService cartItemService;
 
@@ -37,35 +42,57 @@ public class CartServiceImpl implements CartService {
                 .build());
     }
 
+    @Override
+    public Cart getCartByUser(AppUser user) {
+        return cartRepository.findByUserId(user.getUserId())
+                .orElseThrow(() -> new CartNotFoundException("Cart for user " + user.getUserId() + " not found"));
+    }
 
     @Override
+    @Transactional
+    public void processOrderItem(Cart cart, Long productId, Integer orderedQuantity) {
+        Optional<CartItem> cartItemOpt = cartItemRepository.findByCartIdAndProductId(cart.getCartId(), productId);
+
+        if (cartItemOpt.isPresent()) {
+            CartItem cartItem = cartItemOpt.get();
+            if (orderedQuantity >= cartItem.getQuantity()) {
+                // Удаляем товар из корзины, если заказанное количество >= количеству в корзине
+                cartItemRepository.delete(cartItem);
+                cart.getItems().remove(cartItem);
+            } else {
+                // Уменьшаем количество в корзине
+                cartItem.setQuantity(cartItem.getQuantity() - orderedQuantity);
+                cartItemRepository.save(cartItem);
+            }
+        }
+    }
+    @Override
+    @Transactional
     public Cart addCartItem(Long userId, Long productId) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> create(userId));
 
-        List<CartItem> items = cart.getItems();
-
-        Optional<CartItem> existingItem = items.stream()
-                .filter(item -> item.getProduct().getProductId().equals(productId))
-                .findFirst();
+        Optional<CartItem> existingItem = cartItemRepository.findByCartIdAndProductId(cart.getCartId(), productId);
 
         if (existingItem.isPresent()) {
             CartItem item = existingItem.get();
             item.setQuantity(item.getQuantity() + 1);
+            cartItemRepository.save(item);
         } else {
+            Product product = productService.getProductById(productId);
             CartItem newItem = CartItem.builder()
                     .cart(cart)
-                    .product(productService.getProductById(productId))
+                    .product(product)
                     .quantity(1)
                     .build();
-            items.add(newItem);
+            cartItemRepository.save(newItem);
+            cart.getItems().add(newItem);
         }
 
         return cartRepository.save(cart);
-
-//        CartItem cartItem = cartItemService.addCartItem(cart, productId);
-//        return cartItem.getCart();
     }
+
+
 
     @Override
     public Cart updateCartItem(Long cartItemId, Integer quantity) {

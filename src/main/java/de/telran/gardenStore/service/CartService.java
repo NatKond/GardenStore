@@ -1,5 +1,6 @@
 package de.telran.gardenStore.service;
 
+import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Cart;
 
 public interface CartService {
@@ -11,6 +12,9 @@ public interface CartService {
     Cart updateCartItem(Long cartItemId, Integer quantity);
 
     void deleteCartItem(Long cartItemId);
+
+    Cart getCartByUser(AppUser user);
+    void processOrderItem(Cart cart, Long productId, Integer orderedQuantity);
 }
 
 

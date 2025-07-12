@@ -5,13 +5,13 @@ import de.telran.gardenStore.entity.CartItem;
 
 public interface CartItemService {
 
+    CartItem getById(Long cartItemId);
+
     CartItem addCartItem(Cart cart, Long productId);
 
     CartItem updateCartItem(Long cartItemId, Integer quantity);
 
     void deleteCartItem(Long cartItemId);
-
-    CartItem getById(Long cartItemId);
 }
 
 

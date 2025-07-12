@@ -1,0 +1,38 @@
+package de.telran.gardenStore.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "cart_items")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class CartItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cartItemId;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Cart cart;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Product product;
+
+    private Integer quantity;
+}
+
+
+
+
+
+
+

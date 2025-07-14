@@ -76,6 +76,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+        product.setCategory(categoryService.getCategoryById(product.getCategory().getCategoryId()));
         return productRepository.save(product);
     }
 
@@ -87,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
         existing.setDescription(updatedProduct.getDescription());
         existing.setPrice(updatedProduct.getPrice());
         existing.setDiscountPrice(updatedProduct.getDiscountPrice());
-        existing.setCategory(updatedProduct.getCategory());
+        existing.setCategory(categoryService.getCategoryById(updatedProduct.getCategory().getCategoryId()));
         existing.setImageUrl(updatedProduct.getImageUrl());
 
         return productRepository.save(existing);

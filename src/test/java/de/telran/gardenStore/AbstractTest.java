@@ -330,19 +330,16 @@ public abstract class AbstractTest {
         favoriteResponseDto1 = FavoriteResponseDto.builder()
                 .favoriteId(favorite1.getFavoriteId())
                 .product(productShortResponseDto1)
-                .userId(favorite1.getUser().getUserId())
                 .build();
 
         favoriteResponseDto2 = FavoriteResponseDto.builder()
                 .favoriteId(favorite2.getFavoriteId())
                 .product(productShortResponseDto2)
-                .userId(favorite2.getUser().getUserId())
                 .build();
 
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()
                 .favoriteId(favoriteCreated.getFavoriteId())
                 .product(productShortResponseCreatedDto)
-                .userId(favoriteCreated.getUser().getUserId())
                 .build();
     }
 }

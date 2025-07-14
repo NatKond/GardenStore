@@ -5,13 +5,10 @@ import lombok.*;
 
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@Data
 @Builder(toBuilder = true)
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponseDto {
     @EqualsAndHashCode.Include

@@ -7,16 +7,18 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Data
+@Builder(toBuilder = true)
 public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderItemId;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
@@ -26,5 +28,6 @@ public class OrderItem {
     private Product product;
 
     private Integer quantity;
+
     private BigDecimal priceAtPurchase;
 }

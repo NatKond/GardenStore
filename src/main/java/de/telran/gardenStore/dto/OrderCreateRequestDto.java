@@ -9,17 +9,18 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class OrderCreateRequestDto {
-    @NotBlank
+
+    @NotBlank(message = "Delivery address name cannot be blank")
     private String deliveryAddress;
 
     @Pattern(regexp = "^\\+?[0-9\\s-]{10,}$")
     private String contactPhone;
 
-    @NotBlank
+    @NotBlank(message = "Delivery method name cannot be blank")
     private String deliveryMethod;
 
     @NotEmpty
-    private List<OrderItemCreateDto> items; // Теперь с валидацией
+    private List<OrderItemCreateRequestDto> items;
 }

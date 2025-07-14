@@ -7,14 +7,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Data
+@Builder(toBuilder = true)
 public class Order {
 
     @Id
@@ -39,6 +40,9 @@ public class Order {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items;
+    private List<OrderItem> items = new ArrayList<>();
 }

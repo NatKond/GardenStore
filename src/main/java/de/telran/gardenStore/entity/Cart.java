@@ -8,10 +8,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "carts")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Data
+@Builder(toBuilder = true)
 public class Cart {
 
     @Id
@@ -19,8 +19,6 @@ public class Cart {
     private Long cartId;
 
     @OneToOne
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 

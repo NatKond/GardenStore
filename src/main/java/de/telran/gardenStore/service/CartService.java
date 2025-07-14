@@ -5,7 +5,11 @@ import de.telran.gardenStore.entity.Cart;
 
 public interface CartService {
 
-    Cart create(Long userId);
+    Cart getCartByUser(AppUser user);
+
+    Cart create(AppUser user);
+
+    Cart update(Cart cart);
 
     Cart addCartItem(Long userId, Long productId);
 
@@ -13,8 +17,7 @@ public interface CartService {
 
     void deleteCartItem(Long cartItemId);
 
-    Cart getCartByUser(AppUser user);
-    void processOrderItem(Cart cart, Long productId, Integer orderedQuantity);
+    //void processOrderItem(Cart cart, Long productId, Integer orderedQuantity);
 }
 
 

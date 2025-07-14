@@ -5,15 +5,13 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@Data
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductShortResponseDto {
-    @EqualsAndHashCode.Include
+
     private Long productId;
 
     private String name;
@@ -25,5 +23,4 @@ public class ProductShortResponseDto {
     private BigDecimal discountPrice;
 
     private Long categoryId;
-
 }

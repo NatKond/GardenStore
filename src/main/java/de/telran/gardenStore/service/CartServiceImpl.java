@@ -6,11 +6,10 @@ import de.telran.gardenStore.entity.CartItem;
 import de.telran.gardenStore.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import de.telran.gardenStore.exception.CartAlreadyExistsException;
+import de.telran.gardenStore.exception.CartNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -25,23 +24,41 @@ public class CartServiceImpl implements CartService {
     private final ProductService productService;
 
     @Override
-    public Cart create(Long userId) {
-        AppUser user = userService.getUserById(userId);
+    public Cart getCartByUser(AppUser user) {
+        return cartRepository.findByUser(user)
+                .orElseThrow(() -> new CartNotFoundException("Cart for user " + user.getUserId() + " not found"));
+    }
 
-        if (cartRepository.findByUserId(userId).isPresent()) {
-            throw new CartAlreadyExistsException("Cart already exists for this user");
-        }
-
+    @Override
+    public Cart create(AppUser user) {
         return cartRepository.save(Cart.builder()
                 .user(user)
                 .build());
     }
 
+    @Override
+    public Cart update(Cart cart) {
+        Cart existingCart = getCartByUser(cart.getUser());
+
+        existingCart.setItems(cart.getItems());
+
+        return cartRepository.save(existingCart);
+    }
+
 
     @Override
     public Cart addCartItem(Long userId, Long productId) {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseGet(() -> create(userId));
+        AppUser user = userService.getUserById(userId);
+
+        Cart cart;
+        try {
+            cart = getCartByUser(user);
+        } catch (CartNotFoundException exception) {
+            cart = create(user);
+        }
+
+//        Cart cart = cartRepository.findByUserId(userId)
+//                .orElseGet(() -> create(userService.getUserById(userId)));
 
         List<CartItem> items = cart.getItems();
 

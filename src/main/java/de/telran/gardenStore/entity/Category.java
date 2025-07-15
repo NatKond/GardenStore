@@ -9,9 +9,9 @@ import java.util.List;
 @Entity
 @Table(name = "categories")
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder(toBuilder = true)
-@AllArgsConstructor
 public class Category {
 
     @Id

@@ -5,20 +5,18 @@ import lombok.*;
 
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
-@ToString
+@AllArgsConstructor
+@Data
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryResponseDto {
 
-    @EqualsAndHashCode.Include
     private Long categoryId;
 
     private String name;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     List<ProductShortResponseDto> products;
 }

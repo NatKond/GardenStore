@@ -48,9 +48,9 @@ public class CategoryControllerImplTest extends AbstractTest {
     @DisplayName("GET /v1/categories - Get all categories")
     @Test
     void getAllCategories() throws Exception {
-        List<Category> categories = List.of(category1, category2);
+        List<Category> categories = List.of(category1, category2, category3);
 
-        List<CategoryShortResponseDto> categoriesDto = List.of(categoryShortResponseDto1, categoryShortResponseDto2);
+        List<CategoryShortResponseDto> categoriesDto = List.of(categoryShortResponseDto1, categoryShortResponseDto2, categoryShortResponseDto3);
 
         when(categoryService.getAllCategories()).thenReturn(categories);
 

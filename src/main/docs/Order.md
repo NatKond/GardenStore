@@ -8,16 +8,16 @@ A customer's order.
 
 ## Fields
 
-| Field           | Type          | DB Column        | Description                                                  |
-|-----------------|---------------|------------------|--------------------------------------------------------------|
-| orderId         | Long          | order_id         | Primary key                                                  |
-| userId          | Long          | user_id          | Foreign key to `users(user_id)`                              |
-| createdAt       | LocalDateTime | created_at       | Timestamp of order creation                                  |
-| deliveryAddress | String        | delivery_address | Delivery address                                             |
-| contactPhone    | String        | contact_phone    | Customer contact phone                                       |
-| deliveryMethod  | String        | delivery_method  | Delivery method                                              |
-| status          | Enum          | status           | Order status CREATED / PAID / SHIPPED / DELIVERED / CANCELED |
-| updatedAt       | LocalDateTime | updated_at       | Last update timestamp                                        |
+| Field           | Type          | DB Column        | Description                                                                     |
+|-----------------|---------------|------------------|---------------------------------------------------------------------------------|
+| orderId         | Long          | order_id         | Primary key                                                                     |
+| userId          | Long          | user_id          | Foreign key to `users(user_id)`                                                 |
+| createdAt       | LocalDateTime | created_at       | Timestamp of order creation                                                     |
+| deliveryAddress | String        | delivery_address | Delivery address                                                                |
+| contactPhone    | String        | contact_phone    | Customer contact phone                                                          |
+| deliveryMethod  | String        | delivery_method  | Delivery method                                                                 |
+| status          | Enum          | status           | Order status CREATED / AWAITING_PAYMENT / PAID / SHIPPED / DELIVERED / CANCELED |
+| updatedAt       | LocalDateTime | updated_at       | Last update timestamp                                                           |
 
 ## DTOs
 
@@ -25,14 +25,12 @@ A customer's order.
 
 ```json
 {
-  "userId": 3,
   "deliveryAddress": "string",
   "deliveryMethod": "string",
   "orderItems": [
     {
       "productId": 1,
-      "quantity": 2,
-      "priceAtPurchase": 8.99
+      "quantity": 2
     }
   ]
 }
@@ -60,6 +58,7 @@ A customer's order.
   "deliveryMethod": "string",
   "orderItems": [
     {
+      "orderId": 1,
       "quantity": 2,
       "priceAtPurchase": 8.99,
       "product": {
@@ -71,6 +70,7 @@ A customer's order.
       }
     },
     {
+      "orderId": 1,
       "quantity": 1,
       "priceAtPurchase": 10.49,
       "product": {

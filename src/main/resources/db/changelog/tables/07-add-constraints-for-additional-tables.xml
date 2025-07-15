@@ -70,4 +70,13 @@
         </sql>
     </changeSet>
 
+    <changeSet id="27-add-check-delivery_method" author="nkond">
+        <sql>
+            ALTER TABLE orders
+                ADD CONSTRAINT chk_orders_delivery_method
+                    CHECK (delivery_method IN ('COURIER', 'PICKUP', 'POST'));
+        </sql>
+
+    </changeSet>
+
 </databaseChangeLog>

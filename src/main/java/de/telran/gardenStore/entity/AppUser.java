@@ -1,5 +1,6 @@
 package de.telran.gardenStore.entity;
 
+
 import de.telran.gardenStore.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +28,7 @@ public class AppUser {
     private String phoneNumber;
 
     private String passwordHash;
-
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
@@ -39,7 +40,7 @@ public class AppUser {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
 
 }

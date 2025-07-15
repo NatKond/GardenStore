@@ -6,15 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OrderResponseDto {
+public class OrderShortResponseDto {
 
     private Long orderId;
 
@@ -26,7 +23,4 @@ public class OrderResponseDto {
 
     private String deliveryMethod;
 
-    private LocalDateTime createdAt;
-
-    private List<OrderItemResponseDto> items;
 }

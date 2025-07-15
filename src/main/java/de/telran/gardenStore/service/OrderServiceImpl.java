@@ -49,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
 
             if (cartItemOptional.isPresent()) {
                 CartItem cartItem = cartItemOptional.get();
+                orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
                 if (cartItem.getQuantity() <= orderItem.getQuantity()) {
                     //cartService.deleteCartItem(cartItem.getCartItemId());
                     cartItems.remove(cartItem);

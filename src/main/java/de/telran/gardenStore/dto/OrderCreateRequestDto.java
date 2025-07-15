@@ -12,13 +12,13 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class OrderCreateRequestDto {
 
-    @NotBlank(message = "Delivery address name cannot be blank")
+    @NotBlank(message = "Delivery address cannot be blank")
     private String deliveryAddress;
 
     @Pattern(regexp = "^\\+?[0-9\\s-]{10,}$")
     private String contactPhone;
 
-    @NotBlank(message = "Delivery method name cannot be blank")
+    @NotBlank(message = "Delivery method cannot be blank")
     private String deliveryMethod;
 
     @NotEmpty

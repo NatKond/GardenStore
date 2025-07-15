@@ -1,10 +1,9 @@
 package de.telran.gardenStore;
 
 import de.telran.gardenStore.dto.*;
-import de.telran.gardenStore.entity.AppUser;
-import de.telran.gardenStore.entity.Category;
-import de.telran.gardenStore.entity.Favorite;
-import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.entity.*;
+import de.telran.gardenStore.enums.DeliveryMethod;
+import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -17,6 +16,7 @@ public abstract class AbstractTest {
 
     protected Category category1;
     protected Category category2;
+    protected Category category3;
     protected Category categoryToCreate;
     protected Category categoryCreated;
 
@@ -36,8 +36,23 @@ public abstract class AbstractTest {
     protected Favorite favoriteToCreate;
     protected Favorite favoriteCreated;
 
+    protected Cart cart1;
+    protected Cart cart2;
+
+    protected CartItem cartItem1;
+    protected CartItem cartItem2;
+    protected CartItem cartItem3;
+
+    protected Order order1;
+    protected Order order2;
+
+    protected OrderItem orderItem1;
+    protected OrderItem orderItem2;
+    protected OrderItem orderItem3;
+
     protected CategoryShortResponseDto categoryShortResponseDto1;
     protected CategoryShortResponseDto categoryShortResponseDto2;
+    protected CategoryShortResponseDto categoryShortResponseDto3;
     protected CategoryResponseDto categoryResponseDto1;
     protected CategoryCreateRequestDto categoryCreateRequestDto;
     protected CategoryResponseDto categoryResponseCreatedDto;
@@ -79,6 +94,11 @@ public abstract class AbstractTest {
                 .name("Protective products and septic tanks")
                 .build();
 
+        category3 = Category.builder()
+                .categoryId(3L)
+                .name("Tools and equipment")
+                .build();
+
         categoryToCreate = Category.builder()
                 .name("Planting material")
                 .products(new ArrayList<>())
@@ -91,25 +111,25 @@ public abstract class AbstractTest {
         product1 = Product.builder()
                 .productId(1L)
                 .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
+                .discountPrice(BigDecimal.valueOf(8.99))
+                .price(BigDecimal.valueOf(11.99))
                 .category(category1)
                 .description("Balanced NPK formula for all types of plants")
                 .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         product2 = Product.builder()
                 .productId(1L)
                 .name("Organic Tomato Feed")
-                .discountPrice(new BigDecimal("10.49"))
-                .price(new BigDecimal("13.99"))
+                .discountPrice(BigDecimal.valueOf(10.49))
+                .price(BigDecimal.valueOf(13.99))
                 .category(category1)
                 .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
                 .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         category1.setProducts(List.of(product1, product2));
@@ -117,26 +137,26 @@ public abstract class AbstractTest {
         product3 = Product.builder()
                 .productId(3L)
                 .name("Slug & Snail Barrier Pellets")
-                .discountPrice(new BigDecimal("5.75"))
-                .price(new BigDecimal("7.50"))
+                .discountPrice(BigDecimal.valueOf(5.75))
+                .price(BigDecimal.valueOf(7.50))
                 .category(category2)
                 .description("Pet-safe barrier pellets to protect plants from slugs")
                 .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         category2.setProducts(List.of(product3));
 
         productToCreate = Product.builder()
                 .name("Garden Tool Set (5 pcs)")
-                .discountPrice(new BigDecimal("19.99"))
-                .price(new BigDecimal("24.99"))
-                .category(category2)
+                .discountPrice(BigDecimal.valueOf(19.99))
+                .price(BigDecimal.valueOf(24.99))
+                .category(category3)
                 .description("Essential hand tools set for everyday gardening")
                 .imageUrl("https://example.com/images/garden_tool_set.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         productCreated = productToCreate.toBuilder()
@@ -196,6 +216,73 @@ public abstract class AbstractTest {
         favoriteCreated = favoriteToCreate.toBuilder()
                 .favoriteId(3L)
                 .build();
+
+        cart1 = Cart.builder()
+                .user(user1)
+                .build();
+
+        cart2 = Cart.builder()
+                .user(user2)
+                .build();
+
+        cartItem1 = CartItem.builder()
+                .cart(cart1)
+                .product(product1)
+                .quantity(2)
+                .build();
+
+        cartItem2 = CartItem.builder()
+                .cart(cart1)
+                .product(product2)
+                .quantity(1)
+                .build();
+
+        cartItem3 = CartItem.builder()
+                .cart(cart2)
+                .product(product1)
+                .quantity(1)
+                .build();
+
+        order1 = Order.builder()
+                .user(user1)
+                .deliveryAddress("123 Garden Street")
+                .contactPhone(user1.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.COURIER)
+                .status(OrderStatus.PAID)
+                .createdAt(LocalDateTime.of(2025, 7, 1, 10, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 10, 30, 0))
+                .build();
+
+        order2 = Order.builder()
+                .user(user2)
+                .deliveryAddress("456 Green Ave")
+                .contactPhone(user2.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.PICKUP)
+                .status(OrderStatus.CREATED)
+                .createdAt(LocalDateTime.of(2025, 7, 2, 12, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 2, 12, 5, 0))
+                .build();
+
+        orderItem1 = OrderItem.builder()
+                .order(order1)
+                .product(product1)
+                .quantity(2)
+                .priceAtPurchase(BigDecimal.valueOf(8.99))
+                .build();
+
+        orderItem2 = OrderItem.builder()
+                .order(order1)
+                .product(product2)
+                .quantity(1)
+                .priceAtPurchase(BigDecimal.valueOf(10.49))
+                .build();
+
+        orderItem3 = OrderItem.builder()
+                .order(order2)
+                .product(product3)
+                .quantity(1)
+                .priceAtPurchase(BigDecimal.valueOf(5.75))
+                .build();
     }
 
     private void initCategoryDtos() {
@@ -207,6 +294,11 @@ public abstract class AbstractTest {
         categoryShortResponseDto2 = CategoryShortResponseDto.builder()
                 .categoryId(category2.getCategoryId())
                 .name(category2.getName())
+                .build();
+
+        categoryShortResponseDto3 = CategoryShortResponseDto.builder()
+                .categoryId(category3.getCategoryId())
+                .name(category3.getName())
                 .build();
 
         categoryResponseDto1 = CategoryResponseDto.builder()

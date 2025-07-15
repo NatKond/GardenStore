@@ -5,7 +5,6 @@ import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
-import de.telran.gardenStore.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

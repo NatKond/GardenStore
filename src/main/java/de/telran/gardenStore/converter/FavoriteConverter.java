@@ -22,11 +22,6 @@ public class FavoriteConverter implements Converter<Favorite, FavoriteCreateRequ
 
     @Override
     public FavoriteResponseDto convertEntityToDto(Favorite favorite) {
-//        modelMapper.typeMap(Favorite.class, FavoriteResponseDto.class).addMappings(
-//                (mapper -> {
-//                    mapper.map(favoriteEntity -> favoriteEntity.getProduct().getProductId(), FavoriteResponseDto::setProductId);
-//                }));
-
         return modelMapper.map(favorite, FavoriteResponseDto.class);
     }
 

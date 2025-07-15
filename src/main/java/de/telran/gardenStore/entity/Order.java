@@ -1,5 +1,6 @@
 package de.telran.gardenStore.entity;
 
+import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,8 +28,11 @@ public class Order {
     private AppUser user;
 
     private String deliveryAddress;
+
     private String contactPhone;
-    private String deliveryMethod;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryMethod deliveryMethod;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)

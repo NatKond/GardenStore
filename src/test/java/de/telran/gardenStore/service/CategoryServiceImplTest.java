@@ -31,9 +31,9 @@ class CategoryServiceImplTest extends AbstractTest {
     @DisplayName("Get all categories")
     @Test
     void getAllCategories() {
-        List<Category> expected = List.of(category1, category2);
+        List<Category> expected = List.of(category1, category2, category3);
 
-        when(categoryRepositoryMock.findAll()).thenReturn(List.of(category1, category2));
+        when(categoryRepositoryMock.findAll()).thenReturn(List.of(category1, category2, category3));
 
         List<Category> actual = categoryService.getAllCategories();
 

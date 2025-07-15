@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ProductConverter implements Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> {
+public class ProductConverter extends AbstractConverter implements Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> {
 
     private final ModelMapper modelMapper;
 
@@ -41,6 +41,6 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
 
     @Override
     public List<ProductShortResponseDto> convertEntityListToDtoList(List<Product> products) {
-        return Converter.convertList(products, (product) -> modelMapper.map(product, ProductShortResponseDto.class));
+        return ConverterEntityToDto.convertList(products, (product) -> modelMapper.map(product, ProductShortResponseDto.class));
     }
 }

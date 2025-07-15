@@ -11,14 +11,9 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class FavoriteConverter implements Converter<Favorite, FavoriteCreateRequestDto, FavoriteResponseDto, FavoriteResponseDto> {
+public class FavoriteConverter extends AbstractConverter implements ConverterEntityToDto<Favorite, FavoriteResponseDto, FavoriteResponseDto> {
 
     private final ModelMapper modelMapper;
-
-    @Override
-    public Favorite convertDtoToEntity(FavoriteCreateRequestDto favoriteCreateRequestDto) {
-        return modelMapper.map(favoriteCreateRequestDto, Favorite.class);
-    }
 
     @Override
     public FavoriteResponseDto convertEntityToDto(Favorite favorite) {
@@ -27,6 +22,6 @@ public class FavoriteConverter implements Converter<Favorite, FavoriteCreateRequ
 
     @Override
     public List<FavoriteResponseDto> convertEntityListToDtoList(List<Favorite> favorites) {
-        return Converter.convertList(favorites, this::convertEntityToDto);
+        return ConverterEntityToDto.convertList(favorites, this::convertEntityToDto);
     }
 }

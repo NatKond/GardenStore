@@ -1,5 +1,4 @@
 package de.telran.gardenStore.controller;
-
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
@@ -41,7 +40,7 @@ public class CategoryControllerImpl implements CategoryController {
 
     @Override
     public CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(categoryService.updateCategory(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+        return categoryConverter.convertEntityToDto(categoryService.updateCategory(categoryId, categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override

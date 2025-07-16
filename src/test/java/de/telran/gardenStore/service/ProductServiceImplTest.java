@@ -28,6 +28,8 @@ class ProductServiceImplTest extends AbstractTest {
 
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private CategoryServiceImpl categoryService;
 
     @Mock
     private EntityManager entityManager;
@@ -43,6 +45,8 @@ class ProductServiceImplTest extends AbstractTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
+
+
 
     @DisplayName("Get all products")
     @Test
@@ -100,6 +104,7 @@ class ProductServiceImplTest extends AbstractTest {
         Product expected = productCreated;
 
         when(productRepository.save(productToCreate)).thenReturn(productCreated);
+        when(categoryService.getCategoryById(productCreated.getCategory().getCategoryId())).thenReturn(productCreated.getCategory());
 
         Product actual = productService.createProduct(productToCreate);
 

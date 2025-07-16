@@ -44,7 +44,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public void deleteOrder(Long orderId) {
+    public void delete(Long orderId) {
         orderService.cancel(orderId);
     }
 }

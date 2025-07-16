@@ -7,11 +7,11 @@ public interface CartItemService {
 
     CartItem getById(Long cartItemId);
 
-    CartItem addCartItem(Cart cart, Long productId);
+    CartItem add(Cart cart, Long productId);
 
-    CartItem updateCartItem(Long cartItemId, Integer quantity);
+    CartItem update(Long cartItemId, Integer quantity);
 
-    void deleteCartItem(Long cartItemId);
+    void delete(Long cartItemId);
 }
 
 

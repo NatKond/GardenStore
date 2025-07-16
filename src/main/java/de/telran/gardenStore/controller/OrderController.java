@@ -28,5 +28,5 @@ public interface OrderController {
 
     @DeleteMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
-    void deleteOrder(@PathVariable Long orderId);
+    void delete(@PathVariable Long orderId);
 }

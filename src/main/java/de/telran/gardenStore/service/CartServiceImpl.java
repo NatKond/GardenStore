@@ -24,7 +24,7 @@ public class CartServiceImpl implements CartService {
     private final ProductService productService;
 
     @Override
-    public Cart getCartByUser(AppUser user) {
+    public Cart getByUser(AppUser user) {
         return cartRepository.findByUser(user)
                 .orElseThrow(() -> new CartNotFoundException("Cart for user " + user.getUserId() + " not found"));
     }
@@ -38,7 +38,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart update(Cart cart) {
-        Cart existingCart = getCartByUser(cart.getUser());
+        Cart existingCart = getByUser(cart.getUser());
 
         existingCart.setItems(cart.getItems());
 
@@ -52,7 +52,7 @@ public class CartServiceImpl implements CartService {
 
         Cart cart;
         try {
-            cart = getCartByUser(user);
+            cart = getByUser(user);
         } catch (CartNotFoundException exception) {
             cart = create(user);
         }
@@ -86,13 +86,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart updateCartItem(Long cartItemId, Integer quantity) {
-        CartItem updatedItem = cartItemService.updateCartItem(cartItemId, quantity);
+        CartItem updatedItem = cartItemService.update(cartItemId, quantity);
         return updatedItem.getCart();
     }
 
     @Override
     public void deleteCartItem(Long cartItemId) {
-        cartItemService.deleteCartItem(cartItemId);
+        cartItemService.delete(cartItemId);
     }
 }
 

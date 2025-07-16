@@ -5,7 +5,7 @@ import de.telran.gardenStore.entity.Cart;
 
 public interface CartService {
 
-    Cart getCartByUser(AppUser user);
+    Cart getByUser(AppUser user);
 
     Cart create(AppUser user);
 

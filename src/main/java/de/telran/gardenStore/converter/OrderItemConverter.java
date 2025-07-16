@@ -36,10 +36,10 @@ public class OrderItemConverter implements Converter<OrderItem, OrderItemCreateR
 
     @Override
     public List<OrderItemResponseDto> convertEntityListToDtoList(List<OrderItem> orderItems) {
-        return Converter.convertList(orderItems, this::convertEntityToDto);
+        return ConverterEntityToDto.convertList(orderItems, this::convertEntityToDto);
     }
 
     public List<OrderItem> converDtoListToEntityList(List<OrderItemCreateRequestDto> orderItems) {
-        return Converter.convertList(orderItems, this::convertDtoToEntity);
+        return ConverterEntityToDto.convertList(orderItems, this::convertDtoToEntity);
     }
 }

@@ -40,6 +40,6 @@ public class OrderConverter implements Converter<Order, OrderCreateRequestDto, O
 
     @Override
     public List<OrderShortResponseDto> convertEntityListToDtoList(List<Order> orders) {
-        return Converter.convertList(orders, (order) -> modelMapper.map(order, OrderShortResponseDto.class));
+        return ConverterEntityToDto.convertList(orders, (order) -> modelMapper.map(order, OrderShortResponseDto.class));
     }
 }

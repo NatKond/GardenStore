@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order create(Order order) {
 
-        Cart cart = cartService.getCartByUser(order.getUser());
+        Cart cart = cartService.getByUser(order.getUser());
         List<CartItem> cartItems = cart.getItems();
         List<OrderItem> orderItems = order.getItems();
         Iterator<OrderItem> iterator = orderItems.iterator();

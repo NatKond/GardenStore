@@ -27,7 +27,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public CartItem addCartItem(Cart cart, Long productId) {
+    public CartItem add(Cart cart, Long productId) {
         Optional<CartItem> existingItemOptional = cartItemRepository
                 .findByCartIdAndProductId(cart.getCartId(), productId);
 
@@ -46,14 +46,14 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public CartItem updateCartItem(Long cartItemId, Integer quantity) {
+    public CartItem update(Long cartItemId, Integer quantity) {
         CartItem item = getById(cartItemId);
         item.setQuantity(quantity);
         return cartItemRepository.save(item);
     }
 
     @Override
-    public void deleteCartItem(Long cartItemId) {
+    public void delete(Long cartItemId) {
         cartItemRepository.delete(getById(cartItemId));
     }
 

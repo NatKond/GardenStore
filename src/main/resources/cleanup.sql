@@ -1,4 +1,8 @@
-DROP TABLE app_users;
-DROP TABLE categories;
-DROP TABLE favorites;
-DROP TABLE products;
+DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS cart_items;
+DROP TABLE IF EXISTS carts;
+DROP TABLE IF EXISTS favorites;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS app_users;

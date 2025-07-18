@@ -6,7 +6,6 @@ import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,24 +36,22 @@ class OrderServiceImplTest extends AbstractTest {
     private OrderServiceImpl orderService;
 
     @Test
-    @DisplayName("Get order by ID - positive case")
-    void getById_ExistingOrder_ReturnsOrder() {
+    @DisplayName("Get order by ID : positive case")
+    void getByIdPositiveCase() {
 
         Long orderId = order1.getOrderId();
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order1));
 
+        Order actual = orderService.getById(orderId);
 
-        Order result = orderService.getById(orderId);
-
-
-        assertNotNull(result);
-        assertEquals(order1, result);
+        assertNotNull(actual);
+        assertEquals(order1, actual);
         verify(orderRepository).findById(orderId);
     }
 
     @Test
-    @DisplayName("Get order by ID - negative case (order not found)")
-    void getById_NonExistingOrder_ThrowsException() {
+    @DisplayName("Get order by ID : negative case")
+    void getByIdNegativeCase() {
 
         Long orderId = 999L;
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
@@ -70,38 +67,36 @@ class OrderServiceImplTest extends AbstractTest {
     void getAllByUserId_ReturnsUserOrders() {
 
         Long userId = user1.getUserId();
-        List<Order> expectedOrders = List.of(order1);
+        List<Order> expected = List.of(order1);
+
         when(userService.getUserById(userId)).thenReturn(user1);
-        when(orderRepository.findAllByUser(user1)).thenReturn(expectedOrders);
+        when(orderRepository.findAllByUser(user1)).thenReturn(expected);
 
-        List<Order> result = orderService.getAllByUserId(userId);
+        List<Order> actual = orderService.getAllByUserId(userId);
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(expectedOrders, result);
+        assertNotNull(actual);
+        assertEquals(1, actual.size());
+        assertEquals(expected, actual);
         verify(userService).getUserById(userId);
         verify(orderRepository).findAllByUser(user1);
     }
 
     @Test
-    @DisplayName("Create order - positive case")
-    @Transactional
+    @DisplayName("Create order : positive case")
     void createOrder_ValidOrder_ReturnsCreatedOrder() {
-        List<CartItem> cartItems = new ArrayList<>(List.of(cartItem1, cartItem2));
+
         List<OrderItem> orderItems = new ArrayList<>(List.of(
                 OrderItem.builder()
-                        .product(product1)
-                        .quantity(2)
+                        .product(cartItem1.getProduct())
+                        .quantity(cartItem1.getQuantity())
                         .build(),
                 OrderItem.builder()
-                        .product(product2)
-                        .quantity(1)
+                        .product(cartItem2.getProduct())
+                        .quantity(cartItem2.getQuantity())
                         .build()
         ));
 
-        Cart cart = cart1.toBuilder()
-                .items(cartItems)
-                .build();
+        Cart cart = cart1;
 
         Order orderToCreate = Order.builder()
                 .user(user1)
@@ -112,29 +107,28 @@ class OrderServiceImplTest extends AbstractTest {
                 .items(orderItems)
                 .build();
 
-        Order savedOrder = orderToCreate.toBuilder()
+        Order orderCreated = orderToCreate.toBuilder()
                 .orderId(1L)
                 .build();
 
         when(cartService.getByUser(user1)).thenReturn(cart);
-        when(orderRepository.save(orderToCreate)).thenReturn(savedOrder);
+        when(orderRepository.save(orderToCreate)).thenReturn(orderCreated);
 
-        Order result = orderService.create(orderToCreate);
+        Order actual = orderService.create(orderToCreate);
 
-        assertNotNull(result);
-        assertEquals(savedOrder, result);
+        assertNotNull(actual);
+        assertEquals(orderCreated, actual);
         verify(cartService).getByUser(user1);
         verify(orderRepository).save(orderToCreate);
         verify(cartService).update(cart);
     }
-    @Test
-    @DisplayName("Cancel order - positive case")
-    void cancelOrder_ExistingOrder_UpdatesStatus() {
 
-        Long orderId = order1.getOrderId();
-        Order orderToCancel = order1.toBuilder()
-                .status(OrderStatus.CREATED)
-                .build();
+    @Test
+    @DisplayName("Cancel order : positive case")
+    void cancelOrderPositiveCase() {
+
+        Long orderId = order2.getOrderId();
+        Order orderToCancel = order2;
 
         Order cancelledOrder = orderToCancel.toBuilder()
                 .status(OrderStatus.CANCELLED)
@@ -150,8 +144,8 @@ class OrderServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Cancel order - negative case (order not found)")
-    void cancelOrder_NonExistingOrder_ThrowsException() {
+    @DisplayName("Cancel order : negative case")
+    void cancelOrderNegativeCase() {
 
         Long orderId = 999L;
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());

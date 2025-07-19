@@ -237,13 +237,18 @@ public abstract class AbstractTest {
                 .quantity(1)
                 .build();
 
+        cart1.setItems(new ArrayList<>(List.of(cartItem1, cartItem2)));
+
         cartItem3 = CartItem.builder()
                 .cart(cart2)
                 .product(product1)
                 .quantity(1)
                 .build();
 
+        cart2.setItems(new ArrayList<>(List.of(cartItem3)));
+
         order1 = Order.builder()
+                .orderId(1L)
                 .user(user1)
                 .deliveryAddress("123 Garden Street")
                 .contactPhone(user1.getPhoneNumber())
@@ -254,6 +259,7 @@ public abstract class AbstractTest {
                 .build();
 
         order2 = Order.builder()
+                .orderId(2L)
                 .user(user2)
                 .deliveryAddress("456 Green Ave")
                 .contactPhone(user2.getPhoneNumber())
@@ -277,12 +283,16 @@ public abstract class AbstractTest {
                 .priceAtPurchase(BigDecimal.valueOf(10.49))
                 .build();
 
+        order1.setItems(new ArrayList<>(List.of(orderItem1, orderItem2)));
+
         orderItem3 = OrderItem.builder()
                 .order(order2)
                 .product(product3)
                 .quantity(1)
                 .priceAtPurchase(BigDecimal.valueOf(5.75))
                 .build();
+
+        order2.setItems(new ArrayList<>(List.of(orderItem3)));
     }
 
     private void initCategoryDtos() {

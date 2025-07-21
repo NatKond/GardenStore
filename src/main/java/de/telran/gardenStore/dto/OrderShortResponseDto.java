@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -22,5 +24,7 @@ public class OrderShortResponseDto {
     private String contactPhone;
 
     private String deliveryMethod;
+
+    private LocalDateTime createdAt;
 
 }

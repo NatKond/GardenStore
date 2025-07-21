@@ -19,8 +19,9 @@ public class OrderCreateRequestDto {
     private String contactPhone;
 
     @NotBlank(message = "Delivery method cannot be blank")
+    @Pattern(regexp = "DELIVERY|PICKUP", message = "Delivery method must be either DELIVERY or PICKUP")
     private String deliveryMethod;
 
-    @NotEmpty
+    @NotEmpty(message = "must not be empty")
     private List<OrderItemCreateRequestDto> items;
 }

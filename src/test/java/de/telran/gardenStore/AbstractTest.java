@@ -59,6 +59,7 @@ public abstract class AbstractTest {
 
     protected ProductShortResponseDto productShortResponseDto1;
     protected ProductShortResponseDto productShortResponseDto2;
+    protected ProductShortResponseDto productShortResponseDto3;
     protected ProductResponseDto productResponseDto1;
     protected ProductCreateRequestDto productCreateRequestDto;
     protected ProductResponseDto productResponseCreatedDto;
@@ -74,13 +75,21 @@ public abstract class AbstractTest {
     protected FavoriteResponseDto favoriteResponseDto2;
     protected FavoriteResponseDto favoriteResponseCreatedDto;
 
+    protected OrderShortResponseDto orderShortResponseDto1;
+    protected OrderShortResponseDto orderShortResponseDto2;
+    protected OrderResponseDto orderResponseDto1;
+    protected OrderResponseDto orderResponseDto2;
+    protected OrderCreateRequestDto orderCreateRequestDto;
+    protected OrderResponseDto orderResponseCreatedDto;
+
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
         initEntities();
         initProductDtos();
         initCategoryDtos();
         initFavoriteDtos();
         initUserDtos();
+        initOrderDtos();
     }
 
     private void initEntities() {
@@ -121,7 +130,7 @@ public abstract class AbstractTest {
                 .build();
 
         product2 = Product.builder()
-                .productId(1L)
+                .productId(2L)
                 .name("Organic Tomato Feed")
                 .discountPrice(BigDecimal.valueOf(10.49))
                 .price(BigDecimal.valueOf(13.99))
@@ -346,6 +355,15 @@ public abstract class AbstractTest {
                 .description(product2.getDescription())
                 .build();
 
+        productShortResponseDto3 = ProductShortResponseDto.builder()
+                .productId(product3.getProductId())
+                .name(product3.getName())
+                .price(product3.getPrice())
+                .discountPrice(product3.getDiscountPrice())
+                .categoryId(product3.getCategory().getCategoryId())
+                .description(product3.getDescription())
+                .build();
+
         productResponseDto1 = ProductResponseDto.builder()
                 .productId(product1.getProductId())
                 .name(product1.getName())
@@ -442,6 +460,98 @@ public abstract class AbstractTest {
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()
                 .favoriteId(favoriteCreated.getFavoriteId())
                 .product(productShortResponseCreatedDto)
+                .build();
+    }
+    protected void initOrderDtos() {
+        orderShortResponseDto1 = OrderShortResponseDto.builder()
+                .orderId(order1.getOrderId())
+                .status(order1.getStatus().name())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .createdAt(order1.getCreatedAt())
+                .build();
+
+        orderShortResponseDto2 = OrderShortResponseDto.builder()
+                .orderId(order2.getOrderId())
+                .status(order2.getStatus().name())
+                .deliveryMethod(order2.getDeliveryMethod().name())
+                .createdAt(order2.getCreatedAt())
+                .build();
+
+        orderCreateRequestDto = OrderCreateRequestDto.builder()
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .items(List.of(
+                        OrderItemCreateRequestDto.builder()
+                                .productId(product1.getProductId())
+                                .quantity(2)
+                                .build(),
+                        OrderItemCreateRequestDto.builder()
+                                .productId(product2.getProductId())
+                                .quantity(1)
+                                .build()
+                ))
+                .build();
+
+        orderResponseDto1 = OrderResponseDto.builder()
+                .orderId(order1.getOrderId())
+                .status(order1.getStatus().name())
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .createdAt(order1.getCreatedAt())
+                .updatedAt(order1.getUpdatedAt())
+                .items(List.of(
+                        OrderItemResponseDto.builder()
+                                .product(productShortResponseDto1)
+                                .quantity(orderItem1.getQuantity())
+                                .priceAtPurchase(orderItem1.getPriceAtPurchase())
+                                .build(),
+                        OrderItemResponseDto.builder()
+                                .product(productShortResponseDto2)
+                                .quantity(orderItem2.getQuantity())
+                                .priceAtPurchase(orderItem2.getPriceAtPurchase())
+                                .build()
+                ))
+                .build();
+
+        orderResponseDto2 = OrderResponseDto.builder()
+                .orderId(order2.getOrderId())
+                .status(order2.getStatus().name())
+                .deliveryAddress(order2.getDeliveryAddress())
+                .contactPhone(order2.getContactPhone())
+                .deliveryMethod(order2.getDeliveryMethod().name())
+                .createdAt(order2.getCreatedAt())
+                .updatedAt(order2.getUpdatedAt())
+                .items(List.of(
+                        OrderItemResponseDto.builder()
+                                .product(productShortResponseDto3)
+                                .quantity(orderItem3.getQuantity())
+                                .priceAtPurchase(orderItem3.getPriceAtPurchase())
+                                .build()
+                ))
+                .build();
+
+        orderResponseCreatedDto = OrderResponseDto.builder()
+                .orderId(3L)
+                .status(OrderStatus.CREATED.name())
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .items(List.of(
+                        OrderItemResponseDto.builder()
+                                .product(productShortResponseDto1)
+                                .quantity(2)
+                                .priceAtPurchase(product1.getDiscountPrice())
+                                .build(),
+                        OrderItemResponseDto.builder()
+                                .product(productShortResponseDto2)
+                                .quantity(1)
+                                .priceAtPurchase(product2.getDiscountPrice())
+                                .build()
+                ))
                 .build();
     }
 }

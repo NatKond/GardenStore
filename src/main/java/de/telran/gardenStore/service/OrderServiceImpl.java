@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -66,9 +67,33 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancel(Long orderId) {
+    public Order cancel(Long orderId) {
         Order order = getById(orderId);
         order.setStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order update(Long orderId, Order order) {
+        Order existingOrder = getById(orderId);
+        existingOrder.setDeliveryAddress(order.getDeliveryAddress());
+        existingOrder.setContactPhone(order.getContactPhone());
+        existingOrder.setDeliveryMethod(order.getDeliveryMethod());
+
+        return orderRepository.save(existingOrder);
+    }
+
+    @Override
+    public List<Order> getAllOrders(OrderStatus status, LocalDateTime startDate, LocalDateTime endDate) {
+        if (status == null && startDate == null && endDate == null) {
+            return orderRepository.findAll();
+        } if (status != null && startDate != null && endDate != null) {
+            return orderRepository.findAllByStatusAndCreatedAtBetween(status, startDate, endDate);
+        } else if (status != null) {
+            return orderRepository.findAllByStatus(status);
+        } else {
+            return orderRepository.findAllByCreatedAtBetween(startDate, endDate);
+        }
+
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderResponseDto {
 
@@ -27,6 +27,8 @@ public class OrderResponseDto {
     private String deliveryMethod;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private List<OrderItemResponseDto> items;
 }

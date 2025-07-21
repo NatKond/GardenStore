@@ -1,38 +1,42 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.converter.Converter;
+import de.telran.gardenStore.dto.OrderCreateRequestDto;
+import de.telran.gardenStore.dto.OrderResponseDto;
+import de.telran.gardenStore.dto.OrderShortResponseDto;
 import de.telran.gardenStore.entity.Order;
-import de.telran.gardenStore.entity.OrderItem;
 import de.telran.gardenStore.enums.OrderStatus;
+import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
+import de.telran.gardenStore.exception.OrderPaymentRejectedException;
 import de.telran.gardenStore.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/payments")
 public class PaymentControllerImpl implements PaymentController {
+
     private final OrderService orderService;
 
+    private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
+
     @Override
-    @PostMapping
-    public ResponseEntity<?> processPayment(Long orderId, BigDecimal amount) {
-        Order order = orderService.getById(orderId);
-        List<OrderItem> orderItemList = order.getItems();
-        BigDecimal sum = BigDecimal.ZERO;
-        for (OrderItem orderItem : orderItemList) {
-            sum = sum.add(orderItem.getPriceAtPurchase());
+    public OrderResponseDto processPayment(Long orderId, BigDecimal paymentAmount) {
+
+        BigDecimal totalAmount = orderService.getTotalAmount(orderId);
+
+        OrderStatus orderStatus = orderService.getById(orderId).getStatus();
+
+        if(orderService.getById(orderId).getStatus() != OrderStatus.AWAITING_PAYMENT) {
+            throw new OrderPaymentRejectedException("Order cannot be paid in current status: " + orderStatus);
         }
-        if (sum.compareTo(amount) == 0) {
-            order.setStatus(OrderStatus.PAID);
+
+        if (totalAmount.equals(paymentAmount)) {
+            return orderConverter.convertEntityToDto(orderService.updateStatus(orderId, OrderStatus.PAID));
         } else {
-            ResponseEntity.badRequest();
+            throw new IncorrectPaymentAmountException("Payment amount is incorrect");
         }
-        return ResponseEntity.ok().build();
     }
 }

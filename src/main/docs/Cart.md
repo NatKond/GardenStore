@@ -21,7 +21,7 @@ Represents a user's shopping cart.
 {
   "cartId": 1,
   "userId": 2,
-  "cartItems": [
+  "items": [
     {
       "quantity": 2,
       "product": {

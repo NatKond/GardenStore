@@ -57,6 +57,8 @@ A customer's order.
   "status": "CREATED",
   "deliveryAddress": "string",
   "deliveryMethod": "string",
+  "createdAt": "string",
+  "updatedAt": "string",
   "items": [
     {
       "orderId": 1,

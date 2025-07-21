@@ -253,7 +253,7 @@ public abstract class AbstractTest {
                 .deliveryAddress("123 Garden Street")
                 .contactPhone(user1.getPhoneNumber())
                 .deliveryMethod(DeliveryMethod.COURIER)
-                .status(OrderStatus.PAID)
+                .status(OrderStatus.AWAITING_PAYMENT)
                 .createdAt(LocalDateTime.of(2025, 7, 1, 10, 0, 0))
                 .updatedAt(LocalDateTime.of(2025, 7, 1, 10, 30, 0))
                 .build();
@@ -273,14 +273,14 @@ public abstract class AbstractTest {
                 .order(order1)
                 .product(product1)
                 .quantity(2)
-                .priceAtPurchase(BigDecimal.valueOf(8.99))
+                .priceAtPurchase(product1.getDiscountPrice())
                 .build();
 
         orderItem2 = OrderItem.builder()
                 .order(order1)
                 .product(product2)
                 .quantity(1)
-                .priceAtPurchase(BigDecimal.valueOf(10.49))
+                .priceAtPurchase(product2.getDiscountPrice())
                 .build();
 
         order1.setItems(new ArrayList<>(List.of(orderItem1, orderItem2)));
@@ -289,7 +289,7 @@ public abstract class AbstractTest {
                 .order(order2)
                 .product(product3)
                 .quantity(1)
-                .priceAtPurchase(BigDecimal.valueOf(5.75))
+                .priceAtPurchase(product3.getDiscountPrice())
                 .build();
 
         order2.setItems(new ArrayList<>(List.of(orderItem3)));

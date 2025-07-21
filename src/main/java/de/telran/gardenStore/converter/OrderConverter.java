@@ -20,9 +20,13 @@ public class OrderConverter implements Converter<Order, OrderCreateRequestDto, O
     @Override
     public Order convertDtoToEntity(OrderCreateRequestDto orderCreateRequestDto) {
         modelMapper.typeMap(OrderCreateRequestDto.class, Order.class).addMappings(
-                mapper -> mapper
-                        .using(context -> orderItemConverter.converDtoListToEntityList((List<OrderItemCreateRequestDto>) context.getSource()))
-                        .map(OrderCreateRequestDto::getItems, Order::setItems));
+                mapper -> {
+                    mapper.skip(Order::setOrderId);
+                    mapper
+                            .using(context -> orderItemConverter.converDtoListToEntityList((List<OrderItemCreateRequestDto>) context.getSource()))
+                            .map(OrderCreateRequestDto::getItems, Order::setItems);
+                }
+        );
 
         Order order = modelMapper.map(orderCreateRequestDto, Order.class);
         order.getItems().forEach(orderItem -> orderItem.setOrder(order));

@@ -15,7 +15,7 @@ public interface CartService {
 
     Cart updateCartItem(Long cartItemId, Integer quantity);
 
-    void deleteCartItem(Long cartItemId);
+    Cart deleteCartItem(Long cartItemId);
 
     //void processOrderItem(Cart cart, Long productId, Integer orderedQuantity);
 }

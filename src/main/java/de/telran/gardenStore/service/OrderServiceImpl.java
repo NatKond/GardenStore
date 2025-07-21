@@ -125,6 +125,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
+    @Transactional
     @Override
     public Order updateOrderItem(Long orderItemId, Integer quantity) {
 
@@ -141,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
         cartItemOptional.ifPresent(cartItem -> processCartItem(cartItem, cartItems, quantity));
 
         orderItem.setQuantity(quantity);
-
+        cartService.update(cart);
         return orderRepository.save(order);
     }
 
@@ -151,6 +152,10 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderItem.getOrder();
         order.getItems().remove(orderItem);
+
+        if (order.getItems().isEmpty()) {
+            throw new EmptyOrderException("Order is empty.");
+        }
 
         return orderRepository.save(order);
     }

@@ -56,7 +56,6 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Get order by ID : negative case")
     void getByIdNegativeCase() {
-
         Long orderId = 999L;
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
@@ -69,7 +68,6 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Get all orders by user ID")
     void getAllByUserId() {
-
         Long userId = user1.getUserId();
         List<Order> expected = List.of(order1);
 
@@ -117,31 +115,9 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Create order : positive case")
     void createOrderPositiveCase() {
-
-        List<OrderItem> orderItems = new ArrayList<>(List.of(
-                OrderItem.builder()
-                        .product(cartItem1.getProduct())
-                        .quantity(cartItem1.getQuantity())
-                        .build(),
-                OrderItem.builder()
-                        .product(cartItem2.getProduct())
-                        .quantity(cartItem2.getQuantity())
-                        .build()
-        ));
-
         Cart cart = cart1;
-
-        Order orderToCreate = Order.builder()
-                .user(user1)
-                .deliveryAddress("123 Garden Street")
-                .contactPhone(user1.getPhoneNumber())
-                .deliveryMethod(DeliveryMethod.COURIER)
-                .status(OrderStatus.CREATED)
-                .items(orderItems)
-                .build();
-
         Order orderCreated = orderToCreate.toBuilder()
-                .orderId(1L)
+                .orderId(3L)
                 .build();
 
         when(cartService.getByUser(user1)).thenReturn(cart);

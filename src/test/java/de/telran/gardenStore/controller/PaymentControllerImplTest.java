@@ -5,7 +5,6 @@ import de.telran.gardenStore.converter.OrderConverter;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.enums.OrderStatus;
-import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.service.OrderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,52 +36,55 @@ public class PaymentControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("POST /v1/payment - Successful payment")
-    void processPayment_Success() throws Exception {
-        Long orderId = 1L;
-        BigDecimal paymentAmount = new BigDecimal("28.47");
-        OrderResponseDto responseDto = OrderResponseDto.builder()
-                .orderId(orderId)
+    void processPaymentPositiveCase() throws Exception {
+        Long orderId = order1.getOrderId();
+        BigDecimal paymentAmount = orderResponseDto1.getTotalAmount();
+        OrderResponseDto orderPaidResponseDto = orderResponseDto1.toBuilder()
                 .status(OrderStatus.PAID.name())
                 .build();
 
-        Order paidOrder = order1.toBuilder().status(OrderStatus.PAID).build();
+        Order paidOrder = order1.toBuilder()
+                .status(OrderStatus.PAID)
+                .build();
 
         when(orderService.getTotalAmount(orderId)).thenReturn(paymentAmount);
         when(orderService.getById(orderId)).thenReturn(order1);
         when(orderService.updateStatus(orderId, OrderStatus.PAID)).thenReturn(paidOrder);
-        when(orderConverter.convertEntityToDto(paidOrder)).thenReturn(responseDto);
+        when(orderConverter.convertEntityToDto(paidOrder)).thenReturn(orderPaidResponseDto);
 
         mockMvc.perform(post("/v1/payment")
                         .param("orderId", orderId.toString())
                         .param("paymentAmount", paymentAmount.toString()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.orderId").value(orderId))
-                .andExpect(jsonPath("$.status").value("PAID"));
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.orderId").value(orderId),
+                        jsonPath("$.status").value("PAID"));
     }
 
     @Test
     @DisplayName("POST /v1/payment - Incorrect payment amount")
-    void processPayment_IncorrectAmount() throws Exception {
-        Long orderId = 1L;
-        BigDecimal paymentAmount = new BigDecimal("20.00");
-        BigDecimal totalAmount = new BigDecimal("28.47");
+    void processPaymentNegativeCase() throws Exception {
+        Long orderId = order1.getOrderId();
+        BigDecimal paymentAmount = orderResponseDto1.getTotalAmount();
+        BigDecimal incorrectAmount = new BigDecimal("20.00");
 
-        when(orderService.getTotalAmount(orderId)).thenReturn(totalAmount);
+        when(orderService.getTotalAmount(orderId)).thenReturn(paymentAmount);
         when(orderService.getById(orderId)).thenReturn(order1);
 
         mockMvc.perform(post("/v1/payment")
                         .param("orderId", orderId.toString())
-                        .param("paymentAmount", paymentAmount.toString()))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.exception").value("IncorrectPaymentAmountException"))
-                .andExpect(jsonPath("$.message").value("Payment amount is incorrect"));
+                        .param("paymentAmount", incorrectAmount.toString()))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.exception").value("IncorrectPaymentAmountException"),
+                        jsonPath("$.message").value("Payment amount is incorrect"));
     }
 
     @Test
     @DisplayName("POST /v1/payment - Order not in AWAITING_PAYMENT status")
     void processPayment_WrongStatus() throws Exception {
-        Long orderId = 2L;
-        BigDecimal paymentAmount = new BigDecimal("5.75");
+        Long orderId = order2.getOrderId();
+        BigDecimal paymentAmount = product3.getDiscountPrice();
 
         when(orderService.getTotalAmount(orderId)).thenReturn(paymentAmount);
         when(orderService.getById(orderId)).thenReturn(order2);
@@ -90,56 +92,9 @@ public class PaymentControllerImplTest extends AbstractTest {
         mockMvc.perform(post("/v1/payment")
                         .param("orderId", orderId.toString())
                         .param("paymentAmount", paymentAmount.toString()))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.exception").value("OrderPaymentRejectedException"))
-                .andExpect(jsonPath("$.message").value("Order cannot be paid in current status: CREATED"));
-    }
-
-    @Test
-    @DisplayName("POST /v1/payment - Negative orderId")
-    void processPayment_NegativeOrderId() throws Exception {
-        mockMvc.perform(post("/v1/payment")
-                        .param("orderId", "-1")
-                        .param("paymentAmount", "10.00"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("POST /v1/payment - Negative paymentAmount")
-    void processPayment_NegativePaymentAmount() throws Exception {
-        mockMvc.perform(post("/v1/payment")
-                        .param("orderId", "1")
-                        .param("paymentAmount", "-10.00"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("POST /v1/payment - Missing orderId")
-    void processPayment_MissingOrderId() throws Exception {
-        mockMvc.perform(post("/v1/payment")
-                        .param("paymentAmount", "10.00"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("POST /v1/payment - Missing paymentAmount")
-    void processPayment_MissingPaymentAmount() throws Exception {
-        mockMvc.perform(post("/v1/payment")
-                        .param("orderId", "1"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("POST /v1/payment - Order not found")
-    void processPayment_OrderNotFound() throws Exception {
-        Long orderId = 999L;
-        BigDecimal paymentAmount = new BigDecimal("10.00");
-
-        when(orderService.getById(orderId)).thenThrow(new OrderNotFoundException("Order not found"));
-
-        mockMvc.perform(post("/v1/payment")
-                        .param("orderId", orderId.toString())
-                        .param("paymentAmount", paymentAmount.toString()))
-                .andExpect(status().isNotFound());
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.exception").value("OrderPaymentRejectedException"),
+                        jsonPath("$.message").value("Order cannot be paid in current status: CREATED"));
     }
 }

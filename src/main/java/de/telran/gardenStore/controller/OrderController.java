@@ -3,16 +3,11 @@ package de.telran.gardenStore.controller;
 import de.telran.gardenStore.dto.OrderCreateRequestDto;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.dto.OrderShortResponseDto;
-import de.telran.gardenStore.dto.OrderUpdateRequestDto;
-import de.telran.gardenStore.enums.OrderStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequestMapping("/v1/orders")
@@ -24,16 +19,6 @@ public interface OrderController {
     @GetMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
     OrderResponseDto getById(@PathVariable @Positive Long orderId);
-
-    @GetMapping
-    List<OrderShortResponseDto> getAllOrders(
-            @RequestParam(required = false) OrderStatus status,
-            @RequestParam(required = false) LocalDateTime startDate,
-            @RequestParam(required = false) LocalDateTime endDate
-    );
-
-    @PutMapping("/{orderId}")
-    OrderResponseDto updateOrder(@PathVariable Long orderId, @RequestBody OrderUpdateRequestDto updateRequest);
 
     @PostMapping("/{userId}")
     @PreAuthorize("hasRole('USER')")
@@ -53,5 +38,5 @@ public interface OrderController {
 
     @DeleteMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
-    ResponseEntity<OrderResponseDto> delete(@PathVariable @Positive Long orderId);
+    OrderResponseDto delete(@PathVariable @Positive Long orderId);
 }

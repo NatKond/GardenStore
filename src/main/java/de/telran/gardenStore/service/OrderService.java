@@ -10,9 +10,9 @@ public interface OrderService {
 
     Order getById(Long orderId);
 
-    List<Order> getAllByUserId(Long userId);
+    List<Order> getAllForCurrentUser();
 
-    List<Order> getAllActiveOrders();
+    List<Order> getAllActive();
 
     BigDecimal getTotalAmount(Long orderId);
 

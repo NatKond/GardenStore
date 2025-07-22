@@ -6,6 +6,10 @@ import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractTest {
+
+    protected Authentication authentication;
+    protected SecurityContext context;
 
     protected Category category1;
     protected Category category2;
@@ -77,10 +84,18 @@ public abstract class AbstractTest {
     @BeforeEach
     void setUp() {
         initEntities();
+        initSecurityContext();
         initProductDtos();
         initCategoryDtos();
         initFavoriteDtos();
         initUserDtos();
+    }
+
+    private void initSecurityContext() {
+        authentication = new UsernamePasswordAuthenticationToken(user1.getEmail(), null);
+        context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
     }
 
     private void initEntities() {

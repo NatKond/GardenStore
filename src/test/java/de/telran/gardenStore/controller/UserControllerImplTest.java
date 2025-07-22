@@ -10,6 +10,7 @@ import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.exception.UserNotFoundException;
 import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
 import de.telran.gardenStore.service.UserService;
+import de.telran.gardenStore.service.security.AuthenticationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,20 +42,22 @@ class UserControllerImplTest extends AbstractTest {
     private UserService userService;
 
     @MockitoBean
+    private AuthenticationService authenticationService;
+
+    @MockitoBean
     private Converter<AppUser, UserCreateRequestDto, UserResponseDto, UserShortResponseDto> userConverter;
 
     @Test
     @DisplayName("GET /v1/users - Get all users")
-    void getAllUsers() throws Exception {
+    void getAll() throws Exception {
 
         List<AppUser> users = List.of(user1, user2);
         List<UserShortResponseDto> expected = List.of(userShortResponseDto1, userShortResponseDto2);
 
-        when(userService.getAllUsers()).thenReturn(users);
+        when(userService.getAll()).thenReturn(users);
         when(userConverter.convertEntityListToDtoList(users)).thenReturn(expected);
 
-        mockMvc.perform(get("/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/users"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
@@ -63,15 +66,12 @@ class UserControllerImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/user/{userId} - Get user by ID : positive case")
-    void getUserByIdPositiveCase() throws Exception {
-
-        Long userId = 1L;
-
-        when(userService.getUserById(userId)).thenReturn(user1);
+    @DisplayName("GET /v1/user/me - Get current user")
+    void getCurrent() throws Exception {
+        when(userService.getCurrent()).thenReturn(user1);
         when(userConverter.convertEntityToDto(user1)).thenReturn(userResponseDto1);
 
-        mockMvc.perform(get("/v1/users/{userId}", userId)
+        mockMvc.perform(get("/v1/users/me")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpectAll(
@@ -81,11 +81,27 @@ class UserControllerImplTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("GET /v1/user/{userId} - Get current user by ID : positive case")
+    void getByIdPositiveCase() throws Exception {
+        Long userId = user1.getUserId();
+
+        when(userService.getById(userId)).thenReturn(user1);
+        when(userConverter.convertEntityToDto(user1)).thenReturn(userResponseDto1);
+
+        mockMvc.perform(get("/v1/users/{userId}", userId))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(userResponseDto1)));
+    }
+
+    @Test
     @DisplayName("GET /v1/user/{userId} - Get user by ID : negative case")
-    void getUserByIdNegativeCase() throws Exception {
+    void getByIdNegativeCase() throws Exception {
 
         Long userId = 99L;
-        when(userService.getUserById(userId)).thenThrow(new UserNotFoundException("User with id " + userId + " not found"));
+        when(userService.getById(userId)).thenThrow(new UserNotFoundException("User with id " + userId + " not found"));
 
         mockMvc.perform(get("/v1/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -100,10 +116,10 @@ class UserControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("POST /v1/users/register - Create new user : positive case")
-    void createUserPositiveCase() throws Exception {
+    void createPositiveCase() throws Exception {
 
         when(userConverter.convertDtoToEntity(userCreateRequestDto)).thenReturn(userToCreate);
-        when(userService.createUser(userToCreate)).thenReturn(userCreated);
+        when(userService.create(userToCreate)).thenReturn(userCreated);
         when(userConverter.convertEntityToDto(userCreated)).thenReturn(userResponseCreatedDto);
 
         mockMvc.perform(post("/v1/users/register")
@@ -118,10 +134,10 @@ class UserControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("POST /v1/users/register - Create new user : negative case")
-    void createUserNegativeCase() throws Exception {
+    void createNegativeCase() throws Exception {
 
         when(userConverter.convertDtoToEntity(userCreateRequestDto)).thenReturn(userToCreate);
-        when(userService.createUser(userToCreate)).thenThrow(new UserWithEmailAlreadyExistsException("User with email " + userToCreate.getEmail() + " already exists"));
+        when(userService.create(userToCreate)).thenThrow(new UserWithEmailAlreadyExistsException("User with email " + userToCreate.getEmail() + " already exists"));
 
         mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +152,7 @@ class UserControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("PUT /v1/users - Update user")
-    void updateUser() throws Exception {
+    void update() throws Exception {
 
         String emailToUpdate = "charlie.brown777@example.com";
 
@@ -160,11 +176,11 @@ class UserControllerImplTest extends AbstractTest {
 
 
         when(userConverter.convertDtoToEntity(userUpdateRequestDto)).thenReturn(userToUpdate);
-        when(userService.updateUser(userId, userToUpdate)).thenReturn(userUpdated);
-        when(userService.getUserById(userId)).thenReturn(userUpdated);
+        when(userService.update(userToUpdate)).thenReturn(userUpdated);
+        when(userService.getCurrent()).thenReturn(userUpdated);
         when(userConverter.convertEntityToDto(userUpdated)).thenReturn(userResponseUpdatedDto);
 
-        mockMvc.perform(put("/v1/users/{userId}", userId)
+        mockMvc.perform(put("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userUpdateRequestDto)))
                 .andDo(print())
@@ -176,16 +192,14 @@ class UserControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("DELETE /v1/users/{userId} - Delete user by ID")
-    void deleteUserById_ExistingUser_Returns200() throws Exception {
-        // Подготовка
-        Long userId = 1L;
+    void deleteUserById_Existing_Returns200() throws Exception {
 
-        doNothing().when(userService).deleteUserById(userId);
+        doNothing().when(userService).delete();
 
-        mockMvc.perform(delete("/v1/users/{userId}", userId)
+        mockMvc.perform(delete("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(userService).deleteUserById(userId);
+        verify(userService).delete();
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponseDto {
+
     @EqualsAndHashCode.Include
     private Long userId;
 

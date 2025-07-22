@@ -21,17 +21,19 @@ public class FavoriteControllerImpl implements FavoriteController {
     private final ConverterEntityToDto<Favorite, FavoriteResponseDto, FavoriteResponseDto> favoriteConverter;
 
     @Override
-    public List<FavoriteResponseDto> getAllFavoritesByUser(@Positive Long userId) {
-        return favoriteConverter.convertEntityListToDtoList(favoriteService.getAllFavoritesByUser(userId));
+    public List<FavoriteResponseDto> getAllForCurrentUser() {
+        return favoriteConverter.convertEntityListToDtoList(
+                favoriteService.getAllForCurrentUser());
     }
 
     @Override
-    public FavoriteResponseDto createFavorite(@Positive Long userId, @Positive Long productId) {
-        return favoriteConverter.convertEntityToDto(favoriteService.createFavorite(userId, productId));
+    public FavoriteResponseDto create(@Positive Long productId) {
+        return favoriteConverter.convertEntityToDto(
+                favoriteService.create(productId));
     }
 
     @Override
-    public void deleteFavorite(@Positive Long favoriteId) {
-        favoriteService.deleteFavoriteById(favoriteId);
+    public void delete(@Positive Long favoriteId) {
+        favoriteService.deleteById(favoriteId);
     }
 }

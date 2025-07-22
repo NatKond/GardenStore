@@ -18,15 +18,6 @@ A product included in an order.
 
 ## DTOs
 
-### OrderItemCreateDto
-
-```json
-{
-  "productId": 1,
-  "quantity": 2
-}
-```
-
 ### OrderItemResponseDto
 
 ```json

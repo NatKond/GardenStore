@@ -17,29 +17,29 @@ import java.util.List;
 public interface ProductController {
 
     @GetMapping
-    List<ProductShortResponseDto> getAllProducts(@RequestParam(required = false) @Positive Long category,
-                                                 @RequestParam(required = false) Boolean discount,
-                                                 @RequestParam(required = false) @Positive BigDecimal minPrice,
-                                                 @RequestParam(required = false) @Positive BigDecimal maxPrice,
-                                                 @RequestParam(required = false)
+    List<ProductShortResponseDto> getAll(@RequestParam(required = false) @Positive Long category,
+                                         @RequestParam(required = false) Boolean discount,
+                                         @RequestParam(required = false) @Positive BigDecimal minPrice,
+                                         @RequestParam(required = false) @Positive BigDecimal maxPrice,
+                                         @RequestParam(required = false)
                                                  @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
-                                                 @RequestParam(required = false) Boolean sortDirection);
+                                         @RequestParam(required = false) Boolean sortDirection);
 
     @GetMapping("/{productId}")
-    ProductResponseDto getProductById(@PathVariable @Positive Long productId);
+    ProductResponseDto getById(@PathVariable @Positive Long productId);
 
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productRequest);
+    ProductResponseDto create(@RequestBody @Valid ProductCreateRequestDto productRequest);
 
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{productId}")
-    ProductResponseDto updateProduct(@PathVariable @Positive Long productId,
-                                     @RequestBody @Valid ProductCreateRequestDto productRequest);
+    ProductResponseDto update(@PathVariable @Positive Long productId,
+                              @RequestBody @Valid ProductCreateRequestDto productRequest);
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}")
-    void deleteProductById(@PathVariable @Positive Long productId);
+    void delete(@PathVariable @Positive Long productId);
 }

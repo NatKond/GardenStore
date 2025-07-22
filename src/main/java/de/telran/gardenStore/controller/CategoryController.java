@@ -6,6 +6,7 @@ import de.telran.gardenStore.dto.CategoryShortResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,20 +14,24 @@ import java.util.List;
 public interface CategoryController {
 
     @GetMapping
-    List<CategoryShortResponseDto> getAllCategories();
+    List<CategoryShortResponseDto> getAll();
 
     @GetMapping("/{categoryId}")
-    CategoryResponseDto getCategoryById(@PathVariable @Positive Long categoryId);
+    CategoryResponseDto getById(@PathVariable @Positive Long categoryId);
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    CategoryResponseDto createCategory(@RequestBody @Valid CategoryCreateRequestDto dto);
+    @PreAuthorize("hasRole('ADMIN')")
+    CategoryResponseDto create(@RequestBody @Valid CategoryCreateRequestDto dto);
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{categoryId}")
-    CategoryResponseDto updateCategory(@PathVariable @Positive Long categoryId,
-                                       @RequestBody @Valid CategoryCreateRequestDto dto);
+    @PreAuthorize("hasRole('ADMIN')")
+    CategoryResponseDto update(@PathVariable @Positive Long categoryId,
+                               @RequestBody @Valid CategoryCreateRequestDto dto);
+
 
     @DeleteMapping("/{categoryId}")
-    void deleteCategory(@PathVariable @Positive Long categoryId);
+    @PreAuthorize("hasRole('ADMIN')")
+    void delete(@PathVariable @Positive Long categoryId);
 }

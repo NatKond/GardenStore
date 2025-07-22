@@ -1,6 +1,5 @@
 package de.telran.gardenStore.converter;
 
-import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
 import lombok.RequiredArgsConstructor;

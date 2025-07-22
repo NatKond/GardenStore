@@ -27,6 +27,7 @@ A customer's order.
 {
   "deliveryAddress": "string",
   "deliveryMethod": "string",
+  "contactPhone": "+1444555666",
   "orderItems": [
     {
       "productId": 1,
@@ -44,6 +45,7 @@ A customer's order.
   "userId": 3,
   "deliveryAddress": "string",
   "deliveryMethod": "string",
+  "contactPhone": "+1444555666",
   "status": "CREATED"
 }
 ```

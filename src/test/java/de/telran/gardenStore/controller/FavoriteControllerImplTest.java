@@ -2,8 +2,7 @@ package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.gardenStore.AbstractTest;
-import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
+import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
@@ -39,22 +38,20 @@ class FavoriteControllerImplTest  extends AbstractTest {
     private FavoriteService favoriteService;
 
     @MockitoBean
-    private Converter<Favorite, FavoriteCreateRequestDto, FavoriteResponseDto,FavoriteResponseDto> favoriteConverter;
+    private ConverterEntityToDto<Favorite, FavoriteResponseDto, FavoriteResponseDto> favoriteConverter;
 
     @Test
-    @DisplayName("GET /v1/favorites/{userId} - Get all favorites by userId")
+    @DisplayName("GET /v1/favorites - Get all favorites for current user")
     void getAllFavorites() throws Exception {
-
-        Long userId = 1L;
 
         List<Favorite> favorites = List.of(favorite1, favorite2);
 
         List<FavoriteResponseDto> expected = List.of(favoriteResponseDto1, favoriteResponseDto2);
 
-        when(favoriteService.getAllFavoritesByUser(userId)).thenReturn(favorites);
+        when(favoriteService.getAllForCurrentUser()).thenReturn(favorites);
         when(favoriteConverter.convertEntityListToDtoList(favorites)).thenReturn(expected);
 
-        mockMvc.perform(get("/v1/favorites/{userId}", userId))
+        mockMvc.perform(get("/v1/favorites"))
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
@@ -62,33 +59,29 @@ class FavoriteControllerImplTest  extends AbstractTest {
     }
 
     @Test
-    @DisplayName("POST /v1/favorites - Create new favorite : positive Case")
-    void createFavoritePositiveCase() throws Exception {
-        Long userId = favoriteToCreate.getUser().getUserId();
+    @DisplayName("POST /v1/favorites - Create new favorite : positive case")
+    void createPositiveCase() throws Exception {
         Long productId = favoriteToCreate.getProduct().getProductId();
 
-        when(favoriteService.createFavorite(userId, productId)).thenReturn(favoriteCreated);
+        when(favoriteService.create(productId)).thenReturn(favoriteCreated);
         when(favoriteConverter.convertEntityToDto(favoriteCreated)).thenReturn(favoriteResponseCreatedDto);
 
-        mockMvc.perform(post("/v1/favorites?userId={userId}&productId={productId}", userId, productId))
+        mockMvc.perform(post("/v1/favorites?&productId={productId}",productId))
                 .andExpectAll(
                         status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(favoriteResponseCreatedDto)));
-
-
     }
 
     @Test
     @DisplayName("POST /v1/favorites - Create new favorite : negative Case")
-    void createFavoriteNegativeCase() throws Exception {
-        Long userId = favoriteToCreate.getUser().getUserId();
+    void createNegativeCase() throws Exception {
         Long productId = favoriteToCreate.getProduct().getProductId();
 
-        when(favoriteService.createFavorite(userId, productId))
+        when(favoriteService.create(productId))
                 .thenThrow(new FavoriteAlreadyExistsException("Favorite with userId " + favoriteToCreate.getUser().getUserId() + " and productId " + favoriteToCreate.getProduct().getProductId() + " already exists"));
 
-        mockMvc.perform(post("/v1/favorites?userId={userId}&productId={productId}", userId, productId))
+        mockMvc.perform(post("/v1/favorites?&productId={productId}", productId))
                 .andExpectAll(
                         status().isConflict(),
                         content().contentType(MediaType.APPLICATION_JSON),
@@ -99,23 +92,23 @@ class FavoriteControllerImplTest  extends AbstractTest {
 
     @Test
     @DisplayName("DELETE /v1/favorites/{favoriteId} - Delete favorite by ID : positive case")
-    void deleteFavoritePositiveCase() throws Exception {
+    void deletePositiveCase() throws Exception {
 
         Long favoriteId = favorite1.getFavoriteId();
 
         mockMvc.perform(delete("/v1/favorites/{favoriteId}", favoriteId))
                 .andExpect(status().isOk());
 
-        verify(favoriteService).deleteFavoriteById(favoriteId);
+        verify(favoriteService).deleteById(favoriteId);
     }
 
     @Test
     @DisplayName("DELETE /v1/favorites/{favoriteId} - Delete favorite by ID : negative case")
-    void deleteFavoriteNegativeCase() throws Exception {
+    void deleteNegativeCase() throws Exception {
 
         Long favoriteId = 999L;
 
-        doThrow(new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found")).when(favoriteService).deleteFavoriteById(favoriteId);
+        doThrow(new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found")).when(favoriteService).deleteById(favoriteId);
 
         mockMvc.perform(delete("/v1/favorites/{favoriteId}", favoriteId))
                 .andExpectAll(
@@ -125,6 +118,6 @@ class FavoriteControllerImplTest  extends AbstractTest {
                         jsonPath("$.message").value("Favorite with id " + favoriteId + " not found"),
                         jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
 
-        verify(favoriteService).deleteFavoriteById(favoriteId);
+        verify(favoriteService).deleteById(favoriteId);
     }
 }

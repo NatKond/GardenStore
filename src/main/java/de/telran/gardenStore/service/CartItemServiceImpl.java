@@ -36,7 +36,7 @@ public class CartItemServiceImpl implements CartItemService {
             existingItem.setQuantity(existingItem.getQuantity() + 1);
             return cartItemRepository.save(existingItem);
         } else {
-            Product product = productService.getProductById(productId);
+            Product product = productService.getById(productId);
             return cartItemRepository.save(CartItem.builder()
                     .cart(cart)
                     .product(product)

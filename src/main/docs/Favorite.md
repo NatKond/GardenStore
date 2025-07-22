@@ -16,14 +16,6 @@ Represents a user's favorite product.
 
 ## DTOs
 
-### FavoriteCreateRequestDto
-
-```json
-{
-  "productId": 1
-}
-```
-
 ### FavoriteResponseDto
 
 ```json

@@ -21,31 +21,32 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final UserService userService;
 
     @Override
-    public List<Favorite> getAllFavoritesByUser(Long userId) {
-        AppUser user = userService.getUserById(userId);
-        return favoriteRepository.getAllByUser(user);
+    public List<Favorite> getAllForCurrentUser() {
+        return favoriteRepository.getAllByUser(userService.getCurrent());
     }
 
     @Override
-    public Favorite getFavoriteById(Long favoriteId) {
+    public Favorite getById(Long favoriteId) {
         return favoriteRepository.findById(favoriteId).orElseThrow(()
                 -> new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found"));
     }
 
     @Override
-    public Favorite createFavorite(Long userId, Long productId) {
+    public Favorite create(Long productId) {
+        AppUser user = userService.getCurrent();
+        Long userId = user.getUserId();
         if (favoriteRepository.findByUserIdAndProductId(userId, productId).isPresent()) {
             throw new FavoriteAlreadyExistsException("Favorite with userId " + userId + " and productId " + productId + " already exists");
         }
 
         return favoriteRepository.save(Favorite.builder()
-                .user(userService.getUserById(userId))
-                .product(productService.getProductById(productId))
+                .user(user)
+                .product(productService.getById(productId))
                 .build());
     }
 
     @Override
-    public void deleteFavoriteById(Long favoriteId) {
-        favoriteRepository.delete(getFavoriteById(favoriteId));
+    public void deleteById(Long favoriteId) {
+        favoriteRepository.delete(getById(favoriteId));
     }
 }

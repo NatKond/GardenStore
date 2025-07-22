@@ -34,12 +34,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllByUserId(Long userId) {
-        return orderRepository.findAllByUser(userService.getUserById(userId));
+    public List<Order> getAllForCurrentUser() {
+        return orderRepository.findAllByUser(userService.getCurrent());
     }
 
     @Override
-    public List<Order> getAllActiveOrders() {
+    public List<Order> getAllActive() {
         return orderRepository.findAllByStatusNotIn(List.of(OrderStatus.CANCELLED, OrderStatus.DELIVERED));
     }
 

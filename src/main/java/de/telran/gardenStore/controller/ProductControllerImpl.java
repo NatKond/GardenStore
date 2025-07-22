@@ -26,39 +26,43 @@ public class ProductControllerImpl implements ProductController {
     private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Override
-    public List<ProductShortResponseDto> getAllProducts(@Positive Long categoryId,
-                                                        Boolean discount,
-                                                        @Positive BigDecimal minPrice,
-                                                        @Positive BigDecimal maxPrice,
-                                                        @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
+    public List<ProductShortResponseDto> getAll(@Positive Long categoryId,
+                                                Boolean discount,
+                                                @Positive BigDecimal minPrice,
+                                                @Positive BigDecimal maxPrice,
+                                                @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
                                                         String sortBy,
-                                                        Boolean sortDirection) {
+                                                Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("Min price cannot be greater than max price.");
         }
-        return productConverter.convertEntityListToDtoList(productService.getAllProducts(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection));
+        return productConverter.convertEntityListToDtoList(
+                productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection));
     }
 
     @Override
-    public ProductResponseDto getProductById(@Positive Long productId) {
-        return productConverter.convertEntityToDto(productService.getProductById(productId));
-    }
-
-    @Override
-    public ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productCreateRequestDto) {
+    public ProductResponseDto getById(@Positive Long productId) {
         return productConverter.convertEntityToDto(
-                productService.createProduct(productConverter.convertDtoToEntity(productCreateRequestDto)));
+                productService.getById(productId));
     }
 
     @Override
-    public ProductResponseDto updateProduct(@Positive Long productId, @Valid ProductCreateRequestDto productRequest) {
+    public ProductResponseDto create(@RequestBody @Valid ProductCreateRequestDto productCreateRequestDto) {
         return productConverter.convertEntityToDto(
-                productService.updateProduct(productId, productConverter.convertDtoToEntity(productRequest)));
+                productService.create(
+                        productConverter.convertDtoToEntity(productCreateRequestDto)));
     }
 
     @Override
-    public void deleteProductById(@Positive Long productId) {
-        productService.deleteProductById(productId);
+    public ProductResponseDto update(@Positive Long productId, @Valid ProductCreateRequestDto productRequest) {
+        return productConverter.convertEntityToDto(
+                productService.update(productId,
+                        productConverter.convertDtoToEntity(productRequest)));
+    }
+
+    @Override
+    public void delete(@Positive Long productId) {
+        productService.deleteById(productId);
     }
 }

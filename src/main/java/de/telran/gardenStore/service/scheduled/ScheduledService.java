@@ -15,7 +15,7 @@ public class ScheduledService {
 
     @Scheduled(cron = "0 */15 * * * *")
     public void changeOrderService() {
-        orderService.getAllActiveOrders().stream()
+        orderService.getAllActive().stream()
                 .filter(order -> order.getUpdatedAt().isAfter(LocalDateTime.now().minusMinutes(15)))
                 .forEach(order -> orderService.updateStatus(order.getOrderId(),order.getStatus().next()));
     }

@@ -161,10 +161,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancel(Long orderId) {
+    public Order cancel(Long orderId) {
         Order order = getById(orderId);
         order.setStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
     private void processCartItem(CartItem cartItem, List<CartItem> cartItems, Integer quantity) {

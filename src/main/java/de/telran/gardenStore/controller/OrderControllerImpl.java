@@ -75,7 +75,8 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public void delete(@Positive Long orderId) {
-        orderService.cancel(orderId);
+    public OrderResponseDto delete(@Positive Long orderId) {
+        return orderConverter.convertEntityToDto(
+                orderService.cancel(orderId));
     }
 }

@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RequestMapping("/v1/orders")
@@ -39,5 +38,5 @@ public interface OrderController {
 
     @DeleteMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
-    void delete(@PathVariable @Positive Long orderId);
+    OrderResponseDto delete(@PathVariable @Positive Long orderId);
 }

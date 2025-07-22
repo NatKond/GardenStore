@@ -24,9 +24,7 @@ public class PaymentControllerImpl implements PaymentController {
 
     @Override
     public OrderResponseDto processPayment(Long orderId, BigDecimal paymentAmount) {
-
         BigDecimal totalAmount = orderService.getTotalAmount(orderId);
-
         OrderStatus orderStatus = orderService.getById(orderId).getStatus();
 
         if(orderService.getById(orderId).getStatus() != OrderStatus.AWAITING_PAYMENT) {

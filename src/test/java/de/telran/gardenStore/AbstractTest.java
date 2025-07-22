@@ -66,6 +66,7 @@ public abstract class AbstractTest {
 
     protected ProductShortResponseDto productShortResponseDto1;
     protected ProductShortResponseDto productShortResponseDto2;
+    protected ProductShortResponseDto productShortResponseDto3;
     protected ProductResponseDto productResponseDto1;
     protected ProductCreateRequestDto productCreateRequestDto;
     protected ProductResponseDto productResponseCreatedDto;
@@ -82,7 +83,7 @@ public abstract class AbstractTest {
     protected FavoriteResponseDto favoriteResponseCreatedDto;
 
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
         initEntities();
         initSecurityContext();
         initProductDtos();
@@ -136,7 +137,7 @@ public abstract class AbstractTest {
                 .build();
 
         product2 = Product.builder()
-                .productId(1L)
+                .productId(2L)
                 .name("Organic Tomato Feed")
                 .discountPrice(BigDecimal.valueOf(10.49))
                 .price(BigDecimal.valueOf(13.99))
@@ -359,6 +360,15 @@ public abstract class AbstractTest {
                 .discountPrice(product2.getDiscountPrice())
                 .categoryId(product2.getCategory().getCategoryId())
                 .description(product2.getDescription())
+                .build();
+
+        productShortResponseDto3 = ProductShortResponseDto.builder()
+                .productId(product3.getProductId())
+                .name(product3.getName())
+                .price(product3.getPrice())
+                .discountPrice(product3.getDiscountPrice())
+                .categoryId(product3.getCategory().getCategoryId())
+                .description(product3.getDescription())
                 .build();
 
         productResponseDto1 = ProductResponseDto.builder()

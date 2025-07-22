@@ -22,12 +22,9 @@ public class OrderCreateRequestDto {
     @Pattern(regexp = "^\\+?[0-9\\s-]{10,}$")
     private String contactPhone;
 
-    //    @NotBlank(message = "Delivery method cannot be blank")
-//    private String deliveryMethod;
-    @NotNull
+    @NotNull(message = "Delivery method is required")
     @Enumerated(EnumType.STRING)
     private DeliveryMethod deliveryMethod;
-
 
     @NotEmpty
     private List<OrderItemCreateRequestDto> items;

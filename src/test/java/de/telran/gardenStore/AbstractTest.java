@@ -5,12 +5,18 @@ import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.enums.Role;
+import de.telran.gardenStore.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 public abstract class AbstractTest {
 
@@ -50,6 +56,12 @@ public abstract class AbstractTest {
     protected OrderItem orderItem2;
     protected OrderItem orderItem3;
 
+    protected OrderShortResponseDto orderShortResponseDto1;
+    protected OrderShortResponseDto orderShortResponseDto2;
+    protected OrderResponseDto orderResponseDto1;
+    protected OrderResponseDto orderResponseCreatedDto;
+    protected OrderCreateRequestDto orderCreateRequestDto;
+
     protected CategoryShortResponseDto categoryShortResponseDto1;
     protected CategoryShortResponseDto categoryShortResponseDto2;
     protected CategoryShortResponseDto categoryShortResponseDto3;
@@ -74,13 +86,18 @@ public abstract class AbstractTest {
     protected FavoriteResponseDto favoriteResponseDto2;
     protected FavoriteResponseDto favoriteResponseCreatedDto;
 
+    @Mock
+    protected OrderService orderService;
+
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this); // Инициализация моков
         initEntities();
         initProductDtos();
         initCategoryDtos();
         initFavoriteDtos();
         initUserDtos();
+        initOrderDtos();
     }
 
     private void initEntities() {
@@ -324,6 +341,101 @@ public abstract class AbstractTest {
         categoryResponseCreatedDto = CategoryResponseDto.builder()
                 .categoryId(categoryCreated.getCategoryId())
                 .name(categoryCreated.getName())
+                .build();
+    }
+
+    private void initOrderDtos() {
+        orderShortResponseDto1 = OrderShortResponseDto.builder()
+                .orderId(order1.getOrderId())
+                .status(order1.getStatus().name())
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .build();
+
+        orderShortResponseDto2 = OrderShortResponseDto.builder()
+                .orderId(order2.getOrderId())
+                .status(order2.getStatus().name())
+                .deliveryAddress(order2.getDeliveryAddress())
+                .contactPhone(order2.getContactPhone())
+                .deliveryMethod(order2.getDeliveryMethod().name())
+                .build();
+
+
+        orderResponseDto1 = OrderResponseDto.builder()
+                .orderId(order1.getOrderId())
+                .userId(order1.getUser().getUserId())
+                .status(order1.getStatus().name())
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .createdAt(order1.getCreatedAt())
+                .updatedAt(order1.getUpdatedAt())
+                .items(List.of(
+                        OrderItemResponseDto.builder()
+                                .orderItemId(orderItem1.getOrderItemId())
+                                .product(productShortResponseDto1)
+                                .quantity(orderItem1.getQuantity())
+                                .priceAtPurchase(orderItem1.getPriceAtPurchase())
+                                .build(),
+                        OrderItemResponseDto.builder()
+                                .orderItemId(orderItem2.getOrderItemId())
+                                .product(productShortResponseDto2)
+                                .quantity(orderItem2.getQuantity())
+                                .priceAtPurchase(orderItem2.getPriceAtPurchase())
+                                .build()
+                ))
+                .totalAmount(orderService.getTotalAmount(order1.getOrderId()))
+                .build();
+
+
+        orderCreateRequestDto = OrderCreateRequestDto.builder()
+                .deliveryAddress("123 Garden Street")
+                .contactPhone("+1234567890")
+                .deliveryMethod(DeliveryMethod.valueOf("COURIER"))
+                .items(List.of(
+                        OrderItemCreateRequestDto.builder()
+                                .productId(product1.getProductId())
+                                .quantity(2)
+                                .build(),
+                        OrderItemCreateRequestDto.builder()
+                                .productId(product2.getProductId())
+                                .quantity(1)
+                                .build()
+                ))
+                .build();
+
+        orderResponseCreatedDto = OrderResponseDto.builder()
+                .orderId(3L)
+                .userId(user1.getUserId())
+                .status(OrderStatus.CREATED.name())
+                .deliveryAddress("123 Garden Street")
+                .contactPhone("+1234567890")
+                .deliveryMethod("COURIER")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .items(List.of(
+                        OrderItemResponseDto.builder()
+                                .product(productShortResponseDto1)
+                                .quantity(2)
+                                .priceAtPurchase(product1.getPrice())
+                                .build(),
+                        OrderItemResponseDto.builder()
+                                .product(productShortResponseDto2)
+                                .quantity(1)
+                                .priceAtPurchase(product2.getPrice())
+                                .build()
+                ))
+                .totalAmount(new BigDecimal("28.47")) // Пример суммы
+                .build();
+        when(orderService.getTotalAmount(anyLong())).thenReturn(new BigDecimal("28.47"));
+
+        orderShortResponseDto1 = OrderShortResponseDto.builder()
+                .orderId(order1.getOrderId())
+                .status(order1.getStatus().name())
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
                 .build();
     }
 

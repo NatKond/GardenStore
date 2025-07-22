@@ -26,5 +26,5 @@ public interface OrderService {
 
     Order removeOrderItem(Long orderItemId);
 
-    void cancel(Long orderId);
+    Order cancel(Long orderId);
 }

@@ -49,8 +49,6 @@ class ProductServiceImplTest extends AbstractTest {
     @InjectMocks
     private ProductServiceImpl productService;
 
-
-
     @DisplayName("Get all products")
     @Test
     void getAll() {

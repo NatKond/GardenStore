@@ -1,6 +1,5 @@
 package de.telran.gardenStore.converter;
 
-import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class FavoriteConverter extends AbstractConverter implements ConverterEntityToDto<Favorite, FavoriteResponseDto, FavoriteResponseDto> {
+public class FavoriteConverter implements ConverterEntityToDto<Favorite, FavoriteResponseDto, FavoriteResponseDto> {
 
     private final ModelMapper modelMapper;
 

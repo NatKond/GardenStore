@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class UserConverter extends AbstractConverter implements Converter<AppUser,UserCreateRequestDto, UserResponseDto, UserShortResponseDto> {
+public class UserConverter implements Converter<AppUser,UserCreateRequestDto, UserResponseDto, UserShortResponseDto> {
 
     private final ModelMapper modelMapper;
 

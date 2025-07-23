@@ -105,6 +105,7 @@ public abstract class AbstractTest {
         initProductDtos();
         initCategoryDtos();
         initFavoriteDtos();
+        initOrderDtos();
         initUserDtos();
     }
 

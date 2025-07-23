@@ -10,16 +10,16 @@ import java.util.List;
 @RequestMapping("/v1/favorites")
 public interface FavoriteController {
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping
     List<FavoriteResponseDto> getAllForCurrentUser();
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     FavoriteResponseDto create(@RequestParam @Positive Long productId);
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @DeleteMapping("/{favoriteId}")
     void delete(@PathVariable @Positive Long favoriteId);
 }

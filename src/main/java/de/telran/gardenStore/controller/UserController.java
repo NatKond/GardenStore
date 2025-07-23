@@ -25,7 +25,7 @@ public interface UserController {
     UserResponseDto getById(@PathVariable @Positive Long userId);
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     UserResponseDto getCurrent();
 
     @ResponseStatus(HttpStatus.CREATED)

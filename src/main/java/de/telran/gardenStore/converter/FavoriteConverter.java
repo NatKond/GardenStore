@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class FavoriteConverter extends AbstractConverter implements ConverterEntityToDto<Favorite, FavoriteResponseDto, FavoriteResponseDto> {
+public class FavoriteConverter implements ConverterEntityToDto<Favorite, FavoriteResponseDto, FavoriteResponseDto> {
 
     private final ModelMapper modelMapper;
 

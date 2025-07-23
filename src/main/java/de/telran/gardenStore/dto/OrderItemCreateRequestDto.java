@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder(toBuilder = true)
 public class OrderItemCreateRequestDto {
 
-    @NotNull(message = "Product ID is required")
+    @NotNull(message = "Product is required")
     @Positive
     private Long productId;
 

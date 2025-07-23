@@ -9,7 +9,6 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserShortResponseDto {
 
-    @EqualsAndHashCode.Include
     private Long userId;
 
     private String name;

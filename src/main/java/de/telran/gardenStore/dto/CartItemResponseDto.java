@@ -2,16 +2,16 @@ package de.telran.gardenStore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FavoriteResponseDto {
+public class CartItemResponseDto {
 
-    private Long favoriteId;
+    private Long cartItemId;
 
     private ProductShortResponseDto product;
-    //private Long productId;
+
+    private Integer quantity;
 }

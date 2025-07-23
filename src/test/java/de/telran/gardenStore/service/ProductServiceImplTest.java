@@ -36,17 +36,18 @@ class ProductServiceImplTest extends AbstractTest {
 
     @Mock
     private CriteriaBuilder criteriaBuilder;
+
     @Mock
     private CriteriaQuery<Product> criteriaQuery;
+
     @Mock
     private Root<Product> root;
+
     @Mock
     private TypedQuery<Product> typedQuery;
 
     @InjectMocks
     private ProductServiceImpl productService;
-
-
 
     @DisplayName("Get all products")
     @Test

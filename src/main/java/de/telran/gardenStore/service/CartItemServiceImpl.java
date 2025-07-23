@@ -44,19 +44,6 @@ public class CartItemServiceImpl implements CartItemService {
                     .build());
         }
     }
-
-    @Override
-    public CartItem update(Long cartItemId, Integer quantity) {
-        CartItem item = getById(cartItemId);
-        item.setQuantity(quantity);
-        return cartItemRepository.save(item);
-    }
-
-    @Override
-    public void delete(Long cartItemId) {
-        cartItemRepository.delete(getById(cartItemId));
-    }
-
 }
 
 

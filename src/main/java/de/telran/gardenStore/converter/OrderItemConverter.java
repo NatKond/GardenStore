@@ -20,6 +20,7 @@ public class OrderItemConverter implements Converter<OrderItem, OrderItemCreateR
     public OrderItem convertDtoToEntity(OrderItemCreateRequestDto orderItemCreateRequestDto) {
         modelMapper.typeMap(OrderItemCreateRequestDto.class, OrderItem.class).addMappings(
                 mapper -> {
+                    mapper.skip(OrderItem::setOrderItemId);
                     mapper
                             .using(context -> Product.builder().productId((Long) context.getSource()).build())
                             .map(OrderItemCreateRequestDto::getProductId, OrderItem::setProduct);

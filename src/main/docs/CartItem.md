@@ -17,15 +17,6 @@ Items added to a shopping cart.
 
 ## DTOs
 
-### CartItemCreateRequestDto
-
-```json
-{
-  "productId": 1,
-  "quantity": 2
-}
-```
-
 ### CartItemResponseDto
 
 ```json

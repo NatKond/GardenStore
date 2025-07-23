@@ -6,17 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderResponseDto {
 
     private Long orderId;
+
+    private Long userId;
 
     private String status;
 
@@ -28,5 +31,9 @@ public class OrderResponseDto {
 
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
+
     private List<OrderItemResponseDto> items;
+
+    private BigDecimal totalAmount;
 }

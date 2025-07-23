@@ -9,9 +9,6 @@ public interface CartItemService {
 
     CartItem add(Cart cart, Long productId);
 
-    CartItem update(Long cartItemId, Integer quantity);
-
-    void delete(Long cartItemId);
 }
 
 

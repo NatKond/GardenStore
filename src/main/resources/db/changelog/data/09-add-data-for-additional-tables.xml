@@ -53,7 +53,7 @@
             <column name="delivery_address" value="123 Garden Street"/>
             <column name="contact_phone" value="+1234567890"/>
             <column name="delivery_method" value="COURIER"/>
-            <column name="status" value="PAID"/>
+            <column name="status" value="AWAITING_PAYMENT"/>
         </insert>
         <insert tableName="orders">
             <column name="user_id" valueNumeric="2"/>

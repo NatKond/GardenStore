@@ -53,7 +53,7 @@ public class ProductControllerImplTest extends AbstractTest {
         when(productConverter.convertEntityListToDtoList(products)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/products"))
-                .andDo(print()) // Логирование запроса и ответа
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),

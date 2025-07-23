@@ -28,6 +28,7 @@ public class AppUser {
     private String phoneNumber;
 
     private String passwordHash;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;

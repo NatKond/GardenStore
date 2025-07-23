@@ -3,6 +3,7 @@ package de.telran.gardenStore.dto;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -27,5 +28,6 @@ public class OrderCreateRequestDto {
     private DeliveryMethod deliveryMethod;
 
     @NotEmpty
+    @Valid
     private List<OrderItemCreateRequestDto> items;
 }

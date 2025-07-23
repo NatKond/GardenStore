@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ProductConverter extends AbstractConverter implements Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> {
+public class ProductConverter implements Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> {
 
     private final ModelMapper modelMapper;
 

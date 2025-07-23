@@ -1,4 +1,5 @@
 package de.telran.gardenStore.controller;
+
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
@@ -23,28 +24,33 @@ public class CategoryControllerImpl implements CategoryController {
     private final Converter<Category, CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> categoryConverter;
 
     @Override
-    public List<CategoryShortResponseDto> getAllCategories() {
-        return categoryConverter.convertEntityListToDtoList(categoryService.getAllCategories());
+    public List<CategoryShortResponseDto> getAll() {
+        return categoryConverter.convertEntityListToDtoList(
+                categoryService.getAll());
     }
 
     @Override
-    public CategoryResponseDto getCategoryById(@Positive Long categoryId) {
-        return categoryConverter.convertEntityToDto(categoryService.getCategoryById(categoryId));
+    public CategoryResponseDto getById(@Positive Long categoryId) {
+        return categoryConverter.convertEntityToDto(
+                categoryService.getById(categoryId));
     }
 
     @Override
-    public CategoryResponseDto createCategory(@Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(categoryService.createCategory(
-                categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+    public CategoryResponseDto create(@Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+        return categoryConverter.convertEntityToDto(
+                categoryService.create(
+                        categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
-    public CategoryResponseDto updateCategory(@Positive Long categoryId, @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(categoryService.updateCategory(categoryId, categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+    public CategoryResponseDto update(@Positive Long categoryId, @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+        return categoryConverter.convertEntityToDto(
+                categoryService.update(categoryId,
+                        categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
-    public void deleteCategory(@Positive Long categoryId) {
-        categoryService.deleteCategoryById(categoryId);
+    public void delete(@Positive Long categoryId) {
+        categoryService.deleteById(categoryId);
     }
 }

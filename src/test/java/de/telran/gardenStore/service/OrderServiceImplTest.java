@@ -67,30 +67,30 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Get all orders by user ID")
-    void getAllByUserId() {
-        Long userId = user1.getUserId();
+    void getAllForCurrentUser() {
+
         List<Order> expected = List.of(order1);
 
-        when(userService.getUserById(userId)).thenReturn(user1);
+        when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findAllByUser(user1)).thenReturn(expected);
 
-        List<Order> actual = orderService.getAllByUserId(userId);
+        List<Order> actual = orderService.getAllForCurrentUser();
 
         assertNotNull(actual);
         assertEquals(1, actual.size());
         assertEquals(expected, actual);
-        verify(userService).getUserById(userId);
+        verify(userService).getCurrent();
         verify(orderRepository).findAllByUser(user1);
     }
 
     @Test
     @DisplayName("Get all active orders")
-    void getAllActiveOrders() {
+    void getAllActive() {
         List<Order> expected = List.of(order1, order2);
 
         when(orderRepository.findAllByStatusNotIn(List.of(OrderStatus.CANCELLED, OrderStatus.DELIVERED))).thenReturn(expected);
 
-        List<Order> actual = orderService.getAllActiveOrders();
+        List<Order> actual = orderService.getAllActive();
 
         assertNotNull(actual);
         assertEquals(2, actual.size());

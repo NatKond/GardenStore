@@ -51,7 +51,7 @@ class ProductServiceImplTest extends AbstractTest {
 
     @DisplayName("Get all products")
     @Test
-    void getAllProducts() {
+    void getAll() {
         List<Product> expected = List.of(product1, product2);
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
@@ -62,7 +62,7 @@ class ProductServiceImplTest extends AbstractTest {
         when(typedQuery.getResultList()).thenReturn(expected);
         //when(productRepository.findAll()).thenReturn(expected);
 
-        List<Product> actual = productService.getAllProducts(null, null, null, null, null, null);
+        List<Product> actual = productService.getAll(null, null, null, null, null, null);
 
         assertNotNull(actual);
         assertEquals(2, actual.size());
@@ -72,14 +72,14 @@ class ProductServiceImplTest extends AbstractTest {
 
     @DisplayName("Get product by ID : positive case")
     @Test
-    void getProductByIdPositiveCase() {
+    void getByIdPositiveCase() {
         Long productId = 1L;
 
         Product expected = product1;
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product1));
 
-        Product actual = productService.getProductById(productId);
+        Product actual = productService.getById(productId);
 
         assertEquals(expected, actual);
         assertEquals(expected.getName(), actual.getName());
@@ -90,24 +90,24 @@ class ProductServiceImplTest extends AbstractTest {
 
     @DisplayName("Get product by ID : negative case")
     @Test
-    void getProductByIdNegativeCase() {
+    void getByIdNegativeCase() {
         Long productId = 999L;
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-        RuntimeException runtimeException = assertThrows(ProductNotFoundException.class, () -> productService.getProductById(productId));
+        RuntimeException runtimeException = assertThrows(ProductNotFoundException.class, () -> productService.getById(productId));
         assertEquals("Product with id " + productId + " not found", runtimeException.getMessage());
     }
 
     @DisplayName("Create new product")
     @Test
-    void createProduct() {
+    void create() {
         Product expected = productCreated;
 
         when(productRepository.save(productToCreate)).thenReturn(productCreated);
-        when(categoryService.getCategoryById(productCreated.getCategory().getCategoryId())).thenReturn(productCreated.getCategory());
+        when(categoryService.getById(productCreated.getCategory().getCategoryId())).thenReturn(productCreated.getCategory());
 
-        Product actual = productService.createProduct(productToCreate);
+        Product actual = productService.create(productToCreate);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
@@ -116,14 +116,14 @@ class ProductServiceImplTest extends AbstractTest {
 
     @DisplayName("Delete product by ID : positive case")
     @Test
-    void deleteProductByIdPositiveCase() {
+    void deleteByIdPositiveCase() {
         Product deletedProduct = product1;
 
         Long productId = 1L;
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(deletedProduct));
 
-        productService.deleteProductById(productId);
+        productService.deleteById(productId);
 
         verify(productRepository).findById(productId);
         verify(productRepository).delete(deletedProduct);
@@ -131,13 +131,13 @@ class ProductServiceImplTest extends AbstractTest {
 
     @DisplayName("Delete product by ID : negative case")
     @Test
-    void deleteProductByIdNegativeCase() {
+    void deleteByIdNegativeCase() {
 
         Long productId = 999L;
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-        RuntimeException runtimeException = assertThrows(ProductNotFoundException.class, () -> productService.getProductById(productId));
+        RuntimeException runtimeException = assertThrows(ProductNotFoundException.class, () -> productService.getById(productId));
         assertEquals("Product with id " + productId + " not found", runtimeException.getMessage());
     }
 }

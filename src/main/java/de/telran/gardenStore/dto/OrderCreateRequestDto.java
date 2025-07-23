@@ -27,7 +27,7 @@ public class OrderCreateRequestDto {
     @Enumerated(EnumType.STRING)
     private DeliveryMethod deliveryMethod;
 
-    @NotEmpty
     @Valid
+    @NotEmpty(message = "Order should contain at least one item")
     private List<OrderItemCreateRequestDto> items;
 }

@@ -50,21 +50,19 @@ public class OrderControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("GET /v1/orders/history/{userId} - Get order history for user")
     void getAll() throws Exception {
-        Long userId = user1.getUserId();
-
         List<Order> userOrders = List.of(order1);
         List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1);
 
-        when(orderService.getAllByUserId(userId)).thenReturn(userOrders);
+        when(orderService.getAllForCurrentUser()).thenReturn(userOrders);
         when(orderConverter.convertEntityListToDtoList(userOrders)).thenReturn(expected);
 
-        mockMvc.perform(get("/v1/orders/history/{userId}", userId))
+        mockMvc.perform(get("/v1/orders/history"))
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(expected)));
 
-        verify(orderService).getAllByUserId(userId);
+        verify(orderService).getAllForCurrentUser();
         verify(orderConverter).convertEntityListToDtoList(userOrders);
     }
 
@@ -105,18 +103,16 @@ public class OrderControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("POST /v1/orders/{userId} - Create new order : positive case")
     void createPositiveCase() throws Exception {
-        Long userId = user1.getUserId();
-
         Order orderCreated = orderToCreate.toBuilder()
                 .orderId(3L)
                 .build();
 
-        when(userService.getUserById(userId)).thenReturn(user1);
+        when(userService.getCurrent()).thenReturn(user1);
         when(orderConverter.convertDtoToEntity(orderCreateRequestDto)).thenReturn(orderToCreate);
         when(orderService.create(orderToCreate)).thenReturn(orderCreated);
         when(orderConverter.convertEntityToDto(orderCreated)).thenReturn(orderResponseCreatedDto);
 
-        mockMvc.perform(post("/v1/orders/{userId}", userId)
+        mockMvc.perform(post("/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderCreateRequestDto)))
                 .andExpectAll(
@@ -124,7 +120,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(orderResponseCreatedDto)));
 
-        verify(userService).getUserById(userId);
+        verify(userService).getCurrent();
         verify(orderConverter).convertDtoToEntity(orderCreateRequestDto);
         verify(orderService).create(orderToCreate);
         verify(orderConverter).convertEntityToDto(orderCreated);
@@ -133,8 +129,6 @@ public class OrderControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("POST /v1/orders/{userId} - Create new order : negative case")
     void createNegativeCase() throws Exception {
-        Long userId = user1.getUserId();
-
         List<OrderItemCreateRequestDto> orderItemsCreateRequestDto = List.of(
                 OrderItemCreateRequestDto.builder()
                         .productId(product3.getProductId())
@@ -156,11 +150,11 @@ public class OrderControllerImplTest extends AbstractTest {
                 .items(orderItems)
                 .build();
 
-        when(userService.getUserById(userId)).thenReturn(user1);
+        when(userService.getCurrent()).thenReturn(user1);
         when(orderConverter.convertDtoToEntity(orderInvalidCreateRequestDto)).thenReturn(orderInvalid);
         when(orderService.create(orderToCreate)).thenThrow(new EmptyOrderException("Order is empty."));
 
-        mockMvc.perform(post("/v1/orders/{userId}", userId)
+        mockMvc.perform(post("/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderInvalidCreateRequestDto)))
                 .andExpectAll(
@@ -169,7 +163,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         jsonPath("$.exception").value("EmptyOrderException"),
                         jsonPath("$.message").value("Order is empty."));
 
-        verify(userService).getUserById(userId);
+        verify(userService).getCurrent();
         verify(orderConverter).convertDtoToEntity(orderInvalidCreateRequestDto);
     }
 

@@ -49,8 +49,8 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public Cart addCartItem(Long userId, Long productId) {
-        AppUser user = userService.getUserById(userId);
+    public Cart addCartItem(Long productId) {
+        AppUser user = userService.getCurrent();
 
         Cart cart;
         try {
@@ -74,7 +74,7 @@ public class CartServiceImpl implements CartService {
         } else {
             CartItem newItem = CartItem.builder()
                     .cart(cart)
-                    .product(productService.getProductById(productId))
+                    .product(productService.getById(productId))
                     .quantity(1)
                     .build();
             items.add(newItem);

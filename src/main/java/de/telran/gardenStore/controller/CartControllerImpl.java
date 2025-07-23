@@ -22,16 +22,16 @@ public class CartControllerImpl implements CartController {
     private final UserService userService;
 
     @Override
-    public CartResponseDto getCartByUserId(@Positive Long userId) {
+    public CartResponseDto getCartByUserId() {
         return cartConverter.convertEntityToDto(
                 cartService.getByUser(
-                        userService.getUserById(userId)));
+                        userService.getCurrent()));
     }
 
     @Override
-    public CartResponseDto addCartItem(@Positive Long userId, @Positive Long productId) {
+    public CartResponseDto addCartItem(@Positive Long productId) {
         return cartConverter.convertEntityToDto(
-                cartService.addCartItem(userId, productId));
+                cartService.addCartItem(productId));
     }
 
     @Override

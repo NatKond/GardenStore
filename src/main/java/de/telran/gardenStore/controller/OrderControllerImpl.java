@@ -25,8 +25,8 @@ public class OrderControllerImpl implements OrderController {
     private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Override
-    public List<OrderShortResponseDto> getAll(Long userId) {
-        return orderConverter.convertEntityListToDtoList(orderService.getAllByUserId(userId));
+    public List<OrderShortResponseDto> getAll() {
+        return orderConverter.convertEntityListToDtoList(orderService.getAllForCurrentUser());
     }
 
     @Override
@@ -37,10 +37,10 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public OrderResponseDto create(Long userId, @Valid OrderCreateRequestDto orderCreateRequestDto) {
+    public OrderResponseDto create(@Valid OrderCreateRequestDto orderCreateRequestDto) {
         Order order = orderConverter.convertDtoToEntity(orderCreateRequestDto);
 
-        AppUser user = userService.getUserById(userId);
+        AppUser user = userService.getCurrent();
         order.setUser(user);
 
         if (orderCreateRequestDto.getContactPhone() != null) {

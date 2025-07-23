@@ -10,7 +10,7 @@
             <column name="email" value="alice.johnson@example.com"/>
             <column name="phone_number" value="+1234567890"/>
             <column name="password_hash" value="12345"/>
-            <column name="role" value="ROLE_USER"/>
+            <column name="role" value="ROLE_ADMIN"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="Bob Smith"/>

@@ -6,12 +6,20 @@ import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractTest {
+
+    protected Authentication authentication;
+    protected SecurityContext context;
 
     protected Category category1;
     protected Category category2;
@@ -74,6 +82,7 @@ public abstract class AbstractTest {
 
     protected ProductShortResponseDto productShortResponseDto1;
     protected ProductShortResponseDto productShortResponseDto2;
+    protected ProductShortResponseDto productShortResponseDto3;
     protected ProductResponseDto productResponseDto1;
     protected ProductCreateRequestDto productCreateRequestDto;
     protected ProductResponseDto productResponseCreatedDto;
@@ -90,13 +99,21 @@ public abstract class AbstractTest {
     protected FavoriteResponseDto favoriteResponseCreatedDto;
 
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
         initEntities();
+        initSecurityContext();
         initProductDtos();
         initCategoryDtos();
         initFavoriteDtos();
-        initUserDtos();
         initOrderDtos();
+        initUserDtos();
+    }
+
+    private void initSecurityContext() {
+        authentication = new UsernamePasswordAuthenticationToken(user1.getEmail(), null);
+        context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
     }
 
     private void initEntities() {
@@ -137,7 +154,7 @@ public abstract class AbstractTest {
                 .build();
 
         product2 = Product.builder()
-                .productId(1L)
+                .productId(2L)
                 .name("Organic Tomato Feed")
                 .discountPrice(BigDecimal.valueOf(10.49))
                 .price(BigDecimal.valueOf(13.99))
@@ -481,6 +498,15 @@ public abstract class AbstractTest {
                 .discountPrice(product2.getDiscountPrice())
                 .categoryId(product2.getCategory().getCategoryId())
                 .description(product2.getDescription())
+                .build();
+
+        productShortResponseDto3 = ProductShortResponseDto.builder()
+                .productId(product3.getProductId())
+                .name(product3.getName())
+                .price(product3.getPrice())
+                .discountPrice(product3.getDiscountPrice())
+                .categoryId(product3.getCategory().getCategoryId())
+                .description(product3.getDescription())
                 .build();
 
         productResponseDto1 = ProductResponseDto.builder()

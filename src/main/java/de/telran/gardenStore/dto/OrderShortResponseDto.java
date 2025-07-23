@@ -15,6 +15,8 @@ public class OrderShortResponseDto {
 
     private Long orderId;
 
+    private Long userId;
+
     private String status;
 
     private String deliveryAddress;
@@ -22,5 +24,4 @@ public class OrderShortResponseDto {
     private String contactPhone;
 
     private String deliveryMethod;
-
 }

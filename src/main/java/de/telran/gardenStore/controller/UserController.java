@@ -3,9 +3,12 @@ package de.telran.gardenStore.controller;
 import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.dto.UserShortResponseDto;
+import de.telran.gardenStore.dto.security.LoginRequest;
+import de.telran.gardenStore.dto.security.LoginResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,20 +17,30 @@ import java.util.List;
 public interface UserController {
 
     @GetMapping
-    List<UserShortResponseDto> getAllUsers();
+    @PreAuthorize("hasRole('ADMIN')")
+    List<UserShortResponseDto> getAll();
 
     @GetMapping("/{userId}")
-    UserResponseDto getUserById(@PathVariable @Positive Long userId);
+    @PreAuthorize("hasRole('ADMIN')")
+    UserResponseDto getById(@PathVariable @Positive Long userId);
+
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    UserResponseDto getCurrent();
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    UserResponseDto createUser(@RequestBody @Valid UserCreateRequestDto userRequest);
+    UserResponseDto create(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto);
 
+    @PostMapping("/login")
+    LoginResponse login(@RequestBody @Valid LoginRequest loginRequest);
+
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PutMapping("/{userId}")
-    UserResponseDto updateUser(@PathVariable @Positive Long userId,
-                                    @RequestBody @Valid UserCreateRequestDto userRequest);
+    @PutMapping
+    UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest);
 
-    @DeleteMapping("/{userId}")
-    void deleteUserById(@PathVariable @Positive Long userId);
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @DeleteMapping
+    void delete();
 }

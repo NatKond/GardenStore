@@ -8,11 +8,11 @@ import lombok.Data;
 @Builder(toBuilder = true)
 public class OrderItemCreateRequestDto {
 
-    @Positive
     @NotNull(message = "Product is required")
+    @Positive
     private Long productId;
 
-    @Positive
     @NotNull(message = "Quantity is required")
+    @Positive(message = "Quantity should be at least 1")
     private Integer quantity;
 }

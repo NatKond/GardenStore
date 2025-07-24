@@ -9,6 +9,7 @@ import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.service.ProductService;
+import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductControllerImpl.class)
-@AutoConfigureMockMvc(addFilters = false) // Отключаем security фильтры для тестов
+@AutoConfigureMockMvc(addFilters = false)
 public class ProductControllerImplTest extends AbstractTest {
 
     @Autowired
@@ -34,6 +35,9 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private ProductService productService;
@@ -153,7 +157,6 @@ public class ProductControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
     void deleteProduct_ShouldDeleteProduct() throws Exception {
-
         Long productId = 1L;
 
         doNothing().when(productService).deleteById(productId);

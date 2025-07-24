@@ -11,6 +11,7 @@ import de.telran.gardenStore.exception.EmptyOrderException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.service.OrderService;
 import de.telran.gardenStore.service.UserService;
+import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class OrderControllerImplTest extends AbstractTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private OrderService orderService;

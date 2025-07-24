@@ -8,6 +8,7 @@ import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.service.FavoriteService;
+import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ class FavoriteControllerImplTest  extends AbstractTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private FavoriteService favoriteService;

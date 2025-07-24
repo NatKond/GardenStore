@@ -40,7 +40,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .claims()
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + Duration.ofMinutes(5).toMillis()))
+                .expiration(new Date(System.currentTimeMillis() + Duration.ofMinutes(30).toMillis()))
                 .subject(user.getEmail())
                 .add(claims)
                 .and()

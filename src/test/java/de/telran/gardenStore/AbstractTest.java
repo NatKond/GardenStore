@@ -254,9 +254,13 @@ public abstract class AbstractTest {
                 .user(user1)
                 .build();
 
+        user1.setCart(cart1);
+
         cart2 = Cart.builder()
                 .user(user2)
                 .build();
+
+        user2.setCart(cart2);
 
         cartItem1 = CartItem.builder()
                 .cart(cart1)

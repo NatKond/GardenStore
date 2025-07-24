@@ -6,6 +6,7 @@ import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.service.OrderService;
+import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class PaymentControllerImplTest extends AbstractTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private OrderService orderService;

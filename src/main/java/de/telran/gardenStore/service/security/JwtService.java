@@ -5,4 +5,6 @@ import de.telran.gardenStore.entity.AppUser;
 public interface JwtService {
 
     String generateToken(AppUser user);
+
+    String extractUsername(String token);
 }

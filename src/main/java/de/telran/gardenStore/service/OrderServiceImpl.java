@@ -56,10 +56,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order create(Order order) {
-        Cart cart = cartService.getByUser(order.getUser());
-        List<CartItem> cartItems = cart.getItems();
-        List<OrderItem> orderItems = order.getItems();
+        AppUser user = userService.getCurrent();
+        order.setUser(user);
+        if (order.getContactPhone() == null) {
+            order.setContactPhone(user.getPhoneNumber());
+        }
 
+        Cart cart = cartService.getByUser(user);
+        List<CartItem> cartItems = cart.getItems();
+
+        List<OrderItem> orderItems = order.getItems();
         Iterator<OrderItem> iterator = orderItems.iterator();
         while (iterator.hasNext()) {
             OrderItem orderItem = iterator.next();

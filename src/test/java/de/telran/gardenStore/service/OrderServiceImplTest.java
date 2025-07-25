@@ -44,6 +44,8 @@ class OrderServiceImplTest extends AbstractTest {
     @DisplayName("Get order by ID : positive case")
     void getByIdPositiveCase() {
         Long orderId = order1.getOrderId();
+
+        when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order1));
 
         Order actual = orderService.getById(orderId);
@@ -57,6 +59,7 @@ class OrderServiceImplTest extends AbstractTest {
     @DisplayName("Get order by ID : negative case")
     void getByIdNegativeCase() {
         Long orderId = 999L;
+        
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
         OrderNotFoundException exception = assertThrows(OrderNotFoundException.class,
@@ -66,9 +69,8 @@ class OrderServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Get all orders by user ID")
+    @DisplayName("Get all orders for current user")
     void getAllForCurrentUser() {
-
         List<Order> expected = List.of(order1);
 
         when(userService.getCurrent()).thenReturn(user1);
@@ -104,6 +106,7 @@ class OrderServiceImplTest extends AbstractTest {
 
         BigDecimal expected = new BigDecimal("28.47");
 
+        when(userService.getCurrent()).thenReturn(order1.getUser());
         when(orderRepository.findById(order1.getOrderId())).thenReturn(Optional.of(order1));
 
         BigDecimal actual = orderService.getTotalAmount(order1.getOrderId());
@@ -120,7 +123,8 @@ class OrderServiceImplTest extends AbstractTest {
                 .orderId(3L)
                 .build();
 
-        when(cartService.getByUser(user1)).thenReturn(cart);
+        when(userService.getCurrent()).thenReturn(orderCreated.getUser());
+        when(cartService.getByUser(orderCreated.getUser())).thenReturn(cart);
         when(orderRepository.save(orderToCreate)).thenReturn(orderCreated);
 
         Order actual = orderService.create(orderToCreate);
@@ -153,11 +157,12 @@ class OrderServiceImplTest extends AbstractTest {
                 .items(orderItems)
                 .build();
 
-        when(cartService.getByUser(user1)).thenReturn(cart);
+        when(userService.getCurrent()).thenReturn(orderToCreate.getUser());
+        when(cartService.getByUser(orderToCreate.getUser())).thenReturn(cart);
 
         EmptyOrderException exception = assertThrows(EmptyOrderException.class, () -> orderService.create(orderToCreate));
 
-        assertEquals("Order is empty.", exception.getMessage());
+        assertEquals("Order is empty", exception.getMessage());
         verify(cartService).getByUser(user1);
         verify(orderRepository, never()).save(any());
     }
@@ -172,6 +177,7 @@ class OrderServiceImplTest extends AbstractTest {
                 .status(OrderStatus.PAID)
                 .build();
 
+        when(userService.getCurrent()).thenReturn(orderToUpdate.getUser());
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(orderToUpdate));
         when(orderRepository.save(orderToUpdate)).thenReturn(expected);
 
@@ -209,7 +215,8 @@ class OrderServiceImplTest extends AbstractTest {
 
         Cart cartUpdated = cart2.toBuilder().items(cartItemsUpdated).build();
 
-        when(cartService.getByUser(user2)).thenReturn(cart);
+        when(userService.getCurrent()).thenReturn(orderToUpdate.getUser());
+        when(cartService.getByUser(orderToUpdate.getUser())).thenReturn(cart);
         when(cartService.update(cart)).thenReturn(cartUpdated);
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(orderToUpdate));
         when(orderRepository.save(orderUpdated)).thenReturn(orderUpdated);
@@ -255,7 +262,8 @@ class OrderServiceImplTest extends AbstractTest {
 
         Cart cartUpdated = cart1.toBuilder().items(cartItemsUpdated).build();
 
-        when(cartService.getByUser(user1)).thenReturn(cart);
+        when(userService.getCurrent()).thenReturn(orderToUpdate.getUser());
+        when(cartService.getByUser(orderToUpdate.getUser())).thenReturn(cart);
         when(cartService.update(cart)).thenReturn(cartUpdated);
         when(orderItemService.getById(orderItemId)).thenReturn(orderItemToUpdate);
         when(orderRepository.save(orderUpdated)).thenReturn(orderUpdated);
@@ -286,6 +294,7 @@ class OrderServiceImplTest extends AbstractTest {
                 .items(orderItemsUpdated)
                 .build();
 
+        when(userService.getCurrent()).thenReturn(orderToUpdate.getUser());
         when(orderItemService.getById(orderItemId)).thenReturn(orderItemToRemove);
         when(orderRepository.save(orderUpdated)).thenReturn(orderUpdated);
 
@@ -301,14 +310,15 @@ class OrderServiceImplTest extends AbstractTest {
     @DisplayName("Remove order item : negative case")
     void removeOrderItemNegativeCase() {
         OrderItem orderItemToRemove = orderItem3;
-
+        Order orderToUpdate = orderItemToRemove.getOrder();
         Long orderItemId = orderItemToRemove.getOrderItemId();
 
+        when(userService.getCurrent()).thenReturn(orderToUpdate.getUser());
         when(orderItemService.getById(orderItemId)).thenReturn(orderItemToRemove);
 
         EmptyOrderException exception = assertThrows(EmptyOrderException.class,
                 () -> orderService.removeOrderItem(orderItemId));
-        assertEquals("Order is empty.", exception.getMessage());
+        assertEquals("Order is empty", exception.getMessage());
     }
 
     @Test
@@ -322,6 +332,7 @@ class OrderServiceImplTest extends AbstractTest {
                 .status(OrderStatus.CANCELLED)
                 .build();
 
+        when(userService.getCurrent()).thenReturn(user2);
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(orderToCancel));
         when(orderRepository.save(cancelledOrder)).thenReturn(cancelledOrder);
 

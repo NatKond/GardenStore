@@ -36,23 +36,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser create(AppUser newUser) {
-        checkUserEmailIsUnique(newUser.getEmail());
-        return userRepository.save(newUser);
+    public AppUser create(AppUser user) {
+        checkUserEmailIsUnique(user.getEmail());
+        return userRepository.save(user);
     }
 
     @Override
-    public AppUser update(AppUser updatedUser) {
+    public AppUser update(AppUser user) {
         AppUser existing = getCurrent();
 
-        if (!existing.getEmail().equals(updatedUser.getEmail())) {
-            checkUserEmailIsUnique(updatedUser.getEmail());
+        if (!existing.getEmail().equals(user.getEmail())) {
+            checkUserEmailIsUnique(user.getEmail());
         }
 
-        existing.setName(updatedUser.getName());
-        existing.setEmail(updatedUser.getEmail());
-        existing.setPhoneNumber(updatedUser.getPhoneNumber());
-        existing.setPasswordHash(updatedUser.getPasswordHash());
+        existing.setName(user.getName());
+        existing.setEmail(user.getEmail());
+        existing.setPhoneNumber(user.getPhoneNumber());
+        existing.setPasswordHash(user.getPasswordHash());
 
         return userRepository.save(existing);
     }

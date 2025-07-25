@@ -82,17 +82,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product update(Long id, Product updatedProduct) {
+    public Product update(Long id, Product product) {
         Product existing = getById(id);
 
-        Category category = categoryService.getById(updatedProduct.getCategory().getCategoryId());
+        Category category = categoryService.getById(product.getCategory().getCategoryId());
 
-        existing.setName(updatedProduct.getName());
-        existing.setDescription(updatedProduct.getDescription());
-        existing.setPrice(updatedProduct.getPrice());
-        existing.setDiscountPrice(updatedProduct.getDiscountPrice());
-        existing.setCategory(updatedProduct.getCategory()); //category);
-        existing.setImageUrl(updatedProduct.getImageUrl());
+        existing.setName(product.getName());
+        existing.setDescription(product.getDescription());
+        existing.setPrice(product.getPrice());
+        existing.setDiscountPrice(product.getDiscountPrice());
+        existing.setCategory(product.getCategory()); //category);
+        existing.setImageUrl(product.getImageUrl());
 
         return productRepository.save(existing);
     }

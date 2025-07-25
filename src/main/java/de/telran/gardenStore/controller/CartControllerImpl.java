@@ -7,12 +7,15 @@ import de.telran.gardenStore.service.CartService;
 import de.telran.gardenStore.service.UserService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/v1/cart")
 public class CartControllerImpl implements CartController {
 
     private final CartService cartService;
@@ -21,27 +24,38 @@ public class CartControllerImpl implements CartController {
 
     private final UserService userService;
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @Override
-    public CartResponseDto getCartByUserId() {
+    public CartResponseDto getCartForCurrentUser() {
         return cartConverter.convertEntityToDto(
                 cartService.getByUser(
                         userService.getCurrent()));
     }
 
+    @PostMapping("/items")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @Override
-    public CartResponseDto addCartItem(@Positive Long productId) {
+    public CartResponseDto addCartItem(@RequestParam @Positive Long productId) {
         return cartConverter.convertEntityToDto(
                 cartService.addCartItem(productId));
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PutMapping("/items/{cartItemId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @Override
-    public CartResponseDto updateCartItem(@Positive Long cartItemId, @Positive Integer quantity) {
+    public CartResponseDto updateCartItem(@PathVariable @Positive Long cartItemId,
+                                          @RequestParam @Positive Integer quantity) {
         return cartConverter.convertEntityToDto(
                 cartService.updateCartItem(cartItemId, quantity));
     }
 
     @Override
-    public CartResponseDto deleteCartItem(@Positive Long cartItemId) {
+    @DeleteMapping("/items/{cartItemId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public CartResponseDto deleteCartItem(@PathVariable @Positive Long cartItemId) {
         return cartConverter.convertEntityToDto(cartService.deleteCartItem(cartItemId));
     }
 }

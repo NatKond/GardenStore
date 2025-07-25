@@ -10,7 +10,7 @@ public interface CartController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    CartResponseDto getCartByUserId();
+    CartResponseDto getCartForCurrentUser();
 
     @PostMapping("/items")
     @ResponseStatus(HttpStatus.CREATED)

@@ -22,7 +22,7 @@ public class CartControllerImpl implements CartController {
     private final UserService userService;
 
     @Override
-    public CartResponseDto getCartByUserId() {
+    public CartResponseDto getCartForCurrentUser() {
         return cartConverter.convertEntityToDto(
                 cartService.getByUser(
                         userService.getCurrent()));

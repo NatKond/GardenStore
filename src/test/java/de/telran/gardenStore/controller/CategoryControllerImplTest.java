@@ -10,6 +10,7 @@ import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.service.CategoryService;
+import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,6 +42,9 @@ public class CategoryControllerImplTest extends AbstractTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
     private CategoryService categoryService;
 
     @MockitoBean
@@ -47,12 +52,12 @@ public class CategoryControllerImplTest extends AbstractTest {
 
     @DisplayName("GET /v1/categories - Get all categories")
     @Test
-    void getAllCategories() throws Exception {
-        List<Category> categories = List.of(category1, category2);
+    void getAll() throws Exception {
+        List<Category> categories = List.of(category1, category2, category3);
 
-        List<CategoryShortResponseDto> categoriesDto = List.of(categoryShortResponseDto1, categoryShortResponseDto2);
+        List<CategoryShortResponseDto> categoriesDto = List.of(categoryShortResponseDto1, categoryShortResponseDto2, categoryShortResponseDto3);
 
-        when(categoryService.getAllCategories()).thenReturn(categories);
+        when(categoryService.getAll()).thenReturn(categories);
 
         when(categoryConverter.convertEntityListToDtoList(categories)).thenReturn(categoriesDto);
 
@@ -67,9 +72,9 @@ public class CategoryControllerImplTest extends AbstractTest {
 
     @DisplayName("GET /v1/categories/{categoryId} - Get category by ID : positive case")
     @Test
-    void getCategoryByIdPositiveCase() throws Exception {
+    void getByIdPositiveCase() throws Exception {
 
-        when(categoryService.getCategoryById(category1.getCategoryId())).thenReturn(category1);
+        when(categoryService.getById(category1.getCategoryId())).thenReturn(category1);
 
         when(categoryConverter.convertEntityToDto(category1)).thenReturn(categoryResponseDto1);
 
@@ -85,10 +90,10 @@ public class CategoryControllerImplTest extends AbstractTest {
 
     @DisplayName("GET /v1/categories/{categoryId} - Get category by ID : negative case")
     @Test
-    void getCategoryByIdNegativeCase() throws Exception {
+    void getByIdNegativeCase() throws Exception {
         Long categoryId = 6L;
 
-        when(categoryService.getCategoryById(categoryId)).thenThrow(new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+        when(categoryService.getById(categoryId)).thenThrow(new CategoryNotFoundException("Category with id " + categoryId + " not found"));
 
         mockMvc
                 .perform(get("/v1/categories/{categoryId}", categoryId))
@@ -104,7 +109,7 @@ public class CategoryControllerImplTest extends AbstractTest {
 
     @DisplayName("POST /v1/categories - Create new category : positive case")
     @Test
-    void createCategoryPositiveCase() throws Exception {
+    void createPositiveCase() throws Exception {
 
         Category categoryCreated = this.categoryToCreate.toBuilder()
                 .categoryId(4L)
@@ -115,7 +120,7 @@ public class CategoryControllerImplTest extends AbstractTest {
                 .name(categoryCreated.getName())
                 .build();
 
-        when(categoryService.createCategory(categoryToCreate)).thenReturn(categoryCreated);
+        when(categoryService.create(categoryToCreate)).thenReturn(categoryCreated);
         when(categoryConverter.convertDtoToEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
         when(categoryConverter.convertEntityToDto(categoryCreated)).thenReturn(categoryResponseCreatedDto);
 
@@ -132,10 +137,10 @@ public class CategoryControllerImplTest extends AbstractTest {
 
     @DisplayName("POST /v1/categories - Create new category : negative case")
     @Test
-    void createCategoryNegativeCase() throws Exception {
+    void createNegativeCase() throws Exception {
 
         when(categoryConverter.convertDtoToEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
-        when(categoryService.createCategory(categoryToCreate)).thenThrow(new CategoryWithNameAlreadyExistsException("Category with name " + categoryToCreate.getName() + " already exists."));
+        when(categoryService.create(categoryToCreate)).thenThrow(new CategoryWithNameAlreadyExistsException("Category with name " + categoryToCreate.getName() + " already exists."));
 
         mockMvc
                 .perform(post("/v1/categories")
@@ -152,7 +157,7 @@ public class CategoryControllerImplTest extends AbstractTest {
 
     @DisplayName("PUT /v1/categories/{category_id} - Update category")
     @Test
-    void updateCategory() throws Exception {
+    void update() throws Exception {
 
         Category categoryUpdate = category1.toBuilder()
                 .name("Soil and substrates")
@@ -172,8 +177,8 @@ public class CategoryControllerImplTest extends AbstractTest {
                 .build();
 
         when(categoryConverter.convertDtoToEntity(categoryUpdateRequestDto)).thenReturn(categoryUpdate);
-        when(categoryService.updateCategory(categoryUpdated.getCategoryId(), categoryUpdate)).thenReturn(categoryUpdated);
-        when(categoryService.getCategoryById(categoryUpdated.getCategoryId())).thenReturn(categoryUpdated);
+        when(categoryService.update(categoryUpdated.getCategoryId(), categoryUpdate)).thenReturn(categoryUpdated);
+        when(categoryService.getById(categoryUpdated.getCategoryId())).thenReturn(categoryUpdated);
         when(categoryConverter.convertEntityToDto(categoryUpdated)).thenReturn(categoryResponseUpdatedDto);
 
         mockMvc
@@ -189,16 +194,16 @@ public class CategoryControllerImplTest extends AbstractTest {
 
     @DisplayName("DELETE /v1/categories/{category_id} - Delete category by ID")
     @Test
-    void deleteCategory() throws Exception {
+    void delete() throws Exception {
         Long categoryId = category1.getCategoryId();
 
-        doNothing().when(categoryService).deleteCategoryById(categoryId);
+        doNothing().when(categoryService).deleteById(categoryId);
 
         mockMvc
-                .perform(delete("/v1/categories/{category_id}", categoryId))
+                .perform(MockMvcRequestBuilders.delete("/v1/categories/{category_id}", categoryId))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(categoryService).deleteCategoryById(categoryId);
+        verify(categoryService).deleteById(categoryId);
     }
 }

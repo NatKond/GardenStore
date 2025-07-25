@@ -3,8 +3,8 @@ package de.telran.gardenStore.converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.dto.ProductShortResponseDto;
+import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
-import de.telran.gardenStore.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -17,16 +17,13 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
 
     private final ModelMapper modelMapper;
 
-    private final CategoryService categoryService;
-
     @Override
     public Product convertDtoToEntity(ProductCreateRequestDto productCreateRequestDto) {
-
         modelMapper.typeMap(ProductCreateRequestDto.class, Product.class).addMappings(
                 mapper -> {
                     mapper.skip(Product::setProductId);
                     mapper
-                            .using(context -> categoryService.getCategoryById((Long) context.getSource()))
+                            .using(context -> Category.builder().categoryId((Long) context.getSource()).build())
                             .map(ProductCreateRequestDto::getCategoryId, Product::setCategory);
                 }
         );
@@ -36,7 +33,6 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
 
     @Override
     public ProductResponseDto convertEntityToDto(Product product) {
-
         modelMapper.typeMap(Product.class, ProductResponseDto.class).addMappings(
                 (mapper ->
                         mapper.map(productEntity -> productEntity.getCategory().getCategoryId(), ProductResponseDto::setCategoryId)));

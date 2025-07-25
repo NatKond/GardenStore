@@ -23,10 +23,10 @@ Represents a system user.
 
 ```json
 {
-  "name": "string",
-  "email": "string",
-  "phoneNumber": "string",
-  "password": "string"
+  "name": "Frank Green",
+  "email": "frank.green@example.com",
+  "phoneNumber": "+1444555666",
+  "password": "12345"
 }
 ```
 
@@ -35,13 +35,38 @@ Represents a system user.
 ```json
 {
   "userId": 1,
-  "name": "string",
+  "name": "Alice Johnson",
+  "email": "alice.johnson@example.com",
+  "phoneNumber": "+1234567890",
+  "role": "ROLE_USER",
+  "favorites": [
+    {
+      "favoriteId": 1,
+      "product": {
+        "productId": 5,
+        "name": "Tulip Bulb Mix (10 pcs)",
+        "description": "Colorful tulip bulbs perfect for spring blooms",
+        "price": 9.49,
+        "discountPrice": 6.99
+      }
+    }
+  ]
+}
+```
+
+### UserShortResponseDto
+
+```json
+{
+  "userId": 1,
+  "name": "Alice Johnson",
+  "email": "alice.johnson@example.com",
+  "phoneNumber": "+1234567890",
   "role": "ROLE_USER"
 }
 ```
 
 ### LoginRequest
-
 ```json
 {
   "email": "string",
@@ -51,11 +76,12 @@ Represents a system user.
 
 ## Endpoints
 
-| Method | URL                | Role Required | Description         |
-|--------|--------------------|---------------|---------------------|
-| POST   | `/users/register`  | —             | Register user       |
-| POST   | `/users/login`     | —             | Authenticate user   |
-| GET    | `/users`           | ADMIN         | Get all users       |
-| GET    | `/users/{userId}`  | USER / ADMIN  | Get user by ID      |
-| PUT    | `/users/{userId}`  | USER / ADMIN  | Update user profile |
-| DELETE | `/users/{userId}`  | USER / ADMIN  | Delete user         |
+| Method | URL                  | Role Required | Description                 |
+|--------|----------------------|---------------|-----------------------------|
+| POST   | `/v1/users/register` | —             | Register user               |
+| POST   | `/v1/users/login`    | —             | Authenticate user           |
+| GET    | `/v1/users`          | ADMIN         | Get all users               |
+| GET    | `/v1/users/me`       | USER / ADMIN  | Get current user            |
+| GET    | `/v1/users/{userId}` | USER / ADMIN  | Get user by Id              |
+| PUT    | `/v1/users/{userId}` | USER / ADMIN  | Update current user profile |
+| DELETE | `/v1/users/{userId}` | USER / ADMIN  | Delete current user         |

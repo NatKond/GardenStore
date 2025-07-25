@@ -9,6 +9,7 @@ import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.service.ProductService;
+import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductControllerImpl.class)
-@AutoConfigureMockMvc(addFilters = false) // Отключаем security фильтры для тестов
+@AutoConfigureMockMvc(addFilters = false)
 public class ProductControllerImplTest extends AbstractTest {
 
     @Autowired
@@ -36,6 +37,9 @@ public class ProductControllerImplTest extends AbstractTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
     private ProductService productService;
 
     @MockitoBean
@@ -43,17 +47,17 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/products - Get all products")
-    void getAllProducts() throws Exception {
+    void getAll() throws Exception {
 
         List<Product> products = List.of(product1, product2);
 
         List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2);
 
-        when(productService.getAllProducts(null, null, null, null, null, null)).thenReturn(products);
+        when(productService.getAll(null, null, null, null, null, null)).thenReturn(products);
         when(productConverter.convertEntityListToDtoList(products)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/products"))
-                .andDo(print()) // Логирование запроса и ответа
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
@@ -62,10 +66,10 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/products/{productId} - Get product by ID : positive case")
-    void getProductByIdPositiveCase() throws Exception {
+    void getByIdPositiveCase() throws Exception {
         Long productId = 1L;
 
-        when(productService.getProductById(productId)).thenReturn(product1);
+        when(productService.getById(productId)).thenReturn(product1);
         when(productConverter.convertEntityToDto(product1)).thenReturn(productResponseDto1);
 
         mockMvc.perform(get("/v1/products/{productId}", productId))
@@ -79,10 +83,10 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/products/{productId} Get product by ID : negative case")
-    void getProductByIdNegativeCase() throws Exception {
+    void getByIdNegativeCase() throws Exception {
         Long productId = 999L;
 
-        when(productService.getProductById(productId))
+        when(productService.getById(productId))
                 .thenThrow(new ProductNotFoundException("Product with id: " + productId + " not found"));
 
 
@@ -98,10 +102,10 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("POST /v1/products - Create new product")
-    void createProduct() throws Exception {
+    void create() throws Exception {
 
         when(productConverter.convertDtoToEntity(productCreateRequestDto)).thenReturn(productToCreate);
-        when(productService.createProduct(productToCreate)).thenReturn(productCreated);
+        when(productService.create(productToCreate)).thenReturn(productCreated);
         when(productConverter.convertEntityToDto(productCreated)).thenReturn(productResponseCreatedDto);
 
         mockMvc.perform(post("/v1/products")
@@ -116,7 +120,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("PUT /v1/products/{productId} - Update product")
-    void updateProduct() throws Exception {
+    void update() throws Exception {
         Long productId = 3L;
 
         Product productToUpdate = productToCreate.toBuilder()
@@ -137,7 +141,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
 
         when(productConverter.convertDtoToEntity(productUpdateRequestDto)).thenReturn(productToUpdate);
-        when(productService.updateProduct(productId, productToUpdate)).thenReturn(productUpdated);
+        when(productService.update(productId, productToUpdate)).thenReturn(productUpdated);
         when(productConverter.convertEntityToDto(productUpdated)).thenReturn(productResponseUpdatedDto);
 
         mockMvc.perform(put("/v1/products/{productId}", productId)
@@ -153,15 +157,14 @@ public class ProductControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
     void deleteProduct_ShouldDeleteProduct() throws Exception {
-
         Long productId = 1L;
 
-        doNothing().when(productService).deleteProductById(productId);
+        doNothing().when(productService).deleteById(productId);
 
         mockMvc.perform(delete("/v1/products/{productId}", productId))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(productService).deleteProductById(productId);
+        verify(productService).deleteById(productId);
     }
 }

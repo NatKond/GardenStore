@@ -1,6 +1,4 @@
 package de.telran.gardenStore.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,18 +10,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "products")
 @NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
-@Builder(toBuilder = true)
 @AllArgsConstructor
-
+@Data
+@Builder(toBuilder = true)
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long productId;
 
     private String name;
@@ -44,7 +37,6 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
     private Category category;
 }
 

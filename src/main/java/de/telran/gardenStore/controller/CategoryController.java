@@ -37,7 +37,8 @@ public interface CategoryController {
                                 }
                             ]
                             """)))
-    List<CategoryShortResponseDto> getAllCategories();
+    //@GetMapping
+    List<CategoryShortResponseDto> getAll();
 
     @Operation(summary = "Get category by ID")
     @ApiResponse(responseCode = "200", description = "Category found",
@@ -70,7 +71,8 @@ public interface CategoryController {
                                 "timestamp": "2025-07-08T22:06:22.675691"
                             }
                             """)))
-    CategoryResponseDto getCategoryById(@Parameter(description = "ID of the category", example = "1")
+    //@GetMapping("/{categoryId}")
+    CategoryResponseDto getById(@Parameter(description = "ID of the category", example = "1")
                                         @Positive Long categoryId);
 
     @Operation(summary = "Create a new category")
@@ -108,7 +110,12 @@ public interface CategoryController {
                                 "timestamp": "2025-07-08T22:07:08.754019"
                             }
                             """)))
-    CategoryResponseDto createCategory(
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @PreAuthorize("hasRole('ADMIN')")
+//    CategoryResponseDto create(@org.springframework.web.bind.annotation.RequestBody @Valid CategoryCreateRequestDto dto);
+
+    CategoryResponseDto create(
             @RequestBody(
                     description = "Category to create",
                     required = true,
@@ -135,6 +142,12 @@ public interface CategoryController {
                     )
             )
             @Valid CategoryCreateRequestDto dto);
+
+//    @ResponseStatus(HttpStatus.ACCEPTED)
+//    @PutMapping("/{categoryId}")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    CategoryResponseDto update(@PathVariable @Positive Long categoryId,
+//                               @RequestBody @Valid CategoryCreateRequestDto dto);
 
     @Operation(summary = "Update existing category")
     @ApiResponse(responseCode = "202", description = "Category successfully updated",
@@ -188,7 +201,7 @@ public interface CategoryController {
                                 "timestamp": "2025-07-08T22:10:18.67931"
                             }
                             """)))
-    CategoryResponseDto updateCategory(@Parameter(description = "ID of the category to update", example = "1")
+    CategoryResponseDto update(@Parameter(description = "ID of the category to update", example = "1")
                                        @Positive Long categoryId,
                                        @RequestBody(
                                                description = "Category to update",
@@ -217,6 +230,10 @@ public interface CategoryController {
                                        )
                                        @Valid CategoryCreateRequestDto dto);
 
+//    @DeleteMapping("/{categoryId}")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    void delete(@PathVariable @Positive Long categoryId);
+
     @Operation(summary = "Delete category by ID")
     @ApiResponse(responseCode = "204", description = "Category successfully deleted")
     @ApiResponse(responseCode = "404", description = "Category not found",
@@ -230,5 +247,5 @@ public interface CategoryController {
                                 "timestamp": "2025-07-08T22:06:22.675691"
                             }
                             """)))
-    void deleteCategory(@Parameter(description = "ID of the category to delete", example = "1") @Positive Long categoryId);
+    void delete(@Parameter(description = "ID of the category to delete", example = "1") @Positive Long categoryId);
 }

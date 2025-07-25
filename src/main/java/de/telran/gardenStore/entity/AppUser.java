@@ -4,16 +4,14 @@ import de.telran.gardenStore.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "app_users")
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
+@Data
 @Builder(toBuilder = true)
 public class AppUser {
 
@@ -30,9 +28,19 @@ public class AppUser {
 
     private String passwordHash;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Favorite> favorites;
+    private List<Favorite> favorites = new ArrayList<>();
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
+
 }

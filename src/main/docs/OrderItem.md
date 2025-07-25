@@ -18,33 +18,27 @@ A product included in an order.
 
 ## DTOs
 
-### OrderItemCreateDto
-
-```json
-{
-  "orderId": 1,
-  "productId": 1,
-  "quantity": 2,
-  "priceAtPurchase": 99.99
-}
-```
-
 ### OrderItemResponseDto
 
 ```json
 {
   "orderId": 1,
-  "productId": 1,
   "quantity": 2,
-  "priceAtPurchase": 99.99
+  "priceAtPurchase": 99.99,
+  "product": {
+    "productId": 1,
+    "name": "string",
+    "description": "string",
+    "price": 9.49,
+    "discountPrice": 6.99
+  }
 }
 ```
 
 ## Endpoints
 
-| Method | URL                           | Role Required  | Description             |
-|--------|-------------------------------|----------------|-------------------------|
-| GET    | `/orders/{orderId}/items`     | USER/ADMIN     | Get items from order    |
-| POST   | `/orders/{orderId}/items`     | USER/ADMIN     | Add item to order       |
-| PUT    | `/orders/items/{orderItemId}` | USER/ADMIN     | Change item in order    |
-| DELETE | `/orders/items/{orderItemId}` | USER/ADMIN     | Delete items from order |
+| Method | URL                              | Role Required  | Description             |
+|--------|----------------------------------|----------------|-------------------------|
+| POST   | `/v1/orders/items`               | USER/ADMIN     | Add item to order       |
+| PUT    | `/v1/orders/items/{orderItemId}` | USER/ADMIN     | Change item in order    |
+| DELETE | `/v1/orders/items/{orderItemId}` | USER/ADMIN     | Delete items from order |

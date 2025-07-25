@@ -1,12 +1,15 @@
 package de.telran.gardenStore;
 
 import de.telran.gardenStore.dto.*;
-import de.telran.gardenStore.entity.AppUser;
-import de.telran.gardenStore.entity.Category;
-import de.telran.gardenStore.entity.Favorite;
-import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.entity.*;
+import de.telran.gardenStore.enums.DeliveryMethod;
+import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,8 +18,12 @@ import java.util.List;
 
 public abstract class AbstractTest {
 
+    protected Authentication authentication;
+    protected SecurityContext context;
+
     protected Category category1;
     protected Category category2;
+    protected Category category3;
     protected Category categoryToCreate;
     protected Category categoryCreated;
 
@@ -36,14 +43,46 @@ public abstract class AbstractTest {
     protected Favorite favoriteToCreate;
     protected Favorite favoriteCreated;
 
+    protected Cart cart1;
+    protected Cart cart2;
+
+    protected CartItem cartItem1;
+    protected CartItem cartItem2;
+    protected CartItem cartItem3;
+
+    protected Order order1;
+    protected Order order2;
+    protected Order orderToCreate;
+
+    protected OrderItem orderItem1;
+    protected OrderItem orderItem2;
+    protected OrderItem orderItem3;
+    protected OrderItem orderItemToCreate1;
+    protected OrderItem orderItemToCreate2;
+
+    protected OrderShortResponseDto orderShortResponseDto1;
+    protected OrderShortResponseDto orderShortResponseDto2;
+    protected OrderResponseDto orderResponseDto1;
+    protected OrderResponseDto orderResponseCreatedDto;
+    protected OrderCreateRequestDto orderCreateRequestDto;
+
+    protected OrderItemResponseDto orderItemResponseDto1;
+    protected OrderItemResponseDto orderItemResponseDto2;
+    protected OrderItemCreateRequestDto orderItemCreateRequestDto1;
+    protected OrderItemCreateRequestDto orderItemCreateRequestDto2;
+    protected OrderItemResponseDto orderItemResponseDtoCreated1;
+    protected OrderItemResponseDto orderItemResponseDtoCreated2;
+
     protected CategoryShortResponseDto categoryShortResponseDto1;
     protected CategoryShortResponseDto categoryShortResponseDto2;
+    protected CategoryShortResponseDto categoryShortResponseDto3;
     protected CategoryResponseDto categoryResponseDto1;
     protected CategoryCreateRequestDto categoryCreateRequestDto;
     protected CategoryResponseDto categoryResponseCreatedDto;
 
     protected ProductShortResponseDto productShortResponseDto1;
     protected ProductShortResponseDto productShortResponseDto2;
+    protected ProductShortResponseDto productShortResponseDto3;
     protected ProductResponseDto productResponseDto1;
     protected ProductCreateRequestDto productCreateRequestDto;
     protected ProductResponseDto productResponseCreatedDto;
@@ -57,16 +96,24 @@ public abstract class AbstractTest {
 
     protected FavoriteResponseDto favoriteResponseDto1;
     protected FavoriteResponseDto favoriteResponseDto2;
-    protected FavoriteCreateRequestDto favoriteCreateRequestDto;
     protected FavoriteResponseDto favoriteResponseCreatedDto;
 
     @BeforeEach
-    void setUp() {
+    protected void setUp() {
         initEntities();
+        initSecurityContext();
         initProductDtos();
         initCategoryDtos();
         initFavoriteDtos();
+        initOrderDtos();
         initUserDtos();
+    }
+
+    private void initSecurityContext() {
+        authentication = new UsernamePasswordAuthenticationToken(user1.getEmail(), null);
+        context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
     }
 
     private void initEntities() {
@@ -78,6 +125,11 @@ public abstract class AbstractTest {
         category2 = Category.builder()
                 .categoryId(2L)
                 .name("Protective products and septic tanks")
+                .build();
+
+        category3 = Category.builder()
+                .categoryId(3L)
+                .name("Tools and equipment")
                 .build();
 
         categoryToCreate = Category.builder()
@@ -92,25 +144,25 @@ public abstract class AbstractTest {
         product1 = Product.builder()
                 .productId(1L)
                 .name("All-Purpose Plant Fertilizer")
-                .discountPrice(new BigDecimal("8.99"))
-                .price(new BigDecimal("11.99"))
+                .discountPrice(BigDecimal.valueOf(8.99))
+                .price(BigDecimal.valueOf(11.99))
                 .category(category1)
                 .description("Balanced NPK formula for all types of plants")
                 .imageUrl("https://example.com/images/fertilizer_all_purpose.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         product2 = Product.builder()
-                .productId(1L)
+                .productId(2L)
                 .name("Organic Tomato Feed")
-                .discountPrice(new BigDecimal("10.49"))
-                .price(new BigDecimal("13.99"))
+                .discountPrice(BigDecimal.valueOf(10.49))
+                .price(BigDecimal.valueOf(13.99))
                 .category(category1)
                 .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
                 .imageUrl("https://example.com/images/fertilizer_tomato_feed.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         category1.setProducts(List.of(product1, product2));
@@ -118,26 +170,26 @@ public abstract class AbstractTest {
         product3 = Product.builder()
                 .productId(3L)
                 .name("Slug & Snail Barrier Pellets")
-                .discountPrice(new BigDecimal("5.75"))
-                .price(new BigDecimal("7.50"))
+                .discountPrice(BigDecimal.valueOf(5.75))
+                .price(BigDecimal.valueOf(7.50))
                 .category(category2)
                 .description("Pet-safe barrier pellets to protect plants from slugs")
                 .imageUrl("https://example.com/images/protection_slug_pellets.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         category2.setProducts(List.of(product3));
 
         productToCreate = Product.builder()
                 .name("Garden Tool Set (5 pcs)")
-                .discountPrice(new BigDecimal("19.99"))
-                .price(new BigDecimal("24.99"))
-                .category(category2)
+                .discountPrice(BigDecimal.valueOf(19.99))
+                .price(BigDecimal.valueOf(24.99))
+                .category(category3)
                 .description("Essential hand tools set for everyday gardening")
                 .imageUrl("https://example.com/images/garden_tool_set.jpg")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 0, 0, 0))
                 .build();
 
         productCreated = productToCreate.toBuilder()
@@ -197,6 +249,109 @@ public abstract class AbstractTest {
         favoriteCreated = favoriteToCreate.toBuilder()
                 .favoriteId(3L)
                 .build();
+
+        cart1 = Cart.builder()
+                .user(user1)
+                .build();
+
+        user1.setCart(cart1);
+
+        cart2 = Cart.builder()
+                .user(user2)
+                .build();
+
+        user2.setCart(cart2);
+
+        cartItem1 = CartItem.builder()
+                .cart(cart1)
+                .product(product1)
+                .quantity(2)
+                .build();
+
+        cartItem2 = CartItem.builder()
+                .cart(cart1)
+                .product(product2)
+                .quantity(1)
+                .build();
+
+        cart1.setItems(new ArrayList<>(List.of(cartItem1, cartItem2)));
+
+        cartItem3 = CartItem.builder()
+                .cart(cart2)
+                .product(product1)
+                .quantity(1)
+                .build();
+
+        cart2.setItems(new ArrayList<>(List.of(cartItem3)));
+
+        order1 = Order.builder()
+                .orderId(1L)
+                .user(user1)
+                .deliveryAddress("123 Garden Street")
+                .contactPhone(user1.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.COURIER)
+                .status(OrderStatus.AWAITING_PAYMENT)
+                .createdAt(LocalDateTime.of(2025, 7, 1, 10, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 1, 10, 30, 0))
+                .build();
+
+        orderItem1 = OrderItem.builder()
+                .order(order1)
+                .product(product1)
+                .quantity(2)
+                .priceAtPurchase(product1.getDiscountPrice())
+                .build();
+
+        orderItem2 = OrderItem.builder()
+                .order(order1)
+                .product(product2)
+                .quantity(1)
+                .priceAtPurchase(product2.getDiscountPrice())
+                .build();
+
+        order1.setItems(new ArrayList<>(List.of(orderItem1, orderItem2)));
+
+        order2 = Order.builder()
+                .orderId(2L)
+                .user(user2)
+                .deliveryAddress("456 Green Ave")
+                .contactPhone(user2.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.PICKUP)
+                .status(OrderStatus.CREATED)
+                .createdAt(LocalDateTime.of(2025, 7, 2, 12, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 2, 12, 5, 0))
+                .build();
+
+        orderItem3 = OrderItem.builder()
+                .order(order2)
+                .product(product3)
+                .quantity(1)
+                .priceAtPurchase(product3.getDiscountPrice())
+                .build();
+
+        order2.setItems(new ArrayList<>(List.of(orderItem3)));
+
+        orderToCreate = Order.builder()
+                .user(user1)
+                .deliveryAddress("123 Garden Street")
+                .contactPhone(user1.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.COURIER)
+                .status(OrderStatus.CREATED)
+                .build();
+
+        orderItemToCreate1 = OrderItem.builder()
+                .product(cartItem1.getProduct())
+                .quantity(cartItem1.getQuantity())
+                .priceAtPurchase(cartItem1.getProduct().getDiscountPrice())
+                .build();
+
+        orderItemToCreate2 = OrderItem.builder()
+                .product(cartItem2.getProduct())
+                .quantity(cartItem2.getQuantity())
+                .priceAtPurchase(cartItem2.getProduct().getDiscountPrice())
+                .build();
+
+        orderToCreate.setItems(new ArrayList<>(List.of(orderItemToCreate1, orderItemToCreate2)));
     }
 
     private void initCategoryDtos() {
@@ -208,6 +363,11 @@ public abstract class AbstractTest {
         categoryShortResponseDto2 = CategoryShortResponseDto.builder()
                 .categoryId(category2.getCategoryId())
                 .name(category2.getName())
+                .build();
+
+        categoryShortResponseDto3 = CategoryShortResponseDto.builder()
+                .categoryId(category3.getCategoryId())
+                .name(category3.getName())
                 .build();
 
         categoryResponseDto1 = CategoryResponseDto.builder()
@@ -224,6 +384,105 @@ public abstract class AbstractTest {
                 .categoryId(categoryCreated.getCategoryId())
                 .name(categoryCreated.getName())
                 .build();
+    }
+
+    private void initOrderDtos() {
+        orderShortResponseDto1 = OrderShortResponseDto.builder()
+                .orderId(order1.getOrderId())
+                .status(order1.getStatus().name())
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .build();
+
+        orderShortResponseDto2 = OrderShortResponseDto.builder()
+                .orderId(order2.getOrderId())
+                .status(order2.getStatus().name())
+                .deliveryAddress(order2.getDeliveryAddress())
+                .contactPhone(order2.getContactPhone())
+                .deliveryMethod(order2.getDeliveryMethod().name())
+                .build();
+
+        orderResponseDto1 = OrderResponseDto.builder()
+                .orderId(order1.getOrderId())
+                .userId(order1.getUser().getUserId())
+                .status(order1.getStatus().name())
+                .deliveryAddress(order1.getDeliveryAddress())
+                .contactPhone(order1.getContactPhone())
+                .deliveryMethod(order1.getDeliveryMethod().name())
+                .createdAt(order1.getCreatedAt())
+                .updatedAt(order1.getUpdatedAt())
+                .build();
+
+        orderItemResponseDto1 = OrderItemResponseDto.builder()
+                .orderItemId(orderItem1.getOrderItemId())
+                .product(productShortResponseDto1)
+                .quantity(orderItem1.getQuantity())
+                .priceAtPurchase(orderItem1.getPriceAtPurchase())
+                .build();
+
+        orderItemResponseDto2 = OrderItemResponseDto.builder()
+                .orderItemId(orderItem2.getOrderItemId())
+                .product(productShortResponseDto2)
+                .quantity(orderItem2.getQuantity())
+                .priceAtPurchase(orderItem2.getPriceAtPurchase())
+                .build();
+
+        orderResponseDto1.setItems(List.of(orderItemResponseDto1, orderItemResponseDto2));
+
+        orderResponseDto1.setTotalAmount(orderItem1.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem1.getQuantity()))
+                .add(orderItem2.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem2.getQuantity())))
+        );
+
+        orderCreateRequestDto = OrderCreateRequestDto.builder()
+                .deliveryAddress(orderToCreate.getDeliveryAddress())
+                .contactPhone(orderToCreate.getContactPhone())
+                .deliveryMethod(orderToCreate.getDeliveryMethod())
+                .build();
+
+        orderItemCreateRequestDto1 = OrderItemCreateRequestDto.builder()
+                .productId(orderItemToCreate1.getProduct().getProductId())
+                .quantity(orderItemToCreate1.getQuantity())
+                .build();
+
+        orderItemCreateRequestDto2 = OrderItemCreateRequestDto.builder()
+                .productId(orderItemToCreate2.getProduct().getProductId())
+                .quantity(orderItemToCreate2.getQuantity())
+                .build();
+
+        orderCreateRequestDto.setItems(List.of(orderItemCreateRequestDto1, orderItemCreateRequestDto2));
+
+        orderResponseCreatedDto = OrderResponseDto.builder()
+                .orderId(3L)
+                .userId(user1.getUserId())
+                .status(OrderStatus.CREATED.name())
+                .deliveryAddress(orderToCreate.getDeliveryAddress())
+                .contactPhone(orderToCreate.getContactPhone())
+                .deliveryMethod(orderToCreate.getDeliveryMethod().name())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .totalAmount(new BigDecimal("28.47")) // Пример суммы
+                .build();
+
+        orderItemResponseDtoCreated1 = OrderItemResponseDto.builder()
+                .product(productShortResponseDto1)
+                .quantity(orderItemCreateRequestDto1.getQuantity())
+                .priceAtPurchase(orderItemToCreate1.getPriceAtPurchase())
+                .build();
+
+        orderItemResponseDtoCreated2 = OrderItemResponseDto.builder()
+                .product(productShortResponseDto2)
+                .quantity(orderItemCreateRequestDto2.getQuantity())
+                .priceAtPurchase(orderItemToCreate2.getPriceAtPurchase())
+                .build();
+
+        orderResponseCreatedDto.setTotalAmount(
+                orderItemToCreate1.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate1.getQuantity())
+                        .add(orderItemToCreate2.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate2.getQuantity())))));
+
+        orderResponseCreatedDto.setItems(List.of(orderItemResponseDtoCreated1, orderItemResponseDtoCreated2));
+
+        //when(orderService.getTotalAmount(anyLong())).thenReturn(new BigDecimal("28.47"));
     }
 
     private void initProductDtos() {
@@ -243,6 +502,15 @@ public abstract class AbstractTest {
                 .discountPrice(product2.getDiscountPrice())
                 .categoryId(product2.getCategory().getCategoryId())
                 .description(product2.getDescription())
+                .build();
+
+        productShortResponseDto3 = ProductShortResponseDto.builder()
+                .productId(product3.getProductId())
+                .name(product3.getName())
+                .price(product3.getPrice())
+                .discountPrice(product3.getDiscountPrice())
+                .categoryId(product3.getCategory().getCategoryId())
+                .description(product3.getDescription())
                 .build();
 
         productResponseDto1 = ProductResponseDto.builder()
@@ -331,24 +599,16 @@ public abstract class AbstractTest {
         favoriteResponseDto1 = FavoriteResponseDto.builder()
                 .favoriteId(favorite1.getFavoriteId())
                 .product(productShortResponseDto1)
-                .userId(favorite1.getUser().getUserId())
                 .build();
 
         favoriteResponseDto2 = FavoriteResponseDto.builder()
                 .favoriteId(favorite2.getFavoriteId())
                 .product(productShortResponseDto2)
-                .userId(favorite2.getUser().getUserId())
-                .build();
-
-        favoriteCreateRequestDto = FavoriteCreateRequestDto.builder()
-                .userId(favoriteToCreate.getUser().getUserId())
-                .productId(favoriteToCreate.getProduct().getProductId())
                 .build();
 
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()
                 .favoriteId(favoriteCreated.getFavoriteId())
                 .product(productShortResponseCreatedDto)
-                .userId(favoriteCreated.getUser().getUserId())
                 .build();
     }
 }

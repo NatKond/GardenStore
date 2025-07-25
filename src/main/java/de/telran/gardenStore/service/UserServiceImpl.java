@@ -5,6 +5,7 @@ import de.telran.gardenStore.exception.UserNotFoundException;
 import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
 import de.telran.gardenStore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,49 +17,52 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<AppUser> getAllUsers() {
+    public List<AppUser> getAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public AppUser getUserById(Long userId) {
+    public AppUser getById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
     }
 
     @Override
-    public AppUser getUserByEmail(String email) {
+    public AppUser getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
     }
 
+    public AppUser getCurrent() {
+        return getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
     @Override
-    public AppUser createUser(AppUser newUser) {
-        emailCheck(newUser.getEmail());
+    public AppUser create(AppUser newUser) {
+        checkUserEmailIsUnique(newUser.getEmail());
         return userRepository.save(newUser);
     }
 
     @Override
-    public AppUser updateUser(Long userId, AppUser updatedUser) {
-        AppUser existing = getUserById(userId);
+    public AppUser update(AppUser updatedUser) {
+        AppUser existing = getCurrent();
 
         if (!existing.getEmail().equals(updatedUser.getEmail())) {
-            emailCheck(updatedUser.getEmail());
+            checkUserEmailIsUnique(updatedUser.getEmail());
         }
 
         existing.setName(updatedUser.getName());
         existing.setEmail(updatedUser.getEmail());
         existing.setPhoneNumber(updatedUser.getPhoneNumber());
         existing.setPasswordHash(updatedUser.getPasswordHash());
-        existing.setRole(updatedUser.getRole());
 
         return userRepository.save(existing);
     }
 
     @Override
-    public void deleteUserById(Long userId) {
-        userRepository.delete(getUserById(userId));
+    public void delete() {
+        userRepository.delete(getCurrent());
     }
 
-    private void emailCheck(String email) {
+    private void checkUserEmailIsUnique(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new UserWithEmailAlreadyExistsException("User with email " + email + " already exists");
         }

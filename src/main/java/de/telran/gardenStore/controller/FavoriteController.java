@@ -60,7 +60,7 @@ public interface FavoriteController {
                                 "timestamp": "2025-07-08T23:34:45.605807"
                             }
                             """)))
-    List<FavoriteResponseDto> getAllFavoritesByUser(@Parameter(description = "User ID") @Positive Long userId);
+    List<FavoriteResponseDto> getAllForCurrentUser(@Parameter(description = "User ID") @Positive Long userId);
 
     @Operation(summary = "Add product to favorites")
     @ApiResponse(responseCode = "201", description = "Favorite created",
@@ -110,7 +110,7 @@ public interface FavoriteController {
                                 "timestamp": "2025-07-08T23:35:45.857475"
                             }
                             """)))
-    FavoriteResponseDto createFavorite(
+    FavoriteResponseDto create(
             @Parameter(description = "Add favorite for user") @Positive Long userId,
             @RequestBody(description = "Product to add to favorites",
                     required = true,
@@ -135,5 +135,5 @@ public interface FavoriteController {
                                 "timestamp": "2025-07-08T23:38:06.466938"
                             }
                             """)))
-    void deleteFavorite(@Parameter(description = "ID of favorite to delete", example = "1") @Positive Long favoriteId);
+    void delete(@Parameter(description = "ID of favorite to delete", example = "1") @Positive Long favoriteId);
 }

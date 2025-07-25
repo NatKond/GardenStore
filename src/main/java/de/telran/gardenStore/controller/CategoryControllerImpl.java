@@ -27,20 +27,20 @@ public class CategoryControllerImpl implements CategoryController {
 
     @Override
     @GetMapping
-    public List<CategoryShortResponseDto> getAllCategories() {
+    public List<CategoryShortResponseDto> getAll() {
         return categoryConverter.convertEntityListToDtoList(categoryService.getAllCategories());
     }
 
     @Override
     @GetMapping("/{categoryId}")
-    public CategoryResponseDto getCategoryById(@PathVariable @Positive Long categoryId) {
+    public CategoryResponseDto getById(@PathVariable @Positive Long categoryId) {
         return categoryConverter.convertEntityToDto(categoryService.getCategoryById(categoryId));
     }
 
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryResponseDto createCategory(@RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+    public CategoryResponseDto create(@RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
         return categoryConverter.convertEntityToDto(categoryService.createCategory(
                 categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
@@ -48,14 +48,14 @@ public class CategoryControllerImpl implements CategoryController {
     @Override
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{categoryId}")
-    public CategoryResponseDto updateCategory(@PathVariable @Positive Long categoryId,
+    public CategoryResponseDto update(@PathVariable @Positive Long categoryId,
                                               @RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
         return categoryConverter.convertEntityToDto(categoryService.updateCategory(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
     @DeleteMapping("/{categoryId}")
-    public void deleteCategory(@PathVariable @Positive Long categoryId) {
+    public void delete(@PathVariable @Positive Long categoryId) {
         categoryService.deleteCategoryById(categoryId);
     }
 }

@@ -16,30 +16,25 @@ Represents a user's favorite product.
 
 ## DTOs
 
-### FavoriteCreateRequestDto
-
-```json
-{
-  "userId": 3,
-  "productId": 1
-}
-```
-
 ### FavoriteResponseDto
 
 ```json
 {
   "favoriteId": 1,
-  "userId": 3,
-  "productId": 1
+  "product": {
+    "productId": 5,
+    "name": "string",
+    "description": "string",
+    "price": 9.49,
+    "discountPrice": 6.99
+  }
 }
 ```
 
 ## Endpoints
 
-| Method | URL                       | Role Required  | Description                |
-|--------|---------------------------|----------------|----------------------------|
-| GET    | `/favorites`              | USER           | Get user favorite          |
-| GET    | `/favorites/{favoriteId}` | USER           | Get favorite product by id |
-| POST   | `/favorites`              | USER           | Add to favorites           |
-| DELETE | `/favorites/{favoriteId}` | USER           | Remove from favorites      |
+| Method | URL                          | Role Required  | Description                     |
+|--------|------------------------------|----------------|---------------------------------|
+| GET    | `/v1/favorites/{userId}`     | USER           | Get favorites product by userId |
+| POST   | `/v1/favorites/{userId}`     | USER           | Add to favorites                |
+| DELETE | `/v1/favorites/{favoriteId}` | USER           | Remove from favorites           |

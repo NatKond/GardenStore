@@ -2,7 +2,6 @@ package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
-import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.repository.FavoriteRepository;
@@ -22,32 +21,32 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final UserService userService;
 
     @Override
-    public List<Favorite> getAllFavoritesByUser(Long userId) {
-        AppUser user = userService.getUserById(userId);
-        return favoriteRepository.getAllByUser(user);
+    public List<Favorite> getAllForCurrentUser() {
+        return favoriteRepository.getAllByUser(userService.getCurrent());
     }
 
     @Override
-    public Favorite getFavoriteById(Long favoriteId) {
+    public Favorite getById(Long favoriteId) {
         return favoriteRepository.findById(favoriteId).orElseThrow(()
                 -> new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found"));
     }
 
     @Override
-    public Favorite createFavorite(Favorite favorite) {
-
-        AppUser user = userService.getUserById(favorite.getUser().getUserId());
-        Product product = productService.getProductById(favorite.getProduct().getProductId());
-        if (favoriteRepository.findByUserAndProduct(user, product).isPresent()) {
-            throw new FavoriteAlreadyExistsException("Favorite with userId " + user.getUserId() + " and productId " + product.getProductId() + " already exists");
+    public Favorite create(Long productId) {
+        AppUser user = userService.getCurrent();
+        Long userId = user.getUserId();
+        if (favoriteRepository.findByUserIdAndProductId(userId, productId).isPresent()) {
+            throw new FavoriteAlreadyExistsException("Favorite with userId " + userId + " and productId " + productId + " already exists");
         }
-        favorite.setUser(user);
 
-        return favoriteRepository.save(favorite);
+        return favoriteRepository.save(Favorite.builder()
+                .user(user)
+                .product(productService.getById(productId))
+                .build());
     }
 
     @Override
-    public void deleteFavoriteById(Long favoriteId) {
-        favoriteRepository.delete(getFavoriteById(favoriteId));
+    public void deleteById(Long favoriteId) {
+        favoriteRepository.delete(getById(favoriteId));
     }
 }

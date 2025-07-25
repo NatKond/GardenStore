@@ -30,7 +30,7 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     @GetMapping
-    public List<ProductShortResponseDto> getAllProducts(@RequestParam(required = false) @Positive Long categoryId,
+    public List<ProductShortResponseDto> getAll(@RequestParam(required = false) @Positive Long categoryId,
                                                         @RequestParam(required = false) Boolean discount,
                                                         @RequestParam(required = false) @Positive BigDecimal minPrice,
                                                         @RequestParam(required = false) @Positive BigDecimal maxPrice,
@@ -46,7 +46,7 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     @GetMapping("/{productId}")
-    public ProductResponseDto getProductById(@PathVariable @Positive Long productId) {
+    public ProductResponseDto getById(@PathVariable @Positive Long productId) {
         return productConverter.convertEntityToDto(productService.getProductById(productId));
     }
 
@@ -54,7 +54,7 @@ public class ProductControllerImpl implements ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ProductResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productRequest) {
+    public ProductResponseDto create(@RequestBody @Valid ProductCreateRequestDto productRequest) {
         return productConverter.convertEntityToDto(productService.createProduct(
                 productConverter.convertDtoToEntity(productRequest)));
     }
@@ -63,7 +63,7 @@ public class ProductControllerImpl implements ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{productId}")
-    public ProductResponseDto updateProduct(@PathVariable @Positive Long productId,
+    public ProductResponseDto update(@PathVariable @Positive Long productId,
                                             @RequestBody @Valid ProductCreateRequestDto productRequest) {
         return productConverter.convertEntityToDto(productService.updateProduct(productId,
                 productConverter.convertDtoToEntity(productRequest)));
@@ -72,7 +72,7 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}")
-    public void deleteProductById(@PathVariable @Positive Long productId) {
+    public void delete(@PathVariable @Positive Long productId) {
         productService.deleteProductById(productId);
     }
 }

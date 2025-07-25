@@ -43,7 +43,7 @@ public interface ProductController {
                                  }
                             ]
                             """)))
-    List<ProductShortResponseDto> getAllProducts(
+    List<ProductShortResponseDto> getAll(
             @Parameter(description = "Filter by category ID", example = "1") @Positive Long categoryId,
             @Parameter(description = "Filter by discount availability", example = "true") Boolean discount,
             @Parameter(description = "Minimum product price", example = "5") @Positive BigDecimal minPrice,
@@ -79,7 +79,7 @@ public interface ProductController {
                                 "timestamp": "2025-07-08T20:43:40.833577"
                             }
                             """)))
-    ProductResponseDto getProductById(
+    ProductResponseDto getById(
             @Parameter(description = "ID of the product to retrieve", example = "1") @Positive Long productId);
 
     @Operation(summary = "Create a new product")
@@ -114,7 +114,7 @@ public interface ProductController {
                                 "timestamp": "2025-07-08T20:48:30.631028"
                             }
                             """)))
-    ProductResponseDto createProduct(
+    ProductResponseDto create(
             @RequestBody(description = "Product to create", required = true,
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductCreateRequestDto.class),
@@ -205,7 +205,7 @@ public interface ProductController {
                                 "timestamp": "2025-07-08T20:43:40.833577"
                             }
                             """)))
-    ProductResponseDto updateProduct(
+    ProductResponseDto update(
             @Parameter(description = "ID of the product to update", example = "1") @Positive Long productId,
             @RequestBody(description = "Product to update", required = true,
                     content = @Content(mediaType = "application/json",
@@ -246,6 +246,6 @@ public interface ProductController {
                                 "timestamp": "2025-07-08T20:43:40.833577"
                             }
                             """)))
-    void deleteProductById(
+    void delete(
             @Parameter(description = "ID of the product to delete", example = "1") @Positive Long productId);
 }

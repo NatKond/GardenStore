@@ -26,16 +26,14 @@ public class ProductServiceImpl implements ProductService {
     private final EntityManager entityManager;
 
     @Override
-    public List<Product> getAllProducts(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
-
+    public List<Product> getAll(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
-
         List<Predicate> predicates = new ArrayList<>();
 
         if (categoryId != null) {
-            Category category = categoryService.getCategoryById(categoryId);
+            Category category = categoryService.getById(categoryId);
             predicates.add(criteriaBuilder.equal(root.get("category"), category));
         }
 
@@ -71,32 +69,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long productId) {
+    public Product getById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Product with id " + productId + " not found"));
     }
 
     @Override
-    public Product createProduct(Product product) {
+    public Product create(Product product) {
+        Category category = categoryService.getById(product.getCategory().getCategoryId());
+        //product.setCategory(category);
         return productRepository.save(product);
     }
 
     @Override
-    public Product updateProduct(Long id, Product updatedProduct) {
-        Product existing = getProductById(id);
+    public Product update(Long id, Product updatedProduct) {
+        Product existing = getById(id);
+
+        Category category = categoryService.getById(updatedProduct.getCategory().getCategoryId());
 
         existing.setName(updatedProduct.getName());
         existing.setDescription(updatedProduct.getDescription());
         existing.setPrice(updatedProduct.getPrice());
         existing.setDiscountPrice(updatedProduct.getDiscountPrice());
-        existing.setCategory(updatedProduct.getCategory());
+        existing.setCategory(updatedProduct.getCategory()); //category);
         existing.setImageUrl(updatedProduct.getImageUrl());
 
         return productRepository.save(existing);
     }
 
     @Override
-    public void deleteProductById(Long id) {
-        productRepository.delete(getProductById(id));
+    public void deleteById(Long id) {
+        productRepository.delete(getById(id));
     }
 }

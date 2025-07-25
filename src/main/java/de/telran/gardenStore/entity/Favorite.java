@@ -1,6 +1,4 @@
 package de.telran.gardenStore.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,21 +6,18 @@ import lombok.*;
 @Table(name = "favorites")
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
+@Data
 @Builder(toBuilder = true)
 public class Favorite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long favoriteId;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private AppUser user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

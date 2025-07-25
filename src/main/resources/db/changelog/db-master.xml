@@ -7,6 +7,11 @@
     <include file="tables/01-drop-tables.xml" relativeToChangelogFile="true" />
     <include file="tables/02-create-tables.xml" relativeToChangelogFile="true" />
     <include file="tables/03-add-constraints.xml" relativeToChangelogFile="true" />
+    <include file="tables/10-correct-constraint.xml" relativeToChangelogFile="true" />
     <include file="data/04-truncate-tables.xml" relativeToChangelogFile="true" />
     <include file="data/05-add-data.xml" relativeToChangelogFile="true" />
+    <include file="tables/06-create-additional-tables.xml" relativeToChangelogFile="true" />
+    <include file="tables/07-add-constraints-for-additional-tables.xml" relativeToChangelogFile="true" />
+    <include file="data/08-truncate-additional-tables.xml" relativeToChangelogFile="true" />
+    <include file="data/09-add-data-for-additional-tables.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

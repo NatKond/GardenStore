@@ -14,6 +14,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -43,7 +46,7 @@ public interface UserController {
                             ]
                             """
                     )))
-    List<UserShortResponseDto> getAllUsers();
+    List<UserShortResponseDto> getAll();
 
     @Operation(summary = "Get user by ID")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved user",
@@ -80,9 +83,16 @@ public interface UserController {
                             }
                             """
                     )))
-    UserResponseDto getUserById(
+    UserResponseDto getById(
             @Parameter(description = "ID of the user", example = "1")
             @Positive Long userId);
+
+//    @GetMapping("/me")
+//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    UserResponseDto getCurrent();
+
+//    @PostMapping("/login")
+    LoginResponse login(@org.springframework.web.bind.annotation.RequestBody @Valid LoginRequest loginRequest);
 
     @Operation(summary = "Create a new user")
     @ApiResponse(responseCode = "201", description = "User successfully created",
@@ -123,7 +133,7 @@ public interface UserController {
                             }
                             """
                     )))
-    UserResponseDto createUser(
+    UserResponseDto create(
             @RequestBody(
                     description = "User to create",
                     required = true,
@@ -212,7 +222,9 @@ public interface UserController {
                             }
                             """
                     )))
-    UserResponseDto updateUser(
+
+
+    UserResponseDto update(
             @Parameter(description = "ID of the user to update", example = "4")
             @Positive Long userId,
             @RequestBody(
@@ -257,7 +269,7 @@ public interface UserController {
                             }
                             """
                     )))
-    void deleteUserById(
+    void delete(
             @Parameter(description = "ID of the user to delete", example = "1")
             @Positive Long userId);
 }

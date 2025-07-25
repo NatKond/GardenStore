@@ -17,32 +17,27 @@ Items added to a shopping cart.
 
 ## DTOs
 
-### CartItemCreateRequestDto
-
-```json
-{
-  "cartId": 1,
-  "productId": 1,
-  "quantity": 2
-}
-```
-
 ### CartItemResponseDto
 
 ```json
 {
   "cartItemId": 1,
   "cartId": 1,
-  "productId": 1,
-  "quantity": 2
+  "quantity": 2,
+  "product": {
+    "productId": 5,
+    "name": "string",
+    "description": "string",
+    "price": 9.49,
+    "discountPrice": 6.99
+  }
 }
 ```
 
 ## Endpoints
 
-| Method | URL                    | Role Required  | Description           |
-|--------|------------------------|----------------|-----------------------|
-| GET    | `/cart/items`          | USER           | Get all items in cart |
-| POST   | `/cart/items`          | USER           | Add item to cart      |
-| PUT    | `/cart/items/{itemId}` | USER           | Update item in cart   |
-| DELETE | `/cart/items/{itemId}` | USER           | Remove item from cart |
+| Method | URL                       | Role Required  | Description           |
+|--------|---------------------------|----------------|-----------------------|
+| POST   | `/v1/cart/items`          | USER           | Add item to cart      |
+| PUT    | `/v1/cart/items/{itemId}` | USER           | Update item in cart   |
+| DELETE | `/v1/cart/items/{itemId}` | USER           | Remove item from cart |

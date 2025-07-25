@@ -26,11 +26,11 @@ public class PaymentControllerImpl implements PaymentController {
     private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Override
-    public OrderResponseDto processPayment(@Positive Long orderId,  @Positive BigDecimal paymentAmount) {
+    public OrderResponseDto processPayment(@Positive Long orderId, @Positive BigDecimal paymentAmount) {
         BigDecimal totalAmount = orderService.getTotalAmount(orderId);
         OrderStatus orderStatus = orderService.getById(orderId).getStatus();
 
-        if(orderService.getById(orderId).getStatus() != OrderStatus.AWAITING_PAYMENT) {
+        if (orderService.getById(orderId).getStatus() != OrderStatus.AWAITING_PAYMENT) {
             throw new OrderPaymentRejectedException("Order cannot be paid in current status: " + orderStatus);
         }
 

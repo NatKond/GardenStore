@@ -109,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = order.getItems();
         Optional<OrderItem> orderItemExisting = orderItems.stream().filter(orderItem -> orderItem.getProduct().getProductId().equals(productId)).findFirst();
         if (orderItemExisting.isPresent()) {
-            return updateOrderItem(orderItemExisting.get().getOrderItemId(), quantity);
+            return updateOrderItem(orderItemExisting.get().getOrderItemId(), orderItemExisting.get().getQuantity() + quantity);
         }
 
         Cart cart = cartService.getByUser(order.getUser());

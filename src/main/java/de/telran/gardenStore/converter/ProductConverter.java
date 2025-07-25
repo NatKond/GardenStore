@@ -41,14 +41,10 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
 
     @Override
     public List<ProductShortResponseDto> convertEntityListToDtoList(List<Product> products) {
-        return ConverterEntityToDto.convertList(products, this::convertEntityToShortDto);
-    }
-
-    private ProductShortResponseDto convertEntityToShortDto(Product product) {
-
         modelMapper.typeMap(Product.class, ProductShortResponseDto.class).addMappings(
                 (mapper ->
                         mapper.map(productEntity -> productEntity.getCategory().getCategoryId(), ProductShortResponseDto::setCategoryId)));
-        return modelMapper.map(product, ProductShortResponseDto.class);
+
+        return ConverterEntityToDto.convertList(products, (product) ->  modelMapper.map(product, ProductShortResponseDto.class));
     }
 }

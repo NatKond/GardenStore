@@ -111,7 +111,6 @@ public class OrderControllerImplTest extends AbstractTest {
                 .orderId(3L)
                 .build();
 
-        when(userService.getCurrent()).thenReturn(user1);
         when(orderConverter.convertDtoToEntity(orderCreateRequestDto)).thenReturn(orderToCreate);
         when(orderService.create(orderToCreate)).thenReturn(orderCreated);
         when(orderConverter.convertEntityToDto(orderCreated)).thenReturn(orderResponseCreatedDto);
@@ -124,7 +123,6 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(orderResponseCreatedDto)));
 
-        verify(userService).getCurrent();
         verify(orderConverter).convertDtoToEntity(orderCreateRequestDto);
         verify(orderService).create(orderToCreate);
         verify(orderConverter).convertEntityToDto(orderCreated);
@@ -154,7 +152,6 @@ public class OrderControllerImplTest extends AbstractTest {
                 .items(orderItems)
                 .build();
 
-        when(userService.getCurrent()).thenReturn(user1);
         when(orderConverter.convertDtoToEntity(orderInvalidCreateRequestDto)).thenReturn(orderInvalid);
         when(orderService.create(orderToCreate)).thenThrow(new EmptyOrderException("Order is empty."));
 
@@ -167,7 +164,6 @@ public class OrderControllerImplTest extends AbstractTest {
                         jsonPath("$.exception").value("EmptyOrderException"),
                         jsonPath("$.message").value("Order is empty."));
 
-        verify(userService).getCurrent();
         verify(orderConverter).convertDtoToEntity(orderInvalidCreateRequestDto);
     }
 

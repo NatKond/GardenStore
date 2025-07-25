@@ -33,12 +33,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category update(Long categoryId, Category updatedCategory) {
+    public Category update(Long categoryId, Category category) {
         Category existing = getById(categoryId);
-        if (!existing.getName().equals(updatedCategory.getName())) {
-            checkCategoryNameIsUnique(updatedCategory.getName());
+        if (!existing.getName().equals(category.getName())) {
+            checkCategoryNameIsUnique(category.getName());
         }
-        existing.setName(updatedCategory.getName());
+        existing.setName(category.getName());
 
         return categoryRepository.save(existing);
     }

@@ -3,6 +3,7 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.EmptyOrderException;
+import de.telran.gardenStore.exception.OrderAccessDeniedException;
 import de.telran.gardenStore.exception.OrderModificationException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
@@ -29,8 +30,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long orderId) {
-        return orderRepository.findById(orderId)
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + orderId + " not found"));
+        checkOrderAccess(order);
+        return order;
     }
 
     @Override
@@ -56,10 +59,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order create(Order order) {
-        Cart cart = cartService.getByUser(order.getUser());
-        List<CartItem> cartItems = cart.getItems();
-        List<OrderItem> orderItems = order.getItems();
+        AppUser user = userService.getCurrent();
+        order.setUser(user);
+        if (order.getContactPhone() == null) {
+            order.setContactPhone(user.getPhoneNumber());
+        }
 
+        Cart cart = cartService.getByUser(user);
+        List<CartItem> cartItems = cart.getItems();
+
+        List<OrderItem> orderItems = order.getItems();
         Iterator<OrderItem> iterator = orderItems.iterator();
         while (iterator.hasNext()) {
             OrderItem orderItem = iterator.next();
@@ -77,9 +86,9 @@ public class OrderServiceImpl implements OrderService {
                 iterator.remove();
             }
         }
-        if (orderItems.isEmpty()) {
-            throw new EmptyOrderException("Order is empty.");
-        }
+
+        checkOrderNotEmpty(order);
+
         cartService.update(cart);
         return orderRepository.save(order);
     }
@@ -95,11 +104,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order addOrderItem(Long orderId, Long productId, Integer quantity) {
         Order order = getById(orderId);
+        checkOrderAccess(order);
         checkOrderCanBeModified(order);
         List<OrderItem> orderItems = order.getItems();
         Optional<OrderItem> orderItemExisting = orderItems.stream().filter(orderItem -> orderItem.getProduct().getProductId().equals(productId)).findFirst();
         if (orderItemExisting.isPresent()) {
-            return updateOrderItem(orderItemExisting.get().getOrderItemId(), quantity);
+            return updateOrderItem(orderItemExisting.get().getOrderItemId(), orderItemExisting.get().getQuantity() + quantity);
         }
 
         Cart cart = cartService.getByUser(order.getUser());
@@ -128,9 +138,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public Order updateOrderItem(Long orderItemId, Integer quantity) {
-
         OrderItem orderItem = orderItemService.getById(orderItemId);
         Order order = orderItem.getOrder();
+        checkOrderAccess(order);
         checkOrderCanBeModified(order);
 
         Cart cart = cartService.getByUser(order.getUser());
@@ -151,11 +161,11 @@ public class OrderServiceImpl implements OrderService {
         OrderItem orderItem = orderItemService.getById(orderItemId);
 
         Order order = orderItem.getOrder();
+        checkOrderAccess(order);
+        checkOrderCanBeModified(order);
         order.getItems().remove(orderItem);
 
-        if (order.getItems().isEmpty()) {
-            throw new EmptyOrderException("Order is empty.");
-        }
+        checkOrderNotEmpty(order);
 
         return orderRepository.save(order);
     }
@@ -163,6 +173,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancel(Long orderId) {
         Order order = getById(orderId);
+        checkOrderAccess(order);
         order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
     }
@@ -177,9 +188,21 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void checkOrderCanBeModified(Order order){
+    private void checkOrderNotEmpty(Order order) {
+        if (order.getItems().isEmpty()) {
+            throw new EmptyOrderException("Order is empty");
+        }
+    }
+
+    private void checkOrderCanBeModified(Order order) {
         if (order.getStatus() != OrderStatus.CREATED) {
             throw new OrderModificationException("Order cannot be modified in current status " + order.getStatus());
+        }
+    }
+
+    private void checkOrderAccess(Order order) {
+        if (order.getUser() != userService.getCurrent()) {
+            throw new OrderAccessDeniedException("Access denied");
         }
     }
 }

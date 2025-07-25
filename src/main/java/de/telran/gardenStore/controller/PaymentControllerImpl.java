@@ -9,13 +9,16 @@ import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
 import de.telran.gardenStore.exception.OrderPaymentRejectedException;
 import de.telran.gardenStore.service.OrderService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 @RestController
+@Validated
 public class PaymentControllerImpl implements PaymentController {
 
     private final OrderService orderService;
@@ -23,7 +26,7 @@ public class PaymentControllerImpl implements PaymentController {
     private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Override
-    public OrderResponseDto processPayment(Long orderId, BigDecimal paymentAmount) {
+    public OrderResponseDto processPayment(@Positive Long orderId,  @Positive BigDecimal paymentAmount) {
         BigDecimal totalAmount = orderService.getTotalAmount(orderId);
         OrderStatus orderStatus = orderService.getById(orderId).getStatus();
 

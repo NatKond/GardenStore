@@ -37,7 +37,6 @@ public interface CategoryController {
                                 }
                             ]
                             """)))
-    //@GetMapping
     List<CategoryShortResponseDto> getAll();
 
     @Operation(summary = "Get category by ID")
@@ -71,11 +70,10 @@ public interface CategoryController {
                                 "timestamp": "2025-07-08T22:06:22.675691"
                             }
                             """)))
-    //@GetMapping("/{categoryId}")
     CategoryResponseDto getById(@Parameter(description = "ID of the category", example = "1")
                                         @Positive Long categoryId);
 
-    @Operation(summary = "Create a new category")
+    @Operation(summary = "Create a new category (only for role ADMIN)")
     @ApiResponse(responseCode = "201", description = "Category successfully created",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CategoryResponseDto.class),
@@ -110,11 +108,6 @@ public interface CategoryController {
                                 "timestamp": "2025-07-08T22:07:08.754019"
                             }
                             """)))
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasRole('ADMIN')")
-//    CategoryResponseDto create(@org.springframework.web.bind.annotation.RequestBody @Valid CategoryCreateRequestDto dto);
-
     CategoryResponseDto create(
             @RequestBody(
                     description = "Category to create",
@@ -143,13 +136,7 @@ public interface CategoryController {
             )
             @Valid CategoryCreateRequestDto dto);
 
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    @PutMapping("/{categoryId}")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    CategoryResponseDto update(@PathVariable @Positive Long categoryId,
-//                               @RequestBody @Valid CategoryCreateRequestDto dto);
-
-    @Operation(summary = "Update existing category")
+    @Operation(summary = "Update existing category (only for role ADMIN)")
     @ApiResponse(responseCode = "202", description = "Category successfully updated",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CategoryResponseDto.class),
@@ -230,11 +217,8 @@ public interface CategoryController {
                                        )
                                        @Valid CategoryCreateRequestDto dto);
 
-//    @DeleteMapping("/{categoryId}")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    void delete(@PathVariable @Positive Long categoryId);
 
-    @Operation(summary = "Delete category by ID")
+    @Operation(summary = "Delete category by ID (only for role ADMIN)")
     @ApiResponse(responseCode = "204", description = "Category successfully deleted")
     @ApiResponse(responseCode = "404", description = "Category not found",
             content = @Content(mediaType = "application/json",

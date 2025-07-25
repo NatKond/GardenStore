@@ -82,7 +82,7 @@ public interface ProductController {
     ProductResponseDto getById(
             @Parameter(description = "ID of the product to retrieve", example = "1") @Positive Long productId);
 
-    @Operation(summary = "Create a new product")
+    @Operation(summary = "Create a new product (only for role ADMIN)")
     @ApiResponse(responseCode = "201", description = "Product created",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ProductResponseDto.class),
@@ -162,7 +162,7 @@ public interface ProductController {
                             }))
             @Valid ProductCreateRequestDto productRequest);
 
-    @Operation(summary = "Update existing product")
+    @Operation(summary = "Update existing product (only for role ADMIN)")
     @ApiResponse(responseCode = "202", description = "Product updated",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ProductResponseDto.class),
@@ -233,7 +233,7 @@ public interface ProductController {
                             }))
             @Valid ProductCreateRequestDto productRequest);
 
-    @Operation(summary = "Delete product by ID")
+    @Operation(summary = "Delete product by ID (only for role ADMIN)")
     @ApiResponse(responseCode = "204", description = "Product successfully deleted")
     @ApiResponse(responseCode = "404", description = "Product not found",
             content = @Content(mediaType = "application/json",

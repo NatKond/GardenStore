@@ -1,11 +1,8 @@
 package de.telran.gardenStore.controller;
-
-import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
+import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.service.FavoriteService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
@@ -47,6 +44,6 @@ public class FavoriteControllerImpl implements FavoriteController {
     @DeleteMapping("/{favoriteId}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public void delete(@PathVariable @Positive Long favoriteId) {
-        favoriteService.deleteFavoriteById(favoriteId);
+        favoriteService.deleteById(favoriteId);
     }
 }

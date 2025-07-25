@@ -1,6 +1,4 @@
 package de.telran.gardenStore.controller;
-
-import de.telran.gardenStore.dto.FavoriteCreateRequestDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.dto.ApiErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,10 +6,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 
 import java.util.List;
@@ -19,7 +15,7 @@ import java.util.List;
 @Tag(name = "Favorites", description = "Favorite Controller")
 public interface FavoriteController {
 
-    @Operation(summary = "Get all favorites by user ID")
+    @Operation(summary = "Get all favorites for current user")
     @ApiResponse(responseCode = "200", description = "List of user's favorite products",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = FavoriteResponseDto.class),
@@ -60,9 +56,9 @@ public interface FavoriteController {
                                 "timestamp": "2025-07-08T23:34:45.605807"
                             }
                             """)))
-    List<FavoriteResponseDto> getAllForCurrentUser(@Parameter(description = "User ID") @Positive Long userId);
+    List<FavoriteResponseDto> getAllForCurrentUser();
 
-    @Operation(summary = "Add product to favorites")
+    @Operation(summary = "Add product to favorites for current user")
     @ApiResponse(responseCode = "201", description = "Favorite created",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = FavoriteResponseDto.class),
@@ -81,24 +77,14 @@ public interface FavoriteController {
     @ApiResponse(responseCode = "404", description = "User or product not found",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiErrorResponse.class),
-                    examples = {
-                            @ExampleObject(name = "User not found", value = """
-                                    {
-                                        "exception": "UserNotFoundException",
-                                        "message": "User with id 12 not found",
-                                        "status": 404,
-                                        "timestamp": "2025-07-08T23:37:49.213879"
-                                    }
-                                    """),
-                            @ExampleObject(name = "Product not found", value = """
+                    examples = @ExampleObject(name = "Product not found", value = """
                                     {
                                         "exception": "ProductNotFoundException",
                                         "message": "Product with id 12 not found",
                                         "status": 404,
                                         "timestamp": "2025-07-08T23:36:11.847041"
                                     }
-                                    """)
-                    }))
+                                    """)))
     @ApiResponse(responseCode = "409", description = "Favorite already exists",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiErrorResponse.class),
@@ -111,16 +97,7 @@ public interface FavoriteController {
                             }
                             """)))
     FavoriteResponseDto create(
-            @Parameter(description = "Add favorite for user") @Positive Long userId,
-            @RequestBody(description = "Product to add to favorites",
-                    required = true,
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(name = "Favorite create request", value = """
-                                    {
-                                        "productId": 10
-                                    }
-                                    """)))
-            @Valid FavoriteCreateRequestDto favoriteCreateRequestDto);
+            @Parameter(description = "Add favorite for current user", example = "4") @Positive Long productId);
 
     @Operation(summary = "Delete favorite by ID")
     @ApiResponse(responseCode = "204", description = "Favorite deleted")

@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +31,20 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserShortResponseDto> getAll() {
         return userConverter.convertEntityListToDtoList(userService.getAll());
     }
 
     @Override
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponseDto getById(@PathVariable @Positive Long userId) {
         return userConverter.convertEntityToDto(userService.getById(userId));
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @Override
     public UserResponseDto getCurrent() {
         return userConverter.convertEntityToDto(
@@ -47,7 +52,9 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public LoginResponse login(@RequestBody  @Valid LoginRequest loginRequest) {
         return authenticationService.authenticate(loginRequest);
     }
 
@@ -61,14 +68,14 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PutMapping("/{userId}")
+    @PutMapping
     public UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest) {
         return userConverter.convertEntityToDto(
                 userService.update(userConverter.convertDtoToEntity(userRequest)));
     }
 
     @Override
-    @DeleteMapping("/{userId}")
+    @DeleteMapping()
     public void delete() {
         userService.delete();
     }

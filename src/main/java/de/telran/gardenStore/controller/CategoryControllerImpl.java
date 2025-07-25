@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,34 +29,37 @@ public class CategoryControllerImpl implements CategoryController {
     @Override
     @GetMapping
     public List<CategoryShortResponseDto> getAll() {
-        return categoryConverter.convertEntityListToDtoList(categoryService.getAllCategories());
+        return categoryConverter.convertEntityListToDtoList(categoryService.getAll());
     }
 
     @Override
     @GetMapping("/{categoryId}")
     public CategoryResponseDto getById(@PathVariable @Positive Long categoryId) {
-        return categoryConverter.convertEntityToDto(categoryService.getCategoryById(categoryId));
+        return categoryConverter.convertEntityToDto(categoryService.getById(categoryId));
     }
 
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponseDto create(@RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(categoryService.createCategory(
+        return categoryConverter.convertEntityToDto(categoryService.create(
                 categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponseDto update(@PathVariable @Positive Long categoryId,
-                                              @RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(categoryService.updateCategory(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+                                      @RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+        return categoryConverter.convertEntityToDto(categoryService.update(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
     @DeleteMapping("/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable @Positive Long categoryId) {
-        categoryService.deleteCategoryById(categoryId);
+        categoryService.deleteById(categoryId);
     }
 }

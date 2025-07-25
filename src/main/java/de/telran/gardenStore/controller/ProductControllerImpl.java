@@ -41,13 +41,13 @@ public class ProductControllerImpl implements ProductController {
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("Min price cannot be greater than max price.");
         }
-        return productConverter.convertEntityListToDtoList(productService.getAllProducts(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection));
+        return productConverter.convertEntityListToDtoList(productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection));
     }
 
     @Override
     @GetMapping("/{productId}")
     public ProductResponseDto getById(@PathVariable @Positive Long productId) {
-        return productConverter.convertEntityToDto(productService.getProductById(productId));
+        return productConverter.convertEntityToDto(productService.getById(productId));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ProductControllerImpl implements ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductResponseDto create(@RequestBody @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.createProduct(
+        return productConverter.convertEntityToDto(productService.create(
                 productConverter.convertDtoToEntity(productRequest)));
     }
 
@@ -64,8 +64,8 @@ public class ProductControllerImpl implements ProductController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{productId}")
     public ProductResponseDto update(@PathVariable @Positive Long productId,
-                                            @RequestBody @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.updateProduct(productId,
+                                     @RequestBody @Valid ProductCreateRequestDto productRequest) {
+        return productConverter.convertEntityToDto(productService.update(productId,
                 productConverter.convertDtoToEntity(productRequest)));
     }
 
@@ -73,6 +73,6 @@ public class ProductControllerImpl implements ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}")
     public void delete(@PathVariable @Positive Long productId) {
-        productService.deleteProductById(productId);
+        productService.deleteById(productId);
     }
 }

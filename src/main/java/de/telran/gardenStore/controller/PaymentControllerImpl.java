@@ -9,25 +9,35 @@ import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
 import de.telran.gardenStore.exception.OrderPaymentRejectedException;
 import de.telran.gardenStore.service.OrderService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/v1/payment")
+@Validated
 public class PaymentControllerImpl implements PaymentController {
 
     private final OrderService orderService;
 
     private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
+    @PostMapping()
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @Override
-    public OrderResponseDto processPayment(Long orderId, BigDecimal paymentAmount) {
+    public OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @RequestParam @Positive BigDecimal paymentAmount) {
         BigDecimal totalAmount = orderService.getTotalAmount(orderId);
         OrderStatus orderStatus = orderService.getById(orderId).getStatus();
 
-        if(orderService.getById(orderId).getStatus() != OrderStatus.AWAITING_PAYMENT) {
+        if (orderService.getById(orderId).getStatus() != OrderStatus.AWAITING_PAYMENT) {
             throw new OrderPaymentRejectedException("Order cannot be paid in current status: " + orderStatus);
         }
 

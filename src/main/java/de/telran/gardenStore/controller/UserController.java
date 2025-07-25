@@ -4,6 +4,8 @@ import de.telran.gardenStore.dto.ApiErrorResponse;
 import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.dto.UserShortResponseDto;
+import de.telran.gardenStore.dto.security.LoginRequest;
+import de.telran.gardenStore.dto.security.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +16,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ import java.util.List;
 
 public interface UserController {
 
-    @Operation(summary = "Get all users")
+    @Operation(summary = "Get all users (only for role ADMIN)")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list of users",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserShortResponseDto.class),
                     examples = @ExampleObject(name = "List of users", value = """
@@ -48,7 +47,7 @@ public interface UserController {
                     )))
     List<UserShortResponseDto> getAll();
 
-    @Operation(summary = "Get user by ID")
+    @Operation(summary = "Get user by ID (only for role ADMIN)")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved user",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class),
                     examples = @ExampleObject(name = "Alice Johnson", value = """
@@ -87,12 +86,36 @@ public interface UserController {
             @Parameter(description = "ID of the user", example = "1")
             @Positive Long userId);
 
-//    @GetMapping("/me")
-//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @Operation(summary = "Get current user")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved user",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class),
+                    examples = @ExampleObject(name = "Alice Johnson", value = """
+                            {
+                                "userId": 1,
+                                "name": "Alice Johnson",
+                                "email": "alice.johnson@example.com",
+                                "phoneNumber": "+1234567890",
+                                "role": "ROLE_USER",
+                                "favorites": [
+                                    {
+                                        "favoriteId": 1,
+                                        "product": {
+                                            "productId": 5,
+                                            "name": "Tulip Bulb Mix (10 pcs)",
+                                            "description": "Colorful tulip bulbs perfect for spring blooms",
+                                            "price": 9.49,
+                                            "discountPrice": 6.99
+                                        }
+                                    }
+                                ]
+                            }
+                            """)))
     UserResponseDto getCurrent();
 
-//    @PostMapping("/login")
-    LoginResponse login(@org.springframework.web.bind.annotation.RequestBody @Valid LoginRequest loginRequest);
+    @Operation(summary = "Login for existing user")
+    @ApiResponse(responseCode = "200", description = "Successfully authenticated user",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class)))
+    LoginResponse login(@Valid LoginRequest loginRequest);
 
     @Operation(summary = "Create a new user")
     @ApiResponse(responseCode = "201", description = "User successfully created",
@@ -226,7 +249,6 @@ public interface UserController {
 
     UserResponseDto update(
             @Parameter(description = "ID of the user to update", example = "4")
-            @Positive Long userId,
             @RequestBody(
                     description = "User to update",
                     required = true,
@@ -269,7 +291,5 @@ public interface UserController {
                             }
                             """
                     )))
-    void delete(
-            @Parameter(description = "ID of the user to delete", example = "1")
-            @Positive Long userId);
+    void delete();
 }

@@ -20,7 +20,6 @@ import jakarta.validation.constraints.Positive;
 import java.util.List;
 
 @Tag(name = "Users", description = "User Controller")
-
 public interface UserController {
 
     @Operation(summary = "Get all users (only for role ADMIN)")
@@ -115,7 +114,40 @@ public interface UserController {
     @Operation(summary = "Login for existing user")
     @ApiResponse(responseCode = "200", description = "Successfully authenticated user",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class)))
-    LoginResponse login(@Valid LoginRequest loginRequest);
+    LoginResponse login(
+            @RequestBody(description = "User to login",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LoginRequest.class),
+                            examples = {
+                                    @ExampleObject(name = "Alice Johnson(ADMIN)", value = """
+                                    {
+                                      "email": "alice.johnson@example.com",
+                                      "password": "12345"
+                                    }
+                                    """),
+                                    @ExampleObject(name = "Bob Smith(USER)", value = """
+                                    {
+                                      "email": "bob.smith@example.com",
+                                      "password": "12345"
+                                    }
+                                    """),
+                                    @ExampleObject(name = "Carol Lee(USER)", value = """
+                                    {
+                                      "email": "carol.lee@example.com",
+                                      "password": "12345"
+                                    }
+                                    """),
+                                    @ExampleObject(name = "David Brown(USER)", value = """
+                                    {
+                                      "email": "david.brown@example.com",
+                                      "password": "12345"
+                                    }
+                                    """)
+                            }
+                    ))
+            @Valid LoginRequest loginRequest);
 
     @Operation(summary = "Create a new user")
     @ApiResponse(responseCode = "201", description = "User successfully created",
@@ -245,8 +277,6 @@ public interface UserController {
                             }
                             """
                     )))
-
-
     UserResponseDto update(
             @Parameter(description = "ID of the user to update", example = "4")
             @RequestBody(

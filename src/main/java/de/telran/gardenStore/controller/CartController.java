@@ -1,4 +1,5 @@
 package de.telran.gardenStore.controller;
+
 import de.telran.gardenStore.dto.ApiErrorResponse;
 import de.telran.gardenStore.dto.CartResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,13 +54,13 @@ public interface CartController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiErrorResponse.class),
                     examples = @ExampleObject(name = "Cart not found", value = """
-                        {
-                            "exception": "CartNotFoundException",
-                            "message": "Cart for user 5 not found",
-                            "status": 404,
-                            "timestamp": "2025-07-25T11:02:54.107778"
-                        }
-                        """)))
+                            {
+                                "exception": "CartNotFoundException",
+                                "message": "Cart for user 5 not found",
+                                "status": 404,
+                                "timestamp": "2025-07-25T11:02:54.107778"
+                            }
+                            """)))
     CartResponseDto getCartForCurrentUser();
 
     @Operation(summary = "Add product to cart",

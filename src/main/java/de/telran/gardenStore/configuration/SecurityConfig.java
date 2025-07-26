@@ -32,11 +32,20 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request
-                                .requestMatchers(HttpMethod.POST,"/v1/users/register").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/v1/users/login").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/v1/products").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/v1/categories").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/v1/categories/**").permitAll()
+                                .requestMatchers(HttpMethod.POST,
+                                        "/v1/users/register",
+                                        "/v1/users/login").permitAll()
+                                .requestMatchers(HttpMethod.GET,
+                                        "/v1/products",
+                                        "/v1/products/**",
+                                        "/v1/categories",
+                                        "/v1/categories/**"
+                                ).permitAll()
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**"
+                                ).permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session

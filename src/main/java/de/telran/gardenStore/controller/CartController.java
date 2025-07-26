@@ -180,7 +180,7 @@ public interface CartController {
                             }
                             """)))
     CartResponseDto updateCartItem(
-            @Parameter(description = "ID of the cart item", example = "7") @Positive Long cartItemId,
+            @Parameter(description = "ID of the cart item", example = "6") @Positive Long cartItemId,
             @Parameter(description = "New quantity", example = "4") @Positive Integer quantity);
 
     @Operation(summary = "Delete cart item",

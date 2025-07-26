@@ -57,6 +57,7 @@ class FavoriteServiceImplTest extends AbstractTest {
 
         Favorite expected = favorite1;
 
+        when(userService.getCurrent()).thenReturn(user1);
         when(favoriteRepository.findById(favoriteId)).thenReturn(Optional.of(favorite1));
 
         Favorite actual = favoriteService.getById(favoriteId);
@@ -118,6 +119,7 @@ class FavoriteServiceImplTest extends AbstractTest {
     void testDeleteByIdPositiveCase() {
         Long favoriteId = favorite1.getFavoriteId();
 
+        when(userService.getCurrent()).thenReturn(user1);
         when(favoriteRepository.findById(favoriteId)).thenReturn(Optional.of(favorite1));
 
         favoriteService.deleteById(favoriteId);

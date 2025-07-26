@@ -18,6 +18,8 @@ public interface OrderService {
 
     Order create(Order order);
 
+    void updateAll (List<Order> orders);
+
     Order updateStatus(Long orderId, OrderStatus status);
 
     Order addOrderItem(Long orderId, Long productId, Integer quantity);

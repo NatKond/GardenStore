@@ -2,9 +2,9 @@ package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
+import de.telran.gardenStore.exception.FavoriteAccessDeniedException;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
-import de.telran.gardenStore.exception.OrderAccessDeniedException;
 import de.telran.gardenStore.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,7 +55,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private void checkFavoriteOwnership(Favorite favorite) {
         if (favorite.getUser() != userService.getCurrent()) {
-            throw new OrderAccessDeniedException("Access denied");
+            throw new FavoriteAccessDeniedException("Access denied");
         }
     }
 }

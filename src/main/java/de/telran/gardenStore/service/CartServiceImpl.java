@@ -3,7 +3,7 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
-import de.telran.gardenStore.exception.OrderAccessDeniedException;
+import de.telran.gardenStore.exception.CartAccessDeniedException;
 import de.telran.gardenStore.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -108,7 +108,7 @@ public class CartServiceImpl implements CartService {
 
     private void checkCartOwnership(Cart cart) {
         if (cart.getUser() != userService.getCurrent()) {
-            throw new OrderAccessDeniedException("Access denied");
+            throw new CartAccessDeniedException("Access denied");
         }
     }
 }

@@ -4,6 +4,7 @@ import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
+import de.telran.gardenStore.exception.OrderAccessDeniedException;
 import de.telran.gardenStore.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,10 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Favorite getById(Long favoriteId) {
-        return favoriteRepository.findById(favoriteId).orElseThrow(()
+        Favorite favorite = favoriteRepository.findById(favoriteId).orElseThrow(()
                 -> new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found"));
+        checkFavoriteOwnership(favorite);
+        return favorite;
     }
 
     @Override
@@ -48,5 +51,11 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void deleteById(Long favoriteId) {
         favoriteRepository.delete(getById(favoriteId));
+    }
+
+    private void checkFavoriteOwnership(Favorite favorite) {
+        if (favorite.getUser() != userService.getCurrent()) {
+            throw new OrderAccessDeniedException("Access denied");
+        }
     }
 }

@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
     public Order getById(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + orderId + " not found"));
-        checkOrderAccess(order);
+        checkOrderOwnership(order);
         return order;
     }
 
@@ -94,6 +94,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void updateAll (List<Order> orders){
+        orderRepository.saveAll(orders);
+    }
+
+    @Override
     public Order updateStatus(Long orderId, OrderStatus status) {
         Order order = getById(orderId);
         order.setStatus(status);
@@ -104,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order addOrderItem(Long orderId, Long productId, Integer quantity) {
         Order order = getById(orderId);
-        checkOrderAccess(order);
+        checkOrderOwnership(order);
         checkOrderCanBeModified(order);
         List<OrderItem> orderItems = order.getItems();
         Optional<OrderItem> orderItemExisting = orderItems.stream().filter(orderItem -> orderItem.getProduct().getProductId().equals(productId)).findFirst();
@@ -140,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
     public Order updateOrderItem(Long orderItemId, Integer quantity) {
         OrderItem orderItem = orderItemService.getById(orderItemId);
         Order order = orderItem.getOrder();
-        checkOrderAccess(order);
+        checkOrderOwnership(order);
         checkOrderCanBeModified(order);
 
         Cart cart = cartService.getByUser(order.getUser());
@@ -161,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
         OrderItem orderItem = orderItemService.getById(orderItemId);
 
         Order order = orderItem.getOrder();
-        checkOrderAccess(order);
+        checkOrderOwnership(order);
         checkOrderCanBeModified(order);
         order.getItems().remove(orderItem);
 
@@ -173,7 +178,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancel(Long orderId) {
         Order order = getById(orderId);
-        checkOrderAccess(order);
         order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
     }
@@ -200,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void checkOrderAccess(Order order) {
+    private void checkOrderOwnership(Order order) {
         if (order.getUser() != userService.getCurrent()) {
             throw new OrderAccessDeniedException("Access denied");
         }

@@ -72,7 +72,6 @@ public abstract class AbstractTest {
     protected OrderItemCreateRequestDto orderItemCreateRequestDto2;
     protected OrderItemResponseDto orderItemResponseDtoCreated1;
     protected OrderItemResponseDto orderItemResponseDtoCreated2;
-
     protected CategoryShortResponseDto categoryShortResponseDto1;
     protected CategoryShortResponseDto categoryShortResponseDto2;
     protected CategoryShortResponseDto categoryShortResponseDto3;

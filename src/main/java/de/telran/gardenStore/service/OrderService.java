@@ -4,6 +4,7 @@ import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.enums.OrderStatus;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderService {
@@ -12,13 +13,13 @@ public interface OrderService {
 
     List<Order> getAllForCurrentUser();
 
-    List<Order> getAllActive();
+    List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt);
 
     BigDecimal getTotalAmount(Long orderId);
 
     Order create(Order order);
 
-    void updateAll (List<Order> orders);
+    void update (Order order);
 
     Order updateStatus(Long orderId, OrderStatus status);
 

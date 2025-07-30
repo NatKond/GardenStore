@@ -5,7 +5,8 @@ import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.Collection;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -13,5 +14,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByUser(AppUser user);
 
-    List<Order> findAllByStatusNotIn(Collection<OrderStatus> statuses);
+    List<Order> findByStatusAndUpdatedAtAfter(OrderStatus status, LocalDateTime updatedAt);
 }

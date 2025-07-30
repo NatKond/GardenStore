@@ -35,7 +35,9 @@ public class PaymentControllerImpl implements PaymentController {
         }
 
         if (totalAmount.equals(paymentAmount)) {
-            return orderConverter.convertEntityToDto(orderService.updateStatus(orderId, OrderStatus.PAID));
+            OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(orderService.updateStatus(orderId, OrderStatus.PAID));
+            orderResponseDto.setTotalAmount(totalAmount);
+            return orderResponseDto;
         } else {
             throw new IncorrectPaymentAmountException("Payment amount is incorrect");
         }

@@ -67,19 +67,6 @@ public abstract class AbstractTest {
     protected OrderItem orderItemToCreate1;
     protected OrderItem orderItemToCreate2;
 
-    protected OrderShortResponseDto orderShortResponseDto1;
-    protected OrderShortResponseDto orderShortResponseDto2;
-    protected OrderResponseDto orderResponseDto1;
-    protected OrderResponseDto orderResponseCreatedDto;
-    protected OrderCreateRequestDto orderCreateRequestDto;
-
-    protected OrderItemResponseDto orderItemResponseDto1;
-    protected OrderItemResponseDto orderItemResponseDto2;
-    protected OrderItemCreateRequestDto orderItemCreateRequestDto1;
-    protected OrderItemCreateRequestDto orderItemCreateRequestDto2;
-    protected OrderItemResponseDto orderItemResponseDtoCreated1;
-    protected OrderItemResponseDto orderItemResponseDtoCreated2;
-
     protected CategoryShortResponseDto categoryShortResponseDto1;
     protected CategoryShortResponseDto categoryShortResponseDto2;
     protected CategoryShortResponseDto categoryShortResponseDto3;
@@ -104,6 +91,24 @@ public abstract class AbstractTest {
     protected FavoriteResponseDto favoriteResponseDto1;
     protected FavoriteResponseDto favoriteResponseDto2;
     protected FavoriteResponseDto favoriteResponseCreatedDto;
+
+    protected CartResponseDto cartResponseDto1;
+    protected CartResponseDto cartResponseDto2;
+    protected CartItemResponseDto cartItemResponseDto1;
+    protected CartItemResponseDto cartItemResponseDto2;
+    protected CartItemResponseDto cartItemResponseDto3;
+
+    protected OrderShortResponseDto orderShortResponseDto1;
+    protected OrderShortResponseDto orderShortResponseDto2;
+    protected OrderResponseDto orderResponseDto1;
+    protected OrderResponseDto orderResponseCreatedDto;
+    protected OrderCreateRequestDto orderCreateRequestDto;
+    protected OrderItemResponseDto orderItemResponseDto1;
+    protected OrderItemResponseDto orderItemResponseDto2;
+    protected OrderItemCreateRequestDto orderItemCreateRequestDto1;
+    protected OrderItemCreateRequestDto orderItemCreateRequestDto2;
+    protected OrderItemResponseDto orderItemResponseDtoCreated1;
+    protected OrderItemResponseDto orderItemResponseDtoCreated2;
 
     @BeforeEach
     protected void setUp() {
@@ -563,6 +568,40 @@ public abstract class AbstractTest {
                 .categoryId(productCreated.getCategory().getCategoryId())
                 .description(productCreated.getDescription())
                 .build();
+    }
+
+    private void initCartDtos(){
+        cartResponseDto1 = CartResponseDto.builder()
+                .cartId(cart1.getCartId())
+                .userId(cart1.getUser().getUserId())
+                .build();
+
+        cartResponseDto2 = CartResponseDto.builder()
+                .cartId(cart2.getCartId())
+                .userId(cart2.getUser().getUserId())
+                .build();
+
+        cartItemResponseDto1 = CartItemResponseDto.builder()
+                .cartItemId(cartItem1.getCartItemId())
+                .product(productShortResponseDto1)
+                .quantity(cartItem1.getQuantity())
+                .build();
+
+        cartItemResponseDto2 = CartItemResponseDto.builder()
+                .cartItemId(cartItem2.getCartItemId())
+                .product(productShortResponseDto2)
+                .quantity(cartItem2.getQuantity())
+                .build();
+
+        cartResponseDto1.setItems(new ArrayList<>(List.of(cartItemResponseDto1, cartItemResponseDto2)));
+
+        cartItemResponseDto3 = CartItemResponseDto.builder()
+                .cartItemId(cartItem3.getCartItemId())
+                .product(productShortResponseDto1)
+                .quantity(cartItem3.getQuantity())
+                .build();
+
+        cartResponseDto2.setItems(new ArrayList<>(List.of(cartItemResponseDto3)));
     }
 
     private void initUserDtos() {

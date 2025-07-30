@@ -40,9 +40,9 @@ public class JwtServiceImpl implements JwtService {
     private String generateToken(Map<String, Object> claims, AppUser user) {
         return Jwts.builder()
                 .claims()
+                .subject(user.getEmail())
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plus(Duration.ofMinutes(30))))
-                .subject(user.getEmail())
                 .add(claims)
                 .and()
                 .signWith(secretKey)

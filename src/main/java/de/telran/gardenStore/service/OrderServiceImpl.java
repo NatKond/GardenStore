@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +45,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllActive() {
-        return orderRepository.findAllByStatusNotIn(List.of(OrderStatus.CANCELLED, OrderStatus.DELIVERED));
+    public List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt) {
+        return orderRepository.findByStatusAndUpdatedAtAfter(status, updatedAt);
     }
 
     @Override
@@ -68,16 +71,15 @@ public class OrderServiceImpl implements OrderService {
         Cart cart = cartService.getByUser(user);
         List<CartItem> cartItems = cart.getItems();
 
+        Map<Long, CartItem> cartItemsMap = cartItems.stream().collect(Collectors.toMap(cartItem -> cartItem.getProduct().getProductId(), cartItem -> cartItem));
+
         List<OrderItem> orderItems = order.getItems();
         Iterator<OrderItem> iterator = orderItems.iterator();
         while (iterator.hasNext()) {
             OrderItem orderItem = iterator.next();
-            Optional<CartItem> cartItemOptional = cartItems.stream()
-                    .filter(cartItem -> cartItem.getProduct().getProductId().equals(orderItem.getProduct().getProductId()))
-                    .findFirst();
 
-            if (cartItemOptional.isPresent()) {
-                CartItem cartItem = cartItemOptional.get();
+            if (cartItemsMap.containsKey(orderItem.getProduct().getProductId())) {
+                CartItem cartItem = cartItemsMap.get(orderItem.getProduct().getProductId());
                 orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
 
                 processCartItem(cartItem, cartItems, orderItem.getQuantity());
@@ -94,8 +96,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateAll (List<Order> orders){
-        orderRepository.saveAll(orders);
+    public void update (Order order){
+        orderRepository.save(order);
     }
 
     @Override

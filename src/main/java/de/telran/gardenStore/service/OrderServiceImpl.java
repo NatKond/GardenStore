@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +43,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllActive() {
-        return orderRepository.findAllByStatusNotIn(List.of(OrderStatus.CANCELLED, OrderStatus.DELIVERED));
+    public List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt) {
+        return orderRepository.findByStatusAndUpdatedAtAfter(status, updatedAt);
     }
 
     @Override
@@ -94,8 +95,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateAll (List<Order> orders){
-        orderRepository.saveAll(orders);
+    public void update (Order order){
+        orderRepository.save(order);
     }
 
     @Override

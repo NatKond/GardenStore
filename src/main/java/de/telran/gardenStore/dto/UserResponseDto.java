@@ -21,7 +21,7 @@ public class UserResponseDto {
 
     private String phoneNumber;
 
-    private String role;
+    private List<String> roles;
 
     private List<FavoriteResponseDto> favorites;
 }

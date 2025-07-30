@@ -9,21 +9,21 @@ import org.springframework.web.bind.annotation.*;
 public interface CartController {
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     CartResponseDto getCartForCurrentUser();
 
-    @PostMapping("/items")
+    @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    CartResponseDto addCartItem(@RequestParam @Positive Long productId);
+    @PreAuthorize("hasRole('USER')")
+    CartResponseDto addCartItem(@PathVariable @Positive Long productId);
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     CartResponseDto updateCartItem(@PathVariable @Positive Long cartItemId,
                                    @RequestParam @Positive Integer quantity);
 
     @DeleteMapping("/items/{cartItemId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     CartResponseDto deleteCartItem(@PathVariable @Positive Long cartItemId);
 }

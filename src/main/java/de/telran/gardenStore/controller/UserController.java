@@ -25,7 +25,7 @@ public interface UserController {
     UserResponseDto getById(@PathVariable @Positive Long userId);
 
     @GetMapping("/me")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     UserResponseDto getCurrent();
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,12 +35,12 @@ public interface UserController {
     @PostMapping("/login")
     LoginResponse login(@RequestBody @Valid LoginRequest loginRequest);
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping
     UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest);
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping
     void delete();
 }

@@ -20,7 +20,6 @@ import java.util.Map;
 @Slf4j
 public class JwtServiceImpl implements JwtService {
 
-
     private final SecretKey secretKey;
 
     public JwtServiceImpl(@Value("${jwttoken.sing.secret.key}") String jwtSingKey) {
@@ -32,7 +31,7 @@ public class JwtServiceImpl implements JwtService {
         Map<String, Object> claims = new HashMap<>(Map.of(
                 "userId", user.getUserId(),
                 "name", user.getName(),
-                "role", user.getRole()
+                "roles", user.getRoles()
         ));
 
         return generateToken(claims, user);
@@ -55,12 +54,11 @@ public class JwtServiceImpl implements JwtService {
         log.info("claims {}", claims);
         return claims.getSubject();
     }
-
     private Claims getClaimsFromToken(String token) {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

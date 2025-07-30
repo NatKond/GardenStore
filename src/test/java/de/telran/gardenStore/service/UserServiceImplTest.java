@@ -115,7 +115,7 @@ class UserServiceImplTest extends AbstractTest {
         Long userId = user1.getUserId();
         String userEmail = user1.getEmail();
 
-        AppUser userToUpdate = userToCreate.toBuilder()
+        AppUser userToUpdate = user1.toBuilder()
                 .email(emailToUpdate)
                 .build();
 

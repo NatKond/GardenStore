@@ -7,14 +7,11 @@ import de.telran.gardenStore.service.CartService;
 import de.telran.gardenStore.service.UserService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/cart")
 @Validated
 public class CartControllerImpl implements CartController {
 
@@ -32,14 +29,9 @@ public class CartControllerImpl implements CartController {
     }
 
     @Override
-    @PostMapping("/items")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public CartResponseDto addCartItem(@RequestParam @Positive Long productId) {
+    public CartResponseDto addCartItem(@Positive Long productId) {
         return cartConverter.convertEntityToDto(cartService.addCartItem(productId));
     }
-
-
 
     @Override
     public CartResponseDto updateCartItem(@Positive Long cartItemId, @Positive Integer quantity) {

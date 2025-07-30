@@ -1,7 +1,5 @@
 package de.telran.gardenStore.service;
 
-import de.telran.gardenStore.converter.OrderConverter;
-import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
@@ -15,10 +13,9 @@ import java.math.BigDecimal;
 public class PaymentServiceImpl implements PaymentService {
 
     private final OrderService orderService;
-    private final OrderConverter orderConverter;
 
     @Override
-    public OrderResponseDto processPayment(Long orderId, BigDecimal paymentAmount) {
+    public Order processPayment(Long orderId, BigDecimal paymentAmount) {
         BigDecimal totalAmount = orderService.getTotalAmount(orderId);
         Order order = orderService.getById(orderId);
         OrderStatus status = order.getStatus();
@@ -33,7 +30,6 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IncorrectPaymentAmountException("Payment amount is incorrect");
         }
 
-        Order paidOrder = orderService.updateStatus(orderId, OrderStatus.PAID);
-        return orderConverter.convertEntityToDto(paidOrder);
+        return orderService.updateStatus(orderId, OrderStatus.PAID);
     }
 }

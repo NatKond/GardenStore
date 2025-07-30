@@ -12,10 +12,10 @@ public interface CartController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     CartResponseDto getCartForCurrentUser();
 
-    @PostMapping("/items")
+    @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    CartResponseDto addCartItem(@RequestParam @Positive Long productId);
+    CartResponseDto addCartItem(@PathVariable @Positive Long productId);
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")

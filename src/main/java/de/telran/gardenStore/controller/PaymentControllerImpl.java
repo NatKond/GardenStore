@@ -5,10 +5,7 @@ import de.telran.gardenStore.dto.OrderCreateRequestDto;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.dto.OrderShortResponseDto;
 import de.telran.gardenStore.entity.Order;
-import de.telran.gardenStore.enums.OrderStatus;
-import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
-import de.telran.gardenStore.exception.OrderPaymentRejectedException;
-import de.telran.gardenStore.service.OrderService;
+import de.telran.gardenStore.service.PaymentService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -23,11 +20,10 @@ public class PaymentControllerImpl implements PaymentController {
 
     private final PaymentService paymentService;
 
+    private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
+
     @Override
-    public OrderResponseDto processPayment(
-            @Positive Long orderId,
-            @Positive BigDecimal paymentAmount
-    ) {
-        return paymentService.processPayment(orderId, paymentAmount);
+    public OrderResponseDto processPayment(@Positive Long orderId, @Positive BigDecimal paymentAmount) {
+        return orderConverter.convertEntityToDto(paymentService.processPayment(orderId, paymentAmount));
     }
 }

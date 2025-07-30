@@ -1,8 +1,6 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.AbstractTest;
-import de.telran.gardenStore.converter.OrderConverter;
-import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
@@ -13,7 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -23,28 +23,21 @@ class PaymentServiceImplTest extends AbstractTest {
     @Mock
     private OrderService orderService;
 
-    @Mock
-    private OrderConverter orderConverter;
-
     @InjectMocks
     private PaymentServiceImpl paymentService;
 
     @Test
-    @DisplayName("Successful payment")
+    @DisplayName("Process Payment : positive case")
     void processPayment_PositiveCase() {
         BigDecimal paymentAmount = orderResponseDto1.getTotalAmount();
-        Order paidOrder = order1.toBuilder().status(OrderStatus.PAID).build();
-        OrderResponseDto expected = orderResponseDto1.toBuilder()
-                .status("PAID")
-                .build();
+        Order expected = order1.toBuilder().status(OrderStatus.PAID).build();
 
         when(orderService.getTotalAmount(order1.getOrderId())).thenReturn(paymentAmount);
         when(orderService.getById(order1.getOrderId())).thenReturn(order1);
         when(orderService.updateStatus(order1.getOrderId(), OrderStatus.PAID))
-                .thenReturn(paidOrder);
-        when(orderConverter.convertEntityToDto(paidOrder)).thenReturn(expected);
+                .thenReturn(expected);
 
-        OrderResponseDto actual = paymentService.processPayment(
+        Order actual = paymentService.processPayment(
                 order1.getOrderId(),
                 paymentAmount
         );
@@ -53,7 +46,7 @@ class PaymentServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Incorrect payment amount")
+    @DisplayName("Process Payment : negative case(incorrect amount)")
     void processPayment_NegativeCase_IncorrectAmount() {
         BigDecimal incorrectAmount = new BigDecimal("20.00");
 
@@ -61,22 +54,24 @@ class PaymentServiceImplTest extends AbstractTest {
                 .thenReturn(orderResponseDto1.getTotalAmount());
         when(orderService.getById(order1.getOrderId())).thenReturn(order1);
 
-        assertThrows(
+        RuntimeException runtimeException = assertThrows(
                 IncorrectPaymentAmountException.class,
                 () -> paymentService.processPayment(order1.getOrderId(), incorrectAmount)
         );
+        assertEquals("Payment amount is incorrect", runtimeException.getMessage());
     }
 
     @Test
-    @DisplayName("Order not in AWAITING_PAYMENT status")
+    @DisplayName("Process Payment : negative case(incorrect status)")
     void processPayment_NegativeCase_WrongStatus() {
         when(orderService.getTotalAmount(order2.getOrderId()))
                 .thenReturn(product3.getDiscountPrice());
         when(orderService.getById(order2.getOrderId())).thenReturn(order2);
 
-        assertThrows(
+        RuntimeException runtimeException = assertThrows(
                 OrderPaymentRejectedException.class,
                 () -> paymentService.processPayment(order2.getOrderId(), product3.getDiscountPrice())
         );
+        assertEquals("Order cannot be paid in current status: " + order2.getStatus(), runtimeException.getMessage());
     }
 }

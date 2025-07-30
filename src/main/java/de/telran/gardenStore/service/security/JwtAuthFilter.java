@@ -1,7 +1,5 @@
 package de.telran.gardenStore.service.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.telran.gardenStore.dto.ApiErrorResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,8 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -30,8 +25,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private final UserDetailsService userDetailsService;
-
-    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -52,17 +45,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             username = jwtService.extractUsername(token);
         } catch (JwtException | IllegalArgumentException e) {
             log.warn("JWT authentication failed: {}", e.getMessage());
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-            ApiErrorResponse errorResponse = ApiErrorResponse.builder()
-                    .exception(e.getClass().getSimpleName())
-                    .message(e.getMessage())
-                    .status(HttpStatus.UNAUTHORIZED.value())
-                    .timestamp(LocalDateTime.now())
-                    .build();
-
-            objectMapper.writeValue(response.getWriter(), errorResponse);
             return;
         }
 

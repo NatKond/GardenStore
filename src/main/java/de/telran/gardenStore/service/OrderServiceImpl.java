@@ -72,18 +72,20 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = cart.getItems();
 
         Map<Long, CartItem> cartItemsMap = cartItems.stream().collect(Collectors.toMap(cartItem -> cartItem.getProduct().getProductId(), cartItem -> cartItem));
-
         List<OrderItem> orderItems = order.getItems();
+
         Iterator<OrderItem> iterator = orderItems.iterator();
         while (iterator.hasNext()) {
             OrderItem orderItem = iterator.next();
 
             if (cartItemsMap.containsKey(orderItem.getProduct().getProductId())) {
                 CartItem cartItem = cartItemsMap.get(orderItem.getProduct().getProductId());
-                orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
-
+                orderItem.setPriceAtPurchase(
+                        cartItem.getProduct().getDiscountPrice() != null
+                                ? cartItem.getProduct().getDiscountPrice()
+                                : cartItem.getProduct().getPrice()
+                );
                 processCartItem(cartItem, cartItems, orderItem.getQuantity());
-
             } else {
                 iterator.remove();
             }
@@ -96,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void update (Order order){
+    public void update(Order order) {
         orderRepository.save(order);
     }
 
@@ -180,7 +182,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancel(Long orderId) {
         Order order = getById(orderId);
-        order.setStatus(OrderStatus.CANCELLED);
+        if (order.getStatus() == OrderStatus.CREATED || order.getStatus() == OrderStatus.AWAITING_PAYMENT) {
+            order.setStatus(OrderStatus.CANCELLED);
+        }
         return orderRepository.save(order);
     }
 

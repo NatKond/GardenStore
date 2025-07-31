@@ -42,7 +42,6 @@ public class OrderControllerImpl implements OrderController {
                         orderConverter.convertDtoToEntity(orderCreateRequestDto))
         );
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-
         return orderResponseDto;
     }
 

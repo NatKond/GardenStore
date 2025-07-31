@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    List<Favorite> getAllFavoritesByUser(Long userId);
+    List<Favorite> getAllForCurrentUser();
 
-    Favorite getFavoriteById(Long favoriteId);
+    Favorite getById(Long favoriteId);
 
-    Favorite createFavorite(Long userId, Long productId);
+    Favorite create(Long productId);
 
-    void deleteFavoriteById(Long favoriteId);
+    void deleteById(Long favoriteId);
 }

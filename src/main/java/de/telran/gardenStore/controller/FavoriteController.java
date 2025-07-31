@@ -3,20 +3,23 @@ package de.telran.gardenStore.controller;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RequestMapping("/v1/favorites")
 public interface FavoriteController {
 
-    @GetMapping("/{userId}")
-    List<FavoriteResponseDto> getAllFavoritesByUser(@PathVariable @Positive Long userId);
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping
+    List<FavoriteResponseDto> getAllForCurrentUser();
 
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    FavoriteResponseDto createFavorite(@RequestParam @Positive Long userId,
-                                       @RequestParam @Positive Long productId);
+    FavoriteResponseDto create(@RequestParam @Positive Long productId);
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{favoriteId}")
-    void deleteFavorite(@PathVariable @Positive Long favoriteId);
+    void delete(@PathVariable @Positive Long favoriteId);
 }

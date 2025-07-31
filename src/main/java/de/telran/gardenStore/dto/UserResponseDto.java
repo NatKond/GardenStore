@@ -11,6 +11,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponseDto {
+
     @EqualsAndHashCode.Include
     private Long userId;
 
@@ -20,7 +21,7 @@ public class UserResponseDto {
 
     private String phoneNumber;
 
-    private String role;
+    private List<String> roles;
 
     private List<FavoriteResponseDto> favorites;
 }

@@ -36,7 +36,7 @@ public class CartItemServiceImpl implements CartItemService {
             existingItem.setQuantity(existingItem.getQuantity() + 1);
             return cartItemRepository.save(existingItem);
         } else {
-            Product product = productService.getProductById(productId);
+            Product product = productService.getById(productId);
             return cartItemRepository.save(CartItem.builder()
                     .cart(cart)
                     .product(product)
@@ -44,19 +44,6 @@ public class CartItemServiceImpl implements CartItemService {
                     .build());
         }
     }
-
-    @Override
-    public CartItem update(Long cartItemId, Integer quantity) {
-        CartItem item = getById(cartItemId);
-        item.setQuantity(quantity);
-        return cartItemRepository.save(item);
-    }
-
-    @Override
-    public void delete(Long cartItemId) {
-        cartItemRepository.delete(getById(cartItemId));
-    }
-
 }
 
 

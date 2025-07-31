@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderShortResponseDto {
 
     private Long orderId;
+
+    private Long userId;
 
     private String status;
 
@@ -22,5 +24,4 @@ public class OrderShortResponseDto {
     private String contactPhone;
 
     private String deliveryMethod;
-
 }

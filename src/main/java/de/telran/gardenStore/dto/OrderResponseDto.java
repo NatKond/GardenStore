@@ -1,22 +1,22 @@
 package de.telran.gardenStore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderResponseDto {
 
     private Long orderId;
+
+    private Long userId;
 
     private String status;
 
@@ -28,5 +28,11 @@ public class OrderResponseDto {
 
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<OrderItemResponseDto> items;
+
+    private BigDecimal totalAmount;
 }

@@ -11,19 +11,11 @@ public interface CartService {
 
     Cart update(Cart cart);
 
-    Cart addCartItem(Long userId, Long productId);
+    Cart addCartItem(Long productId);
 
     Cart updateCartItem(Long cartItemId, Integer quantity);
 
-    void deleteCartItem(Long cartItemId);
+    Cart deleteCartItem(Long cartItemId);
 
     //void processOrderItem(Cart cart, Long productId, Integer orderedQuantity);
 }
-
-
-
-
-
-
-
-

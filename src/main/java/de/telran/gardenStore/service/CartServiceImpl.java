@@ -3,6 +3,7 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
+import de.telran.gardenStore.exception.CartAccessDeniedException;
 import de.telran.gardenStore.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart getByUser(AppUser user) {
         return cartRepository.findByUser(user)
-                .orElseThrow(() -> new CartNotFoundException("Cart for user " + user.getUserId() + " not found"));
+                .orElseThrow(() -> new CartNotFoundException(
+                        "Cart for user " + user.getUserId() + " not found"
+                ));
     }
 
     @Override
@@ -47,8 +50,8 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public Cart addCartItem(Long userId, Long productId) {
-        AppUser user = userService.getUserById(userId);
+    public Cart addCartItem(Long productId) {
+        AppUser user = userService.getCurrent();
 
         Cart cart;
         try {
@@ -72,7 +75,7 @@ public class CartServiceImpl implements CartService {
         } else {
             CartItem newItem = CartItem.builder()
                     .cart(cart)
-                    .product(productService.getProductById(productId))
+                    .product(productService.getById(productId))
                     .quantity(1)
                     .build();
             items.add(newItem);
@@ -86,13 +89,27 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart updateCartItem(Long cartItemId, Integer quantity) {
-        CartItem updatedItem = cartItemService.update(cartItemId, quantity);
-        return updatedItem.getCart();
+        CartItem cartItem = cartItemService.getById(cartItemId);
+        Cart cart = cartItem.getCart();
+        checkCartOwnership(cart);
+        cartItem.setQuantity(quantity);
+        //CartItem updatedItem = cartItemService.update(cartItemId, quantity);
+        return cartRepository.save(cart);
     }
 
     @Override
-    public void deleteCartItem(Long cartItemId) {
-        cartItemService.delete(cartItemId);
+    public Cart deleteCartItem(Long cartItemId) {
+        CartItem cartItem = cartItemService.getById(cartItemId);
+        Cart cart = cartItem.getCart();
+        checkCartOwnership(cart);
+        cart.getItems().remove(cartItem);
+        return cartRepository.save(cart);
+    }
+
+    private void checkCartOwnership(Cart cart) {
+        if (cart.getUser() != userService.getCurrent()) {
+            throw new CartAccessDeniedException("Access denied");
+        }
     }
 }
 

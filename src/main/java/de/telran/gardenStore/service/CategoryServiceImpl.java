@@ -16,36 +16,36 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public Category getCategoryById(Long categoryId) {
+    public Category getById(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
     }
 
     @Override
-    public Category createCategory(Category category) {
+    public Category create(Category category) {
         checkCategoryNameIsUnique(category.getName());
         return categoryRepository.save(category);
     }
 
     @Override
-    public Category updateCategory(Long categoryId, Category updatedCategory) {
-        Category existing = getCategoryById(categoryId);
-        if (!existing.getName().equals(updatedCategory.getName())) {
-            checkCategoryNameIsUnique(updatedCategory.getName());
+    public Category update(Long categoryId, Category category) {
+        Category existing = getById(categoryId);
+        if (!existing.getName().equals(category.getName())) {
+            checkCategoryNameIsUnique(category.getName());
         }
-        existing.setName(updatedCategory.getName());
+        existing.setName(category.getName());
 
         return categoryRepository.save(existing);
     }
 
     @Override
-    public void deleteCategoryById(Long categoryId) {
-        Category category = getCategoryById(categoryId);
+    public void deleteById(Long categoryId) {
+        Category category = getById(categoryId);
         if (!category.getProducts().isEmpty()) {
             throw new IllegalStateException("Cannot delete category " + category.getName() + " because it contains products.");
         }

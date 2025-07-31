@@ -10,7 +10,6 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FavoriteResponseDto {
 
-    @EqualsAndHashCode.Include
     private Long favoriteId;
 
     private ProductShortResponseDto product;

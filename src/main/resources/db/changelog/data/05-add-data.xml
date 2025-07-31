@@ -10,27 +10,48 @@
             <column name="email" value="alice.johnson@example.com"/>
             <column name="phone_number" value="+1234567890"/>
             <column name="password_hash" value="12345"/>
-            <column name="role" value="ROLE_USER"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="Bob Smith"/>
             <column name="email" value="bob.smith@example.com"/>
             <column name="phone_number" value="+1987654321"/>
             <column name="password_hash" value="12345"/>
-            <column name="role" value="ROLE_USER"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="Carol Lee"/>
             <column name="email" value="carol.lee@example.com"/>
             <column name="phone_number" value="+1122334455"/>
             <column name="password_hash" value="12345"/>
-            <column name="role" value="ROLE_USER"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="David Brown"/>
             <column name="email" value="david.brown@example.com"/>
             <column name="phone_number" value="+1222333444"/>
             <column name="password_hash" value="12345"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="1"/>
+            <column name="role" value="ROLE_ADMIN"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="1"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="2"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="3"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="4"/>
             <column name="role" value="ROLE_USER"/>
         </insert>
 

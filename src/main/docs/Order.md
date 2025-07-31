@@ -27,6 +27,7 @@ A customer's order.
 {
   "deliveryAddress": "string",
   "deliveryMethod": "string",
+  "contactPhone": "+1444555666",
   "orderItems": [
     {
       "productId": 1,
@@ -44,6 +45,7 @@ A customer's order.
   "userId": 3,
   "deliveryAddress": "string",
   "deliveryMethod": "string",
+  "contactPhone": "+1444555666",
   "status": "CREATED"
 }
 ```
@@ -54,9 +56,12 @@ A customer's order.
 {
   "orderId": 1,
   "userId": 3,
+  "status": "CREATED",
   "deliveryAddress": "string",
   "deliveryMethod": "string",
-  "orderItems": [
+  "createdAt": "string",
+  "updatedAt": "string",
+  "items": [
     {
       "orderId": 1,
       "quantity": 2,
@@ -82,7 +87,7 @@ A customer's order.
       }
     }
   ],
-  "status": "CREATED"
+  "totalAmount": 23.98
 }
 ```
 
@@ -94,6 +99,6 @@ A customer's order.
 | GET    | `/v1/orders/{orderId}`           | USER/ADMIN    | Get order by ID                         |
 | POST   | `/v1/orders`                     | USER          | Create new order                        |
 | POST   | `/v1/orders/items`               | USER          | Add item to order                       |
-| PUT    | `/v1/orders/items/{orderItemId}` | USER          | Change item in order                    |
+| PUT    | `/v1/orders/items`               | USER          | Update item in order                    |
 | DELETE | `/v1/orders/items/{orderItemId}` | USER          | Delete items from order                 |
 | DELETE | `/v1/orders/{orderId}`           | USER/ADMIN    | Cancel order : mark order as CANCELLED. |

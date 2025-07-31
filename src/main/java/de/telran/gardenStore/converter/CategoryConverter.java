@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class CategoryConverter extends AbstractConverter implements Converter<Category,CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> {
+public class CategoryConverter implements Converter<Category,CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> {
 
     private final ModelMapper modelMapper;
 

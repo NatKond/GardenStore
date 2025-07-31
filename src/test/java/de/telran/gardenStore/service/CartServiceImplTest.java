@@ -2,7 +2,6 @@ package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.*;
-import de.telran.gardenStore.enums.Role;
 import de.telran.gardenStore.exception.CartNotFoundException;
 import de.telran.gardenStore.repository.CartRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,165 +22,148 @@ import static org.mockito.Mockito.*;
 class CartServiceImplTest extends AbstractTest {
 
     @Mock
-    private CartRepository cartRepositoryMock;
+    private CartRepository cartRepository;
 
     @Mock
-    private CartItemService cartItemServiceMock;
+    private CartItemService cartItemService;
 
     @Mock
-    private UserService userServiceMock;
+    private UserService userService;
 
     @Mock
-    private ProductService productServiceMock;
+    private ProductService productService;
 
     @InjectMocks
     private CartServiceImpl cartService;
-    private AppUser testUser = new AppUser(1L,
-            "Ivan Ivanov",
-            "test@user.com",
-            "0159785634",
-            "123",
-            Role.ROLE_USER,
-            new ArrayList<>(),
-            new Cart());
-    private Product testProduct = new Product(1L,
-            "Test Product",
-            BigDecimal.valueOf(10.0),
-            BigDecimal.valueOf(10.0),
-            "",
-            "",
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            new Category());
 
-    @DisplayName("Get cart by user - positive case (cart exists)")
+    @DisplayName("Get cart by user : positive case")
     @Test
-    void getByUser_WhenCartExists_ReturnsCart() {
+    void getByUserPositiveCase() {
+
+        AppUser user = user1;
+        Cart expected = user.getCart();
+
+        when(cartRepository.findByUser(user)).thenReturn(Optional.of(expected));
+
+        Cart actual = cartService.getByUser(user);
 
 
-        AppUser user = testUser;
-        Cart expectedCart = user.getCart();
-
-        when(cartRepositoryMock.findByUser(user)).thenReturn(Optional.of(expectedCart));
-
-
-        Cart result = cartService.getByUser(user);
-
-
-        assertNotNull(result);
-        assertEquals(expectedCart.getCartId(), result.getCartId());
-        verify(cartRepositoryMock, times(1)).findByUser(user);
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        verify(cartRepository).findByUser(user);
     }
-    @DisplayName("Get cart by user - negative case (cart not found)")
+
+    @DisplayName("Get cart by user : negative case")
     @Test
     void getByUser_WhenCartNotExists_ThrowsException() {
 
-        AppUser user = testUser;
+        AppUser user = user1;
 
-        when(cartRepositoryMock.findByUser(user)).thenReturn(Optional.empty());
+        when(cartRepository.findByUser(user)).thenReturn(Optional.empty());
 
-
-        CartNotFoundException exception = assertThrows(CartNotFoundException.class,
+        RuntimeException exception = assertThrows(CartNotFoundException.class,
                 () -> cartService.getByUser(user));
 
         assertEquals("Cart for user " + user.getUserId() + " not found", exception.getMessage());
-        verify(cartRepositoryMock, times(1)).findByUser(user);
+        verify(cartRepository).findByUser(user);
     }
-    @DisplayName("Create cart - creates new cart for user")
+
+    @DisplayName("Create cart : positive case")
     @Test
-    void createCart_WithValidUser_CreatesNewCart() {
+    void createCartPositiveCase() {
 
-        AppUser user = testUser;
-        Cart newCart = new Cart(1L, user, new ArrayList<>());
+        AppUser user = user1;
+        Cart expected = Cart.builder().user(user).build();
 
-        when(cartRepositoryMock.save(any(Cart.class))).thenReturn(newCart);
+        when(cartRepository.save(any(Cart.class))).thenReturn(expected);
 
+        Cart actual = cartService.create(user);
 
-        Cart result = cartService.create(user);
-
-
-        assertNotNull(result);
-        assertEquals(user, result.getUser());
-        assertTrue(result.getItems().isEmpty());
-        verify(cartRepositoryMock, times(1)).save(any(Cart.class));
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        assertTrue(actual.getItems().isEmpty());
+        verify(cartRepository).save(any(Cart.class));
     }
-    @DisplayName("Add item to cart - adds new item when not exists")
+
+    @DisplayName("Add item to cart")
     @Test
-    void addCartItem_WhenItemNotExists_AddsNewItem() {
+    void addCartItem() {
+        AppUser user = user1;
+        Long productId = product3.getProductId();
+        Product product = product3;
+        Cart cart = cart1;
 
-        Long userId = 1L;
-        Long productId = 1L;
-        AppUser user = testUser;
-        Product product = testProduct;
-        Cart cart = new Cart(1L, user, new ArrayList<>());
+        Cart cartToSave = cart1.toBuilder().build();
+        CartItem cartItemCreated = CartItem.builder()
+                .cart(cart)
+                .product(product)
+                .quantity(1)
+                .build();
 
-        when(userServiceMock.getUserById(userId)).thenReturn(user);
-        when(cartRepositoryMock.findByUser(user)).thenReturn(Optional.of(cart));
-        when(productServiceMock.getProductById(productId)).thenReturn(product);
-        when(cartRepositoryMock.save(cart)).thenReturn(cart);
+        List<CartItem> cartItemsToSave = new ArrayList<>(cartToSave.getItems());
+        cartItemsToSave.add(cartItemCreated);
+        cartToSave.setItems(cartItemsToSave);
 
+        CartItem cartItemSaved = cartItemCreated.toBuilder()
+                .cartItemId(4L)
+                .build();
 
-        Cart result = cartService.addCartItem(userId, productId);
+        Cart expected = cart1.toBuilder().build();
+        List<CartItem> cartItemsSaved = new ArrayList<>(cartToSave.getItems());
+        cartItemsSaved.add(cartItemSaved);
+        expected.setItems(cartItemsSaved);
 
+        when(userService.getCurrent()).thenReturn(user);
+        when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
+        when(productService.getById(productId)).thenReturn(product);
+        when(cartRepository.save(cartToSave)).thenReturn(expected);
 
-        assertEquals(1, result.getItems().size());
-        assertEquals(product, result.getItems().get(0).getProduct());
-        assertEquals(1, result.getItems().get(0).getQuantity());
-        verify(cartRepositoryMock, times(1)).save(cart);
+        Cart actual = cartService.addCartItem(productId);
+
+        assertEquals(expected, actual);
+        verify(cartRepository).save(expected);
     }
-    @DisplayName("Add item to cart - increments quantity when exists")
+
+
+    @DisplayName("Update cart item")
     @Test
-    void addCartItem_WhenItemExists_IncrementsQuantity() {
+    void updateCartItem() {
 
-        Long userId = 1L;
-        Long productId = 1L;
-        AppUser user = testUser;
-        Product product = testProduct;
-        CartItem existingItem = new CartItem(1L, null, product, 1);
-        List<CartItem> cartItemList = new ArrayList<>();
-        cartItemList.add(existingItem);
-        Cart cart = new Cart(1L, user, cartItemList);
+        Long cartItemId = cartItem1.getCartItemId();
+        Integer quantityUpdated = 5;
+        CartItem updatedItem =cartItem1.toBuilder().quantity(quantityUpdated).build();
 
-        when(userServiceMock.getUserById(userId)).thenReturn(user);
-        when(cartRepositoryMock.findByUser(user)).thenReturn(Optional.of(cart));
-//        when(productServiceMock.getProductById(productId)).thenReturn(product);
-        when(cartRepositoryMock.save(cart)).thenReturn(cart);
+        Cart expected = cart1.toBuilder().build();
+        cart1.getItems().remove(cartItem1);
+        cart1.getItems().add(updatedItem);
 
+        when(cartItemService.getById(cartItemId)).thenReturn(cartItem1);
+        when(userService.getCurrent()).thenReturn(user1);
+        when(cartRepository.save(expected)).thenReturn(expected);
 
-        Cart result = cartService.addCartItem(userId, productId);
+        Cart actual = cartService.updateCartItem(cartItemId, quantityUpdated);
 
-
-        assertEquals(1, result.getItems().size());
-        assertEquals(2, result.getItems().get(0).getQuantity());
-        verify(cartRepositoryMock, times(1)).save(cart);
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        verify(cartRepository).save(expected);
     }
-    @DisplayName("Update cart item - updates quantity")
+
+    @DisplayName("Delete cart item")
     @Test
-    void updateCartItem_WithValidQuantity_UpdatesItem() {
+    void deleteCartItem() {
+        Long cartItemId = cartItem1.getCartItemId();
+        Cart expected = cart1.toBuilder().build();
+        cart1.getItems().remove(cartItem1);
 
-        Long cartItemId = 1L;
-        Integer newQuantity = 5;
-        CartItem updatedItem = new CartItem(cartItemId, null, null, newQuantity);
+        when(cartItemService.getById(cartItemId)).thenReturn(cartItem1);
+        when(userService.getCurrent()).thenReturn(user1);
+        when(cartRepository.save(expected)).thenReturn(expected);
 
-        when(cartItemServiceMock.update(cartItemId, newQuantity)).thenReturn(updatedItem);
+        Cart actual = cartService.deleteCartItem(cartItemId);
 
-
-        Cart result = cartService.updateCartItem(cartItemId, newQuantity);
-
-
-        assertNotNull(result);
-        verify(cartItemServiceMock, times(1)).update(cartItemId, newQuantity);
-    }
-    @DisplayName("Delete cart item - removes item from cart")
-    @Test
-    void deleteCartItem_WithValidId_RemovesItem() {
-
-        Long cartItemId = 1L;
-        doNothing().when(cartItemServiceMock).delete(cartItemId);
-
-        cartService.deleteCartItem(cartItemId);
-
-        verify(cartItemServiceMock, times(1)).delete(cartItemId);
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        verify(cartRepository).save(expected);
     }
 }
 

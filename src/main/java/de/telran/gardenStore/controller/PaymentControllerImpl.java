@@ -5,10 +5,7 @@ import de.telran.gardenStore.dto.OrderCreateRequestDto;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.dto.OrderShortResponseDto;
 import de.telran.gardenStore.entity.Order;
-import de.telran.gardenStore.enums.OrderStatus;
-import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
-import de.telran.gardenStore.exception.OrderPaymentRejectedException;
-import de.telran.gardenStore.service.OrderService;
+import de.telran.gardenStore.service.PaymentService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,27 +23,14 @@ import java.math.BigDecimal;
 @Validated
 public class PaymentControllerImpl implements PaymentController {
 
-    private final OrderService orderService;
+    private final PaymentService paymentService;
 
     private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @PostMapping()
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @Override
-    public OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @RequestParam @Positive BigDecimal paymentAmount) {
-        BigDecimal totalAmount = orderService.getTotalAmount(orderId);
-        OrderStatus orderStatus = orderService.getById(orderId).getStatus();
-
-        if (orderService.getById(orderId).getStatus() != OrderStatus.AWAITING_PAYMENT) {
-            throw new OrderPaymentRejectedException("Order cannot be paid in current status: " + orderStatus);
-        }
-
-        if (totalAmount.equals(paymentAmount)) {
-            OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(orderService.updateStatus(orderId, OrderStatus.PAID));
-            orderResponseDto.setTotalAmount(totalAmount);
-            return orderResponseDto;
-        } else {
-            throw new IncorrectPaymentAmountException("Payment amount is incorrect");
-        }
+    public OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @Positive BigDecimal paymentAmount) {
+        return orderConverter.convertEntityToDto(paymentService.processPayment(orderId, paymentAmount));
     }
 }

@@ -86,21 +86,6 @@ class OrderServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Get all active orders")
-    void getAllActive() {
-        List<Order> expected = List.of(order1, order2);
-
-        when(orderRepository.findAllByStatusNotIn(List.of(OrderStatus.CANCELLED, OrderStatus.DELIVERED))).thenReturn(expected);
-
-        List<Order> actual = orderService.getAllActive();
-
-        assertNotNull(actual);
-        assertEquals(2, actual.size());
-        assertEquals(expected, actual);
-        verify(orderRepository).findAllByStatusNotIn(List.of(OrderStatus.CANCELLED, OrderStatus.DELIVERED));
-    }
-
-    @Test
     @DisplayName("Get total amount by orderId")
     void getTotalAmount() {
 

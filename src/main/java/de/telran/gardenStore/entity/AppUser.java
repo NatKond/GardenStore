@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_users")
@@ -28,9 +30,11 @@ public class AppUser {
 
     private String passwordHash;
 
-    @Builder.Default
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Role role = Role.ROLE_USER;
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>(List.of(Role.ROLE_USER));
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

@@ -155,7 +155,7 @@ public class CategoryControllerImplTest extends AbstractTest {
                         jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
     }
 
-    @DisplayName("PUT /v1/categories/{category_id} - Update category")
+    @DisplayName("PUT /v1/categories/{categoryId} - Update category")
     @Test
     void update() throws Exception {
 
@@ -182,7 +182,7 @@ public class CategoryControllerImplTest extends AbstractTest {
         when(categoryConverter.convertEntityToDto(categoryUpdated)).thenReturn(categoryResponseUpdatedDto);
 
         mockMvc
-                .perform(put("/v1/categories/{category_id}", categoryUpdated.getCategoryId())
+                .perform(put("/v1/categories/{categoryId}", categoryUpdated.getCategoryId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryUpdateRequestDto)))
                 .andDo(print())
@@ -192,7 +192,7 @@ public class CategoryControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(categoryResponseUpdatedDto)));
     }
 
-    @DisplayName("DELETE /v1/categories/{category_id} - Delete category by ID")
+    @DisplayName("DELETE /v1/categories/{categoryId} - Delete category by ID")
     @Test
     void delete() throws Exception {
         Long categoryId = category1.getCategoryId();
@@ -200,7 +200,7 @@ public class CategoryControllerImplTest extends AbstractTest {
         doNothing().when(categoryService).deleteById(categoryId);
 
         mockMvc
-                .perform(MockMvcRequestBuilders.delete("/v1/categories/{category_id}", categoryId))
+                .perform(MockMvcRequestBuilders.delete("/v1/categories/{categoryId}", categoryId))
                 .andDo(print())
                 .andExpect(status().isOk());
 

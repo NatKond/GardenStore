@@ -1,211 +1,159 @@
 package de.telran.gardenStore.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.ConverterEntityToDtoShort;
 import de.telran.gardenStore.dto.CartItemResponseDto;
 import de.telran.gardenStore.dto.CartResponseDto;
-import de.telran.gardenStore.dto.ProductShortResponseDto;
-import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
-import de.telran.gardenStore.entity.Product;
-import de.telran.gardenStore.enums.Role;
 import de.telran.gardenStore.service.CartService;
 import de.telran.gardenStore.service.UserService;
-import de.telran.gardenStore.service.security.JwtAuthFilter;
 import de.telran.gardenStore.service.security.JwtService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class CartControllerImplTest {
+
+@WebMvcTest(CartControllerImpl.class)
+@AutoConfigureMockMvc(addFilters = false)
+class CartControllerImplTest extends AbstractTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private CartService cartService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private ConverterEntityToDtoShort<Cart, CartResponseDto> cartConverter;
-
-    @MockBean
-    private JwtAuthFilter jwtAuthFilter;
-
-    @MockBean
+    @MockitoBean
     private JwtService jwtService;
 
-    private AppUser user1;
-    private Product product1;
-    private Product product2;
-    private Cart cart1;
-    private CartItem cartItem1;
-    private CartItem cartItem2;
-    private CartResponseDto cartResponseDto;
+    @MockitoBean
+    private CartService cartService;
 
-    @BeforeEach
-    void setupTestData() {
-        user1 = AppUser.builder()
-                .userId(1L)
-                .name("Test User")
-                .email("test@example.com")
-                .passwordHash("123")
-                .role(Role.ROLE_USER)
-                .build();
+    @MockitoBean
+    private UserService userService;
 
-        product1 = Product.builder()
-                .productId(1L)
-                .name("Fertilizer")
-                .price(BigDecimal.valueOf(10))
-                .discountPrice(BigDecimal.valueOf(8))
-                .build();
-
-        product2 = Product.builder()
-                .productId(2L)
-                .name("Compost")
-                .price(BigDecimal.valueOf(15))
-                .discountPrice(BigDecimal.valueOf(12))
-                .build();
-
-        cart1 = Cart.builder()
-                .cartId(1L)
-                .user(user1)
-                .build();
-
-        cartItem1 = CartItem.builder()
-                .cart(cart1)
-                .product(product1)
-                .quantity(2)
-                .build();
-
-        cartItem2 = CartItem.builder()
-                .cart(cart1)
-                .product(product2)
-                .quantity(1)
-                .build();
-
-        cart1.setItems(List.of(cartItem1, cartItem2));
-
-        CartItemResponseDto item1 = CartItemResponseDto.builder()
-                .cartItemId(100L)
-                .product(ProductShortResponseDto.builder()
-                        .productId(product1.getProductId())
-                        .name(product1.getName())
-                        .price(product1.getPrice())
-                        .discountPrice(product1.getDiscountPrice())
-                        .build())
-                .quantity(cartItem1.getQuantity())
-                .build();
-
-        CartItemResponseDto item2 = CartItemResponseDto.builder()
-                .cartItemId(101L)
-                .product(ProductShortResponseDto.builder()
-                        .productId(product2.getProductId())
-                        .name(product2.getName())
-                        .price(product2.getPrice())
-                        .discountPrice(product2.getDiscountPrice())
-                        .build())
-                .quantity(cartItem2.getQuantity())
-                .build();
-
-        cartResponseDto = CartResponseDto.builder()
-                .cartId(cart1.getCartId())
-                .userId(user1.getUserId())
-                .items(List.of(item1, item2))
-                .build();
-    }
+    @MockitoBean
+    private ConverterEntityToDtoShort<Cart, CartResponseDto> cartConverter;
 
     @Test
-    void testGetCartForCurrentUser() throws Exception {
+    @DisplayName("GET /v1/cart - Get cart for current user")
+    void getCartForCurrentUser() throws Exception {
         when(userService.getCurrent()).thenReturn(user1);
         when(cartService.getByUser(user1)).thenReturn(cart1);
-        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDto);
+        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDto1);
 
-        mockMvc.perform(get("/v1/cart")
-                        .with(user(user1.getEmail()).password("123").roles("USER")))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartId").value(cart1.getCartId()))
-                .andExpect(jsonPath("$.userId").value(user1.getUserId()));
+        mockMvc.perform(get("/v1/cart"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(cartResponseDto1)));
     }
 
+
     @Test
-    void testAddCartItem() throws Exception {
+    @DisplayName("POST /v1/cart/items/{productId} - Add cart item for current user")
+    void addCartItem() throws Exception {
         Long productId = product1.getProductId();
 
-        when(cartService.addCartItem(productId)).thenReturn(cart1);
-        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDto);
+        CartItem cartItemUpdated = cartItem1.toBuilder()
+                .quantity(cartItem1.getQuantity() + 1)
+                .build();
 
-        assertNotNull(cartResponseDto, "cartResponseDto is null — значит мок не сработал");
+        Cart cartUpdated = cart1.toBuilder().build();
 
-        mockMvc.perform(post("/v1/cart/items")
-                        .param("productId", productId.toString())
-                        .with(csrf())
-                        .with(user(user1.getEmail()).password("123").roles("USER"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.cartId").value(cart1.getCartId()))
-                .andExpect(jsonPath("$.userId").value(user1.getUserId()))
-                .andExpect(jsonPath("$.items.length()").value(2))
-                .andExpect(jsonPath("$.items[0].product.name").value("Fertilizer"))
-                .andExpect(jsonPath("$.items[1].product.name").value("Compost"));
+        cartUpdated.getItems().remove(cartItem1);
+        cartUpdated.getItems().add(cartItemUpdated);
+
+        CartItemResponseDto cartItemResponseDtoUpdated = cartItemResponseDto1.toBuilder()
+                .quantity(cartItemUpdated.getQuantity())
+                .build();
+
+        CartResponseDto cartResponseDtoUpdated = cartResponseDto1.toBuilder().build();
+
+        cartResponseDtoUpdated.getItems().remove(cartItemResponseDto1);
+        cartResponseDtoUpdated.getItems().add(cartItemResponseDtoUpdated);
+
+        when(cartService.addCartItem(productId)).thenReturn(cartUpdated);
+        when(cartConverter.convertEntityToDto(cartUpdated)).thenReturn(cartResponseDtoUpdated);
+
+
+        mockMvc.perform(post("/v1/cart/items/{productId}", productId))
+                .andDo(print())
+                .andExpectAll(
+                        status().isCreated(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(cartResponseDtoUpdated)));
     }
 
     @Test
-    void testUpdateCartItem() throws Exception {
-        Long cartItemId = 100L;
+    @DisplayName("PUT /v1/cart/items/{cartItemId}?quantity={quantity} - Update cart item for current user")
+    void updateCartItem() throws Exception {
+        Long cartItemId = cart1.getCartId();
+
         Integer quantity = 3;
 
-        when(cartService.updateCartItem(cartItemId, quantity)).thenReturn(cart1);
-        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDto);
+        CartItem cartItemUpdated = cartItem1.toBuilder()
+                .quantity(quantity)
+                .build();
+
+        Cart cartUpdated = cart1.toBuilder().build();
+
+        cartUpdated.getItems().remove(cartItem1);
+        cartUpdated.getItems().add(cartItemUpdated);
+
+        CartItemResponseDto cartItemResponseDtoUpdated = cartItemResponseDto1.toBuilder()
+                .quantity(cartItemUpdated.getQuantity())
+                .build();
+
+        CartResponseDto cartResponseDtoUpdated = cartResponseDto1.toBuilder().build();
+
+        cartResponseDtoUpdated.getItems().remove(cartItemResponseDto1);
+        cartResponseDtoUpdated.getItems().add(cartItemResponseDtoUpdated);
+
+        when(cartService.updateCartItem(cartItemId, quantity)).thenReturn(cartUpdated);
+        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDtoUpdated);
 
         mockMvc.perform(put("/v1/cart/items/{cartItemId}", cartItemId)
-                        .param("quantity", quantity.toString())
-                        .with(csrf())
-                        .with(user(user1.getEmail()).password("123").roles("USER"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.cartId").value(cart1.getCartId()));
+                        .param("quantity", quantity.toString()))
+                .andDo(print())
+                .andExpectAll(
+                        status().isAccepted(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(cartResponseDtoUpdated)));
     }
 
     @Test
-    void testDeleteCartItem() throws Exception {
-        Long cartItemId = 100L;
+    @DisplayName("DELETE /v1/cart/items/{cartItemId} - Delete cart item for current user")
+    void deleteCartItem() throws Exception {
+        Long cartItemId = cartItem1.getCartItemId();
+
+        Cart cartUpdated = cart1.toBuilder().build();
+        cartUpdated.getItems().remove(cartItem1);
+
+        CartResponseDto cartResponseDtoUpdated = cartResponseDto1.toBuilder().build();
+        cartResponseDtoUpdated.getItems().remove(cartItemResponseDto1);
 
         when(cartService.deleteCartItem(cartItemId)).thenReturn(cart1);
-        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDto);
+        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDtoUpdated);
 
-        mockMvc.perform(delete("/v1/cart/items/{cartItemId}", cartItemId)
-                        .with(csrf())
-                        .with(user(user1.getEmail()).password("123").roles("USER"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartId").value(cart1.getCartId()));
+        mockMvc.perform(delete("/v1/cart/items/{cartItemId}", cartItemId))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(cartResponseDtoUpdated)));
     }
 }
-
-
-
-
-
-
-

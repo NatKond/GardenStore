@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractTest {
 
@@ -60,19 +61,6 @@ public abstract class AbstractTest {
     protected OrderItem orderItemToCreate1;
     protected OrderItem orderItemToCreate2;
 
-    protected OrderShortResponseDto orderShortResponseDto1;
-    protected OrderShortResponseDto orderShortResponseDto2;
-    protected OrderResponseDto orderResponseDto1;
-    protected OrderResponseDto orderResponseCreatedDto;
-    protected OrderCreateRequestDto orderCreateRequestDto;
-
-    protected OrderItemResponseDto orderItemResponseDto1;
-    protected OrderItemResponseDto orderItemResponseDto2;
-    protected OrderItemCreateRequestDto orderItemCreateRequestDto1;
-    protected OrderItemCreateRequestDto orderItemCreateRequestDto2;
-    protected OrderItemResponseDto orderItemResponseDtoCreated1;
-    protected OrderItemResponseDto orderItemResponseDtoCreated2;
-
     protected CategoryShortResponseDto categoryShortResponseDto1;
     protected CategoryShortResponseDto categoryShortResponseDto2;
     protected CategoryShortResponseDto categoryShortResponseDto3;
@@ -98,6 +86,24 @@ public abstract class AbstractTest {
     protected FavoriteResponseDto favoriteResponseDto2;
     protected FavoriteResponseDto favoriteResponseCreatedDto;
 
+    protected CartResponseDto cartResponseDto1;
+    protected CartResponseDto cartResponseDto2;
+    protected CartItemResponseDto cartItemResponseDto1;
+    protected CartItemResponseDto cartItemResponseDto2;
+    protected CartItemResponseDto cartItemResponseDto3;
+
+    protected OrderShortResponseDto orderShortResponseDto1;
+    protected OrderShortResponseDto orderShortResponseDto2;
+    protected OrderResponseDto orderResponseDto1;
+    protected OrderResponseDto orderResponseCreatedDto;
+    protected OrderCreateRequestDto orderCreateRequestDto;
+    protected OrderItemResponseDto orderItemResponseDto1;
+    protected OrderItemResponseDto orderItemResponseDto2;
+    protected OrderItemCreateRequestDto orderItemCreateRequestDto1;
+    protected OrderItemCreateRequestDto orderItemCreateRequestDto2;
+    protected OrderItemResponseDto orderItemResponseDtoCreated1;
+    protected OrderItemResponseDto orderItemResponseDtoCreated2;
+
     @BeforeEach
     protected void setUp() {
         initEntities();
@@ -105,8 +111,9 @@ public abstract class AbstractTest {
         initProductDtos();
         initCategoryDtos();
         initFavoriteDtos();
-        initOrderDtos();
         initUserDtos();
+        initCartDtos();
+        initOrderDtos();
     }
 
     private void initSecurityContext() {
@@ -202,7 +209,7 @@ public abstract class AbstractTest {
                 .email("alice.johnson@example.com")
                 .phoneNumber("+1234567890")
                 .passwordHash("12345")
-                .role(Role.ROLE_USER)
+                .roles(Set.of(Role.ROLE_USER, Role.ROLE_ADMIN))
                 .build();
 
         user2 = AppUser.builder()
@@ -212,7 +219,7 @@ public abstract class AbstractTest {
                 .phoneNumber("+1987654321")
                 .passwordHash("12345")
                 .favorites(new ArrayList<>())
-                .role(Role.ROLE_USER)
+                .roles(Set.of(Role.ROLE_USER))
                 .build();
 
         userToCreate = AppUser.builder()
@@ -220,7 +227,7 @@ public abstract class AbstractTest {
                 .email("charlie.brown@example.com")
                 .phoneNumber("+1122334455")
                 .passwordHash("12345")
-                .role(Role.ROLE_USER)
+                .roles(Set.of(Role.ROLE_USER))
                 .build();
 
         userCreated = userToCreate.toBuilder()
@@ -251,24 +258,28 @@ public abstract class AbstractTest {
                 .build();
 
         cart1 = Cart.builder()
+                .cartId(1L)
                 .user(user1)
                 .build();
 
         user1.setCart(cart1);
 
         cart2 = Cart.builder()
+                .cartId(2L)
                 .user(user2)
                 .build();
 
         user2.setCart(cart2);
 
         cartItem1 = CartItem.builder()
+                .cartItemId(1L)
                 .cart(cart1)
                 .product(product1)
                 .quantity(2)
                 .build();
 
         cartItem2 = CartItem.builder()
+                .cartItemId(2L)
                 .cart(cart1)
                 .product(product2)
                 .quantity(1)
@@ -277,6 +288,7 @@ public abstract class AbstractTest {
         cart1.setItems(new ArrayList<>(List.of(cartItem1, cartItem2)));
 
         cartItem3 = CartItem.builder()
+                .cartItemId(3L)
                 .cart(cart2)
                 .product(product1)
                 .quantity(1)
@@ -558,7 +570,7 @@ public abstract class AbstractTest {
                 .name(user1.getName())
                 .email(user1.getEmail())
                 .phoneNumber(user1.getPhoneNumber())
-                .role(user1.getRole().name())
+                .roles(user1.getRoles().stream().map(Enum::name).toList())
                 .build();
 
         userShortResponseDto2 = UserShortResponseDto.builder()
@@ -566,7 +578,7 @@ public abstract class AbstractTest {
                 .name(user2.getName())
                 .email(user2.getEmail())
                 .phoneNumber(user2.getPhoneNumber())
-                .role(user2.getRole().name())
+                .roles(user2.getRoles().stream().map(Enum::name).toList())
                 .build();
 
         userResponseDto1 = UserResponseDto.builder()
@@ -575,7 +587,7 @@ public abstract class AbstractTest {
                 .email(user1.getEmail())
                 .phoneNumber(user1.getPhoneNumber())
                 .favorites(List.of(favoriteResponseDto1, favoriteResponseDto2))
-                .role(user1.getRole().name())
+                .roles(user2.getRoles().stream().map(Enum::name).toList())
                 .build();
 
         userCreateRequestDto = UserCreateRequestDto.builder()
@@ -590,9 +602,43 @@ public abstract class AbstractTest {
                 .name(userCreated.getName())
                 .email(userCreated.getEmail())
                 .phoneNumber(userCreated.getPhoneNumber())
-                .role(userCreated.getRole().name())
+                .roles(userCreated.getRoles().stream().map(Enum::name).toList())
                 .favorites(new ArrayList<>())
                 .build();
+    }
+
+    private void initCartDtos(){
+        cartResponseDto1 = CartResponseDto.builder()
+                .cartId(cart1.getCartId())
+                .userId(cart1.getUser().getUserId())
+                .build();
+
+        cartResponseDto2 = CartResponseDto.builder()
+                .cartId(cart2.getCartId())
+                .userId(cart2.getUser().getUserId())
+                .build();
+
+        cartItemResponseDto1 = CartItemResponseDto.builder()
+                .cartItemId(cartItem1.getCartItemId())
+                .product(productShortResponseDto1)
+                .quantity(cartItem1.getQuantity())
+                .build();
+
+        cartItemResponseDto2 = CartItemResponseDto.builder()
+                .cartItemId(cartItem2.getCartItemId())
+                .product(productShortResponseDto2)
+                .quantity(cartItem2.getQuantity())
+                .build();
+
+        cartResponseDto1.setItems(new ArrayList<>(List.of(cartItemResponseDto1, cartItemResponseDto2)));
+
+        cartItemResponseDto3 = CartItemResponseDto.builder()
+                .cartItemId(cartItem3.getCartItemId())
+                .product(productShortResponseDto1)
+                .quantity(cartItem3.getQuantity())
+                .build();
+
+        cartResponseDto2.setItems(new ArrayList<>(List.of(cartItemResponseDto3)));
     }
 
     private void initFavoriteDtos() {

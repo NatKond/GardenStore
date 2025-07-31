@@ -8,6 +8,7 @@
     <include file="tables/02-create-tables.xml" relativeToChangelogFile="true" />
     <include file="tables/03-add-constraints.xml" relativeToChangelogFile="true" />
     <include file="tables/10-correct-constraint.xml" relativeToChangelogFile="true" />
+    <include file="tables/11-add-multiple-roles-per-user.xml" relativeToChangelogFile="true" />
     <include file="data/04-truncate-tables.xml" relativeToChangelogFile="true" />
     <include file="data/05-add-data.xml" relativeToChangelogFile="true" />
     <include file="tables/06-create-additional-tables.xml" relativeToChangelogFile="true" />

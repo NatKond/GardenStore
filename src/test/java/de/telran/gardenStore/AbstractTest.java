@@ -44,12 +44,6 @@ public abstract class AbstractTest {
     protected Favorite favoriteToCreate;
     protected Favorite favoriteCreated;
 
-    protected CartResponseDto cartResponseDto1;
-    protected CartResponseDto cartResponseDto2;
-    protected CartItemResponseDto cartItemResponseDto1;
-    protected CartItemResponseDto cartItemResponseDto2;
-    protected CartItemResponseDto cartItemResponseDto3;
-
     protected Cart cart1;
     protected Cart cart2;
 
@@ -568,40 +562,6 @@ public abstract class AbstractTest {
                 .categoryId(productCreated.getCategory().getCategoryId())
                 .description(productCreated.getDescription())
                 .build();
-    }
-
-    private void initCartDtos(){
-        cartResponseDto1 = CartResponseDto.builder()
-                .cartId(cart1.getCartId())
-                .userId(cart1.getUser().getUserId())
-                .build();
-
-        cartResponseDto2 = CartResponseDto.builder()
-                .cartId(cart2.getCartId())
-                .userId(cart2.getUser().getUserId())
-                .build();
-
-        cartItemResponseDto1 = CartItemResponseDto.builder()
-                .cartItemId(cartItem1.getCartItemId())
-                .product(productShortResponseDto1)
-                .quantity(cartItem1.getQuantity())
-                .build();
-
-        cartItemResponseDto2 = CartItemResponseDto.builder()
-                .cartItemId(cartItem2.getCartItemId())
-                .product(productShortResponseDto2)
-                .quantity(cartItem2.getQuantity())
-                .build();
-
-        cartResponseDto1.setItems(new ArrayList<>(List.of(cartItemResponseDto1, cartItemResponseDto2)));
-
-        cartItemResponseDto3 = CartItemResponseDto.builder()
-                .cartItemId(cartItem3.getCartItemId())
-                .product(productShortResponseDto1)
-                .quantity(cartItem3.getQuantity())
-                .build();
-
-        cartResponseDto2.setItems(new ArrayList<>(List.of(cartItemResponseDto3)));
     }
 
     private void initUserDtos() {

@@ -1,6 +1,4 @@
 package de.telran.gardenStore.service.security;
-
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,13 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = header.replace("Bearer ", "");
 
-        String username;
-        try {
-            username = jwtService.extractUsername(token);
-        } catch (JwtException | IllegalArgumentException e) {
-            log.warn("JWT authentication failed: {}", e.getMessage());
-            return;
-        }
+        String username = jwtService.extractUsername(token);
 
         if (StringUtils.isNotEmpty(username) &&
         SecurityContextHolder.getContext().getAuthentication() == null) {

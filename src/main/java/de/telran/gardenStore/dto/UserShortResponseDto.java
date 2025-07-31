@@ -2,6 +2,8 @@ package de.telran.gardenStore.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -17,5 +19,5 @@ public class UserShortResponseDto {
 
     private String phoneNumber;
 
-    private String role;
+    private List<String> roles;
 }

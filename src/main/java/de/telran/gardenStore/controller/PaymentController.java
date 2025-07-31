@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public interface PaymentController {
 
     @PostMapping()
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @RequestParam @Positive BigDecimal paymentAmount);
 
 }

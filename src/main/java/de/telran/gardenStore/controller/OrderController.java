@@ -14,33 +14,33 @@ import java.util.List;
 public interface OrderController {
 
     @GetMapping("/history")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     List<OrderShortResponseDto> getAll();
 
     @GetMapping("/{orderId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     OrderResponseDto getById(@PathVariable @Positive Long orderId);
 
     @PostMapping()
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     OrderResponseDto create(@RequestBody @Valid OrderCreateRequestDto orderCreateRequestDto);
 
     @PostMapping("/items")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     OrderResponseDto addOrderItem(@RequestParam @Positive Long orderId, @RequestParam @Positive Long productId, @RequestParam @Positive Integer quantity);
 
     @PutMapping("/items")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     OrderResponseDto updateOrderItem(@RequestParam @Positive Long orderItemId, @RequestParam @Positive Integer quantity);
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")
     OrderResponseDto removeOrderItem(@PathVariable @Positive Long orderItemId);
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{orderId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     OrderResponseDto delete(@PathVariable @Positive Long orderId);
 }

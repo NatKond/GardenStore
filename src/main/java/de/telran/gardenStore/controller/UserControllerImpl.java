@@ -44,7 +44,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @Override
     public UserResponseDto getCurrent() {
         return userConverter.convertEntityToDto(

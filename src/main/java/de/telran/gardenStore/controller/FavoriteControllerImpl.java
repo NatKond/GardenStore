@@ -25,7 +25,7 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     @Override
     @GetMapping()
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public List<FavoriteResponseDto> getAllForCurrentUser() {
         return favoriteConverter.convertEntityListToDtoList(
                 favoriteService.getAllForCurrentUser());
@@ -34,7 +34,7 @@ public class FavoriteControllerImpl implements FavoriteController {
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public FavoriteResponseDto create(@Positive @RequestParam Long productId) {
         return favoriteConverter.convertEntityToDto(
                 favoriteService.create(productId));
@@ -42,7 +42,7 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     @Override
     @DeleteMapping("/{favoriteId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public void delete(@PathVariable @Positive Long favoriteId) {
         favoriteService.deleteById(favoriteId);
     }

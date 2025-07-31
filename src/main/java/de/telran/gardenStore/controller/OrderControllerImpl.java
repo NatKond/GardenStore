@@ -26,14 +26,14 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @GetMapping("/history")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public List<OrderShortResponseDto> getAll() {
         return orderConverter.convertEntityListToDtoList(orderService.getAllForCurrentUser());
     }
 
     @Override
     @GetMapping("/{orderId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public OrderResponseDto getById(@PathVariable @Positive Long orderId) {
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
                 orderService.getById(orderId)
@@ -44,7 +44,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @PostMapping()
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderResponseDto create(@RequestBody @Valid OrderCreateRequestDto orderCreateRequestDto) {
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
@@ -58,7 +58,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @PostMapping("/items")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderResponseDto addOrderItem(@RequestParam @Positive Long orderId,
                                          @RequestParam @Positive Long productId,
@@ -72,7 +72,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @PutMapping("/items")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OrderResponseDto updateOrderItem(@RequestParam @Positive Long orderItemId,
                                             @RequestParam @Positive Integer quantity){
@@ -83,7 +83,7 @@ public class OrderControllerImpl implements OrderController {
         return orderResponseDto;
     }
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")
     @Override
     public OrderResponseDto removeOrderItem(@PathVariable @Positive Long orderItemId){
@@ -95,7 +95,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @DeleteMapping("/{orderId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @Override
     public OrderResponseDto delete(@PathVariable @Positive Long orderId) {
         return orderConverter.convertEntityToDto(

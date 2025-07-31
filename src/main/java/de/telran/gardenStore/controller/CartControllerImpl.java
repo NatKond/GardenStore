@@ -33,11 +33,11 @@ public class CartControllerImpl implements CartController {
                         userService.getCurrent()));
     }
 
-    @PostMapping("/items")
+    @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Override
-    public CartResponseDto addCartItem(@RequestParam @Positive Long productId) {
+    public CartResponseDto addCartItem(@PathVariable @Positive Long productId) {
         return cartConverter.convertEntityToDto(
                 cartService.addCartItem(productId));
     }

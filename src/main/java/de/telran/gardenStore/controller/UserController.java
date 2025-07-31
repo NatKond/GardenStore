@@ -121,7 +121,7 @@ public interface UserController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = LoginRequest.class),
                             examples = {
-                                    @ExampleObject(name = "Alice Johnson(ADMIN)", value = """
+                                    @ExampleObject(name = "Alice Johnson(ADMIN, USER)", value = """
                                     {
                                       "email": "alice.johnson@example.com",
                                       "password": "12345"

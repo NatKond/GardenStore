@@ -48,7 +48,6 @@ public class OrderControllerImpl implements OrderController {
         );
 
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-
         return orderResponseDto;
     }
 

@@ -58,6 +58,7 @@ public class JwtServiceImpl implements JwtService {
         log.info("claims {}", claims);
         return claims.getSubject();
     }
+
     private Claims getClaimsFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)

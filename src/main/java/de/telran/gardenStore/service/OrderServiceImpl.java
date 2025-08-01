@@ -166,7 +166,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancel(Long orderId) {
         Order order = getById(orderId);
-        order.setStatus(OrderStatus.CANCELLED);
+        if (order.getStatus() == OrderStatus.CREATED || order.getStatus() == OrderStatus.AWAITING_PAYMENT) {
+            order.setStatus(OrderStatus.CANCELLED);
+        }
         return orderRepository.save(order);
     }
 

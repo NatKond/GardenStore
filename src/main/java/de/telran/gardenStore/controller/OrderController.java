@@ -29,16 +29,16 @@ public interface OrderController {
     @PostMapping("/items")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
-    OrderResponseDto addOrderItem(@RequestParam @Positive Long orderId, @RequestParam @Positive Long productId, @RequestParam @Positive Integer quantity);
+    OrderResponseDto addItem(@RequestParam @Positive Long orderId, @RequestParam @Positive Long productId, @RequestParam @Positive Integer quantity);
 
     @PutMapping("/items")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    OrderResponseDto updateOrderItem(@RequestParam @Positive Long orderItemId, @RequestParam @Positive Integer quantity);
+    OrderResponseDto updateItem(@RequestParam @Positive Long orderItemId, @RequestParam @Positive Integer quantity);
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")
-    OrderResponseDto removeOrderItem(@PathVariable @Positive Long orderItemId);
+    OrderResponseDto removeItem(@PathVariable @Positive Long orderItemId);
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{orderId}")

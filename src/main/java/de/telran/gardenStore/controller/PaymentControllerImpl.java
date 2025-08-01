@@ -1,7 +1,6 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.OrderCreateRequestDto;
+import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.dto.OrderShortResponseDto;
 import de.telran.gardenStore.entity.Order;
@@ -20,7 +19,7 @@ public class PaymentControllerImpl implements PaymentController {
 
     private final PaymentService paymentService;
 
-    private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
+    private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Override
     public OrderResponseDto processPayment(@Positive Long orderId, @Positive BigDecimal paymentAmount) {

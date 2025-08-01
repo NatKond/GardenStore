@@ -12,10 +12,14 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     private final OrderItemRepository orderItemRepository;
 
+    private final UserService userService;
 
     @Override
     public OrderItem getById(Long orderItemId){
-        return orderItemRepository.findById(orderItemId).orElseThrow(() -> new OrderItemNotFoundException("Order item with id " + orderItemId + " not found"));
+        return orderItemRepository.findByUserAndId(userService.getCurrent(), orderItemId)
+                .orElseThrow(() -> new OrderItemNotFoundException(
+                        "Order item with id " + orderItemId + " not found"
+                ));
     }
 
 }

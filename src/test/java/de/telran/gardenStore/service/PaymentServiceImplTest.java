@@ -30,15 +30,16 @@ class PaymentServiceImplTest extends AbstractTest {
     @DisplayName("Process Payment : positive case")
     void processPayment_PositiveCase() {
         BigDecimal paymentAmount = orderResponseDto1.getTotalAmount();
+        Order order = order1.toBuilder().status(OrderStatus.AWAITING_PAYMENT).build();
         Order expected = order1.toBuilder().status(OrderStatus.PAID).build();
 
-        when(orderService.getTotalAmount(order1.getOrderId())).thenReturn(paymentAmount);
-        when(orderService.getById(order1.getOrderId())).thenReturn(order1);
-        when(orderService.updateStatus(order1.getOrderId(), OrderStatus.PAID))
+        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(paymentAmount);
+        when(orderService.getById(order.getOrderId())).thenReturn(order);
+        when(orderService.updateStatus(order.getOrderId(), OrderStatus.PAID))
                 .thenReturn(expected);
 
         Order actual = paymentService.processPayment(
-                order1.getOrderId(),
+                order.getOrderId(),
                 paymentAmount
         );
 
@@ -49,14 +50,15 @@ class PaymentServiceImplTest extends AbstractTest {
     @DisplayName("Process Payment : negative case(incorrect amount)")
     void processPayment_NegativeCase_IncorrectAmount() {
         BigDecimal incorrectAmount = new BigDecimal("20.00");
+        Order order = order1.toBuilder().status(OrderStatus.AWAITING_PAYMENT).build();
 
-        when(orderService.getTotalAmount(order1.getOrderId()))
+        when(orderService.getTotalAmount(order.getOrderId()))
                 .thenReturn(orderResponseDto1.getTotalAmount());
-        when(orderService.getById(order1.getOrderId())).thenReturn(order1);
+        when(orderService.getById(order.getOrderId())).thenReturn(order);
 
         RuntimeException runtimeException = assertThrows(
                 IncorrectPaymentAmountException.class,
-                () -> paymentService.processPayment(order1.getOrderId(), incorrectAmount)
+                () -> paymentService.processPayment(order.getOrderId(), incorrectAmount)
         );
         assertEquals("Payment amount is incorrect", runtimeException.getMessage());
     }

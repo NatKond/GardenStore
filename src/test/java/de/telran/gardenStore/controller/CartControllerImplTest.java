@@ -7,6 +7,7 @@ import de.telran.gardenStore.dto.CartItemResponseDto;
 import de.telran.gardenStore.dto.CartResponseDto;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
+import de.telran.gardenStore.exception.CartItemNotFoundException;
 import de.telran.gardenStore.service.CartService;
 import de.telran.gardenStore.service.UserService;
 import de.telran.gardenStore.service.security.JwtService;
@@ -49,7 +50,7 @@ class CartControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/cart - Get cart for current user")
-    void getCartForCurrentUser() throws Exception {
+    void getForCurrentUser() throws Exception {
         when(userService.getCurrent()).thenReturn(user1);
         when(cartService.getByUser(user1)).thenReturn(cart1);
         when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDto1);
@@ -65,7 +66,7 @@ class CartControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("POST /v1/cart/items/{productId} - Add cart item for current user")
-    void addCartItem() throws Exception {
+    void addItem() throws Exception {
         Long productId = product1.getProductId();
 
         CartItem cartItemUpdated = cartItem1.toBuilder()
@@ -86,7 +87,7 @@ class CartControllerImplTest extends AbstractTest {
         cartResponseDtoUpdated.getItems().remove(cartItemResponseDto1);
         cartResponseDtoUpdated.getItems().add(cartItemResponseDtoUpdated);
 
-        when(cartService.addCartItem(productId)).thenReturn(cartUpdated);
+        when(cartService.addItem(productId)).thenReturn(cartUpdated);
         when(cartConverter.convertEntityToDto(cartUpdated)).thenReturn(cartResponseDtoUpdated);
 
 
@@ -100,7 +101,7 @@ class CartControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("PUT /v1/cart/items/{cartItemId}?quantity={quantity} - Update cart item for current user")
-    void updateCartItem() throws Exception {
+    void updateItem() throws Exception {
         Long cartItemId = cart1.getCartId();
 
         Integer quantity = 3;
@@ -123,7 +124,7 @@ class CartControllerImplTest extends AbstractTest {
         cartResponseDtoUpdated.getItems().remove(cartItemResponseDto1);
         cartResponseDtoUpdated.getItems().add(cartItemResponseDtoUpdated);
 
-        when(cartService.updateCartItem(cartItemId, quantity)).thenReturn(cartUpdated);
+        when(cartService.updateItem(cartItemId, quantity)).thenReturn(cartUpdated);
         when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDtoUpdated);
 
         mockMvc.perform(put("/v1/cart/items/{cartItemId}", cartItemId)
@@ -137,7 +138,7 @@ class CartControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("DELETE /v1/cart/items/{cartItemId} - Delete cart item for current user")
-    void deleteCartItem() throws Exception {
+    void deleteItemPositiveCase() throws Exception {
         Long cartItemId = cartItem1.getCartItemId();
 
         Cart cartUpdated = cart1.toBuilder().build();
@@ -146,8 +147,8 @@ class CartControllerImplTest extends AbstractTest {
         CartResponseDto cartResponseDtoUpdated = cartResponseDto1.toBuilder().build();
         cartResponseDtoUpdated.getItems().remove(cartItemResponseDto1);
 
-        when(cartService.deleteCartItem(cartItemId)).thenReturn(cart1);
-        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDtoUpdated);
+        when(cartService.deleteItem(cartItemId)).thenReturn(cartUpdated);
+        when(cartConverter.convertEntityToDto(cartUpdated)).thenReturn(cartResponseDtoUpdated);
 
         mockMvc.perform(delete("/v1/cart/items/{cartItemId}", cartItemId))
                 .andDo(print())
@@ -155,5 +156,22 @@ class CartControllerImplTest extends AbstractTest {
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(cartResponseDtoUpdated)));
+    }
+
+    @Test
+    @DisplayName("DELETE /v1/cart/items/{cartItemId} - Delete cart item for current user")
+    void deleteItemNegativeCase() throws Exception {
+        Long cartItemId = 99L;
+
+        when(cartService.deleteItem(cartItemId)).thenReturn(cart1);
+        when(cartConverter.convertEntityToDto(cart1)).thenThrow(new CartItemNotFoundException("CartItem with id " + cartItemId + " not found"));
+
+        mockMvc.perform(delete("/v1/cart/items/{cartItemId}", cartItemId))
+                .andDo(print())
+                .andExpectAll(
+                        status().isNotFound(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.exception").value("CartItemNotFoundException"),
+                        jsonPath("$.message").value("CartItem with id " + cartItemId + " not found"));
     }
 }

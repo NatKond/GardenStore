@@ -10,20 +10,20 @@ public interface CartController {
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
-    CartResponseDto getCartForCurrentUser();
+    CartResponseDto getForCurrentUser();
 
     @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
-    CartResponseDto addCartItem(@PathVariable @Positive Long productId);
+    CartResponseDto addItem(@PathVariable @Positive Long productId);
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
-    CartResponseDto updateCartItem(@PathVariable @Positive Long cartItemId,
-                                   @RequestParam @Positive Integer quantity);
+    CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
+                               @RequestParam @Positive Integer quantity);
 
     @DeleteMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
-    CartResponseDto deleteCartItem(@PathVariable @Positive Long cartItemId);
+    CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId);
 }

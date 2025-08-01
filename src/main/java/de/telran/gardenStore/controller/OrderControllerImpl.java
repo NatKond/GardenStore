@@ -1,6 +1,6 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.converter.Converter;
+import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.service.OrderService;
@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,7 +20,7 @@ public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
 
-    private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
+    private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Override
     public List<OrderShortResponseDto> getAll() {
@@ -37,37 +38,42 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     public OrderResponseDto create(@Valid OrderCreateRequestDto orderCreateRequestDto) {
+
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
                 orderService.create(
-                        orderConverter.convertDtoToEntity(orderCreateRequestDto))
+                        orderCreateRequestDto.getDeliveryAddress(),
+                        orderCreateRequestDto.getDeliveryMethod(),
+                        orderCreateRequestDto.getContactPhone(),
+                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity)))
         );
+
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
 
         return orderResponseDto;
     }
 
     @Override
-    public OrderResponseDto addOrderItem(@Positive Long orderId, @Positive Long productId, @Positive Integer quantity){
+    public OrderResponseDto addItem(@Positive Long orderId, @Positive Long productId, @Positive Integer quantity){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.addOrderItem(orderId, productId, quantity)
+                orderService.addItem(orderId, productId, quantity)
         );
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
         return orderResponseDto;
     }
 
     @Override
-    public OrderResponseDto updateOrderItem(@Positive Long orderItemId, @Positive Integer quantity){
+    public OrderResponseDto updateItem(@Positive Long orderItemId, @Positive Integer quantity){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.updateOrderItem(orderItemId, quantity)
+                orderService.updateItem(orderItemId, quantity)
         );
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
         return orderResponseDto;
     }
 
     @Override
-    public OrderResponseDto removeOrderItem(@Positive Long orderItemId){
+    public OrderResponseDto removeItem(@Positive Long orderItemId){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.removeOrderItem(orderItemId)
+                orderService.removeItem(orderItemId)
         );
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
         return orderResponseDto;

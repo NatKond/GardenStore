@@ -22,25 +22,25 @@ public class CartControllerImpl implements CartController {
     private final UserService userService;
 
     @Override
-    public CartResponseDto getCartForCurrentUser() {
+    public CartResponseDto getForCurrentUser() {
         return cartConverter.convertEntityToDto(
                 cartService.getByUser(
                         userService.getCurrent()));
     }
 
     @Override
-    public CartResponseDto addCartItem(@Positive Long productId) {
-        return cartConverter.convertEntityToDto(cartService.addCartItem(productId));
+    public CartResponseDto addItem(@Positive Long productId) {
+        return cartConverter.convertEntityToDto(cartService.addItem(productId));
     }
 
     @Override
-    public CartResponseDto updateCartItem(@Positive Long cartItemId, @Positive Integer quantity) {
+    public CartResponseDto updateItem(@Positive Long cartItemId, @Positive Integer quantity) {
         return cartConverter.convertEntityToDto(
-                cartService.updateCartItem(cartItemId, quantity));
+                cartService.updateItem(cartItemId, quantity));
     }
 
     @Override
-    public CartResponseDto deleteCartItem(@Positive Long cartItemId) {
-        return cartConverter.convertEntityToDto(cartService.deleteCartItem(cartItemId));
+    public CartResponseDto deleteItem(@Positive Long cartItemId) {
+        return cartConverter.convertEntityToDto(cartService.deleteItem(cartItemId));
     }
 }

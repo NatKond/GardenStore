@@ -58,13 +58,13 @@ class FavoriteServiceImplTest extends AbstractTest {
         Favorite expected = favorite1;
 
         when(userService.getCurrent()).thenReturn(user1);
-        when(favoriteRepository.findById(favoriteId)).thenReturn(Optional.of(favorite1));
+        when(favoriteRepository.findByUserAndFavoriteId(user1, favoriteId)).thenReturn(Optional.of(favorite1));
 
         Favorite actual = favoriteService.getById(favoriteId);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
-        verify(favoriteRepository).findById(favoriteId);
+        verify(favoriteRepository).findByUserAndFavoriteId(user1, favoriteId);
     }
 
     @Test
@@ -72,11 +72,12 @@ class FavoriteServiceImplTest extends AbstractTest {
     void getByIdNegativeCase() {
         Long favoriteId = 9999L;
 
-        when(favoriteRepository.findById(favoriteId)).thenReturn(Optional.empty());
+        when(userService.getCurrent()).thenReturn(user1);
+        when(favoriteRepository.findByUserAndFavoriteId(user1, favoriteId)).thenReturn(Optional.empty());
 
         RuntimeException runtimeException = assertThrows(FavoriteNotFoundException.class, () -> favoriteService.getById(favoriteId));
         assertEquals("Favorite with id " + favoriteId + " not found", runtimeException.getMessage());
-        verify(favoriteRepository).findById(favoriteId);
+        verify(favoriteRepository).findByUserAndFavoriteId(user1, favoriteId);
     }
 
     @Test
@@ -120,11 +121,11 @@ class FavoriteServiceImplTest extends AbstractTest {
         Long favoriteId = favorite1.getFavoriteId();
 
         when(userService.getCurrent()).thenReturn(user1);
-        when(favoriteRepository.findById(favoriteId)).thenReturn(Optional.of(favorite1));
+        when(favoriteRepository.findByUserAndFavoriteId(user1, favoriteId)).thenReturn(Optional.of(favorite1));
 
         favoriteService.deleteById(favoriteId);
 
-        verify(favoriteRepository).findById(favoriteId);
+        verify(favoriteRepository).findByUserAndFavoriteId(user1, favoriteId);
         verify(favoriteRepository).delete(favorite1);
     }
 
@@ -133,11 +134,12 @@ class FavoriteServiceImplTest extends AbstractTest {
     void testDeleteFavoriteNegativeCase() {
         Long favoriteId = 9999L;
 
-        when(favoriteRepository.findById(favoriteId)).thenReturn(Optional.empty());
+        when(favoriteRepository.findByUserAndFavoriteId(user1, favoriteId)).thenReturn(Optional.empty());
+        when(userService.getCurrent()).thenReturn(user1);
 
         RuntimeException runtimeException = assertThrows(FavoriteNotFoundException.class, () -> favoriteService.getById(favoriteId));
         assertEquals("Favorite with id " + favoriteId + " not found", runtimeException.getMessage());
-        verify(favoriteRepository).findById(favoriteId);
+        verify(favoriteRepository).findByUserAndFavoriteId(user1, favoriteId);
     }
 }
 

@@ -1,9 +1,9 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.*;
+import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.EmptyOrderException;
-import de.telran.gardenStore.exception.OrderAccessDeniedException;
 import de.telran.gardenStore.exception.OrderModificationException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,10 +32,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long orderId) {
-        Order order = orderRepository.findById(orderId)
+        return orderRepository.findByUserAndOrderId(userService.getCurrent(),orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + orderId + " not found"));
-        checkOrderOwnership(order);
-        return order;
     }
 
     @Override
@@ -61,33 +58,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order create(Order order) {
+    public Order create(String deliveryAddress, DeliveryMethod deliveryMethod, String contactPhone, Map<Long, Integer> productIdPerQuantityMap) {
         AppUser user = userService.getCurrent();
-        order.setUser(user);
-        if (order.getContactPhone() == null) {
-            order.setContactPhone(user.getPhoneNumber());
-        }
+
+        Order order = Order.builder()
+                .user(user)
+                .deliveryAddress(deliveryAddress)
+                .contactPhone(contactPhone != null ? contactPhone : user.getPhoneNumber())
+                .deliveryMethod(deliveryMethod)
+                .build();
 
         Cart cart = cartService.getByUser(user);
         List<CartItem> cartItems = cart.getItems();
 
-        Map<Long, CartItem> cartItemsMap = cartItems.stream().collect(Collectors.toMap(cartItem -> cartItem.getProduct().getProductId(), cartItem -> cartItem));
+        Map<Long, CartItem> productIdPerCartItemMap = cartItems.stream()
+                .collect(Collectors.toMap(cartItem -> cartItem.getProduct().getProductId(), cartItem -> cartItem));
 
-        List<OrderItem> orderItems = order.getItems();
-        Iterator<OrderItem> iterator = orderItems.iterator();
-        while (iterator.hasNext()) {
-            OrderItem orderItem = iterator.next();
+        productIdPerQuantityMap.forEach((productId, quantity) -> {
+            if (productIdPerCartItemMap.containsKey(productId)) {
+                CartItem cartItem = productIdPerCartItemMap.get(productId);
 
-            if (cartItemsMap.containsKey(orderItem.getProduct().getProductId())) {
-                CartItem cartItem = cartItemsMap.get(orderItem.getProduct().getProductId());
-                orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
+                order.getItems().add(createOrderItem(quantity, cartItem, order));
 
-                processCartItem(cartItem, cartItems, orderItem.getQuantity());
-
-            } else {
-                iterator.remove();
+                deleteOrUpdateCartItem(cartItem, cartItems, quantity);
             }
-        }
+
+        });
 
         checkOrderNotEmpty(order);
 
@@ -96,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void update (Order order){
+    public void update(Order order) {
         orderRepository.save(order);
     }
 
@@ -109,33 +105,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public Order addOrderItem(Long orderId, Long productId, Integer quantity) {
+    public Order addItem(Long orderId, Long productId, Integer quantity) {
         Order order = getById(orderId);
-        checkOrderOwnership(order);
         checkOrderCanBeModified(order);
-        List<OrderItem> orderItems = order.getItems();
-        Optional<OrderItem> orderItemExisting = orderItems.stream().filter(orderItem -> orderItem.getProduct().getProductId().equals(productId)).findFirst();
-        if (orderItemExisting.isPresent()) {
-            return updateOrderItem(orderItemExisting.get().getOrderItemId(), orderItemExisting.get().getQuantity() + quantity);
+
+        Optional<OrderItem> orderItemExistingOptional = findOrderItemByProductId(order.getItems(), productId);
+        if (orderItemExistingOptional.isPresent()) {
+            OrderItem orderItemExisting = orderItemExistingOptional.get();
+            return updateItem(orderItemExisting.getOrderItemId(), orderItemExisting.getQuantity() + quantity);
         }
 
         Cart cart = cartService.getByUser(order.getUser());
         List<CartItem> cartItems = cart.getItems();
-        Optional<CartItem> cartItemOptional = cartItems.stream()
-                .filter(cartItem -> cartItem.getProduct().getProductId().equals(productId))
-                .findFirst();
+        Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
-        if (cartItemOptional.isPresent()) {
-            CartItem cartItem = cartItemOptional.get();
-            order.getItems().add(
-                    OrderItem.builder()
-                            .order(order)
-                            .product(cartItem.getProduct())
-                            .priceAtPurchase(cartItem.getProduct().getPrice())
-                            .quantity(quantity)
-                            .build());
+        if(cartItem.isPresent()){
+            CartItem cartItemExisting = cartItem.get();
 
-            processCartItem(cartItem, cartItems, quantity);
+            order.getItems().add(createOrderItem(quantity, cartItemExisting, order));
+
+            deleteOrUpdateCartItem(cartItemExisting, cartItems, quantity);
         }
 
         cartService.update(cart);
@@ -144,19 +133,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public Order updateOrderItem(Long orderItemId, Integer quantity) {
+    public Order updateItem(Long orderItemId, Integer quantity) {
         OrderItem orderItem = orderItemService.getById(orderItemId);
         Order order = orderItem.getOrder();
-        checkOrderOwnership(order);
         checkOrderCanBeModified(order);
 
         Cart cart = cartService.getByUser(order.getUser());
         List<CartItem> cartItems = cart.getItems();
-        Optional<CartItem> cartItemOptional = cartItems.stream()
-                .filter(cartItem -> cartItem.getProduct().getProductId().equals(orderItem.getProduct().getProductId()))
-                .findFirst();
+        Long productId = orderItem.getProduct().getProductId();
+        Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
-        cartItemOptional.ifPresent(cartItem -> processCartItem(cartItem, cartItems, quantity));
+        cartItem.ifPresent(item -> deleteOrUpdateCartItem(item, cartItems, quantity));
 
         orderItem.setQuantity(quantity);
         cartService.update(cart);
@@ -164,11 +151,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order removeOrderItem(Long orderItemId) {
+    public Order removeItem(Long orderItemId) {
         OrderItem orderItem = orderItemService.getById(orderItemId);
 
         Order order = orderItem.getOrder();
-        checkOrderOwnership(order);
         checkOrderCanBeModified(order);
         order.getItems().remove(orderItem);
 
@@ -184,14 +170,34 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
-    private void processCartItem(CartItem cartItem, List<CartItem> cartItems, Integer quantity) {
+    private void deleteOrUpdateCartItem(CartItem cartItem, List<CartItem> cartItems, Integer quantity) {
         if (cartItem.getQuantity() <= quantity) {
             cartItems.remove(cartItem);
-            //cartService.deleteCartItem(cartItem.getCartItemId());
         } else {
             cartItem.setQuantity(cartItem.getQuantity() - quantity);
-            //cartService.updateCartItem(cartItem.getCartItemId(), cartItem.getQuantity() - orderItem.getQuantity());
         }
+    }
+
+    private Optional<CartItem> findCartItemByProductId(List<CartItem> cartItems, Long productId) {
+        return cartItems.stream()
+                .filter(cartItem -> cartItem.getProduct().getProductId().equals(productId))
+                .findFirst();
+    }
+
+    private Optional<OrderItem> findOrderItemByProductId(List<OrderItem> orderItems, Long productId) {
+        return orderItems.stream()
+                .filter(orderItem -> orderItem.getProduct().getProductId().equals(productId))
+                .findFirst();
+    }
+
+    private OrderItem createOrderItem(Integer quantity, CartItem cartItem, Order order) {
+        Product product = cartItem.getProduct();
+        return OrderItem.builder()
+                .order(order)
+                .product(product)
+                .quantity(quantity)
+                .priceAtPurchase(product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice())
+                .build();
     }
 
     private void checkOrderNotEmpty(Order order) {
@@ -203,12 +209,6 @@ public class OrderServiceImpl implements OrderService {
     private void checkOrderCanBeModified(Order order) {
         if (order.getStatus() != OrderStatus.CREATED) {
             throw new OrderModificationException("Order cannot be modified in current status " + order.getStatus());
-        }
-    }
-
-    private void checkOrderOwnership(Order order) {
-        if (order.getUser() != userService.getCurrent()) {
-            throw new OrderAccessDeniedException("Access denied");
         }
     }
 }

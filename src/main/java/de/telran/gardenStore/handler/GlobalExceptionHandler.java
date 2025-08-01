@@ -52,9 +52,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MappingException.class)
     public ResponseEntity<ApiErrorResponse> handleMappingException(MappingException exception) {
         Throwable rootCause = exception.getCause();
-        if (rootCause instanceof EntityNotFoundException) {
-            return handleEntityNotFoundException((EntityNotFoundException) rootCause);
-        }
         log.error(exception.getMessage(), exception);
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
                     .exception(rootCause.getClass().getSimpleName())

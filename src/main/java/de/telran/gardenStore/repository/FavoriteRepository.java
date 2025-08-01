@@ -14,6 +14,12 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     List<Favorite> getAllByUser(AppUser user);
 
-    @Query("SELECT f FROM Favorite f JOIN f.user u JOIN f.product p WHERE p.productId =:productId AND u.userId =:userId ")
-    Optional<Favorite> findByUserIdAndProductId(Long userId,Long productId);
+    Optional<Favorite> findByUserAndFavoriteId(AppUser user, Long favoriteId);
+
+    @Query("SELECT f " +
+            "FROM Favorite f " +
+            "JOIN f.user u " +
+            "JOIN f.product p " +
+            "WHERE p.productId =:productId AND u.userId =:userId ")
+    Optional<Favorite> findByUserIdAndProductId(Long userId, Long productId);
 }

@@ -30,4 +30,11 @@
                     CHECK (role IN ('ROLE_USER', 'ROLE_ADMINISTRATOR'));
         </sql>
     </changeSet>
+
+<!--    <changeSet id="11-add-constraints-to-app_users-role" author="nkond">-->
+<!--        <addCheckConstraint-->
+<!--                tableName="app_users"-->
+<!--                constraintName="chk_app_users_role"-->
+<!--                checkCondition="role IN ('ROLE_USER', 'ROLE_ADMINISTRATOR')"/>-->
+<!--    </changeSet>-->
 </databaseChangeLog>

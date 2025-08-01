@@ -22,8 +22,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -75,6 +77,7 @@ public class OrderControllerImplTest extends AbstractTest {
     void getOrderByIdPositiveCase() throws Exception {
         when(orderService.getById(order1.getOrderId())).thenReturn(order1);
         when(orderConverter.convertEntityToDto(order1)).thenReturn(orderResponseDto1);
+        when(orderService.getTotalAmount(order1.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount());
 
         mockMvc.perform(get("/v1/orders/{orderId}", order1.getOrderId()))
                 .andExpectAll(
@@ -112,8 +115,14 @@ public class OrderControllerImplTest extends AbstractTest {
                 .build();
 
         when(orderConverter.convertDtoToEntity(orderCreateRequestDto)).thenReturn(orderToCreate);
-        when(orderService.create(orderToCreate)).thenReturn(orderCreated);
+        when(orderService.create(
+                orderToCreate.getDeliveryAddress(),
+                orderToCreate.getDeliveryMethod(),
+                orderToCreate.getContactPhone(),
+                orderToCreate.getItems().stream().collect(Collectors.toMap(orderItem -> orderItem.getProduct().getProductId(), OrderItem::getQuantity))
+        )).thenReturn(orderCreated);
         when(orderConverter.convertEntityToDto(orderCreated)).thenReturn(orderResponseCreatedDto);
+        when(orderService.getTotalAmount(orderCreated.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount());
 
         mockMvc.perform(post("/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -123,8 +132,11 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(orderResponseCreatedDto)));
 
-        verify(orderConverter).convertDtoToEntity(orderCreateRequestDto);
-        verify(orderService).create(orderToCreate);
+        verify(orderService).create(
+                orderToCreate.getDeliveryAddress(),
+                orderToCreate.getDeliveryMethod(),
+                orderToCreate.getContactPhone(),
+                orderToCreate.getItems().stream().collect(Collectors.toMap(orderItem -> orderItem.getProduct().getProductId(), OrderItem::getQuantity)));
         verify(orderConverter).convertEntityToDto(orderCreated);
     }
 
@@ -152,8 +164,12 @@ public class OrderControllerImplTest extends AbstractTest {
                 .items(orderItems)
                 .build();
 
-        when(orderConverter.convertDtoToEntity(orderInvalidCreateRequestDto)).thenReturn(orderInvalid);
-        when(orderService.create(orderToCreate)).thenThrow(new EmptyOrderException("Order is empty."));
+        when(orderService.create(
+                orderInvalid.getDeliveryAddress(),
+                orderInvalid.getDeliveryMethod(),
+                orderInvalid.getContactPhone(),
+                orderInvalid.getItems().stream().collect(Collectors.toMap(orderItem -> orderItem.getProduct().getProductId(), OrderItem::getQuantity))))
+                .thenThrow(new EmptyOrderException("Order is empty."));
 
         mockMvc.perform(post("/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -164,7 +180,139 @@ public class OrderControllerImplTest extends AbstractTest {
                         jsonPath("$.exception").value("EmptyOrderException"),
                         jsonPath("$.message").value("Order is empty."));
 
-        verify(orderConverter).convertDtoToEntity(orderInvalidCreateRequestDto);
+    }
+
+    @Test
+    @DisplayName("POST /v1/orders/items?orderId={orderId}&productId={productId}&quantity={quantity} - Update order item")
+    void addItem() throws Exception {
+        Order order = order1.toBuilder()
+                .status(OrderStatus.CREATED)
+                .build();
+        Integer quantity = 2;
+
+        List<OrderItem> orderItemsUpdated = new ArrayList<>(order.getItems());
+        orderItemsUpdated.add(OrderItem.builder()
+                .product(product3)
+                .quantity(quantity)
+                .build());
+        Order orderUpdated = order.toBuilder()
+                .items(orderItemsUpdated)
+                .build();
+
+        List<OrderItemResponseDto> orderItemResponseDto = new ArrayList<>(orderResponseDto1.getItems());
+        orderItemResponseDto.add(OrderItemResponseDto.builder()
+                .orderItemId(4L)
+                .product(productShortResponseDto3)
+                .quantity(quantity)
+                .priceAtPurchase(product3.getDiscountPrice())
+                .build());
+        OrderResponseDto expected = orderResponseDto1.toBuilder()
+                .status(order.getStatus().toString())
+                .items(orderItemResponseDto)
+                .build();
+
+        when(orderService.addItem(order.getOrderId(), product3.getProductId(), quantity)).thenReturn(orderUpdated);
+        when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
+        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount().add(product3.getDiscountPrice().multiply(BigDecimal.valueOf(quantity))));
+
+        mockMvc.perform(post("/v1/orders/items?orderId={orderId}&productId={productId}&quantity={quantity}",
+                        order.getOrderId(),
+                        productShortResponseDto3.getProductId(),
+                        quantity)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isCreated(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
+
+        verify(orderService).addItem(order.getOrderId(), product3.getProductId(), quantity);
+        verify(orderConverter).convertEntityToDto(orderUpdated);
+        verify(orderService).getTotalAmount(order.getOrderId());
+    }
+
+    @Test
+    @DisplayName("PUT /v1/orders/items?orderItemId={orderItemId}&quantity={quantity} - Update order item")
+    void updateItem() throws Exception {
+        Order order = order1.toBuilder()
+                .status(OrderStatus.CREATED)
+                .build();
+
+        Integer quantity = 3;
+        Long orderItemId = orderItem1.getOrderItemId();
+
+        List<OrderItem> orderItemsUpdated = new ArrayList<>(order.getItems());
+        orderItemsUpdated.remove(orderItem1);
+        orderItemsUpdated.add(orderItem1.toBuilder()
+                .quantity(quantity)
+                .build());
+        Order orderUpdated = order.toBuilder()
+                .items(orderItemsUpdated)
+                .build();
+
+        List<OrderItemResponseDto> orderItemResponseDto = new ArrayList<>(orderResponseDto1.getItems());
+        orderItemResponseDto.remove(orderItemResponseDto1);
+        orderItemResponseDto.add(orderItemResponseDto1.toBuilder()
+                .quantity(quantity)
+                .build());
+        OrderResponseDto expected = orderResponseDto1.toBuilder()
+                .status(order.getStatus().toString())
+                .items(orderItemResponseDto)
+                .build();
+
+        when(orderService.updateItem(orderItemId, quantity)).thenReturn(orderUpdated);
+        when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
+        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount().add(product3.getDiscountPrice()));
+
+        mockMvc.perform(put("/v1/orders/items?orderItemId={orderItemId}&quantity={quantity}",
+                        orderItemId,
+                        quantity)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isAccepted(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
+
+        verify(orderService).updateItem(orderItemId,quantity);
+        verify(orderConverter).convertEntityToDto(orderUpdated);
+        verify(orderService).getTotalAmount(order.getOrderId());
+    }
+
+    @Test
+    @DisplayName("DELETE /v1/orders/items/{orderItemId} - Delete order item")
+    void deleteItem() throws Exception {
+        Order order = order1.toBuilder()
+                .status(OrderStatus.CREATED)
+                .build();
+
+        Long orderItemId = orderItem1.getOrderItemId();
+
+        List<OrderItem> orderItemsUpdated = new ArrayList<>(order.getItems());
+        orderItemsUpdated.remove(orderItem1);
+        Order orderUpdated = order.toBuilder()
+                .items(orderItemsUpdated)
+                .build();
+
+        List<OrderItemResponseDto> orderItemResponseDto = new ArrayList<>(orderResponseDto1.getItems());
+        orderItemResponseDto.remove(orderItemResponseDto1);
+        OrderResponseDto expected = orderResponseDto1.toBuilder()
+                .status(order.getStatus().toString())
+                .items(orderItemResponseDto)
+                .build();
+
+        when(orderService.removeItem(orderItemId)).thenReturn(orderUpdated);
+        when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
+        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount().add(product3.getDiscountPrice()));
+
+        mockMvc.perform(delete("/v1/orders/items/{orderItemId} ", orderItemId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
+
+        verify(orderService).removeItem(orderItemId);
+        verify(orderConverter).convertEntityToDto(orderUpdated);
+        verify(orderService).getTotalAmount(order.getOrderId());
     }
 
     @Test

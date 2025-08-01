@@ -76,8 +76,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
-        Category category = categoryService.getById(product.getCategory().getCategoryId());
-        //product.setCategory(category);
+        checkCategoryExists(product.getCategory().getCategoryId());
+
         return productRepository.save(product);
     }
 
@@ -85,13 +85,13 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Long id, Product product) {
         Product existing = getById(id);
 
-        Category category = categoryService.getById(product.getCategory().getCategoryId());
+        checkCategoryExists(product.getCategory().getCategoryId());
 
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
         existing.setDiscountPrice(product.getDiscountPrice());
-        existing.setCategory(product.getCategory()); //category);
+        existing.setCategory(product.getCategory());
         existing.setImageUrl(product.getImageUrl());
 
         return productRepository.save(existing);
@@ -100,5 +100,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteById(Long id) {
         productRepository.delete(getById(id));
+    }
+
+    private void checkCategoryExists(Long categoryId) {
+        categoryService.getById(categoryId);
     }
 }

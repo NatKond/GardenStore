@@ -33,7 +33,7 @@ VALUES
 
 INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status, created_at, updated_at)
 VALUES
-    (1, '123 Garden Street', '+1234567890', 'COURIER', 'AWAITING_PAYMENT', '2025-07-01 10:00:00', '2025-07-01 10:30:00'),
+    (1, '123 Garden Street', '+1234567890', 'COURIER', 'CREATED', '2025-07-01 10:00:00', '2025-07-01 10:30:00'),
     (2, '456 Green Ave', '+1987654321', 'PICKUP', 'CREATED', '2025-07-02 12:00:00', '2025-07-02 12:05:00');
 
 INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)

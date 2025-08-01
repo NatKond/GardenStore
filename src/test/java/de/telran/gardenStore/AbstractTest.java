@@ -302,12 +302,13 @@ public abstract class AbstractTest {
                 .deliveryAddress("123 Garden Street")
                 .contactPhone(user1.getPhoneNumber())
                 .deliveryMethod(DeliveryMethod.COURIER)
-                .status(OrderStatus.AWAITING_PAYMENT)
+                .status(OrderStatus.CREATED)
                 .createdAt(LocalDateTime.of(2025, 7, 1, 10, 0, 0))
                 .updatedAt(LocalDateTime.of(2025, 7, 1, 10, 30, 0))
                 .build();
 
         orderItem1 = OrderItem.builder()
+                .orderItemId(1L)
                 .order(order1)
                 .product(product1)
                 .quantity(2)
@@ -315,6 +316,7 @@ public abstract class AbstractTest {
                 .build();
 
         orderItem2 = OrderItem.builder()
+                .orderItemId(2L)
                 .order(order1)
                 .product(product2)
                 .quantity(1)
@@ -335,6 +337,7 @@ public abstract class AbstractTest {
                 .build();
 
         orderItem3 = OrderItem.builder()
+                .orderItemId(3L)
                 .order(order2)
                 .product(product3)
                 .quantity(1)

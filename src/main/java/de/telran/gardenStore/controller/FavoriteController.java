@@ -16,8 +16,8 @@ public interface FavoriteController {
 
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    FavoriteResponseDto create(@RequestParam @Positive Long productId);
+    @PostMapping("/{productId}")
+    FavoriteResponseDto create(@PathVariable @Positive Long productId);
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{favoriteId}")

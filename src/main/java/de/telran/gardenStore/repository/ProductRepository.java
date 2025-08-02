@@ -10,6 +10,14 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE p.discountPrice IS NOT NULL ORDER BY (p.price - p.discountPrice) DESC")
+    @Query(value = """
+        SELECT p.*
+        FROM products p
+        WHERE p.discount_price IS NOT NULL
+        AND FLOOR(((p.price - p.discount_price) * 100) / p.price) = (
+            SELECT MAX(FLOOR(((p.price - p.discount_price) * 100) / p.price)) 
+            FROM products p
+        )
+        """, nativeQuery = true)
     List<Product> findProductsWithHighestDiscount();
 }

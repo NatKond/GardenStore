@@ -1,6 +1,7 @@
 package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.exception.NoDiscountedProductsException;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -123,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductOfTheDay() {
         List<Product> discountedProducts = productRepository.findProductsWithHighestDiscount();
         if (discountedProducts.isEmpty()) {
-            throw new ProductNotFoundException("No discounted products available");
+            throw new NoDiscountedProductsException("No discounted products available");
         }
         return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
     }

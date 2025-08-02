@@ -17,6 +17,10 @@ public interface ProductService {
     Product update(Long productId, Product product);
 
     void deleteById(Long productId);
+
+    Product setDiscount(Long productId, BigDecimal discountPercentage);
+
+    Product getProductOfTheDay();
 }
 
 

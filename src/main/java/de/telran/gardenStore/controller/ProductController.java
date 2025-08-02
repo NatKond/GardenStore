@@ -42,4 +42,15 @@ public interface ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}")
     void delete(@PathVariable @Positive Long productId);
+
+    @PostMapping("/{productId}/discount/{discountPercentage}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    ProductResponseDto setDiscount(
+            @PathVariable @Positive Long productId,
+            @PathVariable @Positive BigDecimal discountPercentage
+    );
+
+    @GetMapping("/product-of-the-day")
+    ProductResponseDto getProductOfTheDay();
 }

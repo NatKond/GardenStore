@@ -1,6 +1,7 @@
 package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.exception.NoDiscountedProductsException;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +106,26 @@ public class ProductServiceImpl implements ProductService {
 
     private void checkCategoryExists(Long categoryId) {
         categoryService.getById(categoryId);
+    }
+
+    @Override
+    public Product setDiscount(Long productId, BigDecimal discountPercentage) {
+        if (discountPercentage.compareTo(BigDecimal.ZERO) < 0 || discountPercentage.compareTo(new BigDecimal(100)) > 0) {
+            throw new IllegalArgumentException("Discount percentage must be between 0 and 100");
+        }
+
+        Product product = getById(productId);
+        BigDecimal discountAmount = product.getPrice().multiply(discountPercentage).divide(new BigDecimal(100));
+        product.setDiscountPrice(product.getPrice().subtract(discountAmount));
+        return productRepository.save(product);
+    }
+
+    @Override
+    public Product getProductOfTheDay() {
+        List<Product> discountedProducts = productRepository.findProductsWithHighestDiscount();
+        if (discountedProducts.isEmpty()) {
+            throw new NoDiscountedProductsException("No discounted products available");
+        }
+        return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
     }
 }

@@ -65,4 +65,18 @@ public class ProductControllerImpl implements ProductController {
     public void delete(@Positive Long productId) {
         productService.deleteById(productId);
     }
+
+    @Override
+    public ProductResponseDto setDiscount(@Positive Long productId, @Positive BigDecimal discountPercentage) {
+        return productConverter.convertEntityToDto(
+                productService.setDiscount(productId, discountPercentage)
+        );
+    }
+
+    @Override
+    public ProductResponseDto getProductOfTheDay() {
+        return productConverter.convertEntityToDto(
+                productService.getProductOfTheDay()
+        );
+    }
 }

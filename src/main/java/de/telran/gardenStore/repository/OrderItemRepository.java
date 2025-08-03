@@ -15,6 +15,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
             "FROM OrderItem oi " +
             "JOIN oi.order o " +
             "JOIN o.user u " +
-            "WHERE o.user = :user AND oi.orderItemId =: orderItemId ")
+            "WHERE o.user = :user AND oi.orderItemId = :orderItemId ")
     Optional<OrderItem> findByUserAndId(AppUser user, Long orderItemId);
 }

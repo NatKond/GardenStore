@@ -1,0 +1,16 @@
+package de.telran.gardenStore.service;
+import de.telran.gardenStore.dto.report.ProductReport;
+import de.telran.gardenStore.dto.report.ProfitReport;
+
+import java.util.List;
+
+public interface ReportService {
+
+    List<ProductReport> getTopOrderedProducts(Integer limit);
+
+    List<ProductReport> getTopCanceledProducts(Integer limit);
+
+    List<ProductReport> getProductsAwaitingPaymentForMoreDays(Integer days, Integer limit);
+
+    List<ProfitReport> getProfitOverPeriod(String period, Integer limit, String groupBy);
+}

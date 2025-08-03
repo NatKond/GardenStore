@@ -39,14 +39,12 @@ class CartServiceImplTest extends AbstractTest {
     @DisplayName("Get cart by user : positive case")
     @Test
     void getByUserPositiveCase() {
-
         AppUser user = user1;
         Cart expected = user.getCart();
 
         when(cartRepository.findByUser(user)).thenReturn(Optional.of(expected));
 
         Cart actual = cartService.getByUser(user);
-
 
         assertNotNull(actual);
         assertEquals(expected, actual);
@@ -55,8 +53,7 @@ class CartServiceImplTest extends AbstractTest {
 
     @DisplayName("Get cart by user : negative case")
     @Test
-    void getByUser_WhenCartNotExists_ThrowsException() {
-
+    void getByUserNegativeCase() {
         AppUser user = user1;
 
         when(cartRepository.findByUser(user)).thenReturn(Optional.empty());
@@ -68,14 +65,16 @@ class CartServiceImplTest extends AbstractTest {
         verify(cartRepository).findByUser(user);
     }
 
-    @DisplayName("Create cart : positive case")
+    @DisplayName("Create cart")
     @Test
-    void createCartPositiveCase() {
-
+    void create() {
         AppUser user = user1;
-        Cart expected = Cart.builder().user(user).build();
+        Cart cartToCreate = Cart.builder().user(user).build();
+        Cart expected = cartToCreate.toBuilder()
+                .cartId(1L)
+                .build();
 
-        when(cartRepository.save(any(Cart.class))).thenReturn(expected);
+        when(cartRepository.save(cartToCreate)).thenReturn(expected);
 
         Cart actual = cartService.create(user);
 
@@ -85,9 +84,30 @@ class CartServiceImplTest extends AbstractTest {
         verify(cartRepository).save(any(Cart.class));
     }
 
+    @DisplayName("Update cart")
+    @Test
+    void update() {
+        AppUser user = user1;
+        Cart cart = cart1;
+
+        Cart expected = cart1.toBuilder()
+                .items(new ArrayList<>())
+                .build();
+
+        when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
+        when(cartRepository.save(expected)).thenReturn(expected);
+
+        Cart actual = cartService.update(expected);
+
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        assertTrue(actual.getItems().isEmpty());
+        verify(cartRepository).save(expected);
+    }
+
     @DisplayName("Add item to cart")
     @Test
-    void addCartItem() {
+    void addItem() {
         AppUser user = user1;
         Long productId = product3.getProductId();
         Product product = product3;
@@ -118,7 +138,7 @@ class CartServiceImplTest extends AbstractTest {
         when(productService.getById(productId)).thenReturn(product);
         when(cartRepository.save(cartToSave)).thenReturn(expected);
 
-        Cart actual = cartService.addCartItem(productId);
+        Cart actual = cartService.addItem(productId);
 
         assertEquals(expected, actual);
         verify(cartRepository).save(expected);
@@ -127,8 +147,7 @@ class CartServiceImplTest extends AbstractTest {
 
     @DisplayName("Update cart item")
     @Test
-    void updateCartItem() {
-
+    void updateItem() {
         Long cartItemId = cartItem1.getCartItemId();
         Integer quantityUpdated = 5;
         CartItem updatedItem =cartItem1.toBuilder().quantity(quantityUpdated).build();
@@ -138,10 +157,9 @@ class CartServiceImplTest extends AbstractTest {
         cart1.getItems().add(updatedItem);
 
         when(cartItemService.getById(cartItemId)).thenReturn(cartItem1);
-        when(userService.getCurrent()).thenReturn(user1);
         when(cartRepository.save(expected)).thenReturn(expected);
 
-        Cart actual = cartService.updateCartItem(cartItemId, quantityUpdated);
+        Cart actual = cartService.updateItem(cartItemId, quantityUpdated);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
@@ -150,16 +168,15 @@ class CartServiceImplTest extends AbstractTest {
 
     @DisplayName("Delete cart item")
     @Test
-    void deleteCartItem() {
+    void deleteItem() {
         Long cartItemId = cartItem1.getCartItemId();
         Cart expected = cart1.toBuilder().build();
         cart1.getItems().remove(cartItem1);
 
         when(cartItemService.getById(cartItemId)).thenReturn(cartItem1);
-        when(userService.getCurrent()).thenReturn(user1);
         when(cartRepository.save(expected)).thenReturn(expected);
 
-        Cart actual = cartService.deleteCartItem(cartItemId);
+        Cart actual = cartService.deleteItem(cartItemId);
 
         assertNotNull(actual);
         assertEquals(expected, actual);

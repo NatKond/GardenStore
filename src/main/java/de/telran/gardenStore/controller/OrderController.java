@@ -188,7 +188,7 @@ public interface OrderController {
                                 "timestamp": "2025-07-25T11:45:02.93348"
                             }
                             """)))
-    OrderResponseDto addOrderItem(
+    OrderResponseDto addItem(
             @Parameter(description = "Order ID", example = "3") @Positive Long orderId,
             @Parameter(description = "Product ID", example = "2") @Positive Long productId,
             @Parameter(description = "Quantity", example = "1") @Positive Integer quantity);
@@ -233,7 +233,7 @@ public interface OrderController {
                                 "timestamp": "2025-07-25T11:45:02.93348"
                             }
                             """)))
-    OrderResponseDto updateOrderItem(
+    OrderResponseDto updateItem(
             @Parameter(description = "Order item ID", example = "4") @Positive Long orderItemId,
             @Parameter(description = "New quantity", example = "3") @Positive Integer quantity);
 
@@ -260,7 +260,7 @@ public interface OrderController {
                                     }
                                     """),
                     }))
-    OrderResponseDto removeOrderItem(
+    OrderResponseDto removeItem(
             @Parameter(description = "Order item ID", example = "5") @Positive Long orderItemId);
 
     @Operation(summary = "Cancel order by ID")

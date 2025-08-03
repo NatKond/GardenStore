@@ -8,9 +8,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
+
+    Optional<Order> findByUserAndOrderId(AppUser user, Long orderId);
 
     List<Order> findAllByUser(AppUser user);
 

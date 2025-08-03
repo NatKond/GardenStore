@@ -20,31 +20,31 @@ public class ScheduledService {
     private final OrderService orderService;
 
     @Async
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "${scheduled.orders.cron}")
     public void processCreatedOrders() {
         log.info("{}: Created Orders", Thread.currentThread().getName());
-        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.CREATED, LocalDateTime.now().minusMinutes(5)));
+        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.CREATED, LocalDateTime.now().minusMinutes(60)));
     }
 
     @Async
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "${scheduled.orders.cron}")
     public void processAwaitingPaymentOrders() {
         log.info("{}: Awaiting Payment Orders", Thread.currentThread().getName());
-        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.AWAITING_PAYMENT, LocalDateTime.now().minusMinutes(5)));
+        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.AWAITING_PAYMENT, LocalDateTime.now().minusMinutes(60)));
     }
 
     @Async
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "${scheduled.orders.cron}")
     public void processPaidOrders() {
         log.info("{}: Paid Orders", Thread.currentThread().getName());
-        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.PAID, LocalDateTime.now().minusMinutes(5)));
+        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.PAID, LocalDateTime.now().minusMinutes(60)));
     }
 
     @Async
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "${scheduled.orders.cron}")
     public void processShippedOrders() {
         log.info("{}: Shipped Orders", Thread.currentThread().getName());
-        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.SHIPPED, LocalDateTime.now().minusMinutes(5)));
+        changeOrderStatus(orderService.getByStatusAndTimeAfter(OrderStatus.SHIPPED, LocalDateTime.now().minusMinutes(60)));
     }
 
     private void changeOrderStatus(List<Order> orders) {

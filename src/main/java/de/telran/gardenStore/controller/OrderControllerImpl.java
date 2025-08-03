@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,7 +23,7 @@ public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
 
-    private final Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
+    private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Override
     @GetMapping("/history")
@@ -49,8 +50,12 @@ public class OrderControllerImpl implements OrderController {
     public OrderResponseDto create(@RequestBody @Valid OrderCreateRequestDto orderCreateRequestDto) {
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
                 orderService.create(
-                        orderConverter.convertDtoToEntity(orderCreateRequestDto))
+                        orderCreateRequestDto.getDeliveryAddress(),
+                        orderCreateRequestDto.getDeliveryMethod(),
+                        orderCreateRequestDto.getContactPhone(),
+                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue)))
         );
+
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
 
         return orderResponseDto;
@@ -60,11 +65,11 @@ public class OrderControllerImpl implements OrderController {
     @PostMapping("/items")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponseDto addOrderItem(@RequestParam @Positive Long orderId,
+    public OrderResponseDto addItem(@RequestParam @Positive Long orderId,
                                          @RequestParam @Positive Long productId,
                                          @RequestParam @Positive Integer quantity){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.addOrderItem(orderId, productId, quantity)
+                orderService.addItem(orderId, productId, quantity)
         );
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
         return orderResponseDto;
@@ -74,10 +79,10 @@ public class OrderControllerImpl implements OrderController {
     @PutMapping("/items")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public OrderResponseDto updateOrderItem(@RequestParam @Positive Long orderItemId,
+    public OrderResponseDto updateItem(@RequestParam @Positive Long orderItemId,
                                             @RequestParam @Positive Integer quantity){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.updateOrderItem(orderItemId, quantity)
+                orderService.updateItem(orderItemId, quantity)
         );
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
         return orderResponseDto;
@@ -86,9 +91,9 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")
     @Override
-    public OrderResponseDto removeOrderItem(@PathVariable @Positive Long orderItemId){
+    public OrderResponseDto removeItem(@PathVariable @Positive Long orderItemId){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.removeOrderItem(orderItemId)
+                orderService.removeItem(orderItemId)
         );
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
         return orderResponseDto;

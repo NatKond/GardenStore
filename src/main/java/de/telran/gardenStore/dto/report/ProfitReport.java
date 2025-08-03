@@ -1,4 +1,4 @@
-package de.telran.gardenStore.dto;
+package de.telran.gardenStore.dto.report;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -13,13 +13,10 @@ import java.math.BigDecimal;
 @Data
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OrderItemResponseDto {
+public class ProfitReport {
 
-    private Long orderItemId;
+    private String period;
 
-    private ProductShortResponseDto product;
+    private BigDecimal amountPerPeriod;
 
-    private Integer quantity;
-
-    private BigDecimal priceAtPurchase;
 }

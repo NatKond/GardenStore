@@ -61,7 +61,7 @@ public interface CartController {
                                 "timestamp": "2025-07-25T11:02:54.107778"
                             }
                             """)))
-    CartResponseDto getCartForCurrentUser();
+    CartResponseDto getForCurrentUser();
 
     @Operation(summary = "Add product to cart",
             description = "Adds a product to the current user's shopping cart.")
@@ -120,7 +120,7 @@ public interface CartController {
                                 "timestamp": "2025-07-25T10:50:12.123456"
                             }
                             """)))
-    CartResponseDto addCartItem(
+    CartResponseDto addItem(
             @Parameter(description = "ID of the product to add", example = "3") @Positive Long productId);
 
     @Operation(summary = "Update cart item quantity",
@@ -180,7 +180,7 @@ public interface CartController {
                                 "timestamp": "2025-07-25T10:51:47.789012"
                             }
                             """)))
-    CartResponseDto updateCartItem(
+    CartResponseDto updateItem(
             @Parameter(description = "ID of the cart item", example = "6") @Positive Long cartItemId,
             @Parameter(description = "New quantity", example = "4") @Positive Integer quantity);
 
@@ -230,6 +230,6 @@ public interface CartController {
                                 "timestamp": "2025-07-25T10:53:01.123456"
                             }
                             """)))
-    CartResponseDto deleteCartItem(
+    CartResponseDto deleteItem(
             @Parameter(description = "ID of the cart item to delete", example = "6") @Positive Long cartItemId);
 }

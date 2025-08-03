@@ -3,7 +3,6 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
-import de.telran.gardenStore.exception.CartAccessDeniedException;
 import de.telran.gardenStore.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public Cart addCartItem(Long productId) {
+    public Cart addItem(Long productId) {
         AppUser user = userService.getCurrent();
 
         Cart cart;
@@ -59,9 +58,6 @@ public class CartServiceImpl implements CartService {
         } catch (CartNotFoundException exception) {
             cart = create(user);
         }
-
-//        Cart cart = cartRepository.findByUserId(userId)
-//                .orElseGet(() -> create(userService.getUserById(userId)));
 
         List<CartItem> items = cart.getItems();
 
@@ -82,34 +78,22 @@ public class CartServiceImpl implements CartService {
         }
 
         return cartRepository.save(cart);
-
-//        CartItem cartItem = cartItemService.addCartItem(cart, productId);
-//        return cartItem.getCart();
     }
 
     @Override
-    public Cart updateCartItem(Long cartItemId, Integer quantity) {
+    public Cart updateItem(Long cartItemId, Integer quantity) {
         CartItem cartItem = cartItemService.getById(cartItemId);
         Cart cart = cartItem.getCart();
-        checkCartOwnership(cart);
         cartItem.setQuantity(quantity);
-        //CartItem updatedItem = cartItemService.update(cartItemId, quantity);
         return cartRepository.save(cart);
     }
 
     @Override
-    public Cart deleteCartItem(Long cartItemId) {
+    public Cart deleteItem(Long cartItemId) {
         CartItem cartItem = cartItemService.getById(cartItemId);
         Cart cart = cartItem.getCart();
-        checkCartOwnership(cart);
         cart.getItems().remove(cartItem);
         return cartRepository.save(cart);
-    }
-
-    private void checkCartOwnership(Cart cart) {
-        if (cart.getUser() != userService.getCurrent()) {
-            throw new CartAccessDeniedException("Access denied");
-        }
     }
 }
 

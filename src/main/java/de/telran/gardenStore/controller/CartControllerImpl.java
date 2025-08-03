@@ -27,7 +27,7 @@ public class CartControllerImpl implements CartController {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     @Override
-    public CartResponseDto getCartForCurrentUser() {
+    public CartResponseDto getForCurrentUser() {
         return cartConverter.convertEntityToDto(
                 cartService.getByUser(
                         userService.getCurrent()));
@@ -37,7 +37,7 @@ public class CartControllerImpl implements CartController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Override
-    public CartResponseDto addCartItem(@PathVariable @Positive Long productId) {
+    public CartResponseDto addItem(@PathVariable @Positive Long productId) {
         return cartConverter.convertEntityToDto(
                 cartService.addCartItem(productId));
     }
@@ -46,7 +46,7 @@ public class CartControllerImpl implements CartController {
     @PutMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
     @Override
-    public CartResponseDto updateCartItem(@PathVariable @Positive Long cartItemId,
+    public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
                                           @RequestParam @Positive Integer quantity) {
         return cartConverter.convertEntityToDto(
                 cartService.updateCartItem(cartItemId, quantity));
@@ -55,7 +55,7 @@ public class CartControllerImpl implements CartController {
     @Override
     @DeleteMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
-    public CartResponseDto deleteCartItem(@PathVariable @Positive Long cartItemId) {
+    public CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId) {
         return cartConverter.convertEntityToDto(cartService.deleteCartItem(cartItemId));
     }
 }

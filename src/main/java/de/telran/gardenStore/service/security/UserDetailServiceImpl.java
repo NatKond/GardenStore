@@ -21,7 +21,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser appUser = userService.getByEmail(username);//.orElseThrow(() -> new UsernameNotFoundException("User with email " + username + " not found"));
+        AppUser appUser = userService.getByEmail(username);
 
         List<GrantedAuthority> authorities = appUser.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.name()))
@@ -32,10 +32,5 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 appUser.getPasswordHash(),
                 authorities
         );
-
-//        return new User(
-//                appUser.getEmail(),
-//                appUser.getPasswordHash(),
-//                Collections.singleton(new SimpleGrantedAuthority(appUser.getRole().name())));
     }
 }

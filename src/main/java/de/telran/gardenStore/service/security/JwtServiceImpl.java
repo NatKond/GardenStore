@@ -22,8 +22,12 @@ public class JwtServiceImpl implements JwtService {
 
     private final SecretKey secretKey;
 
-    public JwtServiceImpl(@Value("${jwttoken.sing.secret.key}") String jwtSingKey) {
+    private final Integer expirationTime;
+
+    public JwtServiceImpl(@Value("${jwt.token.sign.secret.key}") String jwtSingKey,
+                          @Value("${jwt.token.expiration.minutes}") Integer expirationTime) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSingKey));
+        this.expirationTime = expirationTime;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class JwtServiceImpl implements JwtService {
                 .claims()
                 .subject(user.getEmail())
                 .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plus(Duration.ofMinutes(30))))
+                .expiration(Date.from(Instant.now().plus(Duration.ofMinutes(expirationTime))))
                 .add(claims)
                 .and()
                 .signWith(secretKey)
@@ -54,6 +58,7 @@ public class JwtServiceImpl implements JwtService {
         log.info("claims {}", claims);
         return claims.getSubject();
     }
+
     private Claims getClaimsFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)

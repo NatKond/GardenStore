@@ -7,6 +7,8 @@ import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -41,13 +43,17 @@ public class ProductControllerImpl implements ProductController {
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("Min price cannot be greater than max price.");
         }
-        return productConverter.convertEntityListToDtoList(productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection));
+        return productConverter.convertEntityListToDtoList(
+                productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection)
+        );
     }
 
     @Override
     @GetMapping("/{productId}")
     public ProductResponseDto getById(@PathVariable @Positive Long productId) {
-        return productConverter.convertEntityToDto(productService.getById(productId));
+        return productConverter.convertEntityToDto(
+                productService.getById(productId)
+        );
     }
 
     @Override
@@ -74,5 +80,22 @@ public class ProductControllerImpl implements ProductController {
     @DeleteMapping("/{productId}")
     public void delete(@PathVariable @Positive Long productId) {
         productService.deleteById(productId);
+    }
+
+    @Override
+    public ProductResponseDto setDiscount(@Positive Long productId,
+                                          @Min(value = 1, message = "Discount must be at least 1%")
+                                          @Max(value = 99, message = "Discount cannot exceed 99%")
+                                          BigDecimal discountPercentage) {
+        return productConverter.convertEntityToDto(
+                productService.setDiscount(productId, discountPercentage)
+        );
+    }
+
+    @Override
+    public ProductResponseDto getProductOfTheDay() {
+        return productConverter.convertEntityToDto(
+                productService.getProductOfTheDay()
+        );
     }
 }

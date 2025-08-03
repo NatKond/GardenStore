@@ -23,4 +23,6 @@ public class ProductShortResponseDto {
     private BigDecimal discountPrice;
 
     private Long categoryId;
+
+    private String imageUrl;
 }

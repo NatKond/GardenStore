@@ -48,12 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public BigDecimal getTotalAmount(Long orderId) {
-        List<OrderItem> orderItems = getById(orderId).getItems();
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        for (OrderItem orderItem : orderItems) {
-            totalAmount = totalAmount.add(orderItem.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
-        }
-        return totalAmount;
+        return orderRepository.getTotalAmount(userService.getCurrent(), orderId);
     }
 
     @Override

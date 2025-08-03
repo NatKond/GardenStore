@@ -5,6 +5,7 @@ import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.OrderItem;
 import de.telran.gardenStore.exception.OrderItemNotFoundException;
 import de.telran.gardenStore.repository.OrderItemRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,8 +30,8 @@ class OrderItemServiceImplTest extends AbstractTest {
     private OrderItemServiceImpl orderItemService;
 
     @Test
-    void getById_validId_shouldReturnOrderItem() {
-
+    @DisplayName("Get order item : positive case")
+    void getByIdPositiveCase() {
         AppUser currentUser = user1;
         OrderItem expectedOrderItem = orderItem1;
         Long orderItemId = expectedOrderItem.getOrderItemId();
@@ -39,9 +40,7 @@ class OrderItemServiceImplTest extends AbstractTest {
         when(orderItemRepository.findByUserAndId(currentUser, orderItemId))
                 .thenReturn(Optional.of(expectedOrderItem));
 
-
         OrderItem result = orderItemService.getById(orderItemId);
-
 
         assertNotNull(result);
         assertEquals(orderItemId, result.getOrderItemId());
@@ -50,15 +49,14 @@ class OrderItemServiceImplTest extends AbstractTest {
     }
 
     @Test
-    void getById_invalidId_shouldThrowOrderItemNotFoundException() {
-        // given
+    @DisplayName("Get order item : negative case")
+    void getByIdNegativeCase() {
         AppUser currentUser = user1;
         Long invalidId = 999L;
 
         when(userService.getCurrent()).thenReturn(currentUser);
         when(orderItemRepository.findByUserAndId(currentUser, invalidId))
                 .thenReturn(Optional.empty());
-
 
         OrderItemNotFoundException exception = assertThrows(
                 OrderItemNotFoundException.class,

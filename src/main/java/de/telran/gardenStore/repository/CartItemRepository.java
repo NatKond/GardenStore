@@ -13,7 +13,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
             "FROM CartItem ci " +
             "JOIN ci.cart c " +
             "JOIN c.user u " +
-            "WHERE c.user = :user AND ci.cartItemId =: cartItemId ")
+            "WHERE c.user = :user AND ci.cartItemId = :cartItemId ")
     Optional<CartItem> findByUserAndId(AppUser user, Long cartItemId);
 }
 

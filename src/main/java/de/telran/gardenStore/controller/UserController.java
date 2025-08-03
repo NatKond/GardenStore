@@ -31,15 +31,20 @@ public interface UserController {
                                     "userId": 1,
                                     "name": "Alice Johnson",
                                     "email": "alice.johnson@example.com",
-                                    "phoneNumber": "+1234567890",
-                                    "role": "ROLE_USER"
+                                    "phoneNumber": "+1234509876",
+                                    "roles": [
+                                        "ROLE_USER",
+                                        "ROLE_ADMIN"
+                                    ]
                                 },
                                 {
                                     "userId": 2,
                                     "name": "Bob Smith",
                                     "email": "bob.smith@example.com",
-                                    "phoneNumber": "+1987654321",
-                                    "role": "ROLE_USER"
+                                    "phoneNumber": "+1987654322",
+                                    "roles": [
+                                        "ROLE_USER"
+                                    ]
                                 }
                             ]
                             """
@@ -54,17 +59,21 @@ public interface UserController {
                                 "userId": 1,
                                 "name": "Alice Johnson",
                                 "email": "alice.johnson@example.com",
-                                "phoneNumber": "+1234567890",
-                                "role": "ROLE_USER",
+                                "phoneNumber": "+1234509876",
+                                "roles": [
+                                    "ROLE_USER",
+                                    "ROLE_ADMIN"
+                                ],
                                 "favorites": [
                                     {
                                         "favoriteId": 1,
                                         "product": {
                                             "productId": 5,
-                                            "name": "Tulip Bulb Mix (10 pcs)",
-                                            "description": "Colorful tulip bulbs perfect for spring blooms",
-                                            "price": 9.49,
-                                            "discountPrice": 6.99
+                                            "name": "Espoma Organic Perlite",
+                                            "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                            "price": 13.95,
+                                            "discountPrice": 12.65,
+                                            "imageUrl": "/product_img/organic_perlite.jpeg"
                                         }
                                     }
                                 ]
@@ -93,17 +102,21 @@ public interface UserController {
                                 "userId": 1,
                                 "name": "Alice Johnson",
                                 "email": "alice.johnson@example.com",
-                                "phoneNumber": "+1234567890",
-                                "role": "ROLE_USER",
+                                "phoneNumber": "+1234509876",
+                                "roles": [
+                                    "ROLE_USER",
+                                    "ROLE_ADMIN"
+                                ],
                                 "favorites": [
                                     {
                                         "favoriteId": 1,
                                         "product": {
                                             "productId": 5,
-                                            "name": "Tulip Bulb Mix (10 pcs)",
-                                            "description": "Colorful tulip bulbs perfect for spring blooms",
-                                            "price": 9.49,
-                                            "discountPrice": 6.99
+                                            "name": "Espoma Organic Perlite",
+                                            "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                            "price": 13.95,
+                                            "discountPrice": 12.65,
+                                            "imageUrl": "/product_img/organic_perlite.jpeg"
                                         }
                                     }
                                 ]
@@ -122,29 +135,29 @@ public interface UserController {
                             schema = @Schema(implementation = LoginRequest.class),
                             examples = {
                                     @ExampleObject(name = "Alice Johnson(ADMIN, USER)", value = """
-                                    {
-                                      "email": "alice.johnson@example.com",
-                                      "password": "12345"
-                                    }
-                                    """),
+                                            {
+                                              "email": "alice.johnson@example.com",
+                                              "password": "12345"
+                                            }
+                                            """),
                                     @ExampleObject(name = "Bob Smith(USER)", value = """
-                                    {
-                                      "email": "bob.smith@example.com",
-                                      "password": "12345"
-                                    }
-                                    """),
+                                            {
+                                              "email": "bob.smith@example.com",
+                                              "password": "12345"
+                                            }
+                                            """),
                                     @ExampleObject(name = "Carol Lee(USER)", value = """
-                                    {
-                                      "email": "carol.lee@example.com",
-                                      "password": "12345"
-                                    }
-                                    """),
+                                            {
+                                              "email": "carol.lee@example.com",
+                                              "password": "12345"
+                                            }
+                                            """),
                                     @ExampleObject(name = "David Brown(USER)", value = """
-                                    {
-                                      "email": "david.brown@example.com",
-                                      "password": "12345"
-                                    }
-                                    """)
+                                            {
+                                              "email": "david.brown@example.com",
+                                              "password": "12345"
+                                            }
+                                            """)
                             }
                     ))
             @Valid LoginRequest loginRequest);

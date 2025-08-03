@@ -85,24 +85,30 @@ public interface OrderController {
             content = @Content(schema = @Schema(implementation = OrderResponseDto.class),
                     examples = @ExampleObject(value = """
                             {
-                                "orderId": 3,
+                                "orderId": 21,
                                 "userId": 1,
                                 "status": "CREATED",
                                 "deliveryAddress": "123 Garden Street",
+                                "contactPhone": "+1234509876",
                                 "deliveryMethod": "PICKUP",
-                                "createdAt": "2025-07-25T11:01:53.093878",
-                                "updatedAt": "2025-07-25T11:01:53.093913",
+                                "createdAt": "2025-08-03T23:27:01.689652",
+                                "updatedAt": "2025-08-03T23:27:01.689692",
                                 "items": [
                                     {
-                                        "orderItemId": 4,
+                                        "orderItemId": 46,
                                         "product": {
-                                            "productId": 1
+                                            "productId": 1,
+                                            "name": "All-Purpose Plant Fertilizer",
+                                            "description": "Balanced NPK formula for all types of plants",
+                                            "price": 11.99,
+                                            "discountPrice": 8.99,
+                                            "imageUrl": "/product_img/fertilizer_all_purpose.jpg"
                                         },
                                         "quantity": 1,
-                                        "priceAtPurchase": 11.99
+                                        "priceAtPurchase": 8.99
                                     }
                                 ],
-                                "totalAmount": 11.99
+                                "totalAmount": 8.99
                             }
                             """)))
     @ApiResponse(responseCode = "400", description = "Order creation failed",
@@ -142,41 +148,44 @@ public interface OrderController {
             content = @Content(schema = @Schema(implementation = OrderResponseDto.class),
                     examples = @ExampleObject(value = """
                             {
-                                "orderId": 3,
-                                "userId": 1,
-                                "status": "CREATED",
-                                "deliveryAddress": "123 Garden Street",
-                                "deliveryMethod": "PICKUP",
-                                "createdAt": "2025-07-25T12:02:39.031111",
-                                "updatedAt": "2025-07-25T12:02:39.031141",
-                                "items": [
-                                    {
-                                        "orderItemId": 4,
-                                        "product": {
-                                            "productId": 1,
-                                            "name": "All-Purpose Plant Fertilizer",
-                                            "description": "Balanced NPK formula for all types of plants",
-                                            "price": 11.99,
-                                            "discountPrice": 8.99
-                                        },
-                                        "quantity": 1,
-                                        "priceAtPurchase": 11.99
-                                    },
-                                    {
-                                        "orderItemId": 5,
-                                        "product": {
-                                            "productId": 2,
-                                            "name": "Organic Tomato Feed",
-                                            "description": "Organic liquid fertilizer ideal for tomatoes and vegetables",
-                                            "price": 13.99,
-                                            "discountPrice": 10.49
-                                        },
-                                        "quantity": 1,
-                                        "priceAtPurchase": 13.99
-                                    }
-                                ],
-                                "totalAmount": 25.98
-                            }
+                                 "orderId": 21,
+                                 "userId": 1,
+                                 "status": "CREATED",
+                                 "deliveryAddress": "123 Garden Street",
+                                 "contactPhone": "+1234509876",
+                                 "deliveryMethod": "PICKUP",
+                                 "createdAt": "2025-08-03T23:27:01.689652",
+                                 "updatedAt": "2025-08-03T23:27:01.689692",
+                                 "items": [
+                                     {
+                                         "orderItemId": 46,
+                                         "product": {
+                                             "productId": 1,
+                                             "name": "All-Purpose Plant Fertilizer",
+                                             "description": "Balanced NPK formula for all types of plants",
+                                             "price": 11.99,
+                                             "discountPrice": 8.99,
+                                             "imageUrl": "/product_img/fertilizer_all_purpose.jpg"
+                                         },
+                                         "quantity": 1,
+                                         "priceAtPurchase": 8.99
+                                     },
+                                     {
+                                         "orderItemId": 47,
+                                         "product": {
+                                             "productId": 2,
+                                             "name": "Organic Tomato Feed",
+                                             "description": "Organic liquid fertilizer ideal for tomatoes and vegetables",
+                                             "price": 13.99,
+                                             "discountPrice": 10.49,
+                                             "imageUrl": "/product_img/fertilizer_tomato_feed.jpg"
+                                         },
+                                         "quantity": 1,
+                                         "priceAtPurchase": 10.49
+                                     }
+                                 ],
+                                 "totalAmount": 19.48
+                             }
                             """)))
     @ApiResponse(responseCode = "400", description = "Order is not modifiable",
             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
@@ -189,7 +198,7 @@ public interface OrderController {
                             }
                             """)))
     OrderResponseDto addItem(
-            @Parameter(description = "Order ID", example = "3") @Positive Long orderId,
+            @Parameter(description = "Order ID", example = "21") @Positive Long orderId,
             @Parameter(description = "Product ID", example = "2") @Positive Long productId,
             @Parameter(description = "Quantity", example = "1") @Positive Integer quantity);
 
@@ -198,29 +207,44 @@ public interface OrderController {
             content = @Content(schema = @Schema(implementation = OrderResponseDto.class),
                     examples = @ExampleObject(value = """
                             {
-                                "orderId": 3,
-                                "userId": 1,
-                                "status": "CREATED",
-                                "deliveryAddress": "123 Garden Street",
-                                "deliveryMethod": "PICKUP",
-                                "createdAt": "2025-07-25T11:39:57.88755",
-                                "updatedAt": "2025-07-25T11:39:57.887592",
-                                "items": [
-                                    {
-                                        "orderItemId": 4,
-                                        "product": {
-                                            "productId": 1,
-                                            "name": "All-Purpose Plant Fertilizer",
-                                            "description": "Balanced NPK formula for all types of plants",
-                                            "price": 11.99,
-                                            "discountPrice": 8.99
-                                        },
-                                        "quantity": 1,
-                                        "priceAtPurchase": 11.99
-                                    }
-                                ],
-                                "totalAmount": 11.99
-                            }
+                                 "orderId": 21,
+                                 "userId": 1,
+                                 "status": "CREATED",
+                                 "deliveryAddress": "123 Garden Street",
+                                 "contactPhone": "+1234509876",
+                                 "deliveryMethod": "PICKUP",
+                                 "createdAt": "2025-08-03T23:29:02.252787",
+                                 "updatedAt": "2025-08-03T23:29:02.252826",
+                                 "items": [
+                                     {
+                                         "orderItemId": 46,
+                                         "product": {
+                                             "productId": 1,
+                                             "name": "All-Purpose Plant Fertilizer",
+                                             "description": "Balanced NPK formula for all types of plants",
+                                             "price": 11.99,
+                                             "discountPrice": 8.99,
+                                             "imageUrl": "/product_img/fertilizer_all_purpose.jpg"
+                                         },
+                                         "quantity": 1,
+                                         "priceAtPurchase": 8.99
+                                     },
+                                     {
+                                         "orderItemId": 47,
+                                         "product": {
+                                             "productId": 2,
+                                             "name": "Organic Tomato Feed",
+                                             "description": "Organic liquid fertilizer ideal for tomatoes and vegetables",
+                                             "price": 13.99,
+                                             "discountPrice": 10.49,
+                                             "imageUrl": "/product_img/fertilizer_tomato_feed.jpg"
+                                         },
+                                         "quantity": 3,
+                                         "priceAtPurchase": 10.49
+                                     }
+                                 ],
+                                 "totalAmount": 40.46
+                             }
                             """)))
 
     @ApiResponse(responseCode = "400", description = "Order is not modifiable",
@@ -234,12 +258,41 @@ public interface OrderController {
                             }
                             """)))
     OrderResponseDto updateItem(
-            @Parameter(description = "Order item ID", example = "4") @Positive Long orderItemId,
+            @Parameter(description = "Order item ID", example = "47") @Positive Long orderItemId,
             @Parameter(description = "New quantity", example = "3") @Positive Integer quantity);
 
     @Operation(summary = "Remove item from order")
     @ApiResponse(responseCode = "200", description = "Item removed from order",
-            content = @Content(schema = @Schema(implementation = OrderResponseDto.class)))
+            content = @Content(schema = @Schema(implementation = OrderResponseDto.class),
+                    examples = @ExampleObject(value = """
+                            {
+                                  "orderId": 21,
+                                  "userId": 1,
+                                  "status": "CREATED",
+                                  "deliveryAddress": "123 Garden Street",
+                                  "contactPhone": "+1234509876",
+                                  "deliveryMethod": "PICKUP",
+                                  "createdAt": "2025-08-03T23:31:36.569785",
+                                  "updatedAt": "2025-08-03T23:31:36.569818",
+                                  "items": [
+                                      {
+                                          "orderItemId": 46,
+                                          "product": {
+                                              "productId": 1,
+                                              "name": "All-Purpose Plant Fertilizer",
+                                              "description": "Balanced NPK formula for all types of plants",
+                                              "price": 11.99,
+                                              "discountPrice": 8.99,
+                                              "imageUrl": "/product_img/fertilizer_all_purpose.jpg"
+                                          },
+                                          "quantity": 1,
+                                          "priceAtPurchase": 8.99
+                                      }
+                                  ],
+                                  "totalAmount": 8.99
+                              }
+                            """))
+    )
     @ApiResponse(responseCode = "400", description = "Order modification failed",
             content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
                     examples = {
@@ -261,27 +314,33 @@ public interface OrderController {
                                     """),
                     }))
     OrderResponseDto removeItem(
-            @Parameter(description = "Order item ID", example = "5") @Positive Long orderItemId);
+            @Parameter(description = "Order item ID", example = "47") @Positive Long orderItemId);
 
     @Operation(summary = "Cancel order by ID")
     @ApiResponse(responseCode = "200", description = "Order cancelled",
             content = @Content(schema = @Schema(implementation = OrderResponseDto.class),
                     examples = @ExampleObject(value = """
                             {
-                                "orderId": 1,
+                                "orderId": 21,
+                                "userId": 1,
                                 "status": "CANCELLED",
                                 "deliveryAddress": "123 Garden Street",
-                                "contactPhone": "+1234567890",
-                                "deliveryMethod": "COURIER",
-                                "createdAt": "2025-07-25T11:36:00.88543",
-                                "updatedAt": "2025-07-25T11:43:01.906749",
+                                "contactPhone": "+1234509876",
+                                "deliveryMethod": "PICKUP",
+                                "createdAt": "2025-08-03T23:31:36.569785",
+                                "updatedAt": "2025-08-03T23:37:18.510762",
                                 "items": [
                                     {
-                                        "orderItemId": 1,
+                                        "orderItemId": 46,
                                         "product": {
-                                            "productId": 1
+                                            "productId": 1,
+                                            "name": "All-Purpose Plant Fertilizer",
+                                            "description": "Balanced NPK formula for all types of plants",
+                                            "price": 11.99,
+                                            "discountPrice": 8.99,
+                                            "imageUrl": "/product_img/fertilizer_all_purpose.jpg"
                                         },
-                                        "quantity": 2,
+                                        "quantity": 1,
                                         "priceAtPurchase": 8.99
                                     }
                                 ]

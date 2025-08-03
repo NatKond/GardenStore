@@ -1,4 +1,5 @@
 package de.telran.gardenStore.controller;
+
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.dto.ApiErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,22 +26,22 @@ public interface FavoriteController {
                                     "favoriteId": 1,
                                     "product": {
                                         "productId": 5,
-                                        "name": "Tulip Bulb Mix (10 pcs)",
-                                        "description": "Colorful tulip bulbs perfect for spring blooms",
-                                        "price": 9.49,
-                                        "discountPrice": 6.99,
-                                        "categoryId": 3
+                                        "name": "Espoma Organic Perlite",
+                                        "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                        "price": 13.95,
+                                        "discountPrice": 12.65,
+                                        "imageUrl": "/product_img/organic_perlite.jpeg"
                                     }
                                 },
                                 {
                                     "favoriteId": 2,
                                     "product": {
                                         "productId": 10,
-                                        "name": "Hanging Planter Basket",
-                                        "description": "Woven hanging basket with metal chain",
-                                        "price": 12.50,
-                                        "discountPrice": 9.25,
-                                        "categoryId": 5
+                                        "name": "Tulip Bulb Mix (10 pcs)",
+                                        "description": "Colorful tulip bulbs perfect for spring blooms",
+                                        "price": 9.49,
+                                        "discountPrice": 6.99,
+                                        "imageUrl": "/product_img/tulip_bulbs.jpg"
                                     }
                                 }
                             ]
@@ -66,11 +67,11 @@ public interface FavoriteController {
                             {
                                 "favoriteId": 8,
                                 "product": {
-                                    "productId": 10,
-                                    "name": "Hanging Planter Basket",
-                                    "description": "Woven hanging basket with metal chain",
-                                    "price": 12.50,
-                                    "discountPrice": 9.25
+                                    "productId": 4,
+                                    "name": "Espoma Organic Orchid Mix",
+                                    "description": "Espoma's Organic Orchid Mix gives your orchid the ideal environment for growth and flowering.",
+                                    "price": 6.95,
+                                    "imageUrl": "/product_img/organic_orchid_mix.jpeg"
                                 }
                             }
                             """)))
@@ -78,13 +79,13 @@ public interface FavoriteController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiErrorResponse.class),
                     examples = @ExampleObject(name = "Product not found", value = """
-                                    {
-                                        "exception": "ProductNotFoundException",
-                                        "message": "Product with id 12 not found",
-                                        "status": 404,
-                                        "timestamp": "2025-07-08T23:36:11.847041"
-                                    }
-                                    """)))
+                            {
+                                "exception": "ProductNotFoundException",
+                                "message": "Product with id 12 not found",
+                                "status": 404,
+                                "timestamp": "2025-07-08T23:36:11.847041"
+                            }
+                            """)))
     @ApiResponse(responseCode = "409", description = "Favorite already exists",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiErrorResponse.class),

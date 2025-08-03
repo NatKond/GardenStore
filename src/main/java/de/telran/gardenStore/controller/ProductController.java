@@ -14,12 +14,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Pattern;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -257,17 +251,13 @@ public interface ProductController {
     void delete(
             @Parameter(description = "ID of the product to delete", example = "1") @Positive Long productId);
 
-    @PostMapping("/{productId}/discount/{discountPercentage}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+
     ProductResponseDto setDiscount(
-            @PathVariable @Positive Long productId,
-            @PathVariable
+            @Positive Long productId,
             @Min(value = 1, message = "Discount must be at least 1%")
             @Max(value = 99, message = "Discount cannot exceed 99%")
             BigDecimal discountPercentage
     );
 
-    @GetMapping("/product-of-the-day")
     ProductResponseDto getProductOfTheDay();
 }

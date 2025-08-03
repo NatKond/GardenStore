@@ -33,9 +33,9 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     @Override
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping()
+    @PostMapping("/{productId}")
     @PreAuthorize("hasRole('USER')")
-    public FavoriteResponseDto create(@Positive @RequestParam Long productId) {
+    public FavoriteResponseDto create(@Positive @PathVariable Long productId) {
         return favoriteConverter.convertEntityToDto(
                 favoriteService.create(productId));
     }

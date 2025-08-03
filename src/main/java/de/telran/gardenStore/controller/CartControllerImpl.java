@@ -39,7 +39,7 @@ public class CartControllerImpl implements CartController {
     @Override
     public CartResponseDto addItem(@PathVariable @Positive Long productId) {
         return cartConverter.convertEntityToDto(
-                cartService.addCartItem(productId));
+                cartService.addItem(productId));
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -49,13 +49,13 @@ public class CartControllerImpl implements CartController {
     public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
                                           @RequestParam @Positive Integer quantity) {
         return cartConverter.convertEntityToDto(
-                cartService.updateCartItem(cartItemId, quantity));
+                cartService.updateItem(cartItemId, quantity));
     }
 
     @Override
     @DeleteMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
     public CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId) {
-        return cartConverter.convertEntityToDto(cartService.deleteCartItem(cartItemId));
+        return cartConverter.convertEntityToDto(cartService.deleteItem(cartItemId));
     }
 }

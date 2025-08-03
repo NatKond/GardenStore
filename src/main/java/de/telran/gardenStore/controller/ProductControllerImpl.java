@@ -82,8 +82,12 @@ public class ProductControllerImpl implements ProductController {
         productService.deleteById(productId);
     }
 
+    @PostMapping("/{productId}/discount/{discountPercentage}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @Override
-    public ProductResponseDto setDiscount(@Positive Long productId,
+    public ProductResponseDto setDiscount(@PathVariable @Positive Long productId,
+                                          @PathVariable
                                           @Min(value = 1, message = "Discount must be at least 1%")
                                           @Max(value = 99, message = "Discount cannot exceed 99%")
                                           BigDecimal discountPercentage) {
@@ -92,6 +96,7 @@ public class ProductControllerImpl implements ProductController {
         );
     }
 
+    @GetMapping("/product-of-the-day")
     @Override
     public ProductResponseDto getProductOfTheDay() {
         return productConverter.convertEntityToDto(

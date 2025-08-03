@@ -140,7 +140,8 @@ public interface CartController {
                                             "name": "All-Purpose Plant Fertilizer",
                                             "description": "Balanced NPK formula for all types of plants",
                                             "price": 11.99,
-                                            "discountPrice": 8.99
+                                            "discountPrice": 8.99,
+                                            "imageUrl": "/product_img/fertilizer_all_purpose.jpg"
                                         },
                                         "quantity": 2
                                     },
@@ -151,20 +152,22 @@ public interface CartController {
                                             "name": "Organic Tomato Feed",
                                             "description": "Organic liquid fertilizer ideal for tomatoes and vegetables",
                                             "price": 13.99,
-                                            "discountPrice": 10.49
+                                            "discountPrice": 10.49,
+                                            "imageUrl": "/product_img/fertilizer_tomato_feed.jpg"
                                         },
                                         "quantity": 1
                                     },
                                     {
-                                        "cartItemId": 7,
+                                        "cartItemId": 6,
                                         "product": {
                                             "productId": 3,
-                                            "name": "Slug & Snail Barrier Pellets",
-                                            "description": "Pet-safe barrier pellets to protect plants from slugs",
-                                            "price": 7.50,
-                                            "discountPrice": 5.75
+                                            "name": "Espoma Organic Potting Mix23",
+                                            "description": "Organic mix feeds your plant with nutrients and gives roots the space to breathe and grow. See your plants thrive!",
+                                            "price": 6.95,
+                                            "discountPrice": 6.7,
+                                            "imageUrl": "/product_img/organic_potting_mix.jpeg"
                                         },
-                                        "quantity": 4
+                                        "quantity": 3
                                     }
                                 ]
                             }
@@ -182,7 +185,7 @@ public interface CartController {
                             """)))
     CartResponseDto updateItem(
             @Parameter(description = "ID of the cart item", example = "6") @Positive Long cartItemId,
-            @Parameter(description = "New quantity", example = "4") @Positive Integer quantity);
+            @Parameter(description = "New quantity", example = "3") @Positive Integer quantity);
 
     @Operation(summary = "Delete cart item",
             description = "Removes an item from the user's cart.")

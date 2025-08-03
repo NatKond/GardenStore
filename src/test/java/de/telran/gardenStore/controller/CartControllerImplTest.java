@@ -63,7 +63,6 @@ class CartControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(cartResponseDto1)));
     }
 
-
     @Test
     @DisplayName("POST /v1/cart/items/{productId} - Add cart item for current user")
     void addItem() throws Exception {

@@ -33,7 +33,7 @@ public class ProductControllerImpl implements ProductController {
                                                 @Positive BigDecimal minPrice,
                                                 @Positive BigDecimal maxPrice,
                                                 @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt")
-                                                        String sortBy,
+                                                String sortBy,
                                                 Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {

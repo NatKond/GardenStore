@@ -8,25 +8,25 @@
         <insert tableName="app_users">
             <column name="name" value="Alice Johnson"/>
             <column name="email" value="alice.johnson@example.com"/>
-            <column name="phone_number" value="+1234567890"/>
+            <column name="phone_number" value="+1234509876"/>
             <column name="password_hash" value="12345"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="Bob Smith"/>
             <column name="email" value="bob.smith@example.com"/>
-            <column name="phone_number" value="+1987654321"/>
+            <column name="phone_number" value="+1987654322"/>
             <column name="password_hash" value="12345"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="Carol Lee"/>
             <column name="email" value="carol.lee@example.com"/>
-            <column name="phone_number" value="+1122334455"/>
+            <column name="phone_number" value="+1234560000"/>
             <column name="password_hash" value="12345"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="David Brown"/>
             <column name="email" value="david.brown@example.com"/>
-            <column name="phone_number" value="+1222333444"/>
+            <column name="phone_number" value="+1222333445"/>
             <column name="password_hash" value="12345"/>
         </insert>
 
@@ -71,6 +71,7 @@
             <column name="name" value="Pots and planters"/>
         </insert>
 
+        <!-- Product 1 -->
         <insert tableName="products">
             <column name="name" value="All-Purpose Plant Fertilizer"/>
             <column name="discount_price" value="8.99"/>
@@ -79,6 +80,7 @@
             <column name="description" value="Balanced NPK formula for all types of plants"/>
             <column name="image_url" value="/product_img/fertilizer_all_purpose.jpg"/>
         </insert>
+        <!-- Product 2 -->
         <insert tableName="products">
             <column name="name" value="Organic Tomato Feed"/>
             <column name="discount_price" value="10.49"/>
@@ -87,6 +89,7 @@
             <column name="description" value="Organic liquid fertilizer ideal for tomatoes and vegetables"/>
             <column name="image_url" value="/product_img/fertilizer_tomato_feed.jpg"/>
         </insert>
+        <!-- Product 3 -->
         <insert tableName="products">
             <column name="name" value="Espoma Organic Potting Mix23"/>
             <column name="price" value="6.95"/>
@@ -96,6 +99,7 @@
                     value="Organic mix feeds your plant with nutrients and gives roots the space to breathe and grow. See your plants thrive!"/>
             <column name="image_url" value="/product_img/organic_potting_mix.jpeg"/>
         </insert>
+        <!-- Product 4 -->
         <insert tableName="products">
             <column name="name" value="Espoma Organic Orchid Mix"/>
             <column name="price" value="6.95"/>
@@ -104,15 +108,17 @@
                     value="Espoma's Organic Orchid Mix gives your orchid the ideal environment for growth and flowering."/>
             <column name="image_url" value="/product_img/organic_orchid_mix.jpeg"/>
         </insert>
+        <!-- Product 5 -->
         <insert tableName="products">
             <column name="name" value="Espoma Organic Perlite"/>
             <column name="price" value="13.95"/>
-            <column name="discount_price" value="13.65"/>
+            <column name="discount_price" value="12.65"/>
             <column name="category_id" value="1"/>
             <column name="description"
                     value="Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation."/>
             <column name="image_url" value="/product_img/organic_perlite.jpeg"/>
         </insert>
+        <!-- Product 6 -->
         <insert tableName="products">
             <column name="name" value="Slug &amp; Snail Barrier Pellets"/>
             <column name="discount_price" value="5.75"/>
@@ -121,6 +127,7 @@
             <column name="description" value="Pet-safe barrier pellets to protect plants from slugs"/>
             <column name="image_url" value="/product_img/protection_slug_pellets.jpg"/>
         </insert>
+        <!-- Product 7 -->
         <insert tableName="products">
             <column name="name" value="Septic Tank Activator Powder"/>
             <column name="discount_price" value="12.95"/>
@@ -129,6 +136,7 @@
             <column name="description" value="Enzyme-based powder to maintain septic tank health"/>
             <column name="image_url" value="/product_img/septic_tank_activator.jpg"/>
         </insert>
+        <!-- Product 8 -->
         <insert tableName="products">
             <column name="name" value="Bonide Diatomaceous Earth"/>
             <column name="price" value="27.95"/>
@@ -138,15 +146,17 @@
                     value="All-natural insect killer that targets pests without harming beneficial critters. Ideal for crops and livestock areas."/>
             <column name="image_url" value="/product_img/diatomaceous_earth.jpeg"/>
         </insert>
+        <!-- Product 9 -->
         <insert tableName="products">
             <column name="name" value="Savannah Summer Annual Collection"/>
-            <column name="price" value="53"/>
-            <column name="discount_price" value="50"/>
+            <column name="price" value="53.00"/>
+            <column name="discount_price" value="45.00"/>
             <column name="category_id" value="3"/>
             <column name="description"
                     value="We love this fusion of colorful blossoms, created by combining some of the most floriferous and high performance annuals we know in our Savannah Summer Collection."/>
             <column name="image_url" value="/product_img/summer_annual_collection.jpeg"/>
         </insert>
+        <!-- Product 10 -->
         <insert tableName="products">
             <column name="name" value="Tulip Bulb Mix (10 pcs)"/>
             <column name="discount_price" value="6.99"/>
@@ -155,6 +165,7 @@
             <column name="description" value="Colorful tulip bulbs perfect for spring blooms"/>
             <column name="image_url" value="/product_img/tulip_bulbs.jpg"/>
         </insert>
+        <!-- Product 11 -->
         <insert tableName="products">
             <column name="name" value="Seed Pack - Carrots (Heirloom)"/>
             <column name="discount_price" value="2.95"/>
@@ -163,6 +174,7 @@
             <column name="description" value="Non-GMO heirloom carrot seeds for rich harvests"/>
             <column name="image_url" value="/product_img/carrot_seeds.jpg"/>
         </insert>
+        <!-- Product 12 -->
         <insert tableName="products">
             <column name="name" value="Electric Hedge Trimmer"/>
             <column name="discount_price" value="49.95"/>
@@ -171,6 +183,7 @@
             <column name="description" value="Cordless hedge trimmer with rechargeable battery"/>
             <column name="image_url" value="/product_img/hedge_trimmer.jpg"/>
         </insert>
+        <!-- Product 13 -->
         <insert tableName="products">
             <column name="name" value="Garden Tool Set (5 pcs)"/>
             <column name="discount_price" value="19.99"/>
@@ -179,6 +192,7 @@
             <column name="description" value="Essential hand tools set for everyday gardening"/>
             <column name="image_url" value="/product_img/garden_tool_set.jpg"/>
         </insert>
+        <!-- Product 14 -->
         <insert tableName="products">
             <column name="name" value="Ceramic Plant Pot - 8 inch"/>
             <column name="discount_price" value="14.50"/>
@@ -187,6 +201,7 @@
             <column name="description" value="Stylish ceramic pot with drainage hole"/>
             <column name="image_url" value="/product_img/ceramic_pot.jpg"/>
         </insert>
+        <!-- Product 15 -->
         <insert tableName="products">
             <column name="name" value="Hanging Planter Basket"/>
             <column name="discount_price" value="9.25"/>

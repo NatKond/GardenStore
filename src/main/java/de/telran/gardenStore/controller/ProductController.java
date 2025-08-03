@@ -4,6 +4,8 @@ import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.dto.ProductShortResponseDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
@@ -48,7 +50,10 @@ public interface ProductController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     ProductResponseDto setDiscount(
             @PathVariable @Positive Long productId,
-            @PathVariable @Positive BigDecimal discountPercentage
+            @PathVariable
+            @Min(value = 1, message = "Discount must be at least 1%")
+            @Max(value = 99, message = "Discount cannot exceed 99%")
+            BigDecimal discountPercentage
     );
 
     @GetMapping("/product-of-the-day")

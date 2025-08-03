@@ -7,6 +7,8 @@ import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +69,10 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ProductResponseDto setDiscount(@Positive Long productId, @Positive BigDecimal discountPercentage) {
+    public ProductResponseDto setDiscount(@Positive Long productId,
+                                          @Min(value = 1, message = "Discount must be at least 1%")
+                                          @Max(value = 99, message = "Discount cannot exceed 99%")
+                                          BigDecimal discountPercentage) {
         return productConverter.convertEntityToDto(
                 productService.setDiscount(productId, discountPercentage)
         );

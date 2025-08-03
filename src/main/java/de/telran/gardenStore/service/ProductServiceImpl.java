@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -110,12 +111,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product setDiscount(Long productId, BigDecimal discountPercentage) {
-        if (discountPercentage.compareTo(BigDecimal.ZERO) < 0 || discountPercentage.compareTo(new BigDecimal(100)) > 0) {
-            throw new IllegalArgumentException("Discount percentage must be between 0 and 100");
-        }
-
         Product product = getById(productId);
-        BigDecimal discountAmount = product.getPrice().multiply(discountPercentage).divide(new BigDecimal(100));
+        BigDecimal discountAmount = product.getPrice()
+                .multiply(discountPercentage)
+                .divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
         product.setDiscountPrice(product.getPrice().subtract(discountAmount));
         return productRepository.save(product);
     }

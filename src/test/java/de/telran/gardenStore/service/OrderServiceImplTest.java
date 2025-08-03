@@ -91,11 +91,11 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Get total amount by orderId")
     void getTotalAmount() {
-        BigDecimal expected = new BigDecimal("28.47");
+        BigDecimal expected = orderResponseDto1.getTotalAmount();
         Long orderId = order1.getOrderId();
 
         when(userService.getCurrent()).thenReturn(order1.getUser());
-        when(orderRepository.findByUserAndOrderId(user1, orderId)).thenReturn(Optional.of(order1));
+        when(orderRepository.getTotalAmount(user1, orderId)).thenReturn(orderResponseDto1.getTotalAmount());
 
         BigDecimal actual = orderService.getTotalAmount(order1.getOrderId());
 

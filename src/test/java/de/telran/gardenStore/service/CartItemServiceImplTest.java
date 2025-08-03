@@ -5,6 +5,7 @@ import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.CartItem;
 import de.telran.gardenStore.exception.CartItemNotFoundException;
 import de.telran.gardenStore.repository.CartItemRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,8 +30,8 @@ class CartItemServiceImplTest extends AbstractTest {
     private CartItemServiceImpl cartItemService;
 
     @Test
-    void getById_validId_shouldReturnCartItem() {
-
+    @DisplayName("Get cart item : positive case")
+    void getByIdPositiveCase() {
         AppUser currentUser = user1;
         CartItem expectedCartItem = cartItem1;
         Long cartItemId = expectedCartItem.getCartItemId();
@@ -39,9 +40,7 @@ class CartItemServiceImplTest extends AbstractTest {
         when(cartItemRepository.findByUserAndId(currentUser, cartItemId))
                 .thenReturn(Optional.of(expectedCartItem));
 
-
         CartItem result = cartItemService.getById(cartItemId);
-
 
         assertNotNull(result);
         assertEquals(cartItemId, result.getCartItemId());
@@ -50,15 +49,14 @@ class CartItemServiceImplTest extends AbstractTest {
     }
 
     @Test
-    void getById_invalidId_shouldThrowCartItemNotFoundException() {
-
+    @DisplayName("Get cart item : negative case")
+    void getByIdNegativeCase() {
         AppUser currentUser = user1;
         Long invalidId = 888L;
 
         when(userService.getCurrent()).thenReturn(currentUser);
         when(cartItemRepository.findByUserAndId(currentUser, invalidId))
                 .thenReturn(Optional.empty());
-
 
         CartItemNotFoundException exception = assertThrows(
                 CartItemNotFoundException.class,

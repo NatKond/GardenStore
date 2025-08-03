@@ -5,6 +5,7 @@ import de.telran.gardenStore.dto.report.ProductReport;
 import de.telran.gardenStore.dto.report.ProfitReport;
 
 import de.telran.gardenStore.enums.OrderStatus;
+import de.telran.gardenStore.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -23,26 +24,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-    //private final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     private final EntityManager entityManager;
 
     @Override
     public List<ProductReport> getTopOrderedProducts(Integer limit) {
-        return getTopProductsByStatus(OrderStatus.DELIVERED, limit);
-        //return productRepository.getTopWithStatus(OrderStatus.DELIVERED, limit);
+        //return getTopProductsByStatus(OrderStatus.DELIVERED, limit);
+        return productRepository.getTopWithStatus(OrderStatus.DELIVERED, limit);
     }
 
     @Override
     public List<ProductReport> getTopCanceledProducts(Integer limit) {
-        return getTopProductsByStatus(OrderStatus.CANCELLED, limit);
-        //return productRepository.getTopWithStatus(OrderStatus.CANCELLED, limit);
+        //return getTopProductsByStatus(OrderStatus.CANCELLED, limit);
+        return productRepository.getTopWithStatus(OrderStatus.CANCELLED, limit);
     }
 
     @Override
     public List<ProductReport> getProductsAwaitingPaymentForMoreDays(Integer days, Integer limit) {
-        return getProductsAwaitingPaymentByTime(LocalDateTime.now().minusDays(days), limit);
-        //return productRepository.getAwaitingPaymentForDays(LocalDateTime.now().minusDays(days), limit);
+        //return getProductsAwaitingPaymentByTime(LocalDateTime.now().minusDays(days), limit);
+        return productRepository.getAwaitingPaymentForDays(LocalDateTime.now().minusDays(days), limit, OrderStatus.AWAITING_PAYMENT);
     }
 
     @Override

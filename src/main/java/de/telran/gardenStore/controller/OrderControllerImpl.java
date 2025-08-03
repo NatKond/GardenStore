@@ -38,13 +38,12 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     public OrderResponseDto create(@Valid OrderCreateRequestDto orderCreateRequestDto) {
-
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
                 orderService.create(
                         orderCreateRequestDto.getDeliveryAddress(),
                         orderCreateRequestDto.getDeliveryMethod(),
                         orderCreateRequestDto.getContactPhone(),
-                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity)))
+                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue)))
         );
 
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));

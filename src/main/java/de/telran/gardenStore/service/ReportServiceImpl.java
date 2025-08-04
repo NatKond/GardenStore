@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -112,18 +111,16 @@ public class ReportServiceImpl implements ReportService {
 
     private List<ProfitReport> getProfitGroupBy(LocalDateTime timeBefore, String groupBy) {
         String query = """
-                SELECT sum(sales.total_amout),
-                       extract(years from sales.updated_at) as year,
-                       extract(months from sales.updated_at) as month,
-                       extract(weeks from sales.updated_at) as week,
-                       extract(days from sales.updated_at) as day,
-                       extract(hours from sales.updated_at) as hour
-                FROM (SELECT sum(oi.price_at_purchase * oi.quantity) as total_amout, o.updated_at
-                      FROM orders o
-                               JOIN order_items oi
-                                    on o.order_id = oi.order_id AND o.status = 'DELIVERED' AND o.updated_at > :timeBefore
-                      GROUP BY o.order_id
-                      ORDER BY o.order_id) as sales
+                SELECT sum(oi.price_at_purchase * oi.quantity),
+                       extract(years from o.updated_at) as year,
+                       extract(months from o.updated_at) as month,
+                       extract(weeks from o.updated_at) as week,
+                       extract(days from o.updated_at) as day,
+                       extract(hours from o.updated_at) as hour
+                FROM orders o
+                JOIN order_items oi ON o.order_id = oi.order_id
+                                           AND o.status = 'DELIVERED'
+                                           AND o.updated_at > :timeBefore
                 GROUP BY year, month, week, day, hour
                 ORDER BY month;
                 """;
@@ -142,7 +139,6 @@ public class ReportServiceImpl implements ReportService {
                                 .period(entry.getKey())
                                 .amountPerPeriod(entry.getValue())
                                 .build())
-                .sorted(Comparator.comparing(ProfitReport::getPeriod))
                 .collect(Collectors.toList());
     }
 

@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long orderId) {
-        return orderRepository.findByUserAndOrderId(userService.getCurrent(),orderId)
+        return orderRepository.findByUserAndOrderId(userService.getCurrent(), orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + orderId + " not found"));
     }
 
@@ -72,12 +72,9 @@ public class OrderServiceImpl implements OrderService {
         productIdPerQuantityMap.forEach((productId, quantity) -> {
             if (productIdPerCartItemMap.containsKey(productId)) {
                 CartItem cartItem = productIdPerCartItemMap.get(productId);
-
                 order.getItems().add(createOrderItem(quantity, cartItem, order));
-
-                deleteOrUpdateCartItem(cartItem, cartItems, quantity);
+                editCartItemList(cartItem, cartItems, quantity);
             }
-
         });
 
         checkOrderNotEmpty(order);
@@ -114,15 +111,14 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = cart.getItems();
         Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
-        if(cartItem.isPresent()){
+        if (cartItem.isPresent()) {
             CartItem cartItemExisting = cartItem.get();
-
             order.getItems().add(createOrderItem(quantity, cartItemExisting, order));
-
-            deleteOrUpdateCartItem(cartItemExisting, cartItems, quantity);
+            editCartItemList(cartItemExisting, cartItems, quantity);
         }
 
         cartService.update(cart);
+
         return orderRepository.save(order);
     }
 
@@ -138,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
         Long productId = orderItem.getProduct().getProductId();
         Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
-        cartItem.ifPresent(item -> deleteOrUpdateCartItem(item, cartItems, quantity));
+        cartItem.ifPresent(item -> editCartItemList(item, cartItems, quantity));
 
         orderItem.setQuantity(quantity);
         cartService.update(cart);
@@ -161,13 +157,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancel(Long orderId) {
         Order order = getById(orderId);
-        if (order.getStatus() == OrderStatus.CREATED || order.getStatus() == OrderStatus.AWAITING_PAYMENT) {
-            order.setStatus(OrderStatus.CANCELLED);
+        if (order.getStatus() != OrderStatus.CREATED && order.getStatus() != OrderStatus.AWAITING_PAYMENT) {
+            throw new OrderModificationException("Order with id " + orderId + " cannot be cancelled");
         }
+        order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
     }
 
-    private void deleteOrUpdateCartItem(CartItem cartItem, List<CartItem> cartItems, Integer quantity) {
+    private void editCartItemList(CartItem cartItem, List<CartItem> cartItems, Integer quantity) {
         if (cartItem.getQuantity() <= quantity) {
             cartItems.remove(cartItem);
         } else {

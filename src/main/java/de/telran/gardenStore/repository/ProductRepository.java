@@ -71,13 +71,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductsWithHighestDiscount();
 
     @Query("""
-    SELECT DISTINCT p 
-    FROM Product p
-    JOIN OrderItem oi ON oi.product = p
-    JOIN Order o ON oi.order = o
-    JOIN AppUser u ON o.user = u
-    WHERE u.email = :username 
-    AND o.status = 'DELIVERED'
-""")
-    List<Product> findAllPurchasedByUser(@Param("username") String username);
+                SELECT DISTINCT p 
+                FROM Product p
+                JOIN OrderItem oi ON oi.product = p
+                JOIN Order o ON oi.order = o
+                WHERE o.user.userId = :userId 
+                AND o.status = 'DELIVERED'
+            """)
+    List<Product> findAllPurchasedByUser(@Param("userId") Long userId);
 }

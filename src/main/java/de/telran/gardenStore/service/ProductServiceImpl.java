@@ -1,4 +1,5 @@
 package de.telran.gardenStore.service;
+import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.NoDiscountedProductsException;
@@ -12,6 +13,8 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,6 +32,8 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
 
     private final EntityManager entityManager;
+
+    private final UserService userService;
 
     @Override
     public List<Product> getAll(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
@@ -129,12 +134,9 @@ public class ProductServiceImpl implements ProductService {
         }
         return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
     }
-
     @Override
     public List<Product> getAllPurchased() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        return productRepository.findAllPurchasedByUser(username);
+        AppUser currentUser = userService.getCurrent();
+        return productRepository.findAllPurchasedByUser(currentUser.getUserId());
     }
 }

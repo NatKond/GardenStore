@@ -5,6 +5,7 @@ import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -68,4 +69,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             )
             """, nativeQuery = true)
     List<Product> findProductsWithHighestDiscount();
+
+    @Query("""
+    SELECT DISTINCT p 
+    FROM Product p
+    JOIN OrderItem oi ON oi.product = p
+    JOIN Order o ON oi.order = o
+    JOIN AppUser u ON o.user = u
+    WHERE u.email = :username 
+    AND o.status = 'DELIVERED'
+""")
+    List<Product> findAllPurchasedByUser(@Param("username") String username);
 }

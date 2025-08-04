@@ -10,6 +10,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -126,5 +128,13 @@ public class ProductServiceImpl implements ProductService {
             throw new NoDiscountedProductsException("No discounted products available");
         }
         return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
+    }
+
+    @Override
+    public List<Product> getAllPurchased() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        return productRepository.findAllPurchasedByUser(username);
     }
 }

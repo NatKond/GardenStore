@@ -84,4 +84,11 @@ public class ProductControllerImpl implements ProductController {
                 productService.getProductOfTheDay()
         );
     }
+
+    @Override
+    public List<ProductShortResponseDto> getAllPurchased() {
+        return productConverter.convertEntityListToDtoList(
+                productService.getAllPurchased()
+        );
+    }
 }

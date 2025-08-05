@@ -30,7 +30,6 @@ class UserServiceImplTest extends AbstractTest {
     @DisplayName("Get all users")
     @Test
     void getAll() {
-
         List<AppUser> expected = List.of(user1, user2);
 
         when(userRepository.findAll()).thenReturn(List.of(user1, user2));
@@ -47,7 +46,6 @@ class UserServiceImplTest extends AbstractTest {
     @DisplayName("Get user by ID : positive case")
     @Test
     void getByIdPositiveCase() {
-
         Long userId = user1.getUserId();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user1));
@@ -66,14 +64,40 @@ class UserServiceImplTest extends AbstractTest {
     @DisplayName("Get user by ID : negative case")
     @Test
     void getByIdNegativeCase() {
-
         Long userId = 99L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(UserNotFoundException.class, () -> userService.getById(userId));
-        assertEquals("User with id " + userId + " not found", exception.getMessage());
+        UserNotFoundException userNotFoundException = assertThrows(UserNotFoundException.class, () -> userService.getById(userId));
+        assertEquals("User with id " + userId + " not found", userNotFoundException.getMessage());
 
         verify(userRepository).findById(userId);
+    }
+
+    @DisplayName("Get user by email : positive case")
+    @Test
+    void getByEmailPositiveCase(){
+        String email = user1.getEmail();
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user1));
+
+        AppUser actual = userService.getByEmail(email);
+
+        assertNotNull(actual);
+        assertEquals(user1, actual);
+        assertEquals(user1.getEmail(), actual.getEmail());
+
+        verify(userRepository).findByEmail(email);
+    }
+
+    @DisplayName("Get user by email : negative case")
+    @Test
+    void getByEmailNegativeCase(){
+        String email = "frank.green@example.com";
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        UserNotFoundException userNotFoundException = assertThrows(UserNotFoundException.class, () -> userService.getByEmail(email));
+        assertEquals("User with email " + email + " not found", userNotFoundException.getMessage());
     }
 
     @DisplayName("Create new user : positive case")
@@ -106,16 +130,47 @@ class UserServiceImplTest extends AbstractTest {
         assertEquals("User with email " + userToCreate.getEmail() + " already exists", exception.getMessage());
     }
 
-    @DisplayName("Update user : positive case")
+    @DisplayName("Update user : positive case(change phone number)")
     @Test
-    void updatePositiveCase() {
+    void updatePositiveCaseChangePhoneNumber() {
 
-        String emailToUpdate = "charlie.brown777@example.com";
+        String phoneNumberToUpdate = "+1239999456";
 
         Long userId = user1.getUserId();
         String userEmail = user1.getEmail();
 
         AppUser userToUpdate = user1.toBuilder()
+                .userId(null)
+                .phoneNumber(phoneNumberToUpdate)
+                .build();
+
+        AppUser userUpdated = userToUpdate.toBuilder()
+                .userId(userId)
+                .build();
+
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user1));
+        when(userRepository.save(userUpdated)).thenReturn(userUpdated);
+
+        AppUser actual = userService.update(userToUpdate);
+
+        assertNotNull(actual);
+        assertEquals(userUpdated, actual);
+        assertEquals(userUpdated.getEmail(), actual.getEmail());
+        assertEquals(userUpdated.getPhoneNumber(), actual.getPhoneNumber());
+        verify(userRepository).save(userUpdated);
+    }
+
+    @DisplayName("Update user : positive case(change email)")
+    @Test
+    void updatePositiveCaseChangeEmail() {
+
+        String emailToUpdate = "alice@example.com";
+
+        Long userId = user1.getUserId();
+        String userEmail = user1.getEmail();
+
+        AppUser userToUpdate = user1.toBuilder()
+                .userId(null)
                 .email(emailToUpdate)
                 .build();
 
@@ -131,9 +186,7 @@ class UserServiceImplTest extends AbstractTest {
 
         assertNotNull(actual);
         assertEquals(userUpdated, actual);
-        assertEquals(userUpdated.getName(), actual.getName());
         assertEquals(userUpdated.getEmail(), actual.getEmail());
-
         verify(userRepository).save(userUpdated);
     }
 

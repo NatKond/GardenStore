@@ -5,6 +5,7 @@ import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.EmptyOrderException;
+import de.telran.gardenStore.exception.OrderCancellationException;
 import de.telran.gardenStore.exception.OrderModificationException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
@@ -351,8 +352,8 @@ class OrderServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Cancel order : negative case")
-    void cancelOrderNegativeCase() {
+    @DisplayName("Cancel order : negative case(order not found)")
+    void cancelOrderNegativeCaseOrderNotFound() {
         Long orderId = 999L;
         when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findByUserAndOrderId(user1, orderId)).thenReturn(Optional.empty());
@@ -360,6 +361,22 @@ class OrderServiceImplTest extends AbstractTest {
         OrderNotFoundException exception = assertThrows(OrderNotFoundException.class,
                 () -> orderService.cancel(orderId));
         assertEquals("Order with id " + orderId + " not found", exception.getMessage());
+        verify(orderRepository).findByUserAndOrderId(user1, orderId);
+        verify(orderRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Cancel order : negative case(order has incorrect status)")
+    void cancelOrderNegativeCaseIncorrectStatus() {
+        Long orderId = order1.getOrderId();
+        OrderStatus status = OrderStatus.PAID;
+        Order orderToCancel = order1.toBuilder().status(status).build();
+        when(userService.getCurrent()).thenReturn(user1);
+        when(orderRepository.findByUserAndOrderId(user1, orderId)).thenReturn(Optional.of(orderToCancel));
+
+        OrderCancellationException exception = assertThrows(OrderCancellationException.class,
+                () -> orderService.cancel(orderId));
+        assertEquals("Order cannot be cancelled in current status " + status, exception.getMessage());
         verify(orderRepository).findByUserAndOrderId(user1, orderId);
         verify(orderRepository, never()).save(any());
     }

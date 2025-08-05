@@ -4,6 +4,7 @@ import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.EmptyOrderException;
+import de.telran.gardenStore.exception.OrderCancellationException;
 import de.telran.gardenStore.exception.OrderModificationException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
@@ -157,8 +158,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancel(Long orderId) {
         Order order = getById(orderId);
-        if (order.getStatus() != OrderStatus.CREATED && order.getStatus() != OrderStatus.AWAITING_PAYMENT) {
-            throw new OrderModificationException("Order with id " + orderId + " cannot be cancelled");
+        OrderStatus status = order.getStatus();
+        if (status != OrderStatus.CREATED && status != OrderStatus.AWAITING_PAYMENT) {
+            throw new OrderCancellationException("Order cannot be cancelled in current status " + status);
         }
         order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);

@@ -58,8 +58,4 @@ public interface ProductController {
 
     @GetMapping("/product-of-the-day")
     ProductResponseDto getProductOfTheDay();
-
-    @GetMapping("/purchased_products")
-    @PreAuthorize("isAuthenticated()")
-    List<ProductShortResponseDto> getAllPurchased();
 }

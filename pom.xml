@@ -120,7 +120,7 @@
                         <exclude>de/telran/gardenStore/dto/**</exclude>
                         <exclude>de/telran/gardenStore/entity/**</exclude>
                         <exclude>de/telran/gardenStore/enums/**</exclude>
-                        <exclude>de/telran/gardenStore/exceptions/**</exclude>
+                        <exclude>de/telran/gardenStore/exception/**</exclude>
                         <exclude>de/telran/gardenStore/repository/**</exclude>
                     </excludes>
                 </configuration>

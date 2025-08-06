@@ -28,6 +28,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final EntityManager entityManager;
 
+    private final UserService userService;
+
     @Override
     public List<Product> getAll(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -123,6 +125,10 @@ public class ProductServiceImpl implements ProductService {
         }
         return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
     }
+
+    @Override
+    public List<Product> getAllPurchased() {
+        return productRepository.findAllPurchasedByUser(userService.getCurrent());
 
     private void checkCategoryExists(Long categoryId) {
         categoryService.getById(categoryId);

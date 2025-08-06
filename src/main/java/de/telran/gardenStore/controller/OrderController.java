@@ -3,6 +3,7 @@ package de.telran.gardenStore.controller;
 import de.telran.gardenStore.dto.OrderCreateRequestDto;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.dto.OrderShortResponseDto;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,10 @@ public interface OrderController {
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     OrderResponseDto updateItem(@RequestParam @Positive Long orderItemId, @RequestParam @Positive Integer quantity);
+
+    @GetMapping("/purchased-products")
+    @PreAuthorize("hasRole('USER')")
+    List<ProductShortResponseDto> getAllPurchasedProducts();
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")

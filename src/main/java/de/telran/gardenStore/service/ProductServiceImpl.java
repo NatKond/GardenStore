@@ -107,10 +107,6 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(getById(id));
     }
 
-    private void checkCategoryExists(Long categoryId) {
-        categoryService.getById(categoryId);
-    }
-
     @Override
     public Product setDiscount(Long productId, BigDecimal discountPercentage) {
         Product product = getById(productId);
@@ -129,8 +125,12 @@ public class ProductServiceImpl implements ProductService {
         }
         return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
     }
+
     @Override
     public List<Product> getAllPurchased() {
         return productRepository.findAllPurchasedByUser(userService.getCurrent());
+
+    private void checkCategoryExists(Long categoryId) {
+        categoryService.getById(categoryId);
     }
 }

@@ -1,4 +1,4 @@
-package de.telran.gardenStore.service;
+package de.telran.gardenStore.service.report;
 import de.telran.gardenStore.dto.report.ProductReport;
 import de.telran.gardenStore.dto.report.ProfitReport;
 

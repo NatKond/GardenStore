@@ -1,13 +1,8 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.ProductCreateRequestDto;
-import de.telran.gardenStore.dto.ProductResponseDto;
-import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.dto.report.ProductReport;
 import de.telran.gardenStore.dto.report.ProfitReport;
-import de.telran.gardenStore.entity.Product;
-import de.telran.gardenStore.service.ReportService;
+import de.telran.gardenStore.service.report.ReportService;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +17,6 @@ import java.util.List;
 public class ReportControllerImpl implements ReportController {
 
     private final ReportService reportService;
-
-    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Override
     public List<ProductReport> getTopOrderedProducts(@Positive Integer limit) {

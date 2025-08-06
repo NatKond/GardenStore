@@ -1,6 +1,6 @@
 package de.telran.gardenStore.service.report;
 
-import de.telran.gardenStore.converter.ReportMapper;
+import de.telran.gardenStore.utils.ReportMapper;
 import de.telran.gardenStore.dto.report.ProductReport;
 import de.telran.gardenStore.dto.report.ProfitReport;
 
@@ -28,8 +28,6 @@ public class ReportServiceImpl implements ReportService {
     private static final int HOUR_INDEX  = 4;
 
     private final EntityManager entityManager;
-
-    private final ReportMapper reportMapper;
 
     @Override
     public List<ProductReport> getTopOrderedProducts(Integer limit) {
@@ -71,7 +69,7 @@ public class ReportServiceImpl implements ReportService {
         nativeQuery.setParameter("status", status.name());
         nativeQuery.setParameter("limit", limit);
         List<Object[]> resultList = (List<Object[]>) nativeQuery.getResultList();
-        return reportMapper.mapToProductReportsList(resultList);
+        return ReportMapper.mapToProductReportsList(resultList);
     }
 
     private List<ProductReport> getProductsAwaitingPaymentByTime(LocalDateTime timeBefore, Integer limit) {
@@ -88,7 +86,7 @@ public class ReportServiceImpl implements ReportService {
         nativeQuery.setParameter("timeBefore", timeBefore);
         nativeQuery.setParameter("limit", limit);
         List<Object[]> resultList = (List<Object[]>) nativeQuery.getResultList();
-        return reportMapper.mapToProductReportsList(resultList);
+        return ReportMapper.mapToProductReportsList(resultList);
     }
 
     private List<ProfitReport> getProfitReports(LocalDateTime timeBefore, String groupBy) {
@@ -110,10 +108,10 @@ public class ReportServiceImpl implements ReportService {
         List<Object[]> resultList = (List<Object[]>) nativeQuery.getResultList();
 
         return switch (groupBy) {
-            case "month" -> reportMapper.mapToProfitReportsList(resultList, MONTH_INDEX);
-            case "week"  -> reportMapper.mapToProfitReportsList(resultList, WEEK_INDEX);
-            case "day"   -> reportMapper.mapToProfitReportsList(resultList, DAY_INDEX);
-            default      -> reportMapper.mapToProfitReportsList(resultList, HOUR_INDEX);
+            case "month" -> ReportMapper.mapToProfitReportsList(resultList, MONTH_INDEX);
+            case "week"  -> ReportMapper.mapToProfitReportsList(resultList, WEEK_INDEX);
+            case "day"   -> ReportMapper.mapToProfitReportsList(resultList, DAY_INDEX);
+            default      -> ReportMapper.mapToProfitReportsList(resultList, HOUR_INDEX);
         };
     }
 }

@@ -6,10 +6,12 @@ import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.entity.OrderItem;
+import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.EmptyOrderException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.service.OrderService;
+import de.telran.gardenStore.service.ProductService;
 import de.telran.gardenStore.service.UserService;
 import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +53,13 @@ public class OrderControllerImplTest extends AbstractTest {
     private Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @MockitoBean
+    private Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
+
+    @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private ProductService productService;
 
     @Test
     @DisplayName("GET /v1/orders/history/{userId} - Get order history for user")

@@ -15,6 +15,14 @@ public interface OrderController {
 
     @GetMapping("/history")
     @PreAuthorize("hasRole('USER')")
+    List<OrderShortResponseDto> getAllForCurrentUser();
+
+    @GetMapping("/history/delivered")
+    @PreAuthorize("hasRole('USER')")
+    List<OrderResponseDto> getAllDeliveredForCurrentUser();
+
+    @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     List<OrderShortResponseDto> getAll();
 
     @GetMapping("/{orderId}")

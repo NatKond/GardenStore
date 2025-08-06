@@ -23,8 +23,18 @@ public class OrderControllerImpl implements OrderController {
     private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Override
-    public List<OrderShortResponseDto> getAll() {
+    public List<OrderShortResponseDto> getAllForCurrentUser() {
         return orderConverter.convertEntityListToDtoList(orderService.getAllForCurrentUser());
+    }
+
+    @Override
+    public List<OrderResponseDto> getAllDeliveredForCurrentUser() {
+        return orderService.getAllDeliveredForCurrentUser().stream().map(orderConverter::convertEntityToDto).toList();
+    }
+
+    @Override
+    public List<OrderShortResponseDto> getAll(){
+        return orderConverter.convertEntityListToDtoList(orderService.getAll());
     }
 
     @Override

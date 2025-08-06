@@ -8,18 +8,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RequestMapping("/v1/favorites")
+@PreAuthorize("hasRole('USER')")
 public interface FavoriteController {
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping
     List<FavoriteResponseDto> getAllForCurrentUser();
 
-    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{productId}")
     FavoriteResponseDto create(@PathVariable @Positive Long productId);
 
-    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{favoriteId}")
     void delete(@PathVariable @Positive Long favoriteId);
 }

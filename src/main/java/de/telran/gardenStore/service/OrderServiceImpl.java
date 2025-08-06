@@ -43,6 +43,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getAll(){
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public List<Order> getAllDeliveredForCurrentUser(){
+        return orderRepository.findAllByUserAndStatus(userService.getCurrent(), OrderStatus.DELIVERED);
+    }
+
+    @Override
     public List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt) {
         return orderRepository.findByStatusAndUpdatedAtAfter(status, updatedAt);
     }

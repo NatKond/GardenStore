@@ -40,7 +40,7 @@ public class AppUser {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
 
     @ToString.Exclude

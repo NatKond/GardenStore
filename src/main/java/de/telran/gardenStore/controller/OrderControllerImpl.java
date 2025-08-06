@@ -1,11 +1,9 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.service.OrderService;
-import de.telran.gardenStore.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +20,7 @@ public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
 
-    private final ProductService productService;
-
     private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
-
-    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Override
     public List<OrderShortResponseDto> getAll() {
@@ -35,57 +29,38 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     public OrderResponseDto getById(@Positive Long orderId) {
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.getById(orderId)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
-        return orderResponseDto;
+        return orderConverter.convertEntityToDto(
+                orderService.getById(orderId));
     }
 
     @Override
     public OrderResponseDto create(@Valid OrderCreateRequestDto orderCreateRequestDto) {
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
+
+        return orderConverter.convertEntityToDto(
                 orderService.create(
                         orderCreateRequestDto.getDeliveryAddress(),
                         orderCreateRequestDto.getDeliveryMethod(),
                         orderCreateRequestDto.getContactPhone(),
-                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue)))
-        );
-
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
+                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue))));
     }
 
     @Override
     public OrderResponseDto addItem(@Positive Long orderId, @Positive Long productId, @Positive Integer quantity){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.addItem(orderId, productId, quantity)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
-        return orderResponseDto;
+
+        return orderConverter.convertEntityToDto(
+                orderService.addItem(orderId, productId, quantity));
     }
 
     @Override
     public OrderResponseDto updateItem(@Positive Long orderItemId, @Positive Integer quantity){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.updateItem(orderItemId, quantity)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
-    }
-
-    @Override
-    public List<ProductShortResponseDto> getAllPurchasedProducts() {
-        return productConverter.convertEntityListToDtoList(productService.getAllPurchased());
+        return orderConverter.convertEntityToDto(
+                orderService.updateItem(orderItemId, quantity));
     }
 
     @Override
     public OrderResponseDto removeItem(@Positive Long orderItemId){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.removeItem(orderItemId)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
+        return orderConverter.convertEntityToDto(
+                orderService.removeItem(orderItemId));
     }
 
     @Override

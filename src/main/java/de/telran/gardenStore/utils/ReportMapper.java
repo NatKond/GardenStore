@@ -1,4 +1,4 @@
-package de.telran.gardenStore.converter;
+package de.telran.gardenStore.utils;
 
 import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.dto.report.ProductReport;
@@ -14,32 +14,32 @@ import java.util.stream.Collectors;
 @Component
 public class ReportMapper {
 
-    public List<ProductReport> mapToProductReportsList(List<Object[]> resultList) {
+    public static List<ProductReport> mapToProductReportsList(List<Object[]> resultList) {
         return resultList
                 .stream()
-                .map(this::mapToProductReport)
+                .map(ReportMapper::mapToProductReport)
                 .collect(Collectors.toList());
     }
 
-    public List<ProfitReport> mapToProfitReportsList(List<Object[]> resultList, Integer rowNumber) {
+    public static List<ProfitReport> mapToProfitReportsList(List<Object[]> resultList, Integer rowNumber) {
         Map<String, BigDecimal> groupedMap = resultList.stream()
                 .collect(Collectors.groupingBy(raw -> String.valueOf(raw[rowNumber]),
                         LinkedHashMap::new,
                         Collectors.reducing(BigDecimal.ZERO, raw -> (BigDecimal) raw[0], BigDecimal::add)));
 
         return groupedMap.entrySet().stream()
-                .map(this::mapToProfitReport)
+                .map(ReportMapper::mapToProfitReport)
                 .collect(Collectors.toList());
     }
 
-    private ProfitReport mapToProfitReport(Map.Entry<String, BigDecimal> entry) {
+    private static ProfitReport mapToProfitReport(Map.Entry<String, BigDecimal> entry) {
         return ProfitReport.builder()
                 .period(entry.getKey())
                 .amountPerPeriod(entry.getValue())
                 .build();
     }
 
-    private ProductReport mapToProductReport(Object[] row){
+    private static ProductReport mapToProductReport(Object[] row){
         return ProductReport.builder()
                 .product(
                         ProductShortResponseDto.builder()

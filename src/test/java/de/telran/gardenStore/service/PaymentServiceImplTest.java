@@ -33,7 +33,6 @@ class PaymentServiceImplTest extends AbstractTest {
         Order order = order1.toBuilder().status(OrderStatus.AWAITING_PAYMENT).build();
         Order expected = order1.toBuilder().status(OrderStatus.PAID).build();
 
-        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(paymentAmount);
         when(orderService.getById(order.getOrderId())).thenReturn(order);
         when(orderService.updateStatus(order.getOrderId(), OrderStatus.PAID))
                 .thenReturn(expected);
@@ -52,8 +51,6 @@ class PaymentServiceImplTest extends AbstractTest {
         BigDecimal incorrectAmount = new BigDecimal("20.00");
         Order order = order1.toBuilder().status(OrderStatus.AWAITING_PAYMENT).build();
 
-        when(orderService.getTotalAmount(order.getOrderId()))
-                .thenReturn(orderResponseDto1.getTotalAmount());
         when(orderService.getById(order.getOrderId())).thenReturn(order);
 
         RuntimeException runtimeException = assertThrows(
@@ -66,8 +63,6 @@ class PaymentServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Process Payment : negative case(incorrect status)")
     void processPayment_NegativeCase_WrongStatus() {
-        when(orderService.getTotalAmount(order2.getOrderId()))
-                .thenReturn(product3.getDiscountPrice());
         when(orderService.getById(order2.getOrderId())).thenReturn(order2);
 
         RuntimeException runtimeException = assertThrows(

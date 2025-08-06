@@ -4,7 +4,6 @@ import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +15,6 @@ public interface OrderService {
     List<Order> getAllForCurrentUser();
 
     List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt);
-
-    BigDecimal getTotalAmount(Long orderId);
 
     Order create(String deliveryAddress, DeliveryMethod deliveryMethod, String contactPhone, Map<Long, Integer> productIdPerQuantityMap);
 

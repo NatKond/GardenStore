@@ -23,8 +23,7 @@ public class CartConverter implements ConverterEntityToDtoShort<Cart, CartRespon
                     mapper
                             .using(context -> cartItemConverter.convertEntityListToDtoList((List<CartItem>) context.getSource()))
                             .map(Cart::getItems, CartResponseDto::setItems);
-                }
-        );
+                });
 
         return modelMapper.map(cart, CartResponseDto.class);
     }

@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.*;
@@ -20,8 +21,12 @@ import java.util.stream.Collectors;
 public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
+
     private final ProductService productService;
+
     private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
+
+    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Override
     public List<OrderShortResponseDto> getAll() {
@@ -71,16 +76,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     public List<ProductShortResponseDto> getAllPurchasedProducts() {
-        return productService.getAllPurchased().stream()
-                .map(product -> new ProductShortResponseDto(
-                        product.getProductId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getPrice(),
-                        product.getDiscountPrice(),
-                        product.getCategory().getCategoryId(),
-                        product.getImageUrl()))
-                .collect(Collectors.toList());
+        return productConverter.convertEntityListToDtoList(productService.getAllPurchased());
     }
 
     @Override

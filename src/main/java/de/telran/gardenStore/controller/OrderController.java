@@ -38,7 +38,7 @@ public interface OrderController {
     OrderResponseDto updateItem(@RequestParam @Positive Long orderItemId, @RequestParam @Positive Integer quantity);
 
     @GetMapping("/purchased-products")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     List<ProductShortResponseDto> getAllPurchasedProducts();
 
     @PreAuthorize("hasRole('USER')")

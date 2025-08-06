@@ -1,5 +1,4 @@
 package de.telran.gardenStore.service;
-import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.NoDiscountedProductsException;
@@ -11,10 +10,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -136,7 +131,6 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public List<Product> getAllPurchased() {
-        AppUser currentUser = userService.getCurrent();
-        return productRepository.findAllPurchasedByUser(currentUser.getUserId());
+        return productRepository.findAllPurchasedByUser(userService.getCurrent());
     }
 }

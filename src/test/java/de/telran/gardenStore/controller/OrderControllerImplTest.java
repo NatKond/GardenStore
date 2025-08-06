@@ -24,7 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +84,6 @@ public class OrderControllerImplTest extends AbstractTest {
     void getOrderByIdPositiveCase() throws Exception {
         when(orderService.getById(order1.getOrderId())).thenReturn(order1);
         when(orderConverter.convertEntityToDto(order1)).thenReturn(orderResponseDto1);
-        when(orderService.getTotalAmount(order1.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount());
 
         mockMvc.perform(get("/v1/orders/{orderId}", order1.getOrderId()))
                 .andExpectAll(
@@ -130,7 +128,6 @@ public class OrderControllerImplTest extends AbstractTest {
                 orderToCreate.getItems().stream().collect(Collectors.toMap(orderItem -> orderItem.getProduct().getProductId(), OrderItem::getQuantity))
         )).thenReturn(orderCreated);
         when(orderConverter.convertEntityToDto(orderCreated)).thenReturn(orderResponseCreatedDto);
-        when(orderService.getTotalAmount(orderCreated.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount());
 
         mockMvc.perform(post("/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -221,7 +218,6 @@ public class OrderControllerImplTest extends AbstractTest {
 
         when(orderService.addItem(order.getOrderId(), product3.getProductId(), quantity)).thenReturn(orderUpdated);
         when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
-        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount().add(product3.getDiscountPrice().multiply(BigDecimal.valueOf(quantity))));
 
         mockMvc.perform(post("/v1/orders/items?orderId={orderId}&productId={productId}&quantity={quantity}",
                         order.getOrderId(),
@@ -235,7 +231,6 @@ public class OrderControllerImplTest extends AbstractTest {
 
         verify(orderService).addItem(order.getOrderId(), product3.getProductId(), quantity);
         verify(orderConverter).convertEntityToDto(orderUpdated);
-        verify(orderService).getTotalAmount(order.getOrderId());
     }
 
     @Test
@@ -269,7 +264,6 @@ public class OrderControllerImplTest extends AbstractTest {
 
         when(orderService.updateItem(orderItemId, quantity)).thenReturn(orderUpdated);
         when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
-        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount().add(product3.getDiscountPrice()));
 
         mockMvc.perform(put("/v1/orders/items?orderItemId={orderItemId}&quantity={quantity}",
                         orderItemId,
@@ -282,7 +276,6 @@ public class OrderControllerImplTest extends AbstractTest {
 
         verify(orderService).updateItem(orderItemId,quantity);
         verify(orderConverter).convertEntityToDto(orderUpdated);
-        verify(orderService).getTotalAmount(order.getOrderId());
     }
 
     @Test
@@ -309,7 +302,6 @@ public class OrderControllerImplTest extends AbstractTest {
 
         when(orderService.removeItem(orderItemId)).thenReturn(orderUpdated);
         when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
-        when(orderService.getTotalAmount(order.getOrderId())).thenReturn(orderResponseDto1.getTotalAmount().add(product3.getDiscountPrice()));
 
         mockMvc.perform(delete("/v1/orders/items/{orderItemId} ", orderItemId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -320,7 +312,6 @@ public class OrderControllerImplTest extends AbstractTest {
 
         verify(orderService).removeItem(orderItemId);
         verify(orderConverter).convertEntityToDto(orderUpdated);
-        verify(orderService).getTotalAmount(order.getOrderId());
     }
 
     @Test

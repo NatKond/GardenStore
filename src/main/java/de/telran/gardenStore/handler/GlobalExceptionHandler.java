@@ -1,6 +1,6 @@
 package de.telran.gardenStore.handler;
 
-import de.telran.gardenStore.dto.ApiErrorResponse;
+import de.telran.gardenStore.dto.ApiResponse;
 import de.telran.gardenStore.exception.EntityAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -23,91 +22,65 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handlerException(Exception exception) {
+    public ResponseEntity<ApiResponse> handlerException(Exception exception) {
         log.error(exception.getMessage(), exception);
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ApiErrorResponse apiErrorResponse = ApiErrorResponse.builder()
-                .exception(exception.getClass().getSimpleName())
-                .message(exception.getMessage())
-                .status(status.value())
-                .timestamp(LocalDateTime.now())
-                .build();
 
-        return new ResponseEntity<>(apiErrorResponse, status);
+        return new ResponseEntity<>(
+                ApiResponse.error(exception, HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
+    public ResponseEntity<ApiResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
         log.error(exception.getMessage(), exception);
-        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
-                .exception(exception.getClass().getSimpleName())
-                .message(exception.getMessage())
-                .status(HttpStatus.NOT_FOUND.value())
-                .timestamp(LocalDateTime.now())
-                .build();
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(
+                ApiResponse.error(exception, HttpStatus.NOT_FOUND.value()),
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MappingException.class)
-    public ResponseEntity<ApiErrorResponse> handleMappingException(MappingException exception) {
-        Throwable rootCause = exception.getCause();
+    public ResponseEntity<ApiResponse> handleMappingException(MappingException exception) {
         log.error(exception.getMessage(), exception);
-        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
-                    .exception(rootCause.getClass().getSimpleName())
-                    .message(rootCause.getMessage())
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .timestamp(LocalDateTime.now())
-                    .build();
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                ApiResponse.error(exception, HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorResponse> handleUserWithEmailAlreadyExistsException(RuntimeException exception) {
+    public ResponseEntity<ApiResponse> handleUserWithEmailAlreadyExistsException(RuntimeException exception) {
         log.error(exception.getMessage(), exception);
-        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
-                .exception(exception.getClass().getSimpleName())
-                .message(exception.getMessage())
-                .status(HttpStatus.CONFLICT.value())
-                .timestamp(LocalDateTime.now())
-                .build();
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(
+                ApiResponse.error(exception, HttpStatus.CONFLICT.value()),
+                HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
+    public ResponseEntity<ApiResponse> handleConstraintViolationException(ConstraintViolationException exception) {
         log.error(exception.getMessage(), exception);
-        Map<String, String> errors = exception.getConstraintViolations()
+        Map<String, String> messages = exception.getConstraintViolations()
                 .stream()
                 .collect(Collectors.groupingBy(violation -> violation.getPropertyPath().toString(),
                         Collectors.mapping(ConstraintViolation::getMessage, Collectors.joining(". "))));
-        ApiErrorResponse apiErrorResponseValidation = ApiErrorResponse.builder()
-                .exception(exception.getClass().getSimpleName())
-                .messages(errors)
-                .status(HttpStatus.BAD_REQUEST.value())
-                .timestamp(LocalDateTime.now())
-                .build();
 
-        return new ResponseEntity<>(apiErrorResponseValidation, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                ApiResponse.error(exception, messages, HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         log.error(exception.getMessage(), exception);
-        Map<String, String> errors = exception.getBindingResult().getFieldErrors()
+        Map<String, String> messages = exception.getBindingResult().getFieldErrors()
                 .stream()
                 .collect(Collectors.groupingBy(FieldError::getField,
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.joining(". "))));
-        ApiErrorResponse apiErrorResponseValidation = ApiErrorResponse.builder()
-                .exception(exception.getClass().getSimpleName())
-                .messages(errors)
-                .status(HttpStatus.BAD_REQUEST.value())
-                .timestamp(LocalDateTime.now())
-                .build();
 
-        return new ResponseEntity<>(apiErrorResponseValidation, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                ApiResponse.error(exception, messages, HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
     }
 }
 

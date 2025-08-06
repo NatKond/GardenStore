@@ -129,6 +129,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAllPurchased() {
         return productRepository.findAllPurchasedByUser(userService.getCurrent());
+    }
 
     private void checkCategoryExists(Long categoryId) {
         categoryService.getById(categoryId);

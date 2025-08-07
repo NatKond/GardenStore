@@ -9,11 +9,11 @@
     <include file="tables/03-add-constraints.xml" relativeToChangelogFile="true" />
     <include file="tables/10-correct-constraint.xml" relativeToChangelogFile="true" />
     <include file="tables/11-add-multiple-roles-per-user.xml" relativeToChangelogFile="true" />
-    <include file="tables/12-add-total-amount-to-orders.xml" relativeToChangelogFile="true" />
     <include file="data/04-truncate-tables.xml" relativeToChangelogFile="true" />
     <include file="data/05-add-data.xml" relativeToChangelogFile="true" />
     <include file="tables/06-create-additional-tables.xml" relativeToChangelogFile="true" />
     <include file="tables/07-add-constraints-for-additional-tables.xml" relativeToChangelogFile="true" />
+    <include file="tables/12-add-total-amount-to-orders.xml" relativeToChangelogFile="true" />
     <include file="data/08-truncate-additional-tables.xml" relativeToChangelogFile="true" />
     <include file="data/09-add-data-for-additional-tables.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

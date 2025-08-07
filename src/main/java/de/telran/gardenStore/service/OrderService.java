@@ -14,6 +14,10 @@ public interface OrderService {
 
     List<Order> getAllForCurrentUser();
 
+    List<Order> getAll();
+
+    List<Order> getAllDeliveredForCurrentUser();
+
     List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt);
 
     Order create(String deliveryAddress, DeliveryMethod deliveryMethod, String contactPhone, Map<Long, Integer> productIdPerQuantityMap);

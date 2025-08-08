@@ -47,7 +47,6 @@ class FavoriteControllerImplTest  extends AbstractTest {
     @Test
     @DisplayName("GET /v1/favorites - Get all favorites for current user")
     void getAllFavorites() throws Exception {
-
         List<Favorite> favorites = List.of(favorite1, favorite2);
 
         List<FavoriteResponseDto> expected = List.of(favoriteResponseDto1, favoriteResponseDto2);
@@ -97,7 +96,6 @@ class FavoriteControllerImplTest  extends AbstractTest {
     @Test
     @DisplayName("DELETE /v1/favorites/{favoriteId} - Delete favorite by ID : positive case")
     void deletePositiveCase() throws Exception {
-
         Long favoriteId = favorite1.getFavoriteId();
 
         mockMvc.perform(delete("/v1/favorites/{favoriteId}", favoriteId))
@@ -109,7 +107,6 @@ class FavoriteControllerImplTest  extends AbstractTest {
     @Test
     @DisplayName("DELETE /v1/favorites/{favoriteId} - Delete favorite by ID : negative case")
     void deleteNegativeCase() throws Exception {
-
         Long favoriteId = 999L;
 
         doThrow(new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found")).when(favoriteService).deleteById(favoriteId);

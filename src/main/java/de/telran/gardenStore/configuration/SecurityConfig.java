@@ -41,6 +41,8 @@ public class SecurityConfig {
                                         "/v1/categories",
                                         "/v1/categories/**"
                                 ).permitAll()
+                                // Добавляем ограничение для отчетов
+                                .requestMatchers("/v1/report/**").hasRole("ADMIN") // Только ADMIN может смотреть отчеты
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session

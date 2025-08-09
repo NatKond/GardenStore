@@ -16,7 +16,6 @@ services:
 
   backend:
     build: .
-    image: gardenstore:latest
     container_name: gardenstore-app
     depends_on:
       - db

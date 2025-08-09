@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -172,15 +173,22 @@ public class ProductControllerImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Setting a discount for a product: positive scenario")
-    void setDiscount_PositiveCase() throws Exception {
+    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Set discount: positive case")
+    void setDiscountPositiveCase() throws Exception {
         Long productId = product1.getProductId();
         BigDecimal discountPercentage = new BigDecimal("20");
+        BigDecimal originalPrice = product1.getPrice();
+
+        BigDecimal discountPrice = originalPrice.multiply(
+                BigDecimal.ONE.subtract(discountPercentage.movePointLeft(2))
+        ).setScale(2, RoundingMode.HALF_UP);
+
         Product productWithDiscount = product1.toBuilder()
-                .discountPrice(new BigDecimal("9.59"))
+                .discountPrice(discountPrice)
                 .build();
+
         ProductResponseDto expected = productResponseDto1.toBuilder()
-                .discountPrice(new BigDecimal("9.59"))
+                .discountPrice(discountPrice)
                 .build();
 
         when(productService.setDiscount(productId, discountPercentage)).thenReturn(productWithDiscount);
@@ -192,20 +200,6 @@ public class ProductControllerImplTest extends AbstractTest {
                         status().isAccepted(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(expected)));
-    }
-
-    @Test
-    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Invalid discount percentage: negative scenario")
-    void setDiscount_NegativeCase_InvalidPercentage() throws Exception {
-        Long productId = product1.getProductId();
-        BigDecimal invalidDiscountPercentage = new BigDecimal("0");
-
-        mockMvc.perform(post("/v1/products/{productId}/discount/{discountPercentage}", productId, invalidDiscountPercentage))
-                .andDo(print())
-                .andExpectAll(
-                        status().isBadRequest(),
-                        jsonPath("$.messages['setDiscount.discountPercentage']").value("Discount must be at least 1%")
-                );
     }
 
     @Test

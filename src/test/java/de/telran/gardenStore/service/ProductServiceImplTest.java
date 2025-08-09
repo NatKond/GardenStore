@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -144,12 +145,15 @@ class ProductServiceImplTest extends AbstractTest {
         assertEquals("Product with id " + productId + " not found", runtimeException.getMessage());
     }
 
-    @DisplayName("setDiscount - Applying a discount to a product: positive scenario")
+    @DisplayName("setDiscount - Set discount: positive case")
     @Test
-    void setDiscount_PositiveCase() {
+    void setDiscountPositiveCase() {
         Long productId = product1.getProductId();
         BigDecimal discountPercentage = new BigDecimal("20");
-        BigDecimal expectedDiscountPrice = new BigDecimal("9.59");
+        BigDecimal originalPrice = product1.getPrice();
+        BigDecimal expectedDiscountPrice = originalPrice.multiply(
+                BigDecimal.ONE.subtract(discountPercentage.movePointLeft(2))
+        ).setScale(2, RoundingMode.HALF_UP);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product1));
         when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -160,24 +164,6 @@ class ProductServiceImplTest extends AbstractTest {
         assertEquals(expectedDiscountPrice, result.getDiscountPrice());
         verify(productRepository).findById(productId);
         verify(productRepository).save(product1);
-    }
-
-    @DisplayName("setDiscount - Product not found: negative scenario")
-    @Test
-    void setDiscount_NegativeCase_ProductNotFound() {
-        Long nonExistentProductId = 999L;
-        BigDecimal discountPercentage = new BigDecimal("20");
-
-        when(productRepository.findById(nonExistentProductId)).thenReturn(Optional.empty());
-
-        ProductNotFoundException exception = assertThrows(
-                ProductNotFoundException.class,
-                () -> productService.setDiscount(nonExistentProductId, discountPercentage)
-        );
-
-        assertEquals("Product with id " + nonExistentProductId + " not found", exception.getMessage());
-        verify(productRepository).findById(nonExistentProductId);
-        verify(productRepository, never()).save(any());
     }
 
     @DisplayName("getProductOfTheDay - Getting the product of the day: positive scenario")

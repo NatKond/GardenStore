@@ -4,6 +4,7 @@ import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.EmptyOrderException;
+import de.telran.gardenStore.exception.OrderCancellationException;
 import de.telran.gardenStore.exception.OrderModificationException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
@@ -32,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long orderId) {
-        return orderRepository.findByUserAndOrderId(userService.getCurrent(),orderId)
+        return orderRepository.findByUserAndOrderId(userService.getCurrent(), orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + orderId + " not found"));
     }
 
@@ -42,18 +43,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt) {
-        return orderRepository.findByStatusAndUpdatedAtAfter(status, updatedAt);
+    public List<Order> getAll(){
+        return orderRepository.findAll();
     }
 
     @Override
-    public BigDecimal getTotalAmount(Long orderId) {
-        List<OrderItem> orderItems = getById(orderId).getItems();
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        for (OrderItem orderItem : orderItems) {
-            totalAmount = totalAmount.add(orderItem.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
-        }
-        return totalAmount;
+    public List<Order> getAllDeliveredForCurrentUser(){
+        return orderRepository.findAllByUserAndStatus(userService.getCurrent(), OrderStatus.DELIVERED);
+    }
+
+    @Override
+    public List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt) {
+        return orderRepository.findByStatusAndUpdatedAtAfter(status, updatedAt);
     }
 
     @Override
@@ -77,17 +78,15 @@ public class OrderServiceImpl implements OrderService {
         productIdPerQuantityMap.forEach((productId, quantity) -> {
             if (productIdPerCartItemMap.containsKey(productId)) {
                 CartItem cartItem = productIdPerCartItemMap.get(productId);
-
                 order.getItems().add(createOrderItem(quantity, cartItem, order));
-
-                deleteOrUpdateCartItem(cartItem, cartItems, quantity);
+                editCartItemList(cartItem, cartItems, quantity);
             }
-
         });
-
         checkOrderNotEmpty(order);
+        order.setTotalAmount(getTotalAmount(order));
 
         cartService.update(cart);
+
         return orderRepository.save(order);
     }
 
@@ -100,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
     public Order updateStatus(Long orderId, OrderStatus status) {
         Order order = getById(orderId);
         order.setStatus(status);
+
         return orderRepository.save(order);
     }
 
@@ -119,15 +119,15 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = cart.getItems();
         Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
-        if(cartItem.isPresent()){
+        if (cartItem.isPresent()) {
             CartItem cartItemExisting = cartItem.get();
-
             order.getItems().add(createOrderItem(quantity, cartItemExisting, order));
-
-            deleteOrUpdateCartItem(cartItemExisting, cartItems, quantity);
+            editCartItemList(cartItemExisting, cartItems, quantity);
         }
 
+        order.setTotalAmount(getTotalAmount(order));
         cartService.update(cart);
+
         return orderRepository.save(order);
     }
 
@@ -143,10 +143,13 @@ public class OrderServiceImpl implements OrderService {
         Long productId = orderItem.getProduct().getProductId();
         Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
-        cartItem.ifPresent(item -> deleteOrUpdateCartItem(item, cartItems, quantity));
+        cartItem.ifPresent(item -> editCartItemList(item, cartItems, quantity));
 
         orderItem.setQuantity(quantity);
+        order.setTotalAmount(getTotalAmount(order));
+
         cartService.update(cart);
+
         return orderRepository.save(order);
     }
 
@@ -159,6 +162,7 @@ public class OrderServiceImpl implements OrderService {
         order.getItems().remove(orderItem);
 
         checkOrderNotEmpty(order);
+        order.setTotalAmount(getTotalAmount(order));
 
         return orderRepository.save(order);
     }
@@ -166,13 +170,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancel(Long orderId) {
         Order order = getById(orderId);
-        if (order.getStatus() == OrderStatus.CREATED || order.getStatus() == OrderStatus.AWAITING_PAYMENT) {
-            order.setStatus(OrderStatus.CANCELLED);
+        OrderStatus status = order.getStatus();
+        if (status != OrderStatus.CREATED && status != OrderStatus.AWAITING_PAYMENT) {
+            throw new OrderCancellationException("Order cannot be cancelled in current status " + status);
         }
+        order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
     }
 
-    private void deleteOrUpdateCartItem(CartItem cartItem, List<CartItem> cartItems, Integer quantity) {
+    private BigDecimal getTotalAmount(Order order) {
+        return order.getItems().stream().map(orderItem -> orderItem.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private void editCartItemList(CartItem cartItem, List<CartItem> cartItems, Integer quantity) {
         if (cartItem.getQuantity() <= quantity) {
             cartItems.remove(cartItem);
         } else {

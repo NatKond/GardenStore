@@ -2,6 +2,7 @@ package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.Category;
+import de.telran.gardenStore.exception.CannotDeleteCategoryException;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.repository.CategoryRepository;
@@ -153,26 +154,37 @@ class CategoryServiceImplTest extends AbstractTest {
     @DisplayName("Delete category by ID : positive case")
     @Test
     void deleteByIdPositiveCase() {
-        Category deletedCategory = categoryCreated;
+        Category categoryToDelete = categoryCreated;
+        Long categoryId = categoryToDelete.getCategoryId();
 
-        Long categoryId = 3L;
-
-        when(categoryRepositoryMock.findById(deletedCategory.getCategoryId())).thenReturn(Optional.of(deletedCategory));
+        when(categoryRepositoryMock.findById(categoryToDelete.getCategoryId())).thenReturn(Optional.of(categoryToDelete));
 
         categoryService.deleteById(categoryId);
 
-        verify(categoryRepositoryMock).delete(deletedCategory);
-        verify(categoryRepositoryMock).findById(deletedCategory.getCategoryId());
+        verify(categoryRepositoryMock).delete(categoryToDelete);
+        verify(categoryRepositoryMock).findById(categoryToDelete.getCategoryId());
     }
 
-    @DisplayName("Delete category by ID : negative case")
+    @DisplayName("Delete category by ID : negative case(category not found)")
     @Test
-    void deleteByIdNegativeCase() {
+    void deleteByIdNegativeCaseCategoryNotFound() {
         Long categoryId = 99L;
 
         when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.empty());
 
-        RuntimeException runtimeException = assertThrows(CategoryNotFoundException.class, () -> categoryService.deleteById(categoryId));
-        assertEquals("Category with id " + categoryId + " not found", runtimeException.getMessage());
+        CategoryNotFoundException categoryNotFoundException = assertThrows(CategoryNotFoundException.class, () -> categoryService.deleteById(categoryId));
+        assertEquals("Category with id " + categoryId + " not found", categoryNotFoundException.getMessage());
+    }
+
+    @DisplayName("Delete category by ID : negative case(category contains products)")
+    @Test
+    void deleteByIdNegativeCaseCategoryContainsProducts() {
+        Category categoryToDelete = category1;
+        Long categoryId = category1.getCategoryId();
+
+        when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.of(categoryToDelete));
+
+        CannotDeleteCategoryException cannotDeleteCategoryException = assertThrows(CannotDeleteCategoryException.class, () -> categoryService.deleteById(categoryId));
+        assertEquals("Cannot delete category " + categoryToDelete.getName() + " because it contains products.", cannotDeleteCategoryException.getMessage());
     }
 }

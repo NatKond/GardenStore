@@ -28,6 +28,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final EntityManager entityManager;
 
+    private final UserService userService;
+
     @Override
     public List<Product> getAll(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -105,10 +107,6 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(getById(id));
     }
 
-    private void checkCategoryExists(Long categoryId) {
-        categoryService.getById(categoryId);
-    }
-
     @Override
     public Product setDiscount(Long productId, BigDecimal discountPercentage) {
         Product product = getById(productId);
@@ -126,5 +124,14 @@ public class ProductServiceImpl implements ProductService {
             throw new NoDiscountedProductsException("No discounted products available");
         }
         return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
+    }
+
+    @Override
+    public List<Product> getAllPurchased() {
+        return productRepository.findAllPurchasedByUser(userService.getCurrent());
+    }
+
+    private void checkCategoryExists(Long categoryId) {
+        categoryService.getById(categoryId);
     }
 }

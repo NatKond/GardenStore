@@ -28,19 +28,26 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @GetMapping("/history")
     @PreAuthorize("hasRole('USER')")
-    public List<OrderShortResponseDto> getAll() {
+    public List<OrderShortResponseDto> getAllForCurrentUser() {
         return orderConverter.convertEntityListToDtoList(orderService.getAllForCurrentUser());
+    }
+
+    @Override
+    public List<OrderResponseDto> getAllDeliveredForCurrentUser() {
+        return orderService.getAllDeliveredForCurrentUser().stream().map(orderConverter::convertEntityToDto).toList();
+    }
+
+    @Override
+    public List<OrderShortResponseDto> getAll(){
+        return orderConverter.convertEntityListToDtoList(orderService.getAll());
     }
 
     @Override
     @GetMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
     public OrderResponseDto getById(@PathVariable @Positive Long orderId) {
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.getById(orderId)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
-        return orderResponseDto;
+        return orderConverter.convertEntityToDto(
+                orderService.getById(orderId));
     }
 
     @Override
@@ -48,17 +55,12 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderResponseDto create(@RequestBody @Valid OrderCreateRequestDto orderCreateRequestDto) {
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
+        return orderConverter.convertEntityToDto(
                 orderService.create(
                         orderCreateRequestDto.getDeliveryAddress(),
                         orderCreateRequestDto.getDeliveryMethod(),
                         orderCreateRequestDto.getContactPhone(),
-                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue)))
-        );
-
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-
-        return orderResponseDto;
+                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue))));
     }
 
     @Override
@@ -68,11 +70,8 @@ public class OrderControllerImpl implements OrderController {
     public OrderResponseDto addItem(@RequestParam @Positive Long orderId,
                                          @RequestParam @Positive Long productId,
                                          @RequestParam @Positive Integer quantity){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.addItem(orderId, productId, quantity)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
-        return orderResponseDto;
+        return orderConverter.convertEntityToDto(
+                orderService.addItem(orderId, productId, quantity));
     }
 
     @Override
@@ -81,22 +80,16 @@ public class OrderControllerImpl implements OrderController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OrderResponseDto updateItem(@RequestParam @Positive Long orderItemId,
                                             @RequestParam @Positive Integer quantity){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.updateItem(orderItemId, quantity)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
+        return orderConverter.convertEntityToDto(
+                orderService.updateItem(orderItemId, quantity));
     }
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")
     @Override
     public OrderResponseDto removeItem(@PathVariable @Positive Long orderItemId){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.removeItem(orderItemId)
-        );
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
+        return orderConverter.convertEntityToDto(
+                orderService.removeItem(orderItemId));
     }
 
     @DeleteMapping("/{orderId}")

@@ -14,6 +14,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -83,6 +85,10 @@ public interface ProductController {
                             """)))
     ProductResponseDto getById(
             @Parameter(description = "ID of the product to retrieve", example = "1") @Positive Long productId);
+
+    @GetMapping("/purchased-products")
+    @PreAuthorize("hasRole('USER')")
+    List<ProductShortResponseDto> getAllPurchasedProducts();
 
     @Operation(summary = "Create a new product (only for role ADMIN)")
     @ApiResponse(responseCode = "201", description = "Product created",
@@ -259,5 +265,6 @@ public interface ProductController {
             BigDecimal discountPercentage
     );
 
+    @GetMapping("/product-of-the-day")
     ProductResponseDto getProductOfTheDay();
 }

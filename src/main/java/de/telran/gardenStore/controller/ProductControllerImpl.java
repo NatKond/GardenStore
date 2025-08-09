@@ -57,6 +57,11 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
+    public List<ProductShortResponseDto> getAllPurchasedProducts() {
+        return productConverter.convertEntityListToDtoList(productService.getAllPurchased());
+    }
+
+    @Override
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping

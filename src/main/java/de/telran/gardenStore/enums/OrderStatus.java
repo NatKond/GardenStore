@@ -8,12 +8,13 @@ public enum OrderStatus {
     DELIVERED,
     CANCELLED;
 
-    public OrderStatus next() {
+    public OrderStatus getNext() {
         return switch (this){
             case CREATED -> AWAITING_PAYMENT;
-            case AWAITING_PAYMENT, CANCELLED -> CANCELLED;
+            case AWAITING_PAYMENT -> CANCELLED;
             case PAID -> SHIPPED;
-            case SHIPPED, DELIVERED -> DELIVERED;
+            case SHIPPED -> DELIVERED;
+            default -> this;
         };
     }
 }

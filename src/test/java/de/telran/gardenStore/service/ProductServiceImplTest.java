@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,6 +113,28 @@ class ProductServiceImplTest extends AbstractTest {
         assertNotNull(actual);
         assertEquals(expected, actual);
         verify(productRepository).save(productToCreate);
+    }
+
+    @DisplayName("setDiscount - Set discount: positive case")
+    @Test
+    void setDiscountPositiveCase() {
+        Long productId = product1.getProductId();
+        BigDecimal discountPercentage = new BigDecimal("20");
+        BigDecimal expectedDiscountPrice = product1.getPrice()
+                .multiply(BigDecimal.ONE.subtract(discountPercentage.movePointLeft(2)));
+
+        Product productWithDiscount = product1.toBuilder()
+                .discountPrice(expectedDiscountPrice)
+                .build();
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product1));
+        when(productRepository.save(productWithDiscount)).thenReturn(productWithDiscount);
+
+        Product actual = productService.setDiscount(productId, discountPercentage);
+
+        assertEquals(expectedDiscountPrice, actual.getDiscountPrice());
+        verify(productRepository).findById(productId);
+        verify(productRepository).save(productWithDiscount);
     }
 
     @DisplayName("Delete product by ID : positive case")

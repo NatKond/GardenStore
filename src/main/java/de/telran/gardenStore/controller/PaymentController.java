@@ -1,6 +1,5 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.dto.ApiErrorResponse;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,7 +12,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-@Tag(name = "Payment", description = "Payment Controller")
+@Tag(name = "7. Payment", description = "Payment Controller")
 public interface PaymentController {
 
     @Operation(summary = "Process payment for order",
@@ -76,7 +75,7 @@ public interface PaymentController {
                             """)))
     @ApiResponse(responseCode = "400", description = "Validation failed or invalid order state",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples =
                     @ExampleObject(name = "Invalid Order Status", value = """
                             {
@@ -88,7 +87,7 @@ public interface PaymentController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Order not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Order not found", value = """
                             {
                                 "exception": "OrderNotFoundException",

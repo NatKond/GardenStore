@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/payment")
-@Validated
+@PreAuthorize("hasRole('USER')")
 public class PaymentControllerImpl implements PaymentController {
 
     private final PaymentService paymentService;
@@ -27,9 +27,10 @@ public class PaymentControllerImpl implements PaymentController {
     private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @PostMapping()
-    @PreAuthorize("hasRole('USER')")
+
     @Override
     public OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @Positive BigDecimal paymentAmount) {
-        return orderConverter.convertEntityToDto(paymentService.processPayment(orderId, paymentAmount));
+        return orderConverter.convertEntityToDto(
+                paymentService.processPayment(orderId, paymentAmount));
     }
 }

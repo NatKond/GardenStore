@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/categories")
-@Validated
 public class CategoryControllerImpl implements CategoryController {
 
     private final CategoryService categoryService;
@@ -35,7 +35,8 @@ public class CategoryControllerImpl implements CategoryController {
     @Override
     @GetMapping("/{categoryId}")
     public CategoryResponseDto getById(@PathVariable @Positive Long categoryId) {
-        return categoryConverter.convertEntityToDto(categoryService.getById(categoryId));
+        return categoryConverter.convertEntityToDto(
+                categoryService.getById(categoryId));
     }
 
     @Override
@@ -53,7 +54,8 @@ public class CategoryControllerImpl implements CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponseDto update(@PathVariable @Positive Long categoryId,
                                       @RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(categoryService.update(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+        return categoryConverter.convertEntityToDto(
+                categoryService.update(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override

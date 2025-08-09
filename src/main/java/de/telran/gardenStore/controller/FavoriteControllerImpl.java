@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/favorites")
-@RequiredArgsConstructor
-@Validated
+@PreAuthorize("hasRole('USER')")
 public class FavoriteControllerImpl implements FavoriteController {
 
     private final FavoriteService favoriteService;
@@ -25,7 +26,6 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     @Override
     @GetMapping()
-    @PreAuthorize("hasRole('USER')")
     public List<FavoriteResponseDto> getAllForCurrentUser() {
         return favoriteConverter.convertEntityListToDtoList(
                 favoriteService.getAllForCurrentUser());
@@ -34,7 +34,6 @@ public class FavoriteControllerImpl implements FavoriteController {
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{productId}")
-    @PreAuthorize("hasRole('USER')")
     public FavoriteResponseDto create(@Positive @PathVariable Long productId) {
         return favoriteConverter.convertEntityToDto(
                 favoriteService.create(productId));
@@ -42,7 +41,6 @@ public class FavoriteControllerImpl implements FavoriteController {
 
     @Override
     @DeleteMapping("/{favoriteId}")
-    @PreAuthorize("hasRole('USER')")
     public void delete(@PathVariable @Positive Long favoriteId) {
         favoriteService.deleteById(favoriteId);
     }

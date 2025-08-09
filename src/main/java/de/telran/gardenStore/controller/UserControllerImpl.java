@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController
 @Validated
 @RequestMapping("/v1/users")
+@RestController
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
@@ -33,14 +33,16 @@ public class UserControllerImpl implements UserController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserShortResponseDto> getAll() {
-        return userConverter.convertEntityListToDtoList(userService.getAll());
+        return userConverter.convertEntityListToDtoList(
+                userService.getAll());
     }
 
     @Override
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponseDto getById(@PathVariable @Positive Long userId) {
-        return userConverter.convertEntityToDto(userService.getById(userId));
+        return userConverter.convertEntityToDto(
+                userService.getById(userId));
     }
 
     @GetMapping("/me")
@@ -63,7 +65,8 @@ public class UserControllerImpl implements UserController {
     @PostMapping("/register")
     public UserResponseDto create(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto) {
         return userConverter.convertEntityToDto(
-                userService.create(userConverter.convertDtoToEntity(userCreateRequestDto)));
+                userService.create(
+                        userConverter.convertDtoToEntity(userCreateRequestDto)));
     }
 
     @Override
@@ -71,7 +74,8 @@ public class UserControllerImpl implements UserController {
     @PutMapping
     public UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest) {
         return userConverter.convertEntityToDto(
-                userService.update(userConverter.convertDtoToEntity(userRequest)));
+                userService.update(
+                        userConverter.convertDtoToEntity(userRequest)));
     }
 
     @Override

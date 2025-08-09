@@ -8,46 +8,39 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/v1/report")
-@RequiredArgsConstructor
-@RestController
 @Validated
+@RestController
+@RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/v1/report")
 public class ReportControllerImpl implements ReportController {
 
     private final ReportService reportService;
 
-    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
-
     @GetMapping("/top-purchased-products/{limit}")
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public List<ProductReport> getTopOrderedProducts(@Positive Integer limit) {
-        return reportService.getTopOrderedProducts(limit);
+    public List<ProductReport> getTopPurchasedProducts(@PathVariable @Positive Integer limit) {
+        return reportService.getTopPurchasedProducts(limit);
     }
 
     @GetMapping("/top-canceled-products/{limit}")
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public List<ProductReport> getTopCanceledProducts(@Positive Integer limit) {
+    public List<ProductReport> getTopCanceledProducts(@PathVariable @Positive Integer limit) {
         return reportService.getTopCanceledProducts(limit);
     }
 
     @GetMapping("/awaiting-payment-products")
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public List<ProductReport> getProductsAwaitingPaymentForDays(@Positive Integer days, @Positive Integer limit) {
+    public List<ProductReport> getProductsAwaitingPaymentForDays(@RequestParam @Positive Integer days,
+                                                                 @RequestParam @Positive Integer limit) {
         return reportService.getProductsAwaitingPaymentForMoreDays(days, limit);
     }
 
     @GetMapping("/profit")
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<ProfitReport> getProfitOverPeriod(@RequestParam @Pattern(regexp = "days|months|years") String timeUnit,
                                                   @RequestParam @Positive Integer timeAmount,

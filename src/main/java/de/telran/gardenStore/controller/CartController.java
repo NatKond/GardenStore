@@ -1,6 +1,5 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.dto.ApiErrorResponse;
 import de.telran.gardenStore.dto.CartResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 
 
-@Tag(name = "Cart", description = "Controller responsible for managing the user's shopping cart")
+@Tag(name = "5. Cart", description = "Cart Controller")
 public interface CartController {
 
     @Operation(summary = "Get current user's cart",
@@ -52,7 +51,7 @@ public interface CartController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Cart not found for user",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Cart not found", value = """
                             {
                                 "exception": "CartNotFoundException",
@@ -111,7 +110,7 @@ public interface CartController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Product not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Product not found", value = """
                             {
                                 "exception": "ProductNotFoundException",
@@ -174,7 +173,7 @@ public interface CartController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Cart item not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Item not found", value = """
                             {
                                 "exception": "CartItemNotFoundException",
@@ -224,7 +223,7 @@ public interface CartController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Cart item not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Item not found", value = """
                             {
                                 "exception": "CartItemNotFoundException",

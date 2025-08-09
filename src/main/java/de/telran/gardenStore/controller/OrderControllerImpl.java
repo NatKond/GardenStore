@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/orders")
-@Validated
 public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
@@ -32,11 +32,15 @@ public class OrderControllerImpl implements OrderController {
         return orderConverter.convertEntityListToDtoList(orderService.getAllForCurrentUser());
     }
 
+    @GetMapping("/history/delivered")
+    @PreAuthorize("hasRole('USER')")
     @Override
     public List<OrderResponseDto> getAllDeliveredForCurrentUser() {
         return orderService.getAllDeliveredForCurrentUser().stream().map(orderConverter::convertEntityToDto).toList();
     }
 
+    @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<OrderShortResponseDto> getAll(){
         return orderConverter.convertEntityListToDtoList(orderService.getAll());
@@ -68,8 +72,8 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderResponseDto addItem(@RequestParam @Positive Long orderId,
-                                         @RequestParam @Positive Long productId,
-                                         @RequestParam @Positive Integer quantity){
+                                    @RequestParam @Positive Long productId,
+                                    @RequestParam @Positive Integer quantity){
         return orderConverter.convertEntityToDto(
                 orderService.addItem(orderId, productId, quantity));
     }
@@ -79,7 +83,7 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OrderResponseDto updateItem(@RequestParam @Positive Long orderItemId,
-                                            @RequestParam @Positive Integer quantity){
+                                       @RequestParam @Positive Integer quantity){
         return orderConverter.convertEntityToDto(
                 orderService.updateItem(orderItemId, quantity));
     }

@@ -12,10 +12,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
-@Validated
 @RequestMapping("/v1/cart")
+@PreAuthorize("hasRole('USER')")
 public class CartControllerImpl implements CartController {
 
     private final CartService cartService;
@@ -25,7 +26,6 @@ public class CartControllerImpl implements CartController {
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
     @Override
     public CartResponseDto getForCurrentUser() {
         return cartConverter.convertEntityToDto(
@@ -35,7 +35,6 @@ public class CartControllerImpl implements CartController {
 
     @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER')")
     @Override
     public CartResponseDto addItem(@PathVariable @Positive Long productId) {
         return cartConverter.convertEntityToDto(
@@ -44,7 +43,6 @@ public class CartControllerImpl implements CartController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")
-    @PreAuthorize("hasRole('USER')")
     @Override
     public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
                                           @RequestParam @Positive Integer quantity) {
@@ -54,7 +52,6 @@ public class CartControllerImpl implements CartController {
 
     @Override
     @DeleteMapping("/items/{cartItemId}")
-    @PreAuthorize("hasRole('USER')")
     public CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId) {
         return cartConverter.convertEntityToDto(cartService.deleteItem(cartItemId));
     }

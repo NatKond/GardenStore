@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.util.List;
 
-@Tag(name = "Categories", description = "Category Controller")
+@Tag(name = "2. Categories", description = "Category Controller")
 public interface CategoryController {
 
     @Operation(summary = "Get all categories")
@@ -61,7 +61,7 @@ public interface CategoryController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Category not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Category not found", value = """
                             {
                                 "exception": "CategoryNotFoundException",
@@ -86,7 +86,7 @@ public interface CategoryController {
                             """)))
     @ApiResponse(responseCode = "400", description = "Validation error",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Validation error", value = """
                             {
                                 "exception": "MethodArgumentNotValidException",
@@ -99,7 +99,7 @@ public interface CategoryController {
                             """)))
     @ApiResponse(responseCode = "409", description = "Category name conflict",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Conflict error", value = """
                             {
                                 "exception": "CategoryWithNameAlreadyExistsException",
@@ -166,7 +166,7 @@ public interface CategoryController {
                             """)))
     @ApiResponse(responseCode = "400", description = "Validation error",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Validation error", value = """
                             {
                                 "exception": "MethodArgumentNotValidException",
@@ -179,7 +179,7 @@ public interface CategoryController {
                             """)))
     @ApiResponse(responseCode = "409", description = "Category name conflict",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Conflict error", value = """
                             {
                                 "exception": "CategoryWithNameAlreadyExistsException",
@@ -222,7 +222,7 @@ public interface CategoryController {
     @ApiResponse(responseCode = "204", description = "Category successfully deleted")
     @ApiResponse(responseCode = "404", description = "Category not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Category not found", value = """
                             {
                                 "exception": "CategoryNotFoundException",

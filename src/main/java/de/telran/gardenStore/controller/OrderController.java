@@ -15,7 +15,7 @@ import jakarta.validation.constraints.Positive;
 import java.util.List;
 
 
-@Tag(name = "Orders", description = "Controller responsible for managing user orders")
+@Tag(name = "6. Orders", description = "Order Controller")
 public interface OrderController {
 
     @Operation(summary = "Get all orders for current user")
@@ -34,16 +34,139 @@ public interface OrderController {
                                 }
                             ]
                             """)))
-    @GetMapping("/history")
-    @PreAuthorize("hasRole('USER')")
     List<OrderShortResponseDto> getAllForCurrentUser();
 
-    @GetMapping("/history/delivered")
-    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Get all delivered orders for current user")
+    @ApiResponse(responseCode = "200", description = "List of delivered orders for current user",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = OrderResponseDto.class),
+                    examples = @ExampleObject(name = "Delivered orders for current user", value = """
+                        [
+                            {
+                                "orderId": 1,
+                                "userId": 1,
+                                "status": "DELIVERED",
+                                "deliveryAddress": "789 Oak Street",
+                                "contactPhone": "+1234509876",
+                                "deliveryMethod": "COURIER",
+                                "createdAt": "2025-01-15T10:00:00",
+                                "updatedAt": "2025-01-17T15:00:00",
+                                "items": [
+                                    {
+                                        "orderItemId": 1,
+                                        "product": {
+                                            "productId": 1,
+                                            "name": "All-Purpose Plant Fertilizer",
+                                            "description": "Balanced NPK formula for all types of plants",
+                                            "price": 11.99,
+                                            "discountPrice": 8.99,
+                                            "imageUrl": "/product_img/fertilizer_all_purpose.jpg"
+                                        },
+                                        "quantity": 2,
+                                        "priceAtPurchase": 8.99
+                                    },
+                                    {
+                                        "orderItemId": 2,
+                                        "product": {
+                                            "productId": 5,
+                                            "name": "Espoma Organic Perlite",
+                                            "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                            "price": 13.95,
+                                            "discountPrice": 12.65,
+                                            "imageUrl": "/product_img/organic_perlite.jpeg"
+                                        },
+                                        "quantity": 1,
+                                        "priceAtPurchase": 12.65
+                                    }
+                                ],
+                                "totalAmount": 30.63
+                            },
+                            {
+                                "orderId": 7,
+                                "userId": 1,
+                                "status": "DELIVERED",
+                                "deliveryAddress": "789 Oak Street",
+                                "contactPhone": "+1234509876",
+                                "deliveryMethod": "COURIER",
+                                "createdAt": "2025-05-03T17:00:00",
+                                "updatedAt": "2025-05-04T10:00:00",
+                                "items": [
+                                    {
+                                        "orderItemId": 14,
+                                        "product": {
+                                            "productId": 4,
+                                            "name": "Espoma Organic Orchid Mix",
+                                            "description": "Espoma's Organic Orchid Mix gives your orchid the ideal environment for growth and flowering.",
+                                            "price": 6.95,
+                                            "imageUrl": "/product_img/organic_orchid_mix.jpeg"
+                                        },
+                                        "quantity": 3,
+                                        "priceAtPurchase": 6.95
+                                    },
+                                    {
+                                        "orderItemId": 15,
+                                        "product": {
+                                            "productId": 11,
+                                            "name": "Seed Pack - Carrots (Heirloom)",
+                                            "description": "Non-GMO heirloom carrot seeds for rich harvests",
+                                            "price": 3.99,
+                                            "discountPrice": 2.95,
+                                            "imageUrl": "/product_img/carrot_seeds.jpg"
+                                        },
+                                        "quantity": 2,
+                                        "priceAtPurchase": 2.95
+                                    }
+                                ],
+                                "totalAmount": 26.75
+                            }
+                        ]
+                        """)))
     List<OrderResponseDto> getAllDeliveredForCurrentUser();
 
-    @GetMapping()
-    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Get all orders (only for role ADMIN)")
+    @ApiResponse(responseCode = "200", description = "List of all orders",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = OrderShortResponseDto.class),
+                    examples = @ExampleObject(name = "All orders", value = """
+                        [
+                            {
+                                "orderId": 1,
+                                "userId": 1,
+                                "status": "DELIVERED",
+                                "deliveryAddress": "789 Oak Street",
+                                "totalAmount": 30.63,
+                                "contactPhone": "+1234509876",
+                                "deliveryMethod": "COURIER"
+                            },
+                            {
+                                "orderId": 2,
+                                "userId": 2,
+                                "status": "DELIVERED",
+                                "deliveryAddress": "456 Elm Avenue",
+                                "totalAmount": 20.1,
+                                "contactPhone": "+1987654322",
+                                "deliveryMethod": "PICKUP"
+                            },
+                            {
+                                "orderId": 3,
+                                "userId": 3,
+                                "status": "DELIVERED",
+                                "deliveryAddress": "321 Maple Road",
+                                "totalAmount": 41.98,
+                                "contactPhone": "+1234560000",
+                                "deliveryMethod": "COURIER"
+                            },
+                            {
+                                "orderId": 4,
+                                "userId": 3,
+                                "status": "CANCELLED",
+                                "deliveryAddress": "321 Maple Road",
+                                "totalAmount": 28.48,
+                                "contactPhone": "+1234560000",
+                                "deliveryMethod": "COURIER"
+                            }
+                        ]
+                        """)))
     List<OrderShortResponseDto> getAll();
 
     @Operation(summary = "Get order by ID")
@@ -78,7 +201,7 @@ public interface OrderController {
                             }
                             """)))
     @ApiResponse(responseCode = "404", description = "Order not found",
-            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(value = """
                             {
                                 "exception": "OrderNotFoundException",
@@ -122,7 +245,7 @@ public interface OrderController {
                             }
                             """)))
     @ApiResponse(responseCode = "400", description = "Order creation failed",
-            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(value = """
                             {
                                 "exception": "EmptyOrderException",
@@ -198,7 +321,7 @@ public interface OrderController {
                              }
                             """)))
     @ApiResponse(responseCode = "400", description = "Order is not modifiable",
-            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(value = """
                             {
                                 "exception": "OrderModificationException",
@@ -258,7 +381,7 @@ public interface OrderController {
                             """)))
 
     @ApiResponse(responseCode = "400", description = "Order is not modifiable",
-            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(value = """
                             {
                                 "exception": "OrderModificationException",
@@ -304,7 +427,7 @@ public interface OrderController {
                             """))
     )
     @ApiResponse(responseCode = "400", description = "Order modification failed",
-            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(schema = @Schema(implementation = ApiResponse.class),
                     examples = {
                             @ExampleObject(name = "Empty Order Exception", value = """
                                     {
@@ -357,7 +480,7 @@ public interface OrderController {
                             }
                             """)))
     @ApiResponse(responseCode = "404", description = "Order not found",
-            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(value = """
                             {
                                 "exception": "OrderNotFoundException",

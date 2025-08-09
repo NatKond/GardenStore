@@ -1,7 +1,6 @@
 package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.FavoriteResponseDto;
-import de.telran.gardenStore.dto.ApiErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,7 +12,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.util.List;
 
-@Tag(name = "Favorites", description = "Favorite Controller")
+@Tag(name = "4. Favorites", description = "Favorite Controller")
 public interface FavoriteController {
 
     @Operation(summary = "Get all favorites for current user")
@@ -48,7 +47,7 @@ public interface FavoriteController {
                             """)))
     @ApiResponse(responseCode = "404", description = "User not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "User not found", value = """
                             {
                                 "exception": "UserNotFoundException",
@@ -77,7 +76,7 @@ public interface FavoriteController {
                             """)))
     @ApiResponse(responseCode = "404", description = "User or product not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Product not found", value = """
                             {
                                 "exception": "ProductNotFoundException",
@@ -88,7 +87,7 @@ public interface FavoriteController {
                             """)))
     @ApiResponse(responseCode = "409", description = "Favorite already exists",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Conflict", value = """
                             {
                                 "exception": "FavoriteAlreadyExistsException",
@@ -104,7 +103,7 @@ public interface FavoriteController {
     @ApiResponse(responseCode = "204", description = "Favorite deleted")
     @ApiResponse(responseCode = "404", description = "Favorite not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Favorite not found", value = """
                             {
                                 "exception": "FavoriteNotFoundException",

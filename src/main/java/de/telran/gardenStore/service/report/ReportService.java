@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ReportService {
 
-    List<ProductReport> getTopOrderedProducts(Integer limit);
+    List<ProductReport> getTopPurchasedProducts(Integer limit);
 
     List<ProductReport> getTopCanceledProducts(Integer limit);
 

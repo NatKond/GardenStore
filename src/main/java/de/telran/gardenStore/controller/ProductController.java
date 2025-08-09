@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Tag(name = "Products", description = "Product Controller")
+@Tag(name = "3. Products", description = "Product Controller")
 public interface ProductController {
 
     @Operation(summary = "Get all products")
@@ -74,7 +74,7 @@ public interface ProductController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Product not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Product not found", value = """
                             {
                                 "exception": "ProductNotFoundException",
@@ -109,7 +109,7 @@ public interface ProductController {
                             """)))
     @ApiResponse(responseCode = "400", description = "Validation error",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Validation error", value = """
                             {
                                 "exception": "MethodArgumentNotValidException",
@@ -189,7 +189,7 @@ public interface ProductController {
                             """)))
     @ApiResponse(responseCode = "400", description = "Validation error",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Validation error", value = """
                             {
                                 "exception": "MethodArgumentNotValidException",
@@ -204,7 +204,7 @@ public interface ProductController {
                             """)))
     @ApiResponse(responseCode = "404", description = "Product not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Product not found", value = """
                             {
                                 "exception": "ProductNotFoundException",
@@ -245,7 +245,7 @@ public interface ProductController {
     @ApiResponse(responseCode = "204", description = "Product successfully deleted")
     @ApiResponse(responseCode = "404", description = "Product not found",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Product not found", value = """
                             {
                                 "exception": "ProductNotFoundException",
@@ -257,14 +257,69 @@ public interface ProductController {
     void delete(
             @Parameter(description = "ID of the product to delete", example = "1") @Positive Long productId);
 
-
+    @Operation(summary = "Set discount for a product (only for role ADMIN)")
+    @ApiResponse(responseCode = "200", description = "Discount successfully applied",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ProductResponseDto.class),
+                    examples = @ExampleObject(name = "Product with discount applied", value = """
+                        {
+                            "productId": 9,
+                            "name": "Savannah Summer Annual Collection",
+                            "description": "We love this fusion of colorful blossoms, created by combining some of the most floriferous and high performance annuals we know in our Savannah Summer Collection.",
+                            "price": 53.00,
+                            "discountPrice": 37.10,
+                            "categoryId": 3,
+                            "imageUrl": "/product_img/summer_annual_collection.jpeg",
+                            "createdAt": "2025-08-09T11:32:52.345883",
+                            "updatedAt": "2025-08-09T11:48:40.907027"
+                        }
+                        """)))
+    @ApiResponse(responseCode = "404", description = "Product not found",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = @ExampleObject(name = "Product not found", value = """
+                        {
+                            "exception": "ProductNotFoundException",
+                            "message": "Product with id 99 not found",
+                            "status": 404,
+                            "timestamp": "2025-08-09T11:55:22.784321"
+                        }
+                        """)))
     ProductResponseDto setDiscount(
-            @Positive Long productId,
+            @Parameter(description = "ID of the product to apply discount", example = "9") @Positive Long productId,
+            @Parameter(description = "Discount percentage to apply", example = "30")
             @Min(value = 1, message = "Discount must be at least 1%")
             @Max(value = 99, message = "Discount cannot exceed 99%")
             BigDecimal discountPercentage
     );
 
-    @GetMapping("/product-of-the-day")
+    @Operation(summary = "Get product of the day")
+    @ApiResponse(responseCode = "200", description = "Product of the day retrieved successfully",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ProductResponseDto.class),
+                    examples = @ExampleObject(name = "Product of the day", value = """
+                        {
+                            "productId": 15,
+                            "name": "Hanging Planter Basket",
+                            "description": "Woven hanging basket with metal chain",
+                            "price": 12.50,
+                            "discountPrice": 9.25,
+                            "categoryId": 5,
+                            "imageUrl": "/product_img/hanging_planter.jpg",
+                            "createdAt": "2025-08-09T11:50:27.305166",
+                            "updatedAt": "2025-08-09T11:50:27.305166"
+                        }
+                        """)))
+    @ApiResponse(responseCode = "404", description = "Product of the day not set",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = @ExampleObject(name = "No product of the day", value = """
+                        {
+                            "exception": "ProductOfTheDayNotFoundException",
+                            "message": "Product of the day is not set",
+                            "status": 404,
+                            "timestamp": "2025-08-09T12:05:14.112874"
+                        }
+                        """)))
     ProductResponseDto getProductOfTheDay();
 }

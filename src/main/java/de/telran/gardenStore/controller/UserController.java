@@ -1,6 +1,5 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.dto.ApiErrorResponse;
 import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.dto.UserShortResponseDto;
@@ -19,7 +18,8 @@ import jakarta.validation.constraints.Positive;
 
 import java.util.List;
 
-@Tag(name = "Users", description = "User Controller")
+@Tag(name = "1. Users", description = "User Controller"
+)
 public interface UserController {
 
     @Operation(summary = "Get all users (only for role ADMIN)")
@@ -80,7 +80,7 @@ public interface UserController {
                             }
                             """)))
     @ApiResponse(responseCode = "404", description = "User not found",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "User not found", value = """
                             {
                                 "exception": "UserNotFoundException",
@@ -167,16 +167,18 @@ public interface UserController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class),
                     examples = @ExampleObject(name = "Alice Johnson", value = """
                             {
-                                "userId": 6,
+                                "userId": 5,
                                 "name": "Frank Green",
                                 "email": "frank.green@example.com",
                                 "phoneNumber": "+1444555666",
-                                "role": "ROLE_USER",
+                                "roles": [
+                                    "ROLE_USER"
+                                ],
                                 "favorites": []
                             }
                             """)))
     @ApiResponse(responseCode = "400", description = "Validation error",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Validation error", value = """
                             {
                                 "exception": "MethodArgumentNotValidException",
@@ -191,7 +193,7 @@ public interface UserController {
                             """
                     )))
     @ApiResponse(responseCode = "409", description = "User with this email already exists",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "User with email already exists", value = """
                             {
                                 "exception": "UserWithEmailAlreadyExistsException",
@@ -238,7 +240,7 @@ public interface UserController {
             )
             @Valid UserCreateRequestDto userRequest);
 
-    @Operation(summary = "Update an existing user")
+    @Operation(summary = "Update current user")
     @ApiResponse(responseCode = "202", description = "User successfully updated",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class),
                     examples = @ExampleObject(name = "Alice Johnson", value = """
@@ -246,13 +248,16 @@ public interface UserController {
                                 "userId": 1,
                                 "name": "Alice Johnson",
                                 "email": "alice.johnson@example.com",
-                                "phoneNumber": "+1234567890",
-                                "role": "ROLE_USER",
+                                "phoneNumber": "+1234567899",
+                                "roles": [
+                                    "ROLE_ADMIN",
+                                    "ROLE_USER"
+                                ],
                                 "favorites": []
                             }
                             """)))
     @ApiResponse(responseCode = "400", description = "Validation error",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Validation error", value = """
                             {
                                 "exception": "MethodArgumentNotValidException",
@@ -266,21 +271,9 @@ public interface UserController {
                             }
                             """
                     )))
-    @ApiResponse(responseCode = "404", description = "User not found",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
-                    examples = @ExampleObject(name = "User not found", value = """
-                            {
-                                "exception": "UserNotFoundException",
-                                "message": "User with id 12 not found",
-                                "status": 404,
-                                "timestamp": "2025-07-08T12:33:30.849474"
-                            }
-                            """
-                    )))
     @ApiResponse(responseCode = "409", description = "User with this email already exists",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "User with email already exists", value = """
                             {
                                 "exception": "UserWithEmailAlreadyExistsException",
@@ -291,7 +284,6 @@ public interface UserController {
                             """
                     )))
     UserResponseDto update(
-            @Parameter(description = "ID of the user to update", example = "4")
             @RequestBody(
                     description = "User to update",
                     required = true,
@@ -299,12 +291,12 @@ public interface UserController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = UserCreateRequestDto.class),
                             examples = {
-                                    @ExampleObject(name = "David Green", value = """
+                                    @ExampleObject(name = "Alice Johnson", value = """
                                             {
                                                 "name": "Alice Johnson",
                                                 "email": "alice.johnson@example.com",
-                                                "phoneNumber": "+1234567890",
-                                                "password": "123455632"
+                                                "phoneNumber": "+1234567899",
+                                                "password": "12345"
                                             }
                                             """),
                                     @ExampleObject(name = "Frank Green", value = """
@@ -312,7 +304,7 @@ public interface UserController {
                                                 "name": "Bob Smith",
                                                 "email": "bob.smith@example.com",
                                                 "phoneNumber": "+1987654321",
-                                                "password": "123455632"
+                                                "password": "12345"
                                             }
                                             """)
                             }
@@ -320,19 +312,7 @@ public interface UserController {
             )
             @Valid UserCreateRequestDto userRequest);
 
-    @Operation(summary = "Delete user by ID")
+    @Operation(summary = "Delete current user")
     @ApiResponse(responseCode = "204", description = "User successfully deleted")
-    @ApiResponse(responseCode = "404", description = "User not found",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ApiErrorResponse.class),
-                    examples = @ExampleObject(name = "User not found", value = """
-                            {
-                                "exception": "UserNotFoundException",
-                                "message": "User with id 12 not found",
-                                "status": 404,
-                                "timestamp": "2025-07-08T12:33:30.849474"
-                            }
-                            """
-                    )))
     void delete();
 }

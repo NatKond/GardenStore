@@ -37,7 +37,7 @@ public class ProductControllerImpl implements ProductController {
                                                         @RequestParam(required = false) @Positive BigDecimal minPrice,
                                                         @RequestParam(required = false) @Positive BigDecimal maxPrice,
                                                         @RequestParam(required = false)
-                                                            @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
+                                                        @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
                                                         @RequestParam(required = false) Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
@@ -97,15 +97,13 @@ public class ProductControllerImpl implements ProductController {
                                           @Max(value = 99, message = "Discount cannot exceed 99%")
                                           BigDecimal discountPercentage) {
         return productConverter.convertEntityToDto(
-                productService.setDiscount(productId, discountPercentage)
-        );
+                productService.setDiscount(productId, discountPercentage));
     }
 
     @GetMapping("/product-of-the-day")
     @Override
     public ProductResponseDto getProductOfTheDay() {
         return productConverter.convertEntityToDto(
-                productService.getProductOfTheDay()
-        );
+                productService.getProductOfTheDay());
     }
 }

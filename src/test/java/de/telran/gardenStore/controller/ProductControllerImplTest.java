@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -119,6 +121,33 @@ public class ProductControllerImplTest extends AbstractTest {
     }
 
     @Test
+    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Set discount: positive case")
+    void setDiscount() throws Exception {
+        Long productId = product1.getProductId();
+        BigDecimal discountPercentage = new BigDecimal("20");
+        BigDecimal expectedDiscountPrice = product1.getPrice()
+                .multiply(BigDecimal.ONE.subtract(discountPercentage.movePointLeft(2)));
+
+        Product productWithDiscount = product1.toBuilder()
+                .discountPrice(expectedDiscountPrice)
+                .build();
+
+        ProductResponseDto responseDto = productResponseDto1.toBuilder()
+                .discountPrice(expectedDiscountPrice)
+                .build();
+
+        when(productService.setDiscount(productId, discountPercentage)).thenReturn(productWithDiscount);
+        when(productConverter.convertEntityToDto(productWithDiscount)).thenReturn(responseDto);
+
+        mockMvc.perform(post("/v1/products/{productId}/discount/{discountPercentage}", productId, discountPercentage)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isOk(),
+                        content().json(objectMapper.writeValueAsString(responseDto)));
+    }
+
+
+    @Test
     @DisplayName("PUT /v1/products/{productId} - Update product")
     void update() throws Exception {
         Long productId = 3L;
@@ -156,7 +185,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
-    void deleteProduct_ShouldDeleteProduct() throws Exception {
+    void ensureProductDeleted() throws Exception {
         Long productId = 1L;
 
         doNothing().when(productService).deleteById(productId);

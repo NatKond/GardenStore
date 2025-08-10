@@ -30,6 +30,10 @@ public interface ProductController {
     @GetMapping("/{productId}")
     ProductResponseDto getById(@PathVariable @Positive Long productId);
 
+    @GetMapping("/purchased-products")
+    @PreAuthorize("hasRole('USER')")
+    List<ProductShortResponseDto> getAllPurchasedProducts();
+
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping

@@ -90,21 +90,6 @@ class OrderServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Get total amount by orderId")
-    void getTotalAmount() {
-        BigDecimal expected = orderResponseDto1.getTotalAmount();
-        Long orderId = order1.getOrderId();
-
-        when(userService.getCurrent()).thenReturn(order1.getUser());
-        when(orderRepository.getTotalAmount(user1, orderId)).thenReturn(orderResponseDto1.getTotalAmount());
-
-        BigDecimal actual = orderService.getTotalAmount(order1.getOrderId());
-
-        assertNotNull(actual);
-        assertEquals(expected, actual);
-    }
-
-    @Test
     @DisplayName("Create order : positive case")
     void createPositiveCase() {
         Cart cart = cart1;
@@ -191,7 +176,7 @@ class OrderServiceImplTest extends AbstractTest {
     void addItemPositiveCase() {
         OrderItem orderItem = OrderItem.builder()
                 .product(cartItem3.getProduct())
-                .quantity(cartItem3.getQuantity())
+                .priceAtPurchase(cartItem3.getProduct().getDiscountPrice())
                 .quantity(cartItem3.getQuantity())
                 .build();
 
@@ -200,11 +185,16 @@ class OrderServiceImplTest extends AbstractTest {
         Order orderToUpdate = order2;
         Long orderId = orderToUpdate.getOrderId();
 
-        List<OrderItem> orderItemsUpdated = new ArrayList<>(List.of(orderItem));
+        List<OrderItem> orderItemsUpdated = new ArrayList<>(order2.getItems());
         orderItemsUpdated.add(orderItem);
+
+        BigDecimal totalAmount = orderItemsUpdated.stream()
+                .map(orderItem4 -> orderItem4.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem4.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order orderUpdated = orderToUpdate.toBuilder()
                 .items(orderItemsUpdated)
+                .totalAmount(totalAmount)
                 .build();
 
         List<CartItem> cartItemsUpdated = new ArrayList<>(List.of(cartItem3));
@@ -300,9 +290,13 @@ class OrderServiceImplTest extends AbstractTest {
 
         List<OrderItem> orderItemsUpdated = new ArrayList<>(orderToUpdate.getItems());
         orderItemsUpdated.remove(orderItemToRemove);
+        BigDecimal totalAmount = orderItemsUpdated.stream()
+                .map(orderItem -> orderItem.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order orderUpdated = orderToUpdate.toBuilder()
                 .items(orderItemsUpdated)
+                .totalAmount(totalAmount)
                 .build();
 
         when(orderItemService.getById(orderItemId)).thenReturn(orderItemToRemove);

@@ -57,6 +57,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-01-15T10:00:00"/>
             <column name="updated_at" valueDate="2025-01-17T15:00:00"/>
+            <column name="total_amount" valueNumeric="30.63"/>
         </insert>
         <!-- Order 2 -->
         <insert tableName="orders">
@@ -67,6 +68,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-02-05T12:30:00"/>
             <column name="updated_at" valueDate="2025-02-06T09:00:00"/>
+            <column name="total_amount" valueNumeric="20.1"/>
         </insert>
         <!-- Order 3 -->
         <insert tableName="orders">
@@ -77,6 +79,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-03-10T08:15:00"/>
             <column name="updated_at" valueDate="2025-03-12T11:20:00"/>
+            <column name="total_amount" valueNumeric="41.98"/>
         </insert>
         <!-- Order 4 -->
         <insert tableName="orders">
@@ -87,6 +90,7 @@
             <column name="status" value="CANCELLED"/>
             <column name="created_at" valueDate="2025-03-22T10:25:00"/>
             <column name="updated_at" valueDate="2025-03-23T10:55:00"/>
+            <column name="total_amount" valueNumeric="28.48"/>
         </insert>
         <!-- Order 5 -->
         <insert tableName="orders">
@@ -97,6 +101,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-03-23T15:25:00"/>
             <column name="updated_at" valueDate="2025-03-26T08:55:00"/>
+            <column name="total_amount" valueNumeric="41.13"/>
         </insert>
         <!-- Order 6 -->
         <insert tableName="orders">
@@ -107,6 +112,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-04-21T13:45:00"/>
             <column name="updated_at" valueDate="2025-04-23T09:30:00"/>
+            <column name="total_amount" valueNumeric="64.45"/>
         </insert>
         <!-- Order 7 -->
         <insert tableName="orders">
@@ -117,6 +123,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-05-03T17:00:00"/>
             <column name="updated_at" valueDate="2025-05-04T10:00:00"/>
+            <column name="total_amount" valueNumeric="26.75"/>
         </insert>
         <!-- Order 8 -->
         <insert tableName="orders">
@@ -127,6 +134,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-05-10T17:00:00"/>
             <column name="updated_at" valueDate="2025-05-14T10:00:00"/>
+            <column name="total_amount" valueNumeric="22.20"/>
         </insert>
         <!-- Order 9 -->
         <insert tableName="orders">
@@ -137,6 +145,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-06-12T16:30:00"/>
             <column name="updated_at" valueDate="2025-06-14T08:15:00"/>
+            <column name="total_amount" valueNumeric="45.55"/>
         </insert>
         <!-- Order 10 -->
         <insert tableName="orders">
@@ -147,6 +156,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-06-29T18:30:00"/>
             <column name="updated_at" valueDate="2025-06-30T15:20:00"/>
+            <column name="total_amount" valueNumeric="45.00"/>
         </insert>
         <!-- Order 11 -->
         <insert tableName="orders">
@@ -157,6 +167,7 @@
             <column name="status" value="CANCELLED"/>
             <column name="created_at" valueDate="2025-07-01T11:45:00"/>
             <column name="updated_at" valueDate="2025-07-02T09:10:00"/>
+            <column name="total_amount" valueNumeric="52.47"/>
         </insert>
         <!-- Order 12 -->
         <insert tableName="orders">
@@ -167,6 +178,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-07-07T21:00:00"/>
             <column name="updated_at" valueDate="2025-07-10T11:00:00"/>
+            <column name="total_amount" valueNumeric="57.65"/>
         </insert>
         <!-- Order 13 -->
         <insert tableName="orders">
@@ -177,6 +189,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-07-18T18:45:00"/>
             <column name="updated_at" valueDate="2025-07-22T12:10:00"/>
+            <column name="total_amount" valueNumeric="62.60"/>
         </insert>
         <!-- Order 14 -->
         <insert tableName="orders">
@@ -187,6 +200,7 @@
             <column name="status" value="AWAITING_PAYMENT"/>
             <column name="created_at" valueDate="2025-07-23T11:45:00"/>
             <column name="updated_at" valueDate="2025-07-23T09:10:00"/>
+            <column name="total_amount" valueNumeric="42.37"/>
         </insert>
         <!-- Order 15 -->
         <insert tableName="orders">
@@ -197,6 +211,7 @@
             <column name="status" value="AWAITING_PAYMENT"/>
             <column name="created_at" valueDate="2025-07-25T09:00:00"/>
             <column name="updated_at" valueDate="2025-07-25T09:00:00"/>
+            <column name="total_amount" valueNumeric="49.93"/>
         </insert>
         <!-- Order 16 -->
         <insert tableName="orders">
@@ -207,6 +222,7 @@
             <column name="status" value="CANCELLED"/>
             <column name="created_at" valueDate="2025-07-27T13:18:00"/>
             <column name="updated_at" valueDate="2025-07-27T15:20:00"/>
+            <column name="total_amount" valueNumeric="23.14"/>
         </insert>
         <!-- Order 17 -->
         <insert tableName="orders">
@@ -217,6 +233,7 @@
             <column name="status" value="AWAITING_PAYMENT"/>
             <column name="created_at" valueDate="2025-07-28T14:20:00"/>
             <column name="updated_at" valueDate="2025-07-28T14:35:00"/>
+            <column name="total_amount" valueNumeric="49.04"/>
         </insert>
         <!-- Order 18 -->
         <insert tableName="orders">
@@ -227,6 +244,7 @@
             <column name="status" value="DELIVERED"/>
             <column name="created_at" valueDate="2025-08-01T18:45:00"/>
             <column name="updated_at" valueDate="2025-08-02T12:10:00"/>
+            <column name="total_amount" valueNumeric="17.40"/>
         </insert>
         <!-- Order 19 -->
         <insert tableName="orders">
@@ -237,6 +255,7 @@
             <column name="status" value="AWAITING_PAYMENT"/>
             <column name="created_at" valueDate="2025-08-02T10:00:00"/>
             <column name="updated_at" valueDate="2025-08-02T10:30:00"/>
+            <column name="total_amount" valueNumeric="49.04"/>
         </insert>
         <!-- Order 20 -->
         <insert tableName="orders">
@@ -245,6 +264,7 @@
             <column name="contact_phone" value="+1987654321"/>
             <column name="delivery_method" value="PICKUP"/>
             <column name="status" value="CREATED"/>
+            <column name="total_amount" valueNumeric="23.73"/>
         </insert>
         <!-- Order 1 -->
         <insert tableName="order_items">

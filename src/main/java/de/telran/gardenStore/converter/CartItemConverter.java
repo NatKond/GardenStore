@@ -2,14 +2,14 @@ package de.telran.gardenStore.converter;
 
 import de.telran.gardenStore.dto.CartItemResponseDto;
 import de.telran.gardenStore.entity.CartItem;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CartItemConverter implements ConverterEntityToDto<CartItem, CartItemResponseDto, CartItemResponseDto> {
 
     private final ModelMapper modelMapper;

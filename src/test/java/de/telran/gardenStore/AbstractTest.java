@@ -328,6 +328,8 @@ public abstract class AbstractTest {
                 .build();
 
         order1.setItems(new ArrayList<>(List.of(orderItem1, orderItem2)));
+        order1.setTotalAmount(orderItem1.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem1.getQuantity()))
+                .add(orderItem2.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem2.getQuantity()))));
 
         order2 = Order.builder()
                 .orderId(2L)
@@ -349,6 +351,7 @@ public abstract class AbstractTest {
                 .build();
 
         order2.setItems(new ArrayList<>(List.of(orderItem3)));
+        order2.setTotalAmount(orderItem3.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem3.getQuantity())));
 
         order3 = Order.builder()
                 .orderId(3L)
@@ -413,6 +416,9 @@ public abstract class AbstractTest {
                 .build();
 
         orderToCreate.setItems(new ArrayList<>(List.of(orderItemToCreate1, orderItemToCreate2)));
+        orderToCreate.setTotalAmount(orderItemToCreate1.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate1.getQuantity()))
+                .add(orderItemToCreate2.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate2.getQuantity()))));
+
     }
 
     private void initCategoryDtos() {
@@ -471,6 +477,7 @@ public abstract class AbstractTest {
                 .deliveryAddress(order1.getDeliveryAddress())
                 .contactPhone(order1.getContactPhone())
                 .deliveryMethod(order1.getDeliveryMethod().name())
+                .totalAmount(order1.getTotalAmount())
                 .createdAt(order1.getCreatedAt())
                 .updatedAt(order1.getUpdatedAt())
                 .build();
@@ -490,10 +497,6 @@ public abstract class AbstractTest {
                 .build();
 
         orderResponseDto1.setItems(List.of(orderItemResponseDto1, orderItemResponseDto2));
-
-        orderResponseDto1.setTotalAmount(orderItem1.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem1.getQuantity()))
-                .add(orderItem2.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem2.getQuantity())))
-        );
 
         orderCreateRequestDto = OrderCreateRequestDto.builder()
                 .deliveryAddress(orderToCreate.getDeliveryAddress())
@@ -522,7 +525,7 @@ public abstract class AbstractTest {
                 .deliveryMethod(orderToCreate.getDeliveryMethod().name())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .totalAmount(new BigDecimal("28.47")) // Пример суммы
+                .totalAmount(orderToCreate.getTotalAmount())
                 .build();
 
         orderItemResponseDtoCreated1 = OrderItemResponseDto.builder()
@@ -537,13 +540,8 @@ public abstract class AbstractTest {
                 .priceAtPurchase(orderItemToCreate2.getPriceAtPurchase())
                 .build();
 
-        orderResponseCreatedDto.setTotalAmount(
-                orderItemToCreate1.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate1.getQuantity())
-                        .add(orderItemToCreate2.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate2.getQuantity())))));
-
         orderResponseCreatedDto.setItems(List.of(orderItemResponseDtoCreated1, orderItemResponseDtoCreated2));
 
-        //when(orderService.getTotalAmount(anyLong())).thenReturn(new BigDecimal("28.47"));
     }
 
     private void initProductDtos() {
@@ -656,7 +654,7 @@ public abstract class AbstractTest {
                 .build();
     }
 
-    private void initCartDtos(){
+    private void initCartDtos() {
         cartResponseDto1 = CartResponseDto.builder()
                 .cartId(cart1.getCartId())
                 .userId(cart1.getUser().getUserId())

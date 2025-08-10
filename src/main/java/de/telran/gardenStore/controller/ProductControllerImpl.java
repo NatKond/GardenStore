@@ -50,6 +50,11 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
+    public List<ProductShortResponseDto> getAllPurchasedProducts() {
+        return productConverter.convertEntityListToDtoList(productService.getAllPurchased());
+    }
+
+    @Override
     public ProductResponseDto create(@RequestBody @Valid ProductCreateRequestDto productCreateRequestDto) {
         return productConverter.convertEntityToDto(
                 productService.create(

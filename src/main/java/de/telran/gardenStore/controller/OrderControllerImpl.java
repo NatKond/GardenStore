@@ -22,65 +22,57 @@ public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
 
-    private final ProductService productService;
-
     private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
-    private final Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
-
     @Override
-    public List<OrderShortResponseDto> getAll() {
+    public List<OrderShortResponseDto> getAllForCurrentUser() {
         return orderConverter.convertEntityListToDtoList(orderService.getAllForCurrentUser());
     }
 
     @Override
+    public List<OrderResponseDto> getAllDeliveredForCurrentUser() {
+        return orderService.getAllDeliveredForCurrentUser().stream().map(orderConverter::convertEntityToDto).toList();
+    }
+
+    @Override
+    public List<OrderShortResponseDto> getAll(){
+        return orderConverter.convertEntityListToDtoList(orderService.getAll());
+    }
+
+    @Override
     public OrderResponseDto getById(@Positive Long orderId) {
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
+        return orderConverter.convertEntityToDto(
                 orderService.getById(orderId));
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
-        return orderResponseDto;
     }
 
     @Override
     public OrderResponseDto create(@Valid OrderCreateRequestDto orderCreateRequestDto) {
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
+
+        return orderConverter.convertEntityToDto(
                 orderService.create(
                         orderCreateRequestDto.getDeliveryAddress(),
                         orderCreateRequestDto.getDeliveryMethod(),
                         orderCreateRequestDto.getContactPhone(),
                         orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue))));
-
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
     }
 
     @Override
     public OrderResponseDto addItem(@Positive Long orderId, @Positive Long productId, @Positive Integer quantity){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
+
+        return orderConverter.convertEntityToDto(
                 orderService.addItem(orderId, productId, quantity));
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
-        return orderResponseDto;
     }
 
     @Override
     public OrderResponseDto updateItem(@Positive Long orderItemId, @Positive Integer quantity){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
+        return orderConverter.convertEntityToDto(
                 orderService.updateItem(orderItemId, quantity));
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
-    }
-
-    @Override
-    public List<ProductShortResponseDto> getAllPurchased() {
-        return productConverter.convertEntityListToDtoList(productService.getAllPurchased());
     }
 
     @Override
     public OrderResponseDto removeItem(@Positive Long orderItemId){
-        OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
+        return orderConverter.convertEntityToDto(
                 orderService.removeItem(orderItemId));
-        orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
-        return orderResponseDto;
     }
 
     @Override

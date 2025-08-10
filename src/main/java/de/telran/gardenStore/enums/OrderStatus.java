@@ -8,7 +8,7 @@ public enum OrderStatus {
     DELIVERED,
     CANCELLED;
 
-    public OrderStatus next() {
+    public OrderStatus getNext() {
         return switch (this){
             case CREATED -> AWAITING_PAYMENT;
             case AWAITING_PAYMENT -> CANCELLED;

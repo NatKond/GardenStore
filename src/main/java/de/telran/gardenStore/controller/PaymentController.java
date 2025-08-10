@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 @RequestMapping("/v1/payment")
+@PreAuthorize("hasRole('USER')")
 public interface PaymentController {
 
     @PostMapping()
-    @PreAuthorize("hasRole('USER')")
     OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @RequestParam @Positive BigDecimal paymentAmount);
 
 }

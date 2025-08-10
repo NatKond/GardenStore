@@ -105,7 +105,7 @@ class CartServiceImplTest extends AbstractTest {
         verify(cartRepository).save(expected);
     }
 
-    @DisplayName("Add item to cart")
+    @DisplayName("Add item to the empty cart")
     @Test
     void addItem() {
         AppUser user = user1;
@@ -144,6 +144,45 @@ class CartServiceImplTest extends AbstractTest {
         verify(cartRepository).save(expected);
     }
 
+    @DisplayName("Add repeated item to the cart")
+    @Test
+    void addRepeatedItemInTheCart() {
+        AppUser user = user1;
+        Long productId = product3.getProductId();
+        Product product = product3;
+        Cart cart = cart1;
+
+        Cart cartToSave = cart1.toBuilder().build();
+        CartItem cartItemCreated = CartItem.builder()
+                .cart(cart)
+                .product(product)
+                .quantity(2)
+                .build();
+
+        List<CartItem> cartItemsToSave = new ArrayList<>(cartToSave.getItems());
+        cartItemsToSave.add(cartItemCreated);
+        cartToSave.setItems(cartItemsToSave);
+
+        CartItem cartItemSaved = cartItemCreated.toBuilder()
+                .cartItemId(4L)
+                .build();
+
+        Cart expected = cart1.toBuilder().build();
+        List<CartItem> cartItemsSaved = new ArrayList<>(cartToSave.getItems());
+        cartItemsSaved.add(cartItemSaved);
+        expected.setItems(cartItemsSaved);
+
+        when(userService.getCurrent()).thenReturn(user);
+        when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
+        when(productService.getById(productId)).thenReturn(product);
+        when(cartRepository.save(cartToSave)).thenReturn(expected);
+
+        cartService.addItem(productId);
+        Cart actual = cartService.addItem(productId);
+
+        assertEquals(expected, actual);
+
+    }
 
     @DisplayName("Update cart item")
     @Test

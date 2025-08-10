@@ -2,6 +2,7 @@ package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.exception.NoDiscountedProductsException;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -16,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,7 @@ class ProductServiceImplTest extends AbstractTest {
 
     @Mock
     private ProductRepository productRepository;
+
     @Mock
     private CategoryServiceImpl categoryService;
 
@@ -139,6 +143,55 @@ class ProductServiceImplTest extends AbstractTest {
 
         RuntimeException runtimeException = assertThrows(ProductNotFoundException.class, () -> productService.getById(productId));
         assertEquals("Product with id " + productId + " not found", runtimeException.getMessage());
+    }
+
+    @DisplayName("setDiscount - Set discount: positive case")
+    @Test
+    void setDiscountPositiveCase() {
+        Long productId = product1.getProductId();
+        BigDecimal discountPercentage = new BigDecimal("20");
+        BigDecimal originalPrice = product1.getPrice();
+        BigDecimal expectedDiscountPrice = originalPrice.multiply(
+                BigDecimal.ONE.subtract(discountPercentage.movePointLeft(2))
+        ).setScale(2, RoundingMode.HALF_UP);
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product1));
+        when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Product result = productService.setDiscount(productId, discountPercentage);
+
+        assertNotNull(result);
+        assertEquals(expectedDiscountPrice, result.getDiscountPrice());
+        verify(productRepository).findById(productId);
+        verify(productRepository).save(product1);
+    }
+
+    @DisplayName("getProductOfTheDay - Get the product of the day: positive case")
+    @Test
+    void getProductOfTheDayPositiveCase() {
+        List<Product> discountedProducts = List.of(product1, product2);
+
+        when(productRepository.findProductsWithHighestDiscount()).thenReturn(discountedProducts);
+
+        Product result = productService.getProductOfTheDay();
+
+        assertNotNull(result);
+        assertTrue(discountedProducts.contains(result));
+        verify(productRepository).findProductsWithHighestDiscount();
+    }
+
+    @DisplayName("getProductOfTheDay - Get the product of the day: negative case")
+    @Test
+    void getProductOfTheDayNegativeCase() {
+        when(productRepository.findProductsWithHighestDiscount()).thenReturn(List.of());
+
+        NoDiscountedProductsException exception = assertThrows(
+                NoDiscountedProductsException.class,
+                () -> productService.getProductOfTheDay()
+        );
+
+        assertEquals("No discounted products available", exception.getMessage());
+        verify(productRepository).findProductsWithHighestDiscount();
     }
 }
 

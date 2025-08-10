@@ -7,6 +7,7 @@ import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.exception.NoDiscountedProductsException;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.service.ProductService;
 import de.telran.gardenStore.service.security.JwtService;
@@ -19,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -156,7 +160,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
-    void deleteProduct_ShouldDeleteProduct() throws Exception {
+    void deleteProduct() throws Exception {
         Long productId = 1L;
 
         doNothing().when(productService).deleteById(productId);
@@ -166,5 +170,64 @@ public class ProductControllerImplTest extends AbstractTest {
                 .andExpect(status().isOk());
 
         verify(productService).deleteById(productId);
+    }
+
+    @Test
+    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Set discount")
+    void setDiscountPositiveCase() throws Exception {
+        Long productId = product1.getProductId();
+        BigDecimal discountPercentage = new BigDecimal("20");
+        BigDecimal originalPrice = product1.getPrice();
+
+        BigDecimal discountPrice = originalPrice.multiply(discountPercentage)
+                .divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
+
+        Product productWithDiscount = product1.toBuilder()
+                .discountPrice(discountPrice)
+                .build();
+
+        ProductResponseDto expected = productResponseDto1.toBuilder()
+                .discountPrice(discountPrice)
+                .build();
+
+        when(productService.setDiscount(productId, discountPercentage)).thenReturn(productWithDiscount);
+        when(productConverter.convertEntityToDto(productWithDiscount)).thenReturn(expected);
+
+        mockMvc.perform(post("/v1/products/{productId}/discount/{discountPercentage}", productId, discountPercentage))
+                .andDo(print())
+                .andExpectAll(
+                        status().isAccepted(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day: positive case")
+    void getProductOfTheDayPositiveCase() throws Exception {
+        Product productOfTheDay = product1;
+        ProductResponseDto expected = productResponseDto1;
+
+        when(productService.getProductOfTheDay()).thenReturn(productOfTheDay);
+        when(productConverter.convertEntityToDto(productOfTheDay)).thenReturn(expected);
+
+        mockMvc.perform(get("/v1/products/product-of-the-day"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day: negative case")
+    void getProductOfTheDayNegativeCase() throws Exception {
+        when(productService.getProductOfTheDay()).thenThrow(new NoDiscountedProductsException("No discounted products available"));
+
+        mockMvc.perform(get("/v1/products/product-of-the-day"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.exception").value("NoDiscountedProductsException"),
+                        jsonPath("$.message").value("No discounted products available"));
     }
 }

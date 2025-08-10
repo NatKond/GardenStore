@@ -105,9 +105,49 @@ class CartServiceImplTest extends AbstractTest {
         verify(cartRepository).save(expected);
     }
 
-    @DisplayName("Add item to cart")
+    @DisplayName("Add item to cart : new cart")
     @Test
-    void addItem() {
+    void addItemNewCart() {
+        AppUser user = user1;
+        Long productId = product3.getProductId();
+        Product product = product3;
+        Integer quantity = 1;
+        Cart cartToCreate = Cart.builder().user(user).build();
+        Cart cartCreated = Cart.builder().cartId(1L).build();
+
+        Cart cartToUpdate = cartCreated.toBuilder().build();
+
+        CartItem cartItemCreated = CartItem.builder()
+                .cart(cartToUpdate)
+                .product(product)
+                .quantity(quantity)
+                .build();
+
+        cartToUpdate.setItems((new ArrayList<>(List.of(cartItemCreated))));
+
+        CartItem cartItemSaved = cartItemCreated.toBuilder()
+                .cartItemId(4L)
+                .build();
+
+        Cart expected = cartToUpdate.toBuilder()
+                .items(new ArrayList<>(List.of(cartItemSaved)))
+                .build();
+
+        when(userService.getCurrent()).thenReturn(user);
+        when(cartRepository.findByUser(user)).thenReturn(Optional.empty());
+        when(cartRepository.save(cartToCreate)).thenReturn(cartCreated);
+        when(productService.getById(productId)).thenReturn(product);
+        when(cartRepository.save(cartToUpdate)).thenReturn(expected);
+
+        Cart actual = cartService.addItem(productId);
+
+        assertEquals(expected, actual);
+        verify(cartRepository).save(expected);
+    }
+
+    @DisplayName("Add item to cart : existing cart")
+    @Test
+    void addItemExistingCart() {
         AppUser user = user1;
         Long productId = product3.getProductId();
         Product product = product3;
@@ -117,7 +157,7 @@ class CartServiceImplTest extends AbstractTest {
         CartItem cartItemCreated = CartItem.builder()
                 .cart(cart)
                 .product(product)
-                .quantity(1)
+                .quantity(2)
                 .build();
 
         List<CartItem> cartItemsToSave = new ArrayList<>(cartToSave.getItems());
@@ -138,12 +178,11 @@ class CartServiceImplTest extends AbstractTest {
         when(productService.getById(productId)).thenReturn(product);
         when(cartRepository.save(cartToSave)).thenReturn(expected);
 
+        cartService.addItem(productId);
         Cart actual = cartService.addItem(productId);
 
         assertEquals(expected, actual);
-        verify(cartRepository).save(expected);
     }
-
 
     @DisplayName("Update cart item")
     @Test

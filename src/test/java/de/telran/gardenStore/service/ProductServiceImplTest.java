@@ -166,9 +166,9 @@ class ProductServiceImplTest extends AbstractTest {
         verify(productRepository).save(product1);
     }
 
-    @DisplayName("getProductOfTheDay - Getting the product of the day: positive scenario")
+    @DisplayName("getProductOfTheDay - Get the product of the day: positive case")
     @Test
-    void getProductOfTheDay_PositiveCase() {
+    void getProductOfTheDayPositiveCase() {
         List<Product> discountedProducts = List.of(product1, product2);
 
         when(productRepository.findProductsWithHighestDiscount()).thenReturn(discountedProducts);
@@ -180,9 +180,9 @@ class ProductServiceImplTest extends AbstractTest {
         verify(productRepository).findProductsWithHighestDiscount();
     }
 
-    @DisplayName("getProductOfTheDay - No discounted products available: negative scenario")
+    @DisplayName("getProductOfTheDay - Get the product of the day: negative case")
     @Test
-    void getProductOfTheDay_NegativeCase_NoDiscountedProducts() {
+    void getProductOfTheDayNegativeCase() {
         when(productRepository.findProductsWithHighestDiscount()).thenReturn(List.of());
 
         NoDiscountedProductsException exception = assertThrows(

@@ -36,8 +36,7 @@ public class OrderControllerImpl implements OrderController {
     @Override
     public OrderResponseDto getById(@Positive Long orderId) {
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.getById(orderId)
-        );
+                orderService.getById(orderId));
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
         return orderResponseDto;
     }
@@ -49,8 +48,7 @@ public class OrderControllerImpl implements OrderController {
                         orderCreateRequestDto.getDeliveryAddress(),
                         orderCreateRequestDto.getDeliveryMethod(),
                         orderCreateRequestDto.getContactPhone(),
-                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue)))
-        );
+                        orderCreateRequestDto.getItems().stream().collect(Collectors.toMap(OrderItemCreateRequestDto::getProductId, OrderItemCreateRequestDto::getQuantity, (newValue, oldValue) -> newValue))));
 
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
         return orderResponseDto;
@@ -59,8 +57,7 @@ public class OrderControllerImpl implements OrderController {
     @Override
     public OrderResponseDto addItem(@Positive Long orderId, @Positive Long productId, @Positive Integer quantity){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.addItem(orderId, productId, quantity)
-        );
+                orderService.addItem(orderId, productId, quantity));
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderId));
         return orderResponseDto;
     }
@@ -68,22 +65,20 @@ public class OrderControllerImpl implements OrderController {
     @Override
     public OrderResponseDto updateItem(@Positive Long orderItemId, @Positive Integer quantity){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.updateItem(orderItemId, quantity)
-        );
+                orderService.updateItem(orderItemId, quantity));
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
         return orderResponseDto;
     }
 
     @Override
-    public List<ProductShortResponseDto> getAllPurchasedProducts() {
+    public List<ProductShortResponseDto> getAllPurchased() {
         return productConverter.convertEntityListToDtoList(productService.getAllPurchased());
     }
 
     @Override
     public OrderResponseDto removeItem(@Positive Long orderItemId){
         OrderResponseDto orderResponseDto = orderConverter.convertEntityToDto(
-                orderService.removeItem(orderItemId)
-        );
+                orderService.removeItem(orderItemId));
         orderResponseDto.setTotalAmount(orderService.getTotalAmount(orderResponseDto.getOrderId()));
         return orderResponseDto;
     }

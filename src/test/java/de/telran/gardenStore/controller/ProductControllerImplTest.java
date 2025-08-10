@@ -160,7 +160,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
-    void deleteProduct_ShouldDeleteProduct() throws Exception {
+    void deleteProduct() throws Exception {
         Long productId = 1L;
 
         doNothing().when(productService).deleteById(productId);
@@ -173,15 +173,14 @@ public class ProductControllerImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Set discount: positive case")
+    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Set discount")
     void setDiscountPositiveCase() throws Exception {
         Long productId = product1.getProductId();
         BigDecimal discountPercentage = new BigDecimal("20");
         BigDecimal originalPrice = product1.getPrice();
 
-        BigDecimal discountPrice = originalPrice.multiply(
-                BigDecimal.ONE.subtract(discountPercentage.movePointLeft(2))
-        ).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal discountPrice = originalPrice.multiply(discountPercentage)
+                .divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
 
         Product productWithDiscount = product1.toBuilder()
                 .discountPrice(discountPrice)
@@ -203,8 +202,8 @@ public class ProductControllerImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products/product-of-the-day - Getting the product of the day: positive scenario")
-    void getProductOfTheDay_PositiveCase() throws Exception {
+    @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day: positive case")
+    void getProductOfTheDayPositiveCase() throws Exception {
         Product productOfTheDay = product1;
         ProductResponseDto expected = productResponseDto1;
 
@@ -220,8 +219,8 @@ public class ProductControllerImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products/product-of-the-day - No discounted products available: negative scenario")
-    void getProductOfTheDay_NegativeCase_NoDiscountedProducts() throws Exception {
+    @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day: negative case")
+    void getProductOfTheDayNegativeCase() throws Exception {
         when(productService.getProductOfTheDay()).thenThrow(new NoDiscountedProductsException("No discounted products available"));
 
         mockMvc.perform(get("/v1/products/product-of-the-day"))

@@ -39,7 +39,7 @@ public interface OrderController {
 
     @GetMapping("/purchased-products")
     @PreAuthorize("hasRole('USER')")
-    List<ProductShortResponseDto> getAllPurchasedProducts();
+    List<ProductShortResponseDto> getAllPurchased();
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")

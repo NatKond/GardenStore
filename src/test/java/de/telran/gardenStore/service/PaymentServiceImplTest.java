@@ -28,9 +28,9 @@ class PaymentServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Process Payment : positive case")
-    void processPayment_PositiveCase() {
+    void processPaymentPositiveCase() {
         BigDecimal paymentAmount = orderResponseDto1.getTotalAmount();
-        Order order = order1.toBuilder().status(OrderStatus.AWAITING_PAYMENT).build();
+        Order order = order1;
         Order expected = order1.toBuilder().status(OrderStatus.PAID).build();
 
         when(orderService.getTotalAmount(order.getOrderId())).thenReturn(paymentAmount);
@@ -48,9 +48,9 @@ class PaymentServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Process Payment : negative case(incorrect amount)")
-    void processPayment_NegativeCase_IncorrectAmount() {
+    void processPaymentNegativeCaseIncorrectAmount() {
         BigDecimal incorrectAmount = new BigDecimal("20.00");
-        Order order = order1.toBuilder().status(OrderStatus.AWAITING_PAYMENT).build();
+        Order order = order1;
 
         when(orderService.getTotalAmount(order.getOrderId()))
                 .thenReturn(orderResponseDto1.getTotalAmount());
@@ -65,7 +65,7 @@ class PaymentServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Process Payment : negative case(incorrect status)")
-    void processPayment_NegativeCase_WrongStatus() {
+    void processPaymentNegativeCaseIncorrectStatus() {
         when(orderService.getTotalAmount(order2.getOrderId()))
                 .thenReturn(product3.getDiscountPrice());
         when(orderService.getById(order2.getOrderId())).thenReturn(order2);

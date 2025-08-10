@@ -53,11 +53,15 @@ public abstract class AbstractTest {
 
     protected Order order1;
     protected Order order2;
+    protected Order order3;
+    protected Order order4;
     protected Order orderToCreate;
 
     protected OrderItem orderItem1;
     protected OrderItem orderItem2;
     protected OrderItem orderItem3;
+    protected OrderItem orderItem4;
+    protected OrderItem orderItem5;
     protected OrderItem orderItemToCreate1;
     protected OrderItem orderItemToCreate2;
 
@@ -302,7 +306,7 @@ public abstract class AbstractTest {
                 .deliveryAddress("123 Garden Street")
                 .contactPhone(user1.getPhoneNumber())
                 .deliveryMethod(DeliveryMethod.COURIER)
-                .status(OrderStatus.CREATED)
+                .status(OrderStatus.AWAITING_PAYMENT)
                 .createdAt(LocalDateTime.of(2025, 7, 1, 10, 0, 0))
                 .updatedAt(LocalDateTime.of(2025, 7, 1, 10, 30, 0))
                 .build();
@@ -345,6 +349,48 @@ public abstract class AbstractTest {
                 .build();
 
         order2.setItems(new ArrayList<>(List.of(orderItem3)));
+
+        order3 = Order.builder()
+                .orderId(3L)
+                .user(user1)
+                .deliveryAddress("123 Garden Street")
+                .contactPhone(user1.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.COURIER)
+                .status(OrderStatus.DELIVERED)
+                .createdAt(LocalDateTime.of(2025, 5, 3, 17, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 5, 5, 17, 0, 0))
+                .build();
+
+        orderItem4 = OrderItem.builder()
+                .orderItemId(4L)
+                .order(order3)
+                .product(product3)
+                .quantity(2)
+                .priceAtPurchase(product3.getDiscountPrice())
+                .build();
+
+        order3.setItems(new ArrayList<>(List.of(orderItem4)));
+
+        order4 = Order.builder()
+                .orderId(4L)
+                .user(user2)
+                .deliveryAddress("456 Green Ave")
+                .contactPhone(user2.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.PICKUP)
+                .status(OrderStatus.CANCELLED)
+                .createdAt(LocalDateTime.of(2025, 7, 1, 11, 45, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 2, 2, 9, 10))
+                .build();
+
+        orderItem5 = OrderItem.builder()
+                .orderItemId(5L)
+                .order(order4)
+                .product(product1)
+                .quantity(1)
+                .priceAtPurchase(product1.getDiscountPrice())
+                .build();
+
+        order4.setItems(new ArrayList<>(List.of(orderItem5)));
 
         orderToCreate = Order.builder()
                 .user(user1)

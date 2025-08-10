@@ -75,7 +75,7 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Get all orders for current user")
     void getAllForCurrentUser() {
-        List<Order> expected = List.of(order1);
+        List<Order> expected = List.of(order1,order3);
 
         when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findAllByUser(user1)).thenReturn(expected);
@@ -83,7 +83,7 @@ class OrderServiceImplTest extends AbstractTest {
         List<Order> actual = orderService.getAllForCurrentUser();
 
         assertNotNull(actual);
-        assertEquals(1, actual.size());
+        assertEquals(expected.size(), actual.size());
         assertEquals(expected, actual);
         verify(userService).getCurrent();
         verify(orderRepository).findAllByUser(user1);
@@ -169,9 +169,7 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Update order status")
     void updateStatus() {
-        Order orderToUpdate = order1.toBuilder()
-                .status(OrderStatus.AWAITING_PAYMENT)
-                .build();
+        Order orderToUpdate = order1;
         Long orderId = orderToUpdate.getOrderId();
 
         Order expected = order1.toBuilder()
@@ -255,7 +253,7 @@ class OrderServiceImplTest extends AbstractTest {
         Cart cart = cart1;
         CartItem cartItemToRemove = cartItem1;
 
-        Order orderToUpdate = order1;
+        Order orderToUpdate = order1.toBuilder().status(OrderStatus.CREATED).build();
 
         Integer quantityUpdated = 4;
 
@@ -295,7 +293,7 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Remove order item : positive case")
     void removeItemPositiveCase() {
-        Order orderToUpdate = order1;
+        Order orderToUpdate = order1.toBuilder().status(OrderStatus.CREATED).build();
 
         OrderItem orderItemToRemove = orderItem1.toBuilder().order(orderToUpdate).build();
         Long orderItemId = orderItemToRemove.getOrderItemId();

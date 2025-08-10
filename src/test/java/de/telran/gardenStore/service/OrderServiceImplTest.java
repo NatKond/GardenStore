@@ -75,7 +75,7 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Get all orders for current user")
     void getAllForCurrentUser() {
-        List<Order> expected = List.of(order1,order3);
+        List<Order> expected = List.of(order1, order3);
 
         when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findAllByUser(user1)).thenReturn(expected);
@@ -87,6 +87,38 @@ class OrderServiceImplTest extends AbstractTest {
         assertEquals(expected, actual);
         verify(userService).getCurrent();
         verify(orderRepository).findAllByUser(user1);
+    }
+
+    @Test
+    @DisplayName("Get all orders")
+    void getAll() {
+        List<Order> expected = List.of(order1, order2, order3, order4);
+
+        when(orderRepository.findAll()).thenReturn(expected);
+
+        List<Order> actual = orderService.getAll();
+
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        assertEquals(expected, actual);
+        verify(orderRepository).findAll();
+    }
+
+    @Test
+    @DisplayName("Get all delivered orders for current user")
+    void getAllDeliveredForCurrentUser() {
+        List<Order> expected = List.of(order3);
+
+        when(userService.getCurrent()).thenReturn(user1);
+        when(orderRepository.findAllByUserAndStatus(user1, OrderStatus.DELIVERED)).thenReturn(expected);
+
+        List<Order> actual = orderService.getAllDeliveredForCurrentUser();
+
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        assertEquals(expected, actual);
+        verify(userService).getCurrent();
+        verify(orderRepository).findAllByUserAndStatus(user1, OrderStatus.DELIVERED);
     }
 
     @Test
@@ -174,10 +206,10 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Add order item : positive case")
     void addItemPositiveCase() {
-        OrderItem orderItem = OrderItem.builder()
+        OrderItem orderItemToAdd = OrderItem.builder()
                 .product(cartItem3.getProduct())
                 .priceAtPurchase(cartItem3.getProduct().getDiscountPrice())
-                .quantity(cartItem3.getQuantity())
+                .quantity(cartItem3.getQuantity() - 1)
                 .build();
 
         Cart cart = cart2;
@@ -186,7 +218,7 @@ class OrderServiceImplTest extends AbstractTest {
         Long orderId = orderToUpdate.getOrderId();
 
         List<OrderItem> orderItemsUpdated = new ArrayList<>(order2.getItems());
-        orderItemsUpdated.add(orderItem);
+        orderItemsUpdated.add(orderItemToAdd);
 
         BigDecimal totalAmount = orderItemsUpdated.stream()
                 .map(orderItem4 -> orderItem4.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem4.getQuantity())))
@@ -197,8 +229,10 @@ class OrderServiceImplTest extends AbstractTest {
                 .totalAmount(totalAmount)
                 .build();
 
-        List<CartItem> cartItemsUpdated = new ArrayList<>(List.of(cartItem3));
-        cartItemsUpdated.remove(cartItem3);
+        List<CartItem> cartItemsUpdated = new ArrayList<>(List.of(
+                cartItem3.toBuilder()
+                        .quantity(cartItem3.getQuantity() - 1)
+                        .build()));
         Cart cartUpdated = cart2.toBuilder().items(cartItemsUpdated).build();
 
         when(userService.getCurrent()).thenReturn(orderToUpdate.getUser());
@@ -207,13 +241,55 @@ class OrderServiceImplTest extends AbstractTest {
         when(cartService.update(cart)).thenReturn(cartUpdated);
         when(orderRepository.save(orderUpdated)).thenReturn(orderUpdated);
 
-        Order actual = orderService.addItem(orderId, orderItem.getProduct().getProductId(), orderItem.getQuantity());
+        Order actual = orderService.addItem(orderId, orderItemToAdd.getProduct().getProductId(), orderItemToAdd.getQuantity());
 
         assertNotNull(actual);
         assertEquals(orderUpdated, actual);
         verify(cartService).getByUser(user2);
         verify(orderRepository).save(orderUpdated);
         verify(cartService).update(cart);
+    }
+
+    @Test
+    @DisplayName("Add order item : positive case(existing product)")
+    void addItemPositiveCaseExistingProduct() {
+        Integer quantity = 2;
+        Order orderToUpdate = order2;
+        Long orderId = orderToUpdate.getOrderId();
+
+        OrderItem orderItemToUpdate = orderItem3.toBuilder()
+                .quantity(orderItem3.getQuantity() + quantity)
+                .build();
+        Long orderItemId = orderItemToUpdate.getOrderItemId();
+        List<OrderItem> orderItemsUpdated = new ArrayList<>(List.of(orderItemToUpdate));
+
+        orderItemToUpdate.setOrder(orderToUpdate);
+
+        BigDecimal totalAmount = orderItemsUpdated.stream()
+                .map(orderItem -> orderItem.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Order orderUpdated = orderToUpdate.toBuilder()
+                .items(orderItemsUpdated)
+                .totalAmount(totalAmount)
+                .build();
+
+        Cart cart = cart2;
+
+        when(userService.getCurrent()).thenReturn(orderToUpdate.getUser());
+        when(orderRepository.findByUserAndOrderId(orderToUpdate.getUser(), orderId)).thenReturn(Optional.of(orderToUpdate));
+        when(orderItemService.getById(orderItemId)).thenReturn(orderItem3);
+        when(cartService.getByUser(orderToUpdate.getUser())).thenReturn(cart);
+        when(cartService.update(cart)).thenReturn(cart);
+        when(orderRepository.save(orderUpdated)).thenReturn(orderUpdated);
+
+        Order actual = orderService.addItem(orderId, orderItemToUpdate.getProduct().getProductId(), quantity);
+
+        assertNotNull(actual);
+        assertEquals(orderUpdated, actual);
+        verify(cartService).getByUser(user2);
+        verify(orderItemService).getById(orderItemId);
+        verify(orderRepository).save(orderUpdated);
     }
 
     @Test
@@ -277,6 +353,7 @@ class OrderServiceImplTest extends AbstractTest {
         assertEquals(orderUpdated, actual);
         verify(cartService).getByUser(user1);
         verify(orderRepository).save(orderUpdated);
+        verify(orderItemService).getById(orderItemId);
         verify(cartService).update(cart);
     }
 

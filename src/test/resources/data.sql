@@ -1,7 +1,13 @@
-INSERT INTO app_users (name, email, phone_number, password_hash, role)
+INSERT INTO app_users (name, email, phone_number, password_hash)
 VALUES
-    ('Alice Johnson', 'alice.johnson@example.com', '+1234567890', '12345', 'ROLE_USER'),
-    ('Bob Smith', 'bob.smith@example.com', '+1987654321', '12345', 'ROLE_USER');
+    ('Alice Johnson', 'alice.johnson@example.com', '+1234567890', '12345'),
+    ('Bob Smith', 'bob.smith@example.com', '+1987654321', '12345');
+
+INSERT INTO user_roles(user_id, role)
+VALUES
+    (1, 'ROLE_USER'),
+    (1,'ROLE_ADMIN'),
+    (2, 'ROLE_USER');
 
 INSERT INTO categories (name)
 VALUES

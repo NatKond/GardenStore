@@ -4,8 +4,16 @@ CREATE TABLE app_users
     name          VARCHAR(255)        NOT NULL,
     email         VARCHAR(255) UNIQUE NOT NULL,
     phone_number  VARCHAR(255),
-    password_hash VARCHAR(255)        NOT NULL,
-    role          VARCHAR(30)         NOT NULL CHECK (role IN ('ROLE_USER', 'ROLE_ADMIN'))
+    password_hash VARCHAR(255)        NOT NULL
+);
+
+CREATE TABLE user_roles (
+    user_id BIGINT NOT NULL,
+    role VARCHAR(255) NOT NULL,
+
+    CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id)
+    REFERENCES app_users (user_id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE categories

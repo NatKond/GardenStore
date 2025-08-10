@@ -119,7 +119,6 @@ class UserServiceImplTest extends AbstractTest {
     @DisplayName("Create new user : negative case")
     @Test
     void createNegativeCase() {
-
         AppUser userToCreate = this.userToCreate.toBuilder()
                 .email(user1.getEmail())
                 .build();
@@ -133,7 +132,6 @@ class UserServiceImplTest extends AbstractTest {
     @DisplayName("Update user : positive case(change phone number)")
     @Test
     void updatePositiveCaseChangePhoneNumber() {
-
         String phoneNumberToUpdate = "+1239999456";
 
         Long userId = user1.getUserId();
@@ -163,7 +161,6 @@ class UserServiceImplTest extends AbstractTest {
     @DisplayName("Update user : positive case(change email)")
     @Test
     void updatePositiveCaseChangeEmail() {
-
         String emailToUpdate = "alice@example.com";
 
         Long userId = user1.getUserId();

@@ -61,10 +61,10 @@ public class OrderControllerImplTest extends AbstractTest {
     private ProductService productService;
 
     @Test
-    @DisplayName("GET /v1/orders/history/{userId} - Get order history for user")
-    void getAll() throws Exception {
-        List<Order> userOrders = List.of(order1);
-        List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1);
+    @DisplayName("GET /v1/orders/history - Get order history for current user")
+    void getAllForCurrentUser() throws Exception {
+        List<Order> userOrders = List.of(order1, order3);
+        List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1, orderShortResponseDto3);
 
         when(orderService.getAllForCurrentUser()).thenReturn(userOrders);
         when(orderConverter.convertEntityListToDtoList(userOrders)).thenReturn(expected);
@@ -76,6 +76,44 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
 
         verify(orderService).getAllForCurrentUser();
+        verify(orderConverter).convertEntityListToDtoList(userOrders);
+    }
+
+    @Test
+    @DisplayName("GET /v1/orders/history/delivered- Get all delivered orders history for current user")
+    void getAllDeliveredForCurrentUser() throws Exception {
+        List<Order> userOrders = List.of(order3);
+        List<OrderResponseDto> expected = List.of(orderResponseDto3);
+
+        when(orderService.getAllDeliveredForCurrentUser()).thenReturn(userOrders);
+        when(orderConverter.convertEntityToDto(order3)).thenReturn(orderResponseDto3);
+
+        mockMvc.perform(get("/v1/orders/history/delivered"))
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
+
+        verify(orderService).getAllDeliveredForCurrentUser();
+        verify(orderConverter).convertEntityToDto(order3);
+    }
+
+    @Test
+    @DisplayName("GET /v1/orders/history/{userId} - Get order history for user")
+    void getAll() throws Exception {
+        List<Order> userOrders = List.of(order1, order2, order3, order4);
+        List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1, orderShortResponseDto2, orderShortResponseDto3, orderShortResponseDto4);
+
+        when(orderService.getAll()).thenReturn(userOrders);
+        when(orderConverter.convertEntityListToDtoList(userOrders)).thenReturn(expected);
+
+        mockMvc.perform(get("/v1/orders"))
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
+
+        verify(orderService).getAll();
         verify(orderConverter).convertEntityListToDtoList(userOrders);
     }
 

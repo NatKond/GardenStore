@@ -379,6 +379,7 @@ public abstract class AbstractTest {
                 .build();
 
         order3.setItems(new ArrayList<>(List.of(orderItem4)));
+        order3.setTotalAmount(orderItem4.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem4.getQuantity())));
 
         order4 = Order.builder()
                 .orderId(4L)
@@ -400,6 +401,7 @@ public abstract class AbstractTest {
                 .build();
 
         order4.setItems(new ArrayList<>(List.of(orderItem5)));
+        order4.setTotalAmount(orderItem5.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem5.getQuantity())));
 
         orderToCreate = Order.builder()
                 .user(user1)
@@ -620,6 +622,7 @@ public abstract class AbstractTest {
                 .discountPrice(product1.getDiscountPrice())
                 .categoryId(product1.getCategory().getCategoryId())
                 .description(product1.getDescription())
+                .imageUrl(product1.getImageUrl())
                 .build();
 
         productShortResponseDto2 = ProductShortResponseDto.builder()
@@ -629,6 +632,7 @@ public abstract class AbstractTest {
                 .discountPrice(product2.getDiscountPrice())
                 .categoryId(product2.getCategory().getCategoryId())
                 .description(product2.getDescription())
+                .imageUrl(product2.getImageUrl())
                 .build();
 
         productShortResponseDto3 = ProductShortResponseDto.builder()
@@ -638,6 +642,7 @@ public abstract class AbstractTest {
                 .discountPrice(product3.getDiscountPrice())
                 .categoryId(product3.getCategory().getCategoryId())
                 .description(product3.getDescription())
+                .imageUrl(product3.getImageUrl())
                 .build();
 
         productResponseDto1 = ProductResponseDto.builder()

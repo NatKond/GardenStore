@@ -53,11 +53,15 @@ public abstract class AbstractTest {
 
     protected Order order1;
     protected Order order2;
+    protected Order order3;
+    protected Order order4;
     protected Order orderToCreate;
 
     protected OrderItem orderItem1;
     protected OrderItem orderItem2;
     protected OrderItem orderItem3;
+    protected OrderItem orderItem4;
+    protected OrderItem orderItem5;
     protected OrderItem orderItemToCreate1;
     protected OrderItem orderItemToCreate2;
 
@@ -94,11 +98,17 @@ public abstract class AbstractTest {
 
     protected OrderShortResponseDto orderShortResponseDto1;
     protected OrderShortResponseDto orderShortResponseDto2;
+    protected OrderShortResponseDto orderShortResponseDto3;
+    protected OrderShortResponseDto orderShortResponseDto4;
     protected OrderResponseDto orderResponseDto1;
+    protected OrderResponseDto orderResponseDto2;
+    protected OrderResponseDto orderResponseDto3;
     protected OrderResponseDto orderResponseCreatedDto;
     protected OrderCreateRequestDto orderCreateRequestDto;
     protected OrderItemResponseDto orderItemResponseDto1;
     protected OrderItemResponseDto orderItemResponseDto2;
+    protected OrderItemResponseDto orderItemResponseDto3;
+    protected OrderItemResponseDto orderItemResponseDto4;
     protected OrderItemCreateRequestDto orderItemCreateRequestDto1;
     protected OrderItemCreateRequestDto orderItemCreateRequestDto2;
     protected OrderItemResponseDto orderItemResponseDtoCreated1;
@@ -264,13 +274,6 @@ public abstract class AbstractTest {
 
         user1.setCart(cart1);
 
-        cart2 = Cart.builder()
-                .cartId(2L)
-                .user(user2)
-                .build();
-
-        user2.setCart(cart2);
-
         cartItem1 = CartItem.builder()
                 .cartItemId(1L)
                 .cart(cart1)
@@ -287,6 +290,13 @@ public abstract class AbstractTest {
 
         cart1.setItems(new ArrayList<>(List.of(cartItem1, cartItem2)));
 
+        cart2 = Cart.builder()
+                .cartId(2L)
+                .user(user2)
+                .build();
+
+        user2.setCart(cart2);
+
         cartItem3 = CartItem.builder()
                 .cartItemId(3L)
                 .cart(cart2)
@@ -302,7 +312,7 @@ public abstract class AbstractTest {
                 .deliveryAddress("123 Garden Street")
                 .contactPhone(user1.getPhoneNumber())
                 .deliveryMethod(DeliveryMethod.COURIER)
-                .status(OrderStatus.CREATED)
+                .status(OrderStatus.AWAITING_PAYMENT)
                 .createdAt(LocalDateTime.of(2025, 7, 1, 10, 0, 0))
                 .updatedAt(LocalDateTime.of(2025, 7, 1, 10, 30, 0))
                 .build();
@@ -348,6 +358,48 @@ public abstract class AbstractTest {
 
         order2.setItems(new ArrayList<>(List.of(orderItem3)));
         order2.setTotalAmount(orderItem3.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem3.getQuantity())));
+
+        order3 = Order.builder()
+                .orderId(3L)
+                .user(user1)
+                .deliveryAddress("123 Garden Street")
+                .contactPhone(user1.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.COURIER)
+                .status(OrderStatus.DELIVERED)
+                .createdAt(LocalDateTime.of(2025, 5, 3, 17, 0, 0))
+                .updatedAt(LocalDateTime.of(2025, 5, 5, 17, 0, 0))
+                .build();
+
+        orderItem4 = OrderItem.builder()
+                .orderItemId(4L)
+                .order(order3)
+                .product(product3)
+                .quantity(2)
+                .priceAtPurchase(product3.getDiscountPrice())
+                .build();
+
+        order3.setItems(new ArrayList<>(List.of(orderItem4)));
+
+        order4 = Order.builder()
+                .orderId(4L)
+                .user(user2)
+                .deliveryAddress("456 Green Ave")
+                .contactPhone(user2.getPhoneNumber())
+                .deliveryMethod(DeliveryMethod.PICKUP)
+                .status(OrderStatus.CANCELLED)
+                .createdAt(LocalDateTime.of(2025, 7, 1, 11, 45, 0))
+                .updatedAt(LocalDateTime.of(2025, 7, 2, 2, 9, 10))
+                .build();
+
+        orderItem5 = OrderItem.builder()
+                .orderItemId(5L)
+                .order(order4)
+                .product(product1)
+                .quantity(1)
+                .priceAtPurchase(product1.getDiscountPrice())
+                .build();
+
+        order4.setItems(new ArrayList<>(List.of(orderItem5)));
 
         orderToCreate = Order.builder()
                 .user(user1)
@@ -413,6 +465,7 @@ public abstract class AbstractTest {
                 .status(order1.getStatus().name())
                 .deliveryAddress(order1.getDeliveryAddress())
                 .contactPhone(order1.getContactPhone())
+                .totalAmount(order1.getTotalAmount())
                 .deliveryMethod(order1.getDeliveryMethod().name())
                 .build();
 
@@ -421,7 +474,26 @@ public abstract class AbstractTest {
                 .status(order2.getStatus().name())
                 .deliveryAddress(order2.getDeliveryAddress())
                 .contactPhone(order2.getContactPhone())
+                .totalAmount(order2.getTotalAmount())
                 .deliveryMethod(order2.getDeliveryMethod().name())
+                .build();
+
+        orderShortResponseDto3 = OrderShortResponseDto.builder()
+                .orderId(order3.getOrderId())
+                .status(order3.getStatus().name())
+                .deliveryAddress(order3.getDeliveryAddress())
+                .contactPhone(order3.getContactPhone())
+                .totalAmount(order3.getTotalAmount())
+                .deliveryMethod(order3.getDeliveryMethod().name())
+                .build();
+
+        orderShortResponseDto4 = OrderShortResponseDto.builder()
+                .orderId(order4.getOrderId())
+                .status(order4.getStatus().name())
+                .deliveryAddress(order4.getDeliveryAddress())
+                .contactPhone(order4.getContactPhone())
+                .totalAmount(order4.getTotalAmount())
+                .deliveryMethod(order4.getDeliveryMethod().name())
                 .build();
 
         orderResponseDto1 = OrderResponseDto.builder()
@@ -451,6 +523,48 @@ public abstract class AbstractTest {
                 .build();
 
         orderResponseDto1.setItems(List.of(orderItemResponseDto1, orderItemResponseDto2));
+
+        orderResponseDto2 = OrderResponseDto.builder()
+                .orderId(order2.getOrderId())
+                .userId(order2.getUser().getUserId())
+                .status(order2.getStatus().name())
+                .deliveryAddress(order2.getDeliveryAddress())
+                .contactPhone(order2.getContactPhone())
+                .deliveryMethod(order2.getDeliveryMethod().name())
+                .totalAmount(order2.getTotalAmount())
+                .createdAt(order2.getCreatedAt())
+                .updatedAt(order2.getUpdatedAt())
+                .build();
+
+        orderItemResponseDto3 = OrderItemResponseDto.builder()
+                .orderItemId(orderItem3.getOrderItemId())
+                .product(productShortResponseDto3)
+                .quantity(orderItem3.getQuantity())
+                .priceAtPurchase(orderItem3.getPriceAtPurchase())
+                .build();
+
+        orderResponseDto2.setItems(List.of(orderItemResponseDto3));
+
+        orderResponseDto3 = OrderResponseDto.builder()
+                .orderId(order3.getOrderId())
+                .userId(order3.getUser().getUserId())
+                .status(order3.getStatus().name())
+                .deliveryAddress(order3.getDeliveryAddress())
+                .contactPhone(order3.getContactPhone())
+                .deliveryMethod(order3.getDeliveryMethod().name())
+                .totalAmount(order3.getTotalAmount())
+                .createdAt(order3.getCreatedAt())
+                .updatedAt(order3.getUpdatedAt())
+                .build();
+
+        orderItemResponseDto4 = OrderItemResponseDto.builder()
+                .orderItemId(orderItem4.getOrderItemId())
+                .product(productShortResponseDto3)
+                .quantity(orderItem4.getQuantity())
+                .priceAtPurchase(orderItem4.getPriceAtPurchase())
+                .build();
+
+        orderResponseDto3.setItems(List.of(orderItemResponseDto4));
 
         orderCreateRequestDto = OrderCreateRequestDto.builder()
                 .deliveryAddress(orderToCreate.getDeliveryAddress())

@@ -143,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
         Long productId = orderItem.getProduct().getProductId();
         Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
-        cartItem.ifPresent(item -> editCartItemList(item, cartItems, quantity));
+        cartItem.ifPresent(item -> editCartItemList(item, cartItems, quantity - orderItem.getQuantity()));
 
         orderItem.setQuantity(quantity);
         order.setTotalAmount(getTotalAmount(order));

@@ -33,7 +33,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart create(AppUser user) {
-        return cartRepository.save(Cart.builder()
+        return cartRepository.save(
+                Cart.builder()
                 .user(user)
                 .build());
     }
@@ -46,7 +47,6 @@ public class CartServiceImpl implements CartService {
 
         return cartRepository.save(existingCart);
     }
-
 
     @Override
     public Cart addItem(Long productId) {

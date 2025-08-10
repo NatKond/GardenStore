@@ -25,25 +25,25 @@ public class CartControllerImpl implements CartController {
 
     private final UserService userService;
 
-    @GetMapping
     @Override
+    @GetMapping
     public CartResponseDto getForCurrentUser() {
         return cartConverter.convertEntityToDto(
                 cartService.getByUser(
                         userService.getCurrent()));
     }
 
+    @Override
     @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
-    @Override
     public CartResponseDto addItem(@PathVariable @Positive Long productId) {
         return cartConverter.convertEntityToDto(
                 cartService.addItem(productId));
     }
 
+    @Override
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")
-    @Override
     public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
                                           @RequestParam @Positive Integer quantity) {
         return cartConverter.convertEntityToDto(

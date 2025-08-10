@@ -155,7 +155,7 @@ class UserControllerImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("PUT /v1/users - Update user")
+    @DisplayName("PUT /v1/users - Update current user")
     void update() throws Exception {
 
         String emailToUpdate = "charlie.brown777@example.com";
@@ -195,8 +195,8 @@ class UserControllerImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("DELETE /v1/users/{userId} - Delete user by ID")
-    void deleteUserById_Existing_Returns200() throws Exception {
+    @DisplayName("DELETE /v1/users/{userId} - Delete current user")
+    void deleteUserByI() throws Exception {
 
         doNothing().when(userService).delete();
 

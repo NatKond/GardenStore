@@ -76,6 +76,8 @@ public abstract class AbstractTest {
     protected ProductShortResponseDto productShortResponseDto2;
     protected ProductShortResponseDto productShortResponseDto3;
     protected ProductResponseDto productResponseDto1;
+    protected ProductResponseDto productResponseDto2;
+    protected ProductResponseDto productResponseDto3;
     protected ProductCreateRequestDto productCreateRequestDto;
     protected ProductResponseDto productResponseCreatedDto;
     protected ProductShortResponseDto productShortResponseCreatedDto;
@@ -173,7 +175,7 @@ public abstract class AbstractTest {
         product2 = Product.builder()
                 .productId(2L)
                 .name("Organic Tomato Feed")
-                .discountPrice(BigDecimal.valueOf(10.49))
+                .discountPrice(BigDecimal.valueOf(9.49))
                 .price(BigDecimal.valueOf(13.99))
                 .category(category1)
                 .description("Organic liquid fertilizer ideal for tomatoes and vegetables")
@@ -653,6 +655,26 @@ public abstract class AbstractTest {
                 .categoryId(product1.getCategory().getCategoryId())
                 .description(product1.getDescription())
                 .imageUrl(product1.getImageUrl())
+                .build();
+
+        productResponseDto2 = ProductResponseDto.builder()
+                .productId(product2.getProductId())
+                .name(product2.getName())
+                .price(product2.getPrice())
+                .discountPrice(product2.getDiscountPrice())
+                .categoryId(product2.getCategory().getCategoryId())
+                .description(product2.getDescription())
+                .imageUrl(product2.getImageUrl())
+                .build();
+
+        productResponseDto3 = ProductResponseDto.builder()
+                .productId(product3.getProductId())
+                .name(product3.getName())
+                .price(product3.getPrice())
+                .discountPrice(product3.getDiscountPrice())
+                .categoryId(product3.getCategory().getCategoryId())
+                .description(product3.getDescription())
+                .imageUrl(product3.getImageUrl())
                 .build();
 
         productCreateRequestDto = ProductCreateRequestDto.builder()

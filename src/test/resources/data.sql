@@ -18,7 +18,7 @@ VALUES
 INSERT INTO products (name, discount_price, price,category_id, description, image_url,created_at, updated_at)
 VALUES
     ('All-Purpose Plant Fertilizer', 8.99, 11.99, 1, 'Balanced NPK formula for all types of plants', 'https://example.com/images/fertilizer_all_purpose.jpg','2025-07-01 00:00:00','2025-07-01 00:00:00'),
-    ('Organic Tomato Feed', 10.49, 13.99, 1, 'Organic liquid fertilizer ideal for tomatoes and vegetables', 'https://example.com/images/fertilizer_tomato_feed.jpg','2025-07-01 00:00:00','2025-07-01 00:00:00'),
+    ('Organic Tomato Feed', 9.49, 13.99, 1, 'Organic liquid fertilizer ideal for tomatoes and vegetables', 'https://example.com/images/fertilizer_tomato_feed.jpg','2025-07-01 00:00:00','2025-07-01 00:00:00'),
     ('Slug & Snail Barrier Pellets', 5.75, 7.50, 2, 'Pet-safe barrier pellets to protect plants from slugs', 'https://example.com/images/protection_slug_pellets.jpg','2025-07-01 00:00:00','2025-07-01 00:00:00');
 
 INSERT INTO favorites(user_id, product_id)

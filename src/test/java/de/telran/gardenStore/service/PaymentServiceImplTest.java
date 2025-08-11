@@ -47,7 +47,7 @@ class PaymentServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Process Payment : negative case(incorrect amount)")
-    void processPaymentNegativeCaseIncorrectAmount() {
+    void processPaymentInvalidAmount() {
         BigDecimal incorrectAmount = new BigDecimal("20.00");
         Order order = order1;
 
@@ -62,7 +62,7 @@ class PaymentServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Process Payment : negative case(incorrect status)")
-    void processPaymentNegativeCaseIncorrectStatus() {
+    void processPaymentInvalidStatus() {
         when(orderService.getById(order2.getOrderId())).thenReturn(order2);
 
         RuntimeException runtimeException = assertThrows(

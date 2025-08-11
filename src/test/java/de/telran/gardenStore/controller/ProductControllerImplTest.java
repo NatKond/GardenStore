@@ -203,7 +203,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day: positive case")
-    void getProductOfTheDayPositiveCase() throws Exception {
+    void getProductOfTheDaySuccess() throws Exception {
         Product productOfTheDay = product1;
         ProductResponseDto expected = productResponseDto1;
 
@@ -220,7 +220,7 @@ public class ProductControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day: negative case")
-    void getProductOfTheDayNegativeCase() throws Exception {
+    void getProductOfTheDayFailure() throws Exception {
         when(productService.getProductOfTheDay()).thenThrow(new NoDiscountedProductsException("No discounted products available"));
 
         mockMvc.perform(get("/v1/products/product-of-the-day"))

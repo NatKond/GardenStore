@@ -104,7 +104,7 @@ class ReportServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Get products awaiting payment")
-    void getProductsAwaitingPaymentForMoreDays() {
+    void getProductsAwaitingPayment() {
         int days = 7;
         int limit = 5;
 
@@ -142,7 +142,7 @@ class ReportServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Getting profit report grouped by months")
-    void getProfitOverPeriod_GroupByMonth_ShouldReturnList() {
+    void getProfitByMonth() {
 
         String timeUnit = "months";
         Integer timeAmount = 6;

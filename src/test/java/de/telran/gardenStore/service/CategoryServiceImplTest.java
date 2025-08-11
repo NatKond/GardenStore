@@ -167,7 +167,7 @@ class CategoryServiceImplTest extends AbstractTest {
 
     @DisplayName("Delete category by ID : negative case(category not found)")
     @Test
-    void deleteByIdNegativeCaseCategoryNotFound() {
+    void deleteCategoryNotFound() {
         Long categoryId = 99L;
 
         when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.empty());
@@ -178,7 +178,7 @@ class CategoryServiceImplTest extends AbstractTest {
 
     @DisplayName("Delete category by ID : negative case(category contains products)")
     @Test
-    void deleteByIdNegativeCaseCategoryContainsProducts() {
+    void deleteCategoryContainsProducts() {
         Category categoryToDelete = category1;
         Long categoryId = category1.getCategoryId();
 

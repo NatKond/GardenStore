@@ -131,7 +131,7 @@ class UserServiceImplTest extends AbstractTest {
 
     @DisplayName("Update user : positive case(change phone number)")
     @Test
-    void updatePositiveCaseChangePhoneNumber() {
+    void updateUserPhone() {
         String phoneNumberToUpdate = "+1239999456";
 
         Long userId = user1.getUserId();
@@ -160,7 +160,7 @@ class UserServiceImplTest extends AbstractTest {
 
     @DisplayName("Update user : positive case(change email)")
     @Test
-    void updatePositiveCaseChangeEmail() {
+    void updateUserEmail() {
         String emailToUpdate = "alice@example.com";
 
         Long userId = user1.getUserId();

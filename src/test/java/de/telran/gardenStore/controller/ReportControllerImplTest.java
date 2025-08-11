@@ -75,7 +75,7 @@ class ReportControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/report/awaiting-payment-products - Get products awaiting payment")
-    void getProductsAwaitingPaymentForDays_ShouldReturnList() throws Exception {
+    void getProductsAwaitingPayment() throws Exception {
         int days = 5;
         int limit = 10;
         List<ProductReport> expected = List.of(ProductReport.builder()
@@ -96,7 +96,7 @@ class ReportControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/report/profit - Get profit report")
-    void getProfitOverPeriod_ShouldReturnList() throws Exception {
+    void getProfitReport() throws Exception {
         String timeUnit = "months";
         int timeAmount = 6;
         String groupBy = "month";

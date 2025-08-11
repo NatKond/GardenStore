@@ -81,7 +81,7 @@ public class OrderControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/orders/history/delivered- Get all delivered orders history for current user")
-    void getAllDeliveredForCurrentUser() throws Exception {
+    void getAllDelivered() throws Exception {
         List<Order> userOrders = List.of(order3);
         List<OrderResponseDto> expected = List.of(orderResponseDto3);
 

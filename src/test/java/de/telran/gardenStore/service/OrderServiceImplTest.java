@@ -106,7 +106,7 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Get all delivered orders for current user")
-    void getAllDeliveredForCurrentUser() {
+    void getAllDelivered() {
         List<Order> expected = List.of(order3);
 
         when(userService.getCurrent()).thenReturn(user1);
@@ -252,7 +252,7 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Add order item : positive case(existing product)")
-    void addItemPositiveCaseExistingProduct() {
+    void addItemExistingProduct() {
         Integer quantity = 2;
         Order orderToUpdate = order2;
         Long orderId = orderToUpdate.getOrderId();
@@ -422,7 +422,7 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Cancel order : negative case(order not found)")
-    void cancelOrderNegativeCaseOrderNotFound() {
+    void cancelOrderNotFound() {
         Long orderId = 999L;
         when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findByUserAndOrderId(user1, orderId)).thenReturn(Optional.empty());
@@ -436,7 +436,7 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Cancel order : negative case(order has incorrect status)")
-    void cancelOrderNegativeCaseIncorrectStatus() {
+    void cancelOrderInvalidStatus() {
         Long orderId = order1.getOrderId();
         OrderStatus status = OrderStatus.PAID;
         Order orderToCancel = order1.toBuilder().status(status).build();

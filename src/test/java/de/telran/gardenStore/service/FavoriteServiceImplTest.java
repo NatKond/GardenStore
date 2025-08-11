@@ -82,7 +82,7 @@ class FavoriteServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Create new favorite : positive case")
-    void testCreatePositiveCase() {
+    void createFavoriteSuccess() {
         Favorite expected = favoriteCreated;
         Long userId = favoriteToCreate.getUser().getUserId();
         Long productId = favoriteToCreate.getUser().getUserId();
@@ -103,7 +103,7 @@ class FavoriteServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Create new favorite : negative case")
-    void testCreateNegativeCase() {
+    void createFavoriteFailure() {
         Long userId = favoriteToCreate.getUser().getUserId();
         Long productId = product3.getProductId();
 
@@ -117,7 +117,7 @@ class FavoriteServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Delete favorite by ID : positive case")
-    void testDeleteByIdPositiveCase() {
+    void deleteFavoriteSuccess() {
         Long favoriteId = favorite1.getFavoriteId();
 
         when(userService.getCurrent()).thenReturn(user1);
@@ -131,7 +131,7 @@ class FavoriteServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Delete favorite by ID : negative case")
-    void testDeleteFavoriteNegativeCase() {
+    void deleteFavoriteFailure() {
         Long favoriteId = 9999L;
 
         when(favoriteRepository.findByUserAndFavoriteId(user1, favoriteId)).thenReturn(Optional.empty());

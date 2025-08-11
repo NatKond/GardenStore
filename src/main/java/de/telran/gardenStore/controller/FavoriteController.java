@@ -1,23 +1,116 @@
 package de.telran.gardenStore.controller;
 
 import de.telran.gardenStore.dto.FavoriteResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@RequestMapping("/v1/favorites")
-@PreAuthorize("hasRole('USER')")
+
+@Tag(name = "4. Favorites", description = "Favorite Controller")
 public interface FavoriteController {
 
-    @GetMapping
+    @Operation(summary = "Get all favorites for current user")
+    @ApiResponse(responseCode = "200", description = "List of user's favorite products",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FavoriteResponseDto.class),
+                    examples = @ExampleObject(name = "Favorites list", value = """
+                            [
+                                {
+                                    "favoriteId": 1,
+                                    "product": {
+                                        "productId": 5,
+                                        "name": "Espoma Organic Perlite",
+                                        "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                        "price": 13.95,
+                                        "discountPrice": 12.65,
+                                        "imageUrl": "/product_img/organic_perlite.jpeg"
+                                    }
+                                },
+                                {
+                                    "favoriteId": 2,
+                                    "product": {
+                                        "productId": 10,
+                                        "name": "Tulip Bulb Mix (10 pcs)",
+                                        "description": "Colorful tulip bulbs perfect for spring blooms",
+                                        "price": 9.49,
+                                        "discountPrice": 6.99,
+                                        "imageUrl": "/product_img/tulip_bulbs.jpg"
+                                    }
+                                }
+                            ]
+                            """)))
+    @ApiResponse(responseCode = "404", description = "User not found",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = @ExampleObject(name = "User not found", value = """
+                            {
+                                "exception": "UserNotFoundException",
+                                "message": "User with id 12 not found",
+                                "status": 404,
+                                "timestamp": "2025-07-08T23:34:45.605807"
+                            }
+                            """)))
     List<FavoriteResponseDto> getAllForCurrentUser();
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{productId}")
-    FavoriteResponseDto create(@PathVariable @Positive Long productId);
+    @Operation(summary = "Add product to favorites for current user")
+    @ApiResponse(responseCode = "201", description = "Favorite created",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FavoriteResponseDto.class),
+                    examples = @ExampleObject(name = "Created favorite", value = """
+                            {
+                                "favoriteId": 8,
+                                "product": {
+                                    "productId": 4,
+                                    "name": "Espoma Organic Orchid Mix",
+                                    "description": "Espoma's Organic Orchid Mix gives your orchid the ideal environment for growth and flowering.",
+                                    "price": 6.95,
+                                    "imageUrl": "/product_img/organic_orchid_mix.jpeg"
+                                }
+                            }
+                            """)))
+    @ApiResponse(responseCode = "404", description = "User or product not found",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = @ExampleObject(name = "Product not found", value = """
+                            {
+                                "exception": "ProductNotFoundException",
+                                "message": "Product with id 12 not found",
+                                "status": 404,
+                                "timestamp": "2025-07-08T23:36:11.847041"
+                            }
+                            """)))
+    @ApiResponse(responseCode = "409", description = "Favorite already exists",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = @ExampleObject(name = "Conflict", value = """
+                            {
+                                "exception": "FavoriteAlreadyExistsException",
+                                "message": "Favorite with userId 4 and productId 10 already exists",
+                                "status": 409,
+                                "timestamp": "2025-07-08T23:35:45.857475"
+                            }
+                            """)))
+    FavoriteResponseDto create(
+            @Parameter(description = "Add favorite for current user", example = "4") @Positive Long productId);
 
-    @DeleteMapping("/{favoriteId}")
-    void delete(@PathVariable @Positive Long favoriteId);
+    @Operation(summary = "Delete favorite by ID")
+    @ApiResponse(responseCode = "204", description = "Favorite deleted")
+    @ApiResponse(responseCode = "404", description = "Favorite not found",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = @ExampleObject(name = "Favorite not found", value = """
+                            {
+                                "exception": "FavoriteNotFoundException",
+                                "message": "Favorite with id 12 not found",
+                                "status": 404,
+                                "timestamp": "2025-07-08T23:38:06.466938"
+                            }
+                            """)))
+    void delete(@Parameter(description = "ID of favorite to delete", example = "1") @Positive Long favoriteId);
 }

@@ -45,7 +45,7 @@ class ReportControllerImplTest extends AbstractTest {
                 .quantity(1L)
                 .build());
 
-        when(reportService.getTopOrderedProducts(limit)).thenReturn(expected);
+        when(reportService.getTopPurchasedProducts(limit)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/report/top-purchased-products/{limit}", limit))
                 .andExpectAll(

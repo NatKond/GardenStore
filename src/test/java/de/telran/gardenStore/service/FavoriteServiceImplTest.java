@@ -1,6 +1,7 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.AbstractTest;
+import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
@@ -84,11 +85,11 @@ class FavoriteServiceImplTest extends AbstractTest {
     @DisplayName("Create new favorite : positive case")
     void testCreatePositiveCase() {
         Favorite expected = favoriteCreated;
-        Long userId = favoriteToCreate.getUser().getUserId();
+        AppUser user = favoriteToCreate.getUser();
         Long productId = favoriteToCreate.getUser().getUserId();
 
         when(userService.getCurrent()).thenReturn(user1);
-        when(favoriteRepository.findByUserIdAndProductId(userId, productId)).thenReturn(Optional.empty());
+        when(favoriteRepository.findByUserIdAndProductId(user, productId)).thenReturn(Optional.empty());
         when(productService.getById(productId)).thenReturn(product3);
         when(favoriteRepository.save(favoriteToCreate)).thenReturn(favoriteCreated);
 
@@ -104,29 +105,31 @@ class FavoriteServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Create new favorite : negative case")
     void testCreateNegativeCase() {
-        Long userId = favoriteToCreate.getUser().getUserId();
+        AppUser user = favoriteToCreate.getUser();
         Long productId = product3.getProductId();
 
-        when(userService.getCurrent()).thenReturn(user1);
-        when(favoriteRepository.findByUserIdAndProductId(userId, productId)).thenReturn(Optional.of(favoriteCreated));
+        when(userService.getCurrent()).thenReturn(user);
+        when(favoriteRepository.findByUserIdAndProductId(user, productId)).thenReturn(Optional.of(favoriteCreated));
 
         RuntimeException runtimeException = assertThrows(FavoriteAlreadyExistsException.class, () -> favoriteService.create(productId));
-        assertEquals("Favorite with userId " + userId + " and productId " + productId + " already exists", runtimeException.getMessage());
-        verify(favoriteRepository).findByUserIdAndProductId(userId, productId);
+        assertEquals("Favorite with userId " + user.getUserId() + " and productId " + productId + " already exists", runtimeException.getMessage());
+        verify(favoriteRepository).findByUserIdAndProductId(user, productId);
     }
 
     @Test
     @DisplayName("Delete favorite by ID : positive case")
     void testDeleteByIdPositiveCase() {
-        Long favoriteId = favorite1.getFavoriteId();
+        Favorite favoriteToDelete = favorite1;
+        Long favoriteId = favoriteToDelete.getFavoriteId();
+        AppUser user =  favoriteToDelete.getUser();
 
-        when(userService.getCurrent()).thenReturn(user1);
-        when(favoriteRepository.findByUserAndFavoriteId(user1, favoriteId)).thenReturn(Optional.of(favorite1));
+        when(userService.getCurrent()).thenReturn(user);
+        when(favoriteRepository.findByUserAndFavoriteId(user, favoriteId)).thenReturn(Optional.of(favoriteToDelete));
 
         favoriteService.deleteById(favoriteId);
 
-        verify(favoriteRepository).findByUserAndFavoriteId(user1, favoriteId);
-        verify(favoriteRepository).delete(favorite1);
+        verify(favoriteRepository).findByUserAndFavoriteId(user, favoriteId);
+        verify(favoriteRepository).delete(favoriteToDelete);
     }
 
     @Test

@@ -16,10 +16,11 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     Optional<Favorite> findByUserAndFavoriteId(AppUser user, Long favoriteId);
 
-    @Query("SELECT f " +
-            "FROM Favorite f " +
-            "JOIN f.user u " +
-            "JOIN f.product p " +
-            "WHERE p.productId = :productId AND u.userId = :userId ")
-    Optional<Favorite> findByUserIdAndProductId(Long userId, Long productId);
+    @Query("""
+            SELECT f
+            FROM Favorite f
+            JOIN f.product p
+            WHERE p.productId = :productId AND f.user = :user
+            """)
+    Optional<Favorite> findByUserIdAndProductId(AppUser user, Long productId);
 }

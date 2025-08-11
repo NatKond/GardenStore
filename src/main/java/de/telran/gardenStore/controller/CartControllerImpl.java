@@ -7,12 +7,16 @@ import de.telran.gardenStore.service.CartService;
 import de.telran.gardenStore.service.UserService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
-@Validated
+@RequestMapping("/v1/cart")
+@PreAuthorize("hasRole('USER')")
 public class CartControllerImpl implements CartController {
 
     private final CartService cartService;
@@ -22,6 +26,7 @@ public class CartControllerImpl implements CartController {
     private final UserService userService;
 
     @Override
+    @GetMapping
     public CartResponseDto getForCurrentUser() {
         return cartConverter.convertEntityToDto(
                 cartService.getByUser(
@@ -29,18 +34,25 @@ public class CartControllerImpl implements CartController {
     }
 
     @Override
-    public CartResponseDto addItem(@Positive Long productId) {
-        return cartConverter.convertEntityToDto(cartService.addItem(productId));
+    @PostMapping("/items/{productId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CartResponseDto addItem(@PathVariable @Positive Long productId) {
+        return cartConverter.convertEntityToDto(
+                cartService.addItem(productId));
     }
 
     @Override
-    public CartResponseDto updateItem(@Positive Long cartItemId, @Positive Integer quantity) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PutMapping("/items/{cartItemId}")
+    public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
+                                          @RequestParam @Positive Integer quantity) {
         return cartConverter.convertEntityToDto(
                 cartService.updateItem(cartItemId, quantity));
     }
 
     @Override
-    public CartResponseDto deleteItem(@Positive Long cartItemId) {
+    @DeleteMapping("/items/{cartItemId}")
+    public CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId) {
         return cartConverter.convertEntityToDto(cartService.deleteItem(cartItemId));
     }
 }

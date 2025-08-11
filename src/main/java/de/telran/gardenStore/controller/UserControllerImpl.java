@@ -10,14 +10,17 @@ import de.telran.gardenStore.service.security.AuthenticationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController
 @Validated
+@RequestMapping("/v1/users")
+@RestController
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
@@ -27,15 +30,23 @@ public class UserControllerImpl implements UserController {
     private final AuthenticationService authenticationService;
 
     @Override
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserShortResponseDto> getAll() {
-        return userConverter.convertEntityListToDtoList(userService.getAll());
+        return userConverter.convertEntityListToDtoList(
+                userService.getAll());
     }
 
     @Override
-    public UserResponseDto getById(@Positive Long userId) {
-        return userConverter.convertEntityToDto(userService.getById(userId));
+    @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponseDto getById(@PathVariable @Positive Long userId) {
+        return userConverter.convertEntityToDto(
+                userService.getById(userId));
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
     @Override
     public UserResponseDto getCurrent() {
         return userConverter.convertEntityToDto(
@@ -43,25 +54,32 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public LoginResponse login(@RequestBody  @Valid LoginRequest loginRequest) {
         return authenticationService.authenticate(loginRequest);
     }
 
     @Override
-    public UserResponseDto create(@Valid UserCreateRequestDto userCreateRequestDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/register")
+    public UserResponseDto create(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto) {
         return userConverter.convertEntityToDto(
                 userService.create(
                         userConverter.convertDtoToEntity(userCreateRequestDto)));
     }
 
     @Override
-    public UserResponseDto update(@Valid UserCreateRequestDto userRequest) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PutMapping
+    public UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest) {
         return userConverter.convertEntityToDto(
                 userService.update(
                         userConverter.convertDtoToEntity(userRequest)));
     }
 
     @Override
+    @DeleteMapping()
     public void delete() {
         userService.delete();
     }

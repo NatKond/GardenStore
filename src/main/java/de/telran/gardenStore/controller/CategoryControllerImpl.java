@@ -9,14 +9,17 @@ import de.telran.gardenStore.service.CategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
-@Validated
+@RequestMapping("/v1/categories")
 public class CategoryControllerImpl implements CategoryController {
 
     private final CategoryService categoryService;
@@ -24,33 +27,41 @@ public class CategoryControllerImpl implements CategoryController {
     private final Converter<Category, CategoryCreateRequestDto, CategoryResponseDto, CategoryShortResponseDto> categoryConverter;
 
     @Override
+    @GetMapping
     public List<CategoryShortResponseDto> getAll() {
-        return categoryConverter.convertEntityListToDtoList(
-                categoryService.getAll());
+        return categoryConverter.convertEntityListToDtoList(categoryService.getAll());
     }
 
     @Override
-    public CategoryResponseDto getById(@Positive Long categoryId) {
+    @GetMapping("/{categoryId}")
+    public CategoryResponseDto getById(@PathVariable @Positive Long categoryId) {
         return categoryConverter.convertEntityToDto(
                 categoryService.getById(categoryId));
     }
 
     @Override
-    public CategoryResponseDto create(@Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(
-                categoryService.create(
-                        categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryResponseDto create(@RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+        return categoryConverter.convertEntityToDto(categoryService.create(
+                categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
-    public CategoryResponseDto update(@Positive Long categoryId, @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PutMapping("/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryResponseDto update(@PathVariable @Positive Long categoryId,
+                                      @RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
         return categoryConverter.convertEntityToDto(
-                categoryService.update(categoryId,
-                        categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+                categoryService.update(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
     }
 
     @Override
-    public void delete(@Positive Long categoryId) {
+    @DeleteMapping("/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(@PathVariable @Positive Long categoryId) {
         categoryService.deleteById(categoryId);
     }
 }

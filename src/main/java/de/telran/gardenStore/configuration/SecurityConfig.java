@@ -41,6 +41,11 @@ public class SecurityConfig {
                                         "/v1/categories",
                                         "/v1/categories/**"
                                 ).permitAll()
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**"
+                                ).permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session

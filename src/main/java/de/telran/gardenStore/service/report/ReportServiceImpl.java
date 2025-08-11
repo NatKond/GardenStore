@@ -30,7 +30,7 @@ public class ReportServiceImpl implements ReportService {
     private final EntityManager entityManager;
 
     @Override
-    public List<ProductReport> getTopOrderedProducts(Integer limit) {
+    public List<ProductReport> getTopPurchasedProducts(Integer limit) {
         return getTopProductsByStatus(OrderStatus.DELIVERED, limit);
     }
 

@@ -30,7 +30,7 @@ CREATE TABLE products
     product_id     IDENTITY PRIMARY KEY,
     name           VARCHAR(255)   NOT NULL,
     discount_price DECIMAL(10, 2),
-    price          DECIMAL(10, 2) NOT NULL NOT NULL,
+    price          DECIMAL(10, 2) NOT NULL,
     category_id    INT            NOT NULL,
     created_at     TIMESTAMP DEFAULT NOW(),
     updated_at     TIMESTAMP DEFAULT NOW(),

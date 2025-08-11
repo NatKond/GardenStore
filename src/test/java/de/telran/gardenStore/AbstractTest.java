@@ -755,11 +755,6 @@ public abstract class AbstractTest {
                 .userId(cart1.getUser().getUserId())
                 .build();
 
-        cartResponseDto2 = CartResponseDto.builder()
-                .cartId(cart2.getCartId())
-                .userId(cart2.getUser().getUserId())
-                .build();
-
         cartItemResponseDto1 = CartItemResponseDto.builder()
                 .cartItemId(cartItem1.getCartItemId())
                 .product(productShortResponseDto1)
@@ -773,6 +768,11 @@ public abstract class AbstractTest {
                 .build();
 
         cartResponseDto1.setItems(new ArrayList<>(List.of(cartItemResponseDto1, cartItemResponseDto2)));
+
+        cartResponseDto2 = CartResponseDto.builder()
+                .cartId(cart2.getCartId())
+                .userId(cart2.getUser().getUserId())
+                .build();
 
         cartItemResponseDto3 = CartItemResponseDto.builder()
                 .cartItemId(cartItem3.getCartItemId())

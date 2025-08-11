@@ -1,3 +1,5 @@
+DROP ALL OBJECTS;
+
 CREATE TABLE app_users
 (
     user_id       IDENTITY PRIMARY KEY,
@@ -77,7 +79,7 @@ CREATE TABLE cart_items
         ON DELETE CASCADE,
     CONSTRAINT fk_cart_item_product FOREIGN KEY (product_id)
         REFERENCES products (product_id)
-        ON DELETE RESTRICT,
+        ON DELETE CASCADE,
     CONSTRAINT uc_cart_product UNIQUE (cart_id, product_id)
 );
 

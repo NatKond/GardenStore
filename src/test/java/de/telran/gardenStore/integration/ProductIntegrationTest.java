@@ -25,9 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@Transactional
+
 @SpringBootTest
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
+@Transactional
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductIntegrationTest extends AbstractTest {
 
     @Autowired
@@ -125,7 +127,7 @@ class ProductIntegrationTest extends AbstractTest {
     @Test
     @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
     void deleteProduct() throws Exception {
-        Long productId = 1L;
+        Long productId = 2L;
 
         mockMvc.perform(delete("/v1/products/{productId}", productId)
                         .with(httpBasic("alice.johnson@example.com", "12345")))

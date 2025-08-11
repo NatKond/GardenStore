@@ -328,11 +328,11 @@ public abstract class AbstractTest {
                 .build();
 
         orderItem2 = OrderItem.builder()
-                .orderItemId(2L)
+                .orderItemId(3L)
                 .order(order1)
-                .product(product2)
+                .product(product3)
                 .quantity(1)
-                .priceAtPurchase(product2.getDiscountPrice())
+                .priceAtPurchase(product3.getDiscountPrice())
                 .build();
 
         order1.setItems(new ArrayList<>(List.of(orderItem1, orderItem2)));
@@ -521,7 +521,7 @@ public abstract class AbstractTest {
 
         orderItemResponseDto2 = OrderItemResponseDto.builder()
                 .orderItemId(orderItem2.getOrderItemId())
-                .product(productShortResponseDto2)
+                .product(productShortResponseDto3)
                 .quantity(orderItem2.getQuantity())
                 .priceAtPurchase(orderItem2.getPriceAtPurchase())
                 .build();

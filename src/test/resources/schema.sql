@@ -92,6 +92,7 @@ CREATE TABLE orders
         ),
     created_at       TIMESTAMP DEFAULT NOW(),
     updated_at       TIMESTAMP DEFAULT NOW(),
+    total_amount     DECIMAL      NOT NULL,
 
     CONSTRAINT fk_order_user FOREIGN KEY (user_id)
         REFERENCES app_users (user_id)

@@ -21,8 +21,6 @@ public interface ProductService {
     Product setDiscount(Long productId, BigDecimal discountPercentage);
 
     Product getProductOfTheDay();
-
-    List<Product> getAllPurchased();
 }
 
 

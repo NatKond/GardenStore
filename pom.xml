@@ -133,6 +133,8 @@
                         <exclude>de/telran/gardenStore/enums/**</exclude>
                         <exclude>de/telran/gardenStore/exception/**</exclude>
                         <exclude>de/telran/gardenStore/repository/**</exclude>
+                        <exclude>de/telran/gardenStore/handler/**</exclude>
+                        <exclude>de/telran/gardenStore/service/security/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

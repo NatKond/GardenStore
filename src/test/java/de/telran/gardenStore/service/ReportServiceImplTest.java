@@ -62,7 +62,7 @@ class ReportServiceImplTest extends AbstractTest {
         when(query.setParameter("limit", limit)).thenReturn(query);
         when(query.getResultList()).thenReturn(resultList);
 
-        List<ProductReport> actual = reportService.getTopOrderedProducts(limit);
+        List<ProductReport> actual = reportService.getTopPurchasedProducts(limit);
 
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
@@ -141,9 +141,8 @@ class ReportServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Getting profit report grouped by months")
-    void getProfitOverPeriod_GroupByMonth_ShouldReturnList() {
-
+    @DisplayName("Get profit report grouped by months")
+    void getProfitOverPeriodGroupByMonth() {
         String timeUnit = "months";
         Integer timeAmount = 6;
         String groupBy = "month";
@@ -160,7 +159,79 @@ class ReportServiceImplTest extends AbstractTest {
 
         List<ProfitReport> expected = List.of(
                 ProfitReport.builder()
-                        .period("2025-05")
+                        .period(resultList.getFirst()[1].toString())
+                        .amountPerPeriod(BigDecimal.valueOf(11.50))
+                        .build()
+        );
+
+        when(entityManager.createNativeQuery(anyString())).thenReturn(query);
+        when(query.setParameter(eq("timeBefore"), any(LocalDateTime.class))).thenReturn(query);
+        when(query.getResultList()).thenReturn(resultList);
+
+        List<ProfitReport> actual = reportService.getProfitOverPeriod(timeUnit, timeAmount, groupBy);
+
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Getting profit report grouped by week")
+    void getProfitOverPeriodGroupByWeek() {
+
+        String timeUnit = "years";
+        Integer timeAmount = 1;
+        String groupBy = "week";
+        LocalDateTime start = LocalDateTime.now().minusMonths(timeAmount);
+
+        List<Object[]> resultList = List.<Object[]>of(
+                new Object[]{
+                        BigDecimal.valueOf(11.50),
+                        "2025-05",
+                        "2023-05 W1",
+                        "2023-05-05",
+                        "2023-05-05 17:00"}
+        );
+
+        List<ProfitReport> expected = List.of(
+                ProfitReport.builder()
+                        .period(resultList.getFirst()[2].toString())
+                        .amountPerPeriod(BigDecimal.valueOf(11.50))
+                        .build()
+        );
+
+        when(entityManager.createNativeQuery(anyString())).thenReturn(query);
+        when(query.setParameter(eq("timeBefore"), any(LocalDateTime.class))).thenReturn(query);
+        when(query.getResultList()).thenReturn(resultList);
+
+        List<ProfitReport> actual = reportService.getProfitOverPeriod(timeUnit, timeAmount, groupBy);
+
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Getting profit report grouped by day")
+    void getProfitOverPeriodGroupByDay() {
+
+        String timeUnit = "days";
+        Integer timeAmount = 150;
+        String groupBy = "day";
+        LocalDateTime start = LocalDateTime.now().minusMonths(timeAmount);
+
+        List<Object[]> resultList = List.<Object[]>of(
+                new Object[]{
+                        BigDecimal.valueOf(11.50),
+                        "2025-05",
+                        "2023-05 W1",
+                        "2023-05-05",
+                        "2023-05-05 17:00"}
+        );
+
+        List<ProfitReport> expected = List.of(
+                ProfitReport.builder()
+                        .period(resultList.getFirst()[3].toString())
                         .amountPerPeriod(BigDecimal.valueOf(11.50))
                         .build()
         );

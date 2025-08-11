@@ -41,7 +41,7 @@ public class ProductControllerImpl implements ProductController {
                                                         @RequestParam(required = false) Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
-            throw new IllegalArgumentException("Min price cannot be greater than max price.");
+            throw new IllegalArgumentException("Min price cannot be greater than max price");
         }
         return productConverter.convertEntityListToDtoList(
                 productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection)
@@ -54,11 +54,6 @@ public class ProductControllerImpl implements ProductController {
         return productConverter.convertEntityToDto(
                 productService.getById(productId)
         );
-    }
-
-    @Override
-    public List<ProductShortResponseDto> getAllPurchasedProducts() {
-        return productConverter.convertEntityListToDtoList(productService.getAllPurchased());
     }
 
     @Override

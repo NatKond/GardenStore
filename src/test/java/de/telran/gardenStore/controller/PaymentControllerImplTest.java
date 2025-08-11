@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.OrderCreateRequestDto;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
@@ -34,12 +36,15 @@ public class PaymentControllerImplTest extends AbstractTest {
     @MockitoBean
     private PaymentService paymentService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockitoBean
     private Converter<Order, OrderCreateRequestDto, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @Test
-    @DisplayName("POST /v1/payment - Delegates to PaymentService")
-    void processPayment_DelegatesToService() throws Exception {
+    @DisplayName("POST /v1/payment - Pay for the order")
+    void processPayment() throws Exception {
         Long orderId = order1.getOrderId();
 
         Order orderPaid = order1.toBuilder()
@@ -57,8 +62,10 @@ public class PaymentControllerImplTest extends AbstractTest {
         mockMvc.perform(post("/v1/payment")
                         .param("orderId", orderId.toString())
                         .param("paymentAmount", paymentAmount.toString()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("PAID"));
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected)));
 
         verify(paymentService).processPayment(orderId, paymentAmount);
     }

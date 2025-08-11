@@ -50,9 +50,8 @@ public class ProductControllerImplTest extends AbstractTest {
     private Converter<Product, ProductCreateRequestDto, ProductResponseDto, ProductShortResponseDto> productConverter;
 
     @Test
-    @DisplayName("GET /v1/products - Get all products")
-    void getAll() throws Exception {
-
+    @DisplayName("GET /v1/products - Get all products : positive case")
+    void getAllPositiveCase() throws Exception {
         List<Product> products = List.of(product1, product2);
 
         List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2);
@@ -66,6 +65,20 @@ public class ProductControllerImplTest extends AbstractTest {
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @DisplayName("GET /v1/products - Get all products : negative case")
+    void getAllNegativeCase() throws Exception {
+
+        mockMvc.perform(get("/v1/products")
+                        .param("minPrice", "10")
+                        .param("maxPrice", "5"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.exception").value("IllegalArgumentException"),
+                        jsonPath("$.message").value("Min price cannot be greater than max price"));
     }
 
     @Test

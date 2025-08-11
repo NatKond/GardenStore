@@ -52,9 +52,9 @@ public class ProductControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("GET /v1/products - Get all products : positive case")
     void getAllPositiveCase() throws Exception {
-        List<Product> products = List.of(product1, product2);
+        List<Product> products = List.of(product1, product2, product3);
 
-        List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2);
+        List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2, productShortResponseDto3);
 
         when(productService.getAll(null, null, null, null, null, null)).thenReturn(products);
         when(productConverter.convertEntityListToDtoList(products)).thenReturn(expected);

@@ -16,6 +16,11 @@ public class CartItemConverter implements ConverterEntityToDto<CartItem, CartIte
 
     @Override
     public CartItemResponseDto convertEntityToDto(CartItem cartItem) {
+        modelMapper.typeMap(CartItem.class, CartItemResponseDto.class).addMappings(
+                (mapper ->
+                            mapper.map(cartItem1 ->
+                                    cartItem1.getProduct().getCategory().getCategoryId(),
+                                    (cartItemResponseDto, o) -> cartItemResponseDto.getProduct().setCategoryId((Long)o))));
         return modelMapper.map(cartItem, CartItemResponseDto.class);
     }
     @Override

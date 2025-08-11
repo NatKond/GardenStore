@@ -32,15 +32,16 @@ public class OrderItemConverter implements Converter<OrderItem, OrderItemCreateR
 
     @Override
     public OrderItemResponseDto convertEntityToDto(OrderItem orderItem) {
+        modelMapper.typeMap(OrderItem.class, OrderItemResponseDto.class).addMappings(
+                (mapper ->
+                        mapper.map(orderItem1 ->
+                                        orderItem1.getProduct().getCategory().getCategoryId(),
+                                (orderItemResponseDto, o) -> orderItemResponseDto.getProduct().setCategoryId((Long)o))));
         return modelMapper.map(orderItem, OrderItemResponseDto.class);
     }
 
     @Override
     public List<OrderItemResponseDto> convertEntityListToDtoList(List<OrderItem> orderItems) {
         return ConverterEntityToDto.convertList(orderItems, this::convertEntityToDto);
-    }
-
-    public List<OrderItem> converDtoListToEntityList(List<OrderItemCreateRequestDto> orderItems) {
-        return ConverterEntityToDto.convertList(orderItems, this::convertDtoToEntity);
     }
 }

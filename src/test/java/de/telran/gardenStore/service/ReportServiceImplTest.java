@@ -37,7 +37,7 @@ class ReportServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Get most ordered products")
-    void getTopOrderedProducts() {
+    void getTopPurchasedProducts() {
         Integer limit = 3;
         List<Object[]> resultList = List.<Object[]>of(
                 new Object[]{
@@ -146,7 +146,6 @@ class ReportServiceImplTest extends AbstractTest {
         String timeUnit = "months";
         Integer timeAmount = 6;
         String groupBy = "month";
-        LocalDateTime start = LocalDateTime.now().minusMonths(timeAmount);
 
         List<Object[]> resultList = List.<Object[]>of(
                 new Object[]{
@@ -178,11 +177,9 @@ class ReportServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Getting profit report grouped by week")
     void getProfitOverPeriodGroupByWeek() {
-
         String timeUnit = "years";
         Integer timeAmount = 1;
         String groupBy = "week";
-        LocalDateTime start = LocalDateTime.now().minusMonths(timeAmount);
 
         List<Object[]> resultList = List.<Object[]>of(
                 new Object[]{
@@ -214,11 +211,9 @@ class ReportServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Getting profit report grouped by day")
     void getProfitOverPeriodGroupByDay() {
-
         String timeUnit = "days";
         Integer timeAmount = 150;
         String groupBy = "day";
-        LocalDateTime start = LocalDateTime.now().minusMonths(timeAmount);
 
         List<Object[]> resultList = List.<Object[]>of(
                 new Object[]{

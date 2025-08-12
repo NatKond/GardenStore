@@ -328,7 +328,7 @@ public abstract class AbstractTest {
                 .build();
 
         orderItem2 = OrderItem.builder()
-                .orderItemId(3L)
+                .orderItemId(2L)
                 .order(order1)
                 .product(product3)
                 .quantity(1)
@@ -428,7 +428,6 @@ public abstract class AbstractTest {
         orderToCreate.setItems(new ArrayList<>(List.of(orderItemToCreate1, orderItemToCreate2)));
         orderToCreate.setTotalAmount(orderItemToCreate1.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate1.getQuantity()))
                 .add(orderItemToCreate2.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItemToCreate2.getQuantity()))));
-
     }
 
     private void initCategoryDtos() {
@@ -589,31 +588,30 @@ public abstract class AbstractTest {
         orderCreateRequestDto.setItems(List.of(orderItemCreateRequestDto1, orderItemCreateRequestDto2));
 
         orderResponseCreatedDto = OrderResponseDto.builder()
-                .orderId(3L)
+                .orderId(5L)
                 .userId(user1.getUserId())
                 .status(OrderStatus.CREATED.name())
                 .deliveryAddress(orderToCreate.getDeliveryAddress())
                 .contactPhone(orderToCreate.getContactPhone())
                 .deliveryMethod(orderToCreate.getDeliveryMethod().name())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
                 .totalAmount(orderToCreate.getTotalAmount())
                 .build();
 
         orderItemResponseDtoCreated1 = OrderItemResponseDto.builder()
+                .orderItemId(6L)
                 .product(productShortResponseDto1)
                 .quantity(orderItemCreateRequestDto1.getQuantity())
                 .priceAtPurchase(orderItemToCreate1.getPriceAtPurchase())
                 .build();
 
         orderItemResponseDtoCreated2 = OrderItemResponseDto.builder()
+                .orderItemId(7L)
                 .product(productShortResponseDto2)
                 .quantity(orderItemCreateRequestDto2.getQuantity())
                 .priceAtPurchase(orderItemToCreate2.getPriceAtPurchase())
                 .build();
 
         orderResponseCreatedDto.setItems(List.of(orderItemResponseDtoCreated1, orderItemResponseDtoCreated2));
-
     }
 
     private void initProductDtos() {
@@ -729,7 +727,7 @@ public abstract class AbstractTest {
                 .email(user1.getEmail())
                 .phoneNumber(user1.getPhoneNumber())
                 .favorites(List.of(favoriteResponseDto1, favoriteResponseDto2))
-                .roles(user2.getRoles().stream().map(Enum::name).toList())
+                .roles(user1.getRoles().stream().map(Enum::name).toList())
                 .build();
 
         userCreateRequestDto = UserCreateRequestDto.builder()
@@ -796,7 +794,7 @@ public abstract class AbstractTest {
 
         favoriteResponseCreatedDto = FavoriteResponseDto.builder()
                 .favoriteId(favoriteCreated.getFavoriteId())
-                .product(productShortResponseCreatedDto)
+                .product(productShortResponseDto3)
                 .build();
     }
 }

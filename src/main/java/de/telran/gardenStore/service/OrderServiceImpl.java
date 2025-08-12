@@ -9,6 +9,7 @@ import de.telran.gardenStore.exception.OrderModificationException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -43,12 +45,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAll(){
+    public List<Order> getAll() {
         return orderRepository.findAll();
     }
 
     @Override
-    public List<Order> getAllDeliveredForCurrentUser(){
+    public List<Order> getAllDeliveredForCurrentUser() {
         return orderRepository.findAllByUserAndStatus(userService.getCurrent(), OrderStatus.DELIVERED);
     }
 
@@ -87,14 +89,16 @@ public class OrderServiceImpl implements OrderService {
 
         cartService.update(cart);
 
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        log.debug("OrderId =  {}: Order created", savedOrder.getOrderId());
+        return savedOrder;
     }
 
     @Override
     public void update(Order order) {
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        log.debug("OrderId = {}: Order updated", savedOrder.getOrderId());
     }
-
     @Override
     public Order updateStatus(Long orderId, OrderStatus status) {
         Order order = getById(orderId);

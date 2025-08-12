@@ -6,12 +6,14 @@ import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -30,7 +32,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category create(Category category) {
         checkCategoryNameIsUnique(category.getName());
-        return categoryRepository.save(category);
+
+        Category savedCategory = categoryRepository.save(category);
+        log.debug("CategoryId = {}: Category saved", savedCategory.getCategoryId());
+        return savedCategory;
     }
 
     @Override
@@ -41,7 +46,9 @@ public class CategoryServiceImpl implements CategoryService {
         }
         existing.setName(category.getName());
 
-        return categoryRepository.save(existing);
+        Category savedCategory = categoryRepository.save(existing);
+        log.debug("CategoryId = {}: Category updated", categoryId);
+        return savedCategory;
     }
 
     @Override

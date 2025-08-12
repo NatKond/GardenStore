@@ -5,6 +5,7 @@ import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
 import de.telran.gardenStore.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import de.telran.gardenStore.exception.CartNotFoundException;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
@@ -33,19 +35,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart create(AppUser user) {
-        return cartRepository.save(
+        Cart savedCart = cartRepository.save(
                 Cart.builder()
-                .user(user)
-                .build());
+                        .user(user)
+                        .build());
+        log.debug("UserId = {}: Cart created", user.getUserId());
+        return savedCart;
     }
 
     @Override
     public Cart update(Cart cart) {
         Cart existingCart = getByUser(cart.getUser());
-
         existingCart.setItems(cart.getItems());
-
-        return cartRepository.save(existingCart);
+        Cart savedCart = cartRepository.save(existingCart);
+        log.debug("CartId = {}: Cart updated", savedCart.getCartId());
+        return savedCart;
     }
 
     @Override
@@ -77,7 +81,9 @@ public class CartServiceImpl implements CartService {
             items.add(newItem);
         }
 
-        return cartRepository.save(cart);
+        Cart savedCart = cartRepository.save(cart);
+        log.debug("CartId = {}, ProductId = {}: Item added", savedCart.getCartId(), productId);
+        return savedCart;
     }
 
     @Override
@@ -85,7 +91,9 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemService.getById(cartItemId);
         Cart cart = cartItem.getCart();
         cartItem.setQuantity(quantity);
-        return cartRepository.save(cart);
+        Cart savedCart = cartRepository.save(cart);
+        log.debug("CartId = {}, CartItemId = {}: Item updated", savedCart.getCartId(), cartItemId);
+        return savedCart;
     }
 
     @Override
@@ -93,7 +101,9 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemService.getById(cartItemId);
         Cart cart = cartItem.getCart();
         cart.getItems().remove(cartItem);
-        return cartRepository.save(cart);
+        Cart savedCart = cartRepository.save(cart);
+        log.debug("CartId = {}, CartItemId = {}: Item removed", savedCart.getCartId(), cartItemId);
+        return savedCart;
     }
 }
 

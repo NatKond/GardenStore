@@ -31,7 +31,7 @@ CREATE TABLE products
     name           VARCHAR(255)   NOT NULL,
     discount_price DECIMAL(10, 2),
     price          DECIMAL(10, 2) NOT NULL,
-    category_id    INT            NOT NULL,
+    category_id    BIGINT         NOT NULL,
     created_at     TIMESTAMP DEFAULT NOW(),
     updated_at     TIMESTAMP DEFAULT NOW(),
     description    VARCHAR(1000),
@@ -45,8 +45,8 @@ CREATE TABLE products
 CREATE TABLE favorites
 (
     favorite_id IDENTITY PRIMARY KEY,
-    user_id     INT NOT NULL,
-    product_id  INT NOT NULL,
+    user_id     BIGINT NOT NULL,
+    product_id  BIGINT NOT NULL,
 
     CONSTRAINT uc_user_product UNIQUE (user_id, product_id),
     CONSTRAINT fk_user FOREIGN KEY (user_id)
@@ -60,7 +60,7 @@ CREATE TABLE favorites
 CREATE TABLE carts
 (
     cart_id IDENTITY PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id BIGINT NOT NULL,
 
     CONSTRAINT fk_cart_user FOREIGN KEY (user_id)
         REFERENCES app_users (user_id)
@@ -70,9 +70,9 @@ CREATE TABLE carts
 CREATE TABLE cart_items
 (
     cart_item_id IDENTITY PRIMARY KEY,
-    cart_id      INT NOT NULL,
-    product_id   INT NOT NULL,
-    quantity     INT NOT NULL,
+    cart_id      BIGINT NOT NULL,
+    product_id   BIGINT NOT NULL,
+    quantity     BIGINT NOT NULL,
 
     CONSTRAINT fk_cart_item_cart FOREIGN KEY (cart_id)
         REFERENCES carts (cart_id)
@@ -86,7 +86,7 @@ CREATE TABLE cart_items
 CREATE TABLE orders
 (
     order_id         IDENTITY PRIMARY KEY,
-    user_id          INT            NOT NULL,
+    user_id          BIGINT         NOT NULL,
     delivery_address VARCHAR(255)   NOT NULL,
     contact_phone    VARCHAR(255),
     delivery_method  VARCHAR(255)   NOT NULL,
@@ -105,9 +105,9 @@ CREATE TABLE orders
 CREATE TABLE order_items
 (
     order_item_id     IDENTITY PRIMARY KEY,
-    order_id          INT            NOT NULL,
-    product_id        INT            NOT NULL,
-    quantity          INT            NOT NULL,
+    order_id          BIGINT         NOT NULL,
+    product_id        BIGINT         NOT NULL,
+    quantity          BIGINT         NOT NULL,
     price_at_purchase DECIMAL(10, 2) NOT NULL,
 
     CONSTRAINT fk_order_item_order FOREIGN KEY (order_id)

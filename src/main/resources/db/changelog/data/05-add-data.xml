@@ -9,25 +9,25 @@
             <column name="name" value="Alice Johnson"/>
             <column name="email" value="alice.johnson@example.com"/>
             <column name="phone_number" value="+1234509876"/>
-            <column name="password_hash" value="12345"/>
+            <column name="password_hash" value="$2a$10$0HzYFEvYU7jsKwENj2bfN.ynV.tqvVm2hq38vvG0aeM.lCWVMFTWC"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="Bob Smith"/>
             <column name="email" value="bob.smith@example.com"/>
             <column name="phone_number" value="+1987654322"/>
-            <column name="password_hash" value="12345"/>
+            <column name="password_hash" value="$2a$10$BzjVF9EnDrZFrjOhbJ/6.Otv4p7h3wy6VMqp2ztaoPKUA9MNjkDGW"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="Carol Lee"/>
             <column name="email" value="carol.lee@example.com"/>
             <column name="phone_number" value="+1234560000"/>
-            <column name="password_hash" value="12345"/>
+            <column name="password_hash" value="$2a$10$4fDhkaFCb6njYXe6OqXHg.J9X9RJt6OKqERUHyDFWdTL9fEGweWcC"/>
         </insert>
         <insert tableName="app_users">
             <column name="name" value="David Brown"/>
             <column name="email" value="david.brown@example.com"/>
             <column name="phone_number" value="+1222333445"/>
-            <column name="password_hash" value="12345"/>
+            <column name="password_hash" value="$2a$10$gFd7X76NBbmUvPpX9PqnLO7rLVhPoO8iSqKL.5QUXSKZolKS/pQk6"/>
         </insert>
 
         <insert tableName="user_roles">

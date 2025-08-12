@@ -94,7 +94,7 @@ public class ReportServiceImpl implements ReportService {
                 SELECT sum(oi.price_at_purchase * oi.quantity),
                 TO_CHAR(o.updated_at, 'YYYY-MM') AS month,
                 TO_CHAR(o.updated_at, 'YYYY-MM "W"') || TO_CHAR(o.updated_at, 'W') AS week,
-                TO_CHAR(o.updated_at, 'YYYY-MM-DD')AS day,
+                TO_CHAR(o.updated_at, 'YYYY-MM-DD') AS day,
                 TO_CHAR(o.updated_at, 'YYYY-MM-DD HH24:00') AS hour
                 FROM orders o
                 JOIN order_items oi ON o.order_id = oi.order_id

@@ -1,6 +1,6 @@
 INSERT INTO app_users (name, email, phone_number, password_hash)
-VALUES ('Alice Johnson', 'alice.johnson@example.com', '+1234567890', '12345'),
-       ('Bob Smith', 'bob.smith@example.com', '+1987654321', '12345');
+VALUES ('Alice Johnson', 'alice.johnson@example.com', '+1234567890', '$2a$10$0HzYFEvYU7jsKwENj2bfN.ynV.tqvVm2hq38vvG0aeM.lCWVMFTWC'),
+       ('Bob Smith', 'bob.smith@example.com', '+1987654321', '$2a$10$BzjVF9EnDrZFrjOhbJ/6.Otv4p7h3wy6VMqp2ztaoPKUA9MNjkDGW');
 
 INSERT INTO user_roles(user_id, role)
 VALUES (1, 'ROLE_USER'),

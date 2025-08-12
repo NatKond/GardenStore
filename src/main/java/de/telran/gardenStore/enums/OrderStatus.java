@@ -11,7 +11,7 @@ public enum OrderStatus {
     public OrderStatus getNext() {
         return switch (this){
             case CREATED -> AWAITING_PAYMENT;
-            case AWAITING_PAYMENT -> PAID;
+            case AWAITING_PAYMENT -> CANCELLED;
             case PAID -> SHIPPED;
             case SHIPPED -> DELIVERED;
             default -> this;

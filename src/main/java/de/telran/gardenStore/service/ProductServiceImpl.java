@@ -1,4 +1,5 @@
 package de.telran.gardenStore.service;
+
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.NoDiscountedProductsException;
@@ -10,6 +11,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,6 +22,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -82,8 +85,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product create(Product product) {
         checkCategoryExists(product.getCategory().getCategoryId());
-
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        log.debug("ProductId =  {}: Product created", product.getProductId());
+        return savedProduct;
     }
 
     @Override
@@ -99,7 +103,9 @@ public class ProductServiceImpl implements ProductService {
         existing.setCategory(product.getCategory());
         existing.setImageUrl(product.getImageUrl());
 
-        return productRepository.save(existing);
+        Product savedProduct = productRepository.save(existing);
+        log.debug("ProductId =  {}: Product updated", product.getProductId());
+        return savedProduct;
     }
 
     @Override
@@ -112,9 +118,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = getById(productId);
         BigDecimal discountAmount = product.getPrice()
                 .multiply(discountPercentage)
-                .divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
+                .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         product.setDiscountPrice(product.getPrice().subtract(discountAmount));
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        log.debug("ProductId =  {}, DiscountPercentage = {}, DiscountPrice = {} : DiscountPrice updated", savedProduct.getProductId(), discountPercentage, savedProduct.getDiscountPrice());
+        return savedProduct;
     }
 
     @Override

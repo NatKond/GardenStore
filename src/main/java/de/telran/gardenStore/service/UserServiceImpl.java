@@ -5,6 +5,7 @@ import de.telran.gardenStore.exception.UserNotFoundException;
 import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
 import de.telran.gardenStore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -38,7 +40,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser create(AppUser user) {
         checkUserEmailIsUnique(user.getEmail());
-        return userRepository.save(user);
+        AppUser savedUser = userRepository.save(user);
+        log.debug("UserId =  {}: User created", savedUser.getUserId());
+        return savedUser;
     }
 
     @Override
@@ -54,7 +58,9 @@ public class UserServiceImpl implements UserService {
         existing.setPhoneNumber(user.getPhoneNumber());
         existing.setPasswordHash(user.getPasswordHash());
 
-        return userRepository.save(existing);
+        AppUser savedUser = userRepository.save(existing);
+        log.debug("UserId =  {}: User updated", savedUser.getUserId());
+        return savedUser;
     }
 
     @Override

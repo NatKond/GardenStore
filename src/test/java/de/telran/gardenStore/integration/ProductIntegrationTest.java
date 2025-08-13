@@ -23,13 +23,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
 @Transactional
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductIntegrationTest extends AbstractTest {
 
     @Autowired
@@ -41,14 +38,98 @@ class ProductIntegrationTest extends AbstractTest {
     @Test
     @DisplayName("GET /v1/products - Get all products : positive case")
     void getAll() throws Exception {
-        List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2, productShortResponseDto3);
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto1,
+                productShortResponseDto2,
+                productShortResponseDto3
+        );
 
         mockMvc.perform(get("/v1/products"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected)));
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products?categoryId=1 - Filter by category")
+    void getAll_filterByCategory() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto1,
+                productShortResponseDto2
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("categoryId", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @DisplayName("GET /v1/products?minPrice=10 - Filter by minPrice")
+    void getAll_filterByMinPrice() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto1,
+                productShortResponseDto2
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("minPrice", "10"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @DisplayName("GET /v1/products?maxPrice=9 - Filter by maxPrice")
+    void getAll_filterByMaxPrice() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto3
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("maxPrice", "9"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @DisplayName("GET /v1/products?sortBy=price&sortDirection=desc - Sort by price desc")
+    void getAll_sortByPriceDesc() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto2, // 13.99
+                productShortResponseDto1, // 11.99
+                productShortResponseDto3  // 7.50
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("sortBy", "price")
+                        .param("sortDirection", "desc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expected)));
+    }
+
+    @Test
+    @DisplayName("GET /v1/products?categoryId=1&minPrice=9&sortBy=price&sortDirection=asc - Combined filters and sorting")
+    void getAll_combinedFiltersAndSorting() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto1,
+                productShortResponseDto2
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("categoryId", "1")
+                        .param("minPrice", "9")
+                        .param("sortBy", "price")
+                        .param("sortDirection", "asc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expected)));
     }
 
     @Test
@@ -58,11 +139,11 @@ class ProductIntegrationTest extends AbstractTest {
 
         mockMvc.perform(get("/v1/products/{productId}", productId))
                 .andDo(print())
-                .andExpect(status().isOk())
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(productResponseDto1)));
+                        content().json(objectMapper.writeValueAsString(productResponseDto1))
+                );
     }
 
     @Test
@@ -77,13 +158,13 @@ class ProductIntegrationTest extends AbstractTest {
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.exception").value("ProductNotFoundException"),
                         jsonPath("$.message").value("Product with id " + productId + " not found"),
-                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.value())
+                );
     }
 
     @Test
     @DisplayName("POST /v1/products - Create new product")
     void create() throws Exception {
-
         mockMvc.perform(post("/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productCreateRequestDto))
@@ -92,7 +173,8 @@ class ProductIntegrationTest extends AbstractTest {
                 .andExpectAll(
                         status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(productResponseCreatedDto)));
+                        content().json(objectMapper.writeValueAsString(productResponseCreatedDto))
+                );
     }
 
     @Test
@@ -121,7 +203,8 @@ class ProductIntegrationTest extends AbstractTest {
                 .andExpectAll(
                         status().isAccepted(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(productResponseUpdatedDto)));
+                        content().json(objectMapper.writeValueAsString(productResponseUpdatedDto))
+                );
     }
 
     @Test
@@ -155,7 +238,8 @@ class ProductIntegrationTest extends AbstractTest {
                 .andExpectAll(
                         status().isAccepted(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected)));
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
     }
 
     @Test
@@ -168,6 +252,7 @@ class ProductIntegrationTest extends AbstractTest {
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected)));
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
     }
 }

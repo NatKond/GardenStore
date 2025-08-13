@@ -38,7 +38,7 @@ class ReportControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/report/top-purchased-products/{limit} - Get most ordered products")
-    void getTopOrderedProducts() throws Exception {
+    void getTopPurchasedProducts() throws Exception {
         int limit = 3;
         List<ProductReport> expected = List.of(ProductReport.builder()
                 .product(productShortResponseDto3)
@@ -57,7 +57,7 @@ class ReportControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("GET /v1/report/top-canceled-products/{limit} - Get most canceled products")
 
-    void getTopCanceledProducts_ShouldReturnList() throws Exception {
+    void getTopCanceledProducts() throws Exception {
         int limit = 2;
         List<ProductReport> expected = List.of(ProductReport.builder()
                 .product(productShortResponseDto1)
@@ -75,7 +75,7 @@ class ReportControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/report/awaiting-payment-products - Get products awaiting payment")
-    void getProductsAwaitingPaymentForDays_ShouldReturnList() throws Exception {
+    void getProductsAwaitingPaymentForDays() throws Exception {
         int days = 5;
         int limit = 10;
         List<ProductReport> expected = List.of(ProductReport.builder()
@@ -96,7 +96,7 @@ class ReportControllerImplTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/report/profit - Get profit report")
-    void getProfitOverPeriod_ShouldReturnList() throws Exception {
+    void getProfitOverPeriod() throws Exception {
         String timeUnit = "months";
         int timeAmount = 6;
         String groupBy = "month";

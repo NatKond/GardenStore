@@ -22,5 +22,5 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
             JOIN f.product p
             WHERE p.productId = :productId AND f.user = :user
             """)
-    Optional<Favorite> findByUserIdAndProductId(AppUser user, Long productId);
+    Optional<Favorite> findByUserAndProductId(AppUser user, Long productId);
 }

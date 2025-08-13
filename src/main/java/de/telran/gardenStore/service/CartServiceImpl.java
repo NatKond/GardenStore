@@ -76,7 +76,7 @@ public class CartServiceImpl implements CartService {
                     .build();
             items.add(newItem);
         }
-        log.info("Attempt to save cart to carts table :{}", cart);
+        log.debug("Attempt to save cart to carts table :{}", cart);
 
         return cartRepository.save(cart);
     }

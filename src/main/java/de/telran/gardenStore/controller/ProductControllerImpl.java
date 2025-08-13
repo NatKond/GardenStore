@@ -32,7 +32,8 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     @GetMapping
-    public List<ProductShortResponseDto> getAll(@RequestParam(required = false) @Positive Long categoryId,
+    public List<ProductShortResponseDto> getAll(@RequestParam(value = "category", required = false) @Positive Long categoryId,
+
                                                         @RequestParam(required = false) Boolean discount,
                                                         @RequestParam(required = false) @Positive BigDecimal minPrice,
                                                         @RequestParam(required = false) @Positive BigDecimal maxPrice,

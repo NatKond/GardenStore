@@ -110,7 +110,7 @@ class CartServiceImplTest extends AbstractTest {
         Product product = product3;
         Integer quantity = 1;
         Cart cartToCreate = Cart.builder().user(user).build();
-        Cart cartCreated = Cart.builder().cartId(1L).build();
+        Cart cartCreated = cartToCreate.toBuilder().cartId(1L).build();
 
         Cart cartToUpdate = cartCreated.toBuilder().build();
 

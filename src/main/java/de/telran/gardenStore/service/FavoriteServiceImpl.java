@@ -6,12 +6,14 @@ import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
 import de.telran.gardenStore.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
@@ -27,7 +29,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Favorite getById(Long favoriteId) {
-        return favoriteRepository.findByUserAndFavoriteId(userService.getCurrent(),favoriteId).orElseThrow(
+        return favoriteRepository.findByUserAndFavoriteId(userService.getCurrent(), favoriteId).orElseThrow(
                 () -> new FavoriteNotFoundException("Favorite with id " + favoriteId + " not found"));
     }
 
@@ -38,10 +40,14 @@ public class FavoriteServiceImpl implements FavoriteService {
             throw new FavoriteAlreadyExistsException("Favorite with userId " + user.getUserId() + " and productId " + productId + " already exists");
         }
 
-        return favoriteRepository.save(Favorite.builder()
+        Favorite favorite = Favorite.builder()
                 .user(user)
                 .product(productService.getById(productId))
-                .build());
+                .build();
+
+        log.debug("Attempt to save Favorite {}\n{} by user {}", favorite.getFavoriteId(), favorite.getProduct(), user.getEmail());
+
+        return favoriteRepository.save(favorite);
     }
 
     @Override

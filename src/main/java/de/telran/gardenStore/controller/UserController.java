@@ -294,16 +294,24 @@ public interface UserController {
                                     @ExampleObject(name = "Alice Johnson", value = """
                                             {
                                                 "name": "Alice Johnson",
-                                                "email": "alice.johnson@example.com",
+                                                "email": "alice@example.com",
                                                 "phoneNumber": "+1234567899",
                                                 "password": "12345"
                                             }
                                             """),
-                                    @ExampleObject(name = "Frank Green", value = """
+                                    @ExampleObject(name = "Bob Smith", value = """
                                             {
                                                 "name": "Bob Smith",
                                                 "email": "bob.smith@example.com",
                                                 "phoneNumber": "+1987654321",
+                                                "password": "12345"
+                                            }
+                                            """),
+                                    @ExampleObject(name = "Frank Brown", value = """
+                                            {
+                                                "name": "Frank Brown",
+                                                "email": "frank.brown@example.com",
+                                                "phoneNumber": "+1444555666",
                                                 "password": "12345"
                                             }
                                             """)

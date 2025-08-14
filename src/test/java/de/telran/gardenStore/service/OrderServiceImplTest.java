@@ -74,13 +74,13 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Get all orders for current user")
-    void getAllForCurrentUser() {
+    void getAll() {
         List<Order> expected = List.of(order1, order3);
 
         when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findAllByUser(user1)).thenReturn(expected);
 
-        List<Order> actual = orderService.getAllForCurrentUser();
+        List<Order> actual = orderService.getAll();
 
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());
@@ -90,29 +90,14 @@ class OrderServiceImplTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Get all orders")
-    void getAll() {
-        List<Order> expected = List.of(order1, order2, order3, order4);
-
-        when(orderRepository.findAll()).thenReturn(expected);
-
-        List<Order> actual = orderService.getAll();
-
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
-        assertEquals(expected, actual);
-        verify(orderRepository).findAll();
-    }
-
-    @Test
     @DisplayName("Get all delivered orders for current user")
-    void getAllDeliveredForCurrentUser() {
+    void getAllDelivered() {
         List<Order> expected = List.of(order3);
 
         when(userService.getCurrent()).thenReturn(user1);
         when(orderRepository.findAllByUserAndStatus(user1, OrderStatus.DELIVERED)).thenReturn(expected);
 
-        List<Order> actual = orderService.getAllDeliveredForCurrentUser();
+        List<Order> actual = orderService.getAllDelivered();
 
         assertNotNull(actual);
         assertEquals(expected.size(), actual.size());

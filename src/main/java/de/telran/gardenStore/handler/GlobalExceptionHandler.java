@@ -13,7 +13,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handlerException(Exception exception) {
         log.error(exception.getMessage(), exception);
-
         return new ResponseEntity<>(
                 ApiResponse.error(exception, HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
@@ -33,7 +31,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
         log.error(exception.getMessage(), exception);
-
         return new ResponseEntity<>(
                 ApiResponse.error(exception, HttpStatus.NOT_FOUND.value()),
                 HttpStatus.NOT_FOUND);
@@ -42,16 +39,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MappingException.class)
     public ResponseEntity<ApiResponse> handleMappingException(MappingException exception) {
         log.error(exception.getMessage(), exception);
-
         return new ResponseEntity<>(
                 ApiResponse.error(exception, HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity<ApiResponse> handleUserWithEmailAlreadyExistsException(RuntimeException exception) {
+    public ResponseEntity<ApiResponse> handleEntityAlreadyExistsException(EntityAlreadyExistsException exception) {
         log.error(exception.getMessage(), exception);
-
         return new ResponseEntity<>(
                 ApiResponse.error(exception, HttpStatus.CONFLICT.value()),
                 HttpStatus.CONFLICT);
@@ -59,28 +54,38 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponse> handleConstraintViolationException(ConstraintViolationException exception) {
-        log.error(exception.getMessage(), exception);
         Map<String, String> messages = exception.getConstraintViolations()
                 .stream()
-                .collect(Collectors.groupingBy(violation -> violation.getPropertyPath().toString(),
-                        Collectors.mapping(ConstraintViolation::getMessage, Collectors.joining(". "))));
+                .collect(Collectors.toMap(
+                        violation -> violation.getPropertyPath().toString(),
+                        ConstraintViolation::getMessage
+                ));
 
+        log.error("Constraint violations: {}", messages);
         return new ResponseEntity<>(
                 ApiResponse.error(exception, messages, HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        log.error(exception.getMessage(), exception);
-        Map<String, String> messages = exception.getBindingResult().getFieldErrors()
+    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors()
                 .stream()
-                .collect(Collectors.groupingBy(FieldError::getField,
-                        Collectors.mapping(FieldError::getDefaultMessage, Collectors.joining(". "))));
+                .collect(Collectors.toMap(
+                        FieldError::getField,
+                        error -> String.format("%s (provided: '%s')",
+                                error.getDefaultMessage(),
+                                truncate(String.valueOf(error.getRejectedValue()), 50)
+                        )));
 
+        log.error("Validation failed for {}: {}", ex.getObjectName(), fieldErrors);
         return new ResponseEntity<>(
-                ApiResponse.error(exception, messages, HttpStatus.BAD_REQUEST.value()),
+                ApiResponse.error(ex, fieldErrors, HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
-}
 
+    private String truncate(String value, int maxLength) {
+        if (value == null) return null;
+        return value.length() > maxLength ? value.substring(0, maxLength) + "..." : value;
+    }
+}

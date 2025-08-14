@@ -15,7 +15,6 @@ public class ApiResponse {
     private String exception;
     private String message;
     private Map<String, String> messages;
-    private Map<String, Object> details;
     private Integer status;
     private LocalDateTime timestamp;
 
@@ -40,16 +39,6 @@ public class ApiResponse {
         return ApiResponse.builder()
                 .exception(exception.getClass().getSimpleName())
                 .messages(messages)
-                .status(status)
-                .timestamp(LocalDateTime.now())
-                .build();
-    }
-
-    public static ApiResponse error(Exception exception, String message, Map<String, Object> details, Integer status) {
-        return ApiResponse.builder()
-                .exception(exception.getClass().getSimpleName())
-                .message(message)
-                .details(details)
                 .status(status)
                 .timestamp(LocalDateTime.now())
                 .build();

@@ -1,20 +1,13 @@
 package de.telran.gardenStore.aop;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 @Aspect
@@ -23,57 +16,19 @@ public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *) && " +
-            "(execution(* *..*.*(..)) && " +
-            "(@annotation(org.springframework.web.bind.annotation.GetMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.DeleteMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.PatchMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.RequestMapping)))")
-    public void controllerMethods() {
-    }
-    private String filterSensitiveData(Object obj) {
-        if (obj == null) return "null";
+            "execution(* *..*.*(..)) && " +
+            "@annotation(org.springframework.web.bind.annotation.PostMapping)")
+    public void postMethods() {}
 
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            FilterProvider filters = new SimpleFilterProvider()
-                    .addFilter("sensitiveDataFilter",
-                            SimpleBeanPropertyFilter.serializeAllExcept("password", "token", "secretKey"));
-            return mapper.writer(filters).writeValueAsString(obj);
-        } catch (Exception e) {
-            return obj.toString();
-        }
-    }
-    @Before("controllerMethods()")
-    public void logMethodInput(JoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-
-        String httpMethod = "UNKNOWN";
-        if (method.isAnnotationPresent(GetMapping.class)) {
-            httpMethod = "GET";
-        } else if (method.isAnnotationPresent(PostMapping.class)) {
-            httpMethod = "POST";
-        } else if (method.isAnnotationPresent(PutMapping.class)) {
-            httpMethod = "PUT";
-        } else if (method.isAnnotationPresent(DeleteMapping.class)) {
-            httpMethod = "DELETE";
-        } else if (method.isAnnotationPresent(PatchMapping.class)) {
-            httpMethod = "PATCH";
-        } else if (method.isAnnotationPresent(RequestMapping.class)) {
-            RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-            httpMethod = Arrays.toString(requestMapping.method());
-        }
-
+    @Before("postMethods()")
+    public void logPostMethodInput(JoinPoint joinPoint) {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
-        Object[] filteredArgs = Arrays.stream(args)
-                .map(this::filterSensitiveData)
-                .toArray();
-        logger.info(">>> [{}] {}.{}() - Args: {}",
-                httpMethod, className, methodName, filteredArgs);
+
+        logger.info(">>> POST request parameters {}.{}(): {}",
+                className, methodName, Arrays.toString(args));
+
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
@@ -83,9 +38,9 @@ public class LoggingAspect {
         }
     }
 
-    @AfterReturning(pointcut = "controllerMethods()", returning = "result")
+    @AfterReturning(pointcut = "postMethods()", returning = "result")
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
-        logger.info("<<< {} - Returned: {}",
+        logger.info("<<< Execution result {}: {}",
                 joinPoint.getSignature().toShortString(),
                 result);
     }

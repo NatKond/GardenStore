@@ -45,7 +45,7 @@ public class CartServiceImpl implements CartService {
         Cart cartToUpdate = getByUser(cart.getUser());
         cartToUpdate.setItems(cart.getItems());
 
-        logAttemptToSaveCart(cartToUpdate, "update");
+        logAttemptToSaveCart(cartToUpdate);
 
         return cartRepository.save(cartToUpdate);
     }
@@ -78,7 +78,7 @@ public class CartServiceImpl implements CartService {
             items.add(newItem);
         }
 
-        logAttemptToSaveCart(cart, "addItem");
+        logAttemptToSaveCart(cart);
 
         return cartRepository.save(cart);
     }
@@ -89,7 +89,7 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = findItemInCart(cart.getItems(), cartItemId);
         cartItem.setQuantity(quantity);
 
-        logAttemptToSaveCart(cart, "updateItem");
+        logAttemptToSaveCart(cart);
 
         return cartRepository.save(cart);
     }
@@ -100,7 +100,7 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = findItemInCart(cart.getItems(), cartItemId);
         cart.getItems().remove(cartItem);
 
-        logAttemptToSaveCart(cart, "deleteItem");
+        logAttemptToSaveCart(cart);
 
         return cartRepository.save(cart);
     }
@@ -112,12 +112,17 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new CartItemNotFoundException("CartItem with id " + cartItemId + " not found"));
     }
 
-    private void logAttemptToSaveCart(Cart cart, String methodName) {
-        log.debug("Attempt in {} to save Cart = {}\n{}by user {} ",
-                methodName,
-                cart.getCartId(),
-                cart.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
-                cart.getUser().getEmail());
+    private void logAttemptToSaveCart(Cart cart) {
+        if (cart.getItems().isEmpty()) {
+            log.debug("Attempt to save Cart = {} by user {} ",
+                    cart.getCartId(),
+                    cart.getUser().getEmail());
+        } else {
+            log.debug("Attempt to save Cart = {}\n{}by user {} ",
+                    cart.getCartId(),
+                    cart.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
+                    cart.getUser().getEmail());
+        }
     }
 }
 

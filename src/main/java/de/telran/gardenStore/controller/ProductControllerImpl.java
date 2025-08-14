@@ -57,6 +57,13 @@ public class ProductControllerImpl implements ProductController {
         );
     }
 
+    @GetMapping("/product-of-the-day")
+    @Override
+    public ProductResponseDto getProductOfTheDay() {
+        return productConverter.convertEntityToDto(
+                productService.getProductOfTheDay());
+    }
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -94,12 +101,5 @@ public class ProductControllerImpl implements ProductController {
                                           BigDecimal discountPercentage) {
         return productConverter.convertEntityToDto(
                 productService.setDiscount(productId, discountPercentage));
-    }
-
-    @GetMapping("/product-of-the-day")
-    @Override
-    public ProductResponseDto getProductOfTheDay() {
-        return productConverter.convertEntityToDto(
-                productService.getProductOfTheDay());
     }
 }

@@ -13,14 +13,18 @@ import java.util.Map;
 public class ApiResponse {
 
     private String exception;
-
     private String message;
-
-    private Map<String,String> messages;
-
+    private Map<String, String> messages;
     private Integer status;
-
     private LocalDateTime timestamp;
+
+    public static ApiResponse error(String message, Integer status) {
+        return ApiResponse.builder()
+                .message(message)
+                .status(status)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
     public static ApiResponse error(Exception exception, Integer status) {
         return ApiResponse.builder()
@@ -31,7 +35,7 @@ public class ApiResponse {
                 .build();
     }
 
-    public static ApiResponse error(Exception exception, Map<String,String> messages, Integer status) {
+    public static ApiResponse error(Exception exception, Map<String, String> messages, Integer status) {
         return ApiResponse.builder()
                 .exception(exception.getClass().getSimpleName())
                 .messages(messages)
@@ -39,5 +43,4 @@ public class ApiResponse {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
-
 }

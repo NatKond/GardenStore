@@ -34,7 +34,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Favorite create(Long productId) {
         AppUser user = userService.getCurrent();
-        if (favoriteRepository.findByUserIdAndProductId(user, productId).isPresent()) {
+        if (favoriteRepository.findByUserAndProductId(user, productId).isPresent()) {
             throw new FavoriteAlreadyExistsException("Favorite with userId " + user.getUserId() + " and productId " + productId + " already exists");
         }
 

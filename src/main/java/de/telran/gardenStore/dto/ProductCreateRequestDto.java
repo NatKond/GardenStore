@@ -6,19 +6,20 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import java.math.BigDecimal;
 import org.hibernate.validator.constraints.URL;
+
+import java.math.BigDecimal;
 
 @Data
 @Builder(toBuilder = true)
 public class ProductCreateRequestDto {
 
     @NotBlank(message = "Name should not be blank")
-    @Size(min = 1, max = 30, message = "Product name should be from 1 to 30 characters")
+    @Size(min = 1, max = 100, message = "Product name should be from 1 to 30 characters")
     private String name;
 
     @NotBlank(message = "Product description should not be blank")
-    @Size(min = 4, max = 100, message = "Product description should be from 4 to 100 characters")
+    @Size(min = 4, max = 255, message = "Product description should be from 4 to 100 characters")
     private String description;
 
     @NotNull(message = "Price is required")

@@ -12,11 +12,9 @@ public interface OrderService {
 
     Order getById(Long orderId);
 
-    List<Order> getAllForCurrentUser();
-
     List<Order> getAll();
 
-    List<Order> getAllDeliveredForCurrentUser();
+    List<Order> getAllDelivered();
 
     List<Order> getByStatusAndTimeAfter(OrderStatus status, LocalDateTime updatedAt);
 

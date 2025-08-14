@@ -31,7 +31,7 @@
         <appender-ref ref="RollingFile"/>
     </root>
 
-    <logger name="de.telran.gardenStore.service" level="trace" additivity="false">
+    <logger name="de.telran.gardenStore.service" level="debug" additivity="false">
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
     </logger>

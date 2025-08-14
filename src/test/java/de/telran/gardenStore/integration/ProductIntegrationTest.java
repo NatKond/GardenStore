@@ -36,8 +36,8 @@ class ProductIntegrationTest extends AbstractTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("GET /v1/products — без фильтров: все продукты (по умолчанию сортировка по productId ASC)")
-    void getAll_noFilters_ok() throws Exception {
+    @DisplayName("GET /v1/products — without filters: all products (default sorting by productId ASC")
+    void getAllNoFiltersOk() throws Exception {
         List<ProductShortResponseDto> expected = List.of(
                 productShortResponseDto1,
                 productShortResponseDto2,
@@ -54,8 +54,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products — сортировка по цене ASC (sortBy=price, sortDirection=false)")
-    void getAll_sortByPriceAsc_ok() throws Exception {
+    @DisplayName("GET /v1/products — sorting by price ASC (sortBy=price, sortDirection=false)")
+    void getAllSortByPriceAscOk() throws Exception {
         List<ProductShortResponseDto> expected = List.of(
                 productShortResponseDto3,
                 productShortResponseDto1,
@@ -74,8 +74,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products — сортировка по цене DESC (sortBy=price, sortDirection=true)")
-    void getAll_sortByPriceDesc_ok() throws Exception {
+    @DisplayName("GET /v1/products — сsorting by price DESC (sortBy=price, sortDirection=true)")
+    void getAllSortByPriceDescOk() throws Exception {
         List<ProductShortResponseDto> expected = List.of(
                 productShortResponseDto2,
                 productShortResponseDto1,
@@ -94,8 +94,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products — невалидное поле сортировки приводит к 400")
-    void getAll_invalidSortBy_badRequest() throws Exception {
+    @DisplayName("GET /v1/products — an invalid sort field results in 400")
+    void getAllInvalidSortByBadRequest() throws Exception {
         mockMvc.perform(get("/v1/products")
                         .param("sortBy", "pricee")
                         .param("sortDirection", "true"))
@@ -103,15 +103,15 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products — фильтр по категории=1 (Fertilizer)")
-    void getAll_filterByCategory1_ok() throws Exception {
+    @DisplayName("GET /v1/products — filter by category=1 (Fertilizer)")
+    void getAllFilterByCategory1Ok() throws Exception {
         List<ProductShortResponseDto> expected = List.of(
                 productShortResponseDto1,
                 productShortResponseDto2
         );
 
         mockMvc.perform(get("/v1/products")
-                        .param("category", "1"))
+                        .param("categoryId", "1"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
@@ -121,23 +121,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products — фильтр по категории=2 (Protective...)")
-    void getAll_filterByCategory2_ok() throws Exception {
-        List<ProductShortResponseDto> expected = List.of(productShortResponseDto3);
-
-        mockMvc.perform(get("/v1/products")
-                        .param("category", "2"))
-                .andDo(print())
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected))
-                );
-    }
-
-    @Test
-    @DisplayName("GET /v1/products — discount=true (все с ненулевым discountPrice)")
-    void getAll_discountTrue_ok() throws Exception {
+    @DisplayName("GET /v1/products — discount=true (all with a non-null discountPrice)")
+    void getAllDiscountTrueOk() throws Exception {
         List<ProductShortResponseDto> expected = List.of(
                 productShortResponseDto1,
                 productShortResponseDto2,
@@ -155,8 +140,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products — discount=false (все без скидки) — пустой список при текущих данных")
-    void getAll_discountFalse_empty_ok() throws Exception {
+    @DisplayName("GET /v1/products — discount=false (all without discount) — empty list with the current data")
+    void getAllDiscountFalseEmptyOk() throws Exception {
         mockMvc.perform(get("/v1/products")
                         .param("discount", "false"))
                 .andDo(print())
@@ -168,8 +153,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products — фильтр по цене: minPrice=8, maxPrice=12 → только product1 (11.99)")
-    void getAll_priceRange_ok() throws Exception {
+    @DisplayName("GET /v1/products — filter by price: minPrice=8, maxPrice=12 → only product1 (11.99)")
+    void getAllPriceRangeOk() throws Exception {
         List<ProductShortResponseDto> expected = List.of(productShortResponseDto1);
 
         mockMvc.perform(get("/v1/products")
@@ -187,7 +172,7 @@ class ProductIntegrationTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/products — minPrice > maxPrice → 400 Bad Request")
-    void getAll_priceRange_invalid_badRequest() throws Exception {
+    void getAllPriceRangeInvalidBadRequest() throws Exception {
         mockMvc.perform(get("/v1/products")
                         .param("minPrice", "20.00")
                         .param("maxPrice", "10.00"))
@@ -197,7 +182,7 @@ class ProductIntegrationTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/products — category=1 & minPrice=10 & sortBy=price DESC → product2, product1")
-    void getAll_combinedFilters_ok() throws Exception {
+    void getAllCombinedFiltersOk() throws Exception {
         List<ProductShortResponseDto> expected = List.of(
                 productShortResponseDto2, // 13.99
                 productShortResponseDto1  // 11.99

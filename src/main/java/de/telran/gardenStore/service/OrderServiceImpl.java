@@ -40,17 +40,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllForCurrentUser() {
+    public List<Order> getAll() {
         return orderRepository.findAllByUser(userService.getCurrent());
     }
 
     @Override
-    public List<Order> getAll() {
-        return orderRepository.findAll();
-    }
-
-    @Override
-    public List<Order> getAllDeliveredForCurrentUser() {
+    public List<Order> getAllDelivered(){
         return orderRepository.findAllByUserAndStatus(userService.getCurrent(), OrderStatus.DELIVERED);
     }
 
@@ -102,6 +97,7 @@ public class OrderServiceImpl implements OrderService {
     public Order updateStatus(Long orderId, OrderStatus status) {
         Order order = getById(orderId);
         order.setStatus(status);
+
         return orderRepository.save(order);
     }
 

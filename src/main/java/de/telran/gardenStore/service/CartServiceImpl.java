@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
@@ -34,6 +34,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart create(AppUser user) {
+
         return cartRepository.save(Cart.builder()
                 .user(user)
                 .build());

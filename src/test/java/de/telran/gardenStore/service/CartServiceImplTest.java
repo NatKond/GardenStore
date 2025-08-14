@@ -25,9 +25,6 @@ class CartServiceImplTest extends AbstractTest {
     private CartRepository cartRepository;
 
     @Mock
-    private CartItemService cartItemService;
-
-    @Mock
     private UserService userService;
 
     @Mock
@@ -113,12 +110,11 @@ class CartServiceImplTest extends AbstractTest {
         Product product = product3;
         Integer quantity = 1;
         Cart cartToCreate = Cart.builder().user(user).build();
-        Cart cartCreated = Cart.builder().cartId(1L).build();
+        Cart cartCreated = cartToCreate.toBuilder().cartId(1L).build();
 
         Cart cartToUpdate = cartCreated.toBuilder().build();
 
         CartItem cartItemCreated = CartItem.builder()
-                .cart(cartToUpdate)
                 .product(product)
                 .quantity(quantity)
                 .build();
@@ -155,7 +151,6 @@ class CartServiceImplTest extends AbstractTest {
 
         Cart cartToSave = cart1.toBuilder().build();
         CartItem cartItemCreated = CartItem.builder()
-                .cart(cart)
                 .product(product)
                 .quantity(2)
                 .build();
@@ -187,15 +182,17 @@ class CartServiceImplTest extends AbstractTest {
     @DisplayName("Update cart item")
     @Test
     void updateItem() {
+        AppUser user = user1;
         Long cartItemId = cartItem1.getCartItemId();
         Integer quantityUpdated = 5;
         CartItem updatedItem =cartItem1.toBuilder().quantity(quantityUpdated).build();
-
+        Cart cart = cart1;
         Cart expected = cart1.toBuilder().build();
         cart1.getItems().remove(cartItem1);
         cart1.getItems().add(updatedItem);
 
-        when(cartItemService.getById(cartItemId)).thenReturn(cartItem1);
+        when(userService.getCurrent()).thenReturn(user);
+        when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
         when(cartRepository.save(expected)).thenReturn(expected);
 
         Cart actual = cartService.updateItem(cartItemId, quantityUpdated);
@@ -208,11 +205,16 @@ class CartServiceImplTest extends AbstractTest {
     @DisplayName("Delete cart item")
     @Test
     void deleteItem() {
+        AppUser user = user1;
         Long cartItemId = cartItem1.getCartItemId();
-        Cart expected = cart1.toBuilder().build();
-        cart1.getItems().remove(cartItem1);
+        Cart cart = cart1;
+        Cart expected = cart1.toBuilder()
+                .items(new ArrayList<>(cart.getItems()))
+                .build();
+        expected.getItems().remove(cartItem1);
 
-        when(cartItemService.getById(cartItemId)).thenReturn(cartItem1);
+        when(userService.getCurrent()).thenReturn(user);
+        when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
         when(cartRepository.save(expected)).thenReturn(expected);
 
         Cart actual = cartService.deleteItem(cartItemId);

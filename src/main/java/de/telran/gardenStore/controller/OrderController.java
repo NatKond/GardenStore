@@ -34,7 +34,7 @@ public interface OrderController {
                                 }
                             ]
                             """)))
-    List<OrderShortResponseDto> getAllForCurrentUser();
+    List<OrderShortResponseDto> getAll();
 
     @Operation(summary = "Get all delivered orders for current user")
     @ApiResponse(responseCode = "200", description = "List of delivered orders for current user",
@@ -121,53 +121,7 @@ public interface OrderController {
                             }
                         ]
                         """)))
-    List<OrderResponseDto> getAllDeliveredForCurrentUser();
-
-    @Operation(summary = "Get all orders (only for role ADMIN)")
-    @ApiResponse(responseCode = "200", description = "List of all orders",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = OrderShortResponseDto.class),
-                    examples = @ExampleObject(name = "All orders", value = """
-                        [
-                            {
-                                "orderId": 1,
-                                "userId": 1,
-                                "status": "DELIVERED",
-                                "deliveryAddress": "789 Oak Street",
-                                "totalAmount": 30.63,
-                                "contactPhone": "+1234509876",
-                                "deliveryMethod": "COURIER"
-                            },
-                            {
-                                "orderId": 2,
-                                "userId": 2,
-                                "status": "DELIVERED",
-                                "deliveryAddress": "456 Elm Avenue",
-                                "totalAmount": 20.1,
-                                "contactPhone": "+1987654322",
-                                "deliveryMethod": "PICKUP"
-                            },
-                            {
-                                "orderId": 3,
-                                "userId": 3,
-                                "status": "DELIVERED",
-                                "deliveryAddress": "321 Maple Road",
-                                "totalAmount": 41.98,
-                                "contactPhone": "+1234560000",
-                                "deliveryMethod": "COURIER"
-                            },
-                            {
-                                "orderId": 4,
-                                "userId": 3,
-                                "status": "CANCELLED",
-                                "deliveryAddress": "321 Maple Road",
-                                "totalAmount": 28.48,
-                                "contactPhone": "+1234560000",
-                                "deliveryMethod": "COURIER"
-                            }
-                        ]
-                        """)))
-    List<OrderShortResponseDto> getAll();
+    List<OrderResponseDto> getAllDelivered();
 
     @Operation(summary = "Get order by ID")
     @ApiResponse(responseCode = "200", description = "Full order details",

@@ -6,19 +6,15 @@
 
     <changeSet id="26-insert-initial-data" author="nkond" runAlways="true">
         <insert tableName="carts">
-            <column name="cart_id" valueNumeric="1"/>
             <column name="user_id" valueNumeric="1"/>
         </insert>
         <insert tableName="carts">
-            <column name="cart_id" valueNumeric="2"/>
             <column name="user_id" valueNumeric="2"/>
         </insert>
         <insert tableName="carts">
-            <column name="cart_id" valueNumeric="3"/>
             <column name="user_id" valueNumeric="3"/>
         </insert>
         <insert tableName="carts">
-            <column name="cart_id" valueNumeric="4"/>
             <column name="user_id" valueNumeric="4"/>
         </insert>
 

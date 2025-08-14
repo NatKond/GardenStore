@@ -28,6 +28,7 @@ public class AppUser {
 
     private String phoneNumber;
 
+    @ToString.Exclude
     private String passwordHash;
 
     @Builder.Default

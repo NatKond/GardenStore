@@ -5,6 +5,7 @@ import de.telran.gardenStore.exception.UserNotFoundException;
 import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
 import de.telran.gardenStore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -38,23 +40,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser create(AppUser user) {
         checkUserEmailIsUnique(user.getEmail());
+        logAttemptToSaveUser(user);
+
         return userRepository.save(user);
     }
 
     @Override
     public AppUser update(AppUser user) {
-        AppUser existing = getCurrent();
+        AppUser userToUpdate = getCurrent();
 
-        if (!existing.getEmail().equals(user.getEmail())) {
+        if (!userToUpdate.getEmail().equals(user.getEmail())) {
             checkUserEmailIsUnique(user.getEmail());
         }
 
-        existing.setName(user.getName());
-        existing.setEmail(user.getEmail());
-        existing.setPhoneNumber(user.getPhoneNumber());
-        existing.setPasswordHash(user.getPasswordHash());
+        userToUpdate.setName(user.getName());
+        userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setPhoneNumber(user.getPhoneNumber());
+        userToUpdate.setPasswordHash(user.getPasswordHash());
+        logAttemptToSaveUser(userToUpdate);
 
-        return userRepository.save(existing);
+        return userRepository.save(userToUpdate);
     }
 
     @Override
@@ -66,5 +71,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new UserWithEmailAlreadyExistsException("User with email " + email + " already exists");
         }
+    }
+
+    private void logAttemptToSaveUser(AppUser user) {
+        log.debug("Attempt to save User {}", user);
     }
 }

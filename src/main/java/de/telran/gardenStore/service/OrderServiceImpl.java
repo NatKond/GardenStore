@@ -9,6 +9,7 @@ import de.telran.gardenStore.exception.OrderModificationException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -38,17 +40,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllForCurrentUser() {
+    public List<Order> getAll() {
         return orderRepository.findAllByUser(userService.getCurrent());
     }
 
     @Override
-    public List<Order> getAll(){
-        return orderRepository.findAll();
-    }
-
-    @Override
-    public List<Order> getAllDeliveredForCurrentUser(){
+    public List<Order> getAllDelivered(){
         return orderRepository.findAllByUserAndStatus(userService.getCurrent(), OrderStatus.DELIVERED);
     }
 
@@ -86,6 +83,7 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(getTotalAmount(order));
 
         cartService.update(cart);
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -124,9 +122,9 @@ public class OrderServiceImpl implements OrderService {
             order.getItems().add(createOrderItem(quantity, cartItemExisting, order));
             editCartItemList(cartItemExisting, cartItems, quantity);
         }
-
         order.setTotalAmount(getTotalAmount(order));
         cartService.update(cart);
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -147,8 +145,8 @@ public class OrderServiceImpl implements OrderService {
 
         orderItem.setQuantity(quantity);
         order.setTotalAmount(getTotalAmount(order));
-
         cartService.update(cart);
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -163,6 +161,7 @@ public class OrderServiceImpl implements OrderService {
 
         checkOrderNotEmpty(order);
         order.setTotalAmount(getTotalAmount(order));
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -223,5 +222,13 @@ public class OrderServiceImpl implements OrderService {
         if (order.getStatus() != OrderStatus.CREATED) {
             throw new OrderModificationException("Order cannot be modified in current status " + order.getStatus());
         }
+    }
+
+    private void logAttemptToSaveOrder(Order order) {
+        log.debug("Attempt to save Order = {} with \n{} total amount = {}\nby user {} ",
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
+                order.getTotalAmount(),
+                order.getUser().getEmail());
     }
 }

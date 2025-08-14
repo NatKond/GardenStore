@@ -68,4 +68,3 @@ class OrderItemServiceImplTest extends AbstractTest {
         verify(orderItemRepository).findByUserAndId(currentUser, invalidId);
     }
 }
-

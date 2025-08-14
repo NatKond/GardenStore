@@ -88,25 +88,21 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(getTotalAmount(order));
 
         cartService.update(cart);
+        logAttemptToSaveOrder(order);
 
-        Order savedOrder = orderRepository.save(order);
-        log.debug("OrderId =  {}: Order created", savedOrder.getOrderId());
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Override
     public void update(Order order) {
-        Order savedOrder = orderRepository.save(order);
-        log.debug("OrderId = {}: Order updated", savedOrder.getOrderId());
+        orderRepository.save(order);
     }
 
     @Override
     public Order updateStatus(Long orderId, OrderStatus status) {
         Order order = getById(orderId);
         order.setStatus(status);
-        Order savedOrder = orderRepository.save(order);
-        log.debug("OrderId = {}, NewOrderStatus = {} : OrderStatus changed", savedOrder.getOrderId(), savedOrder.getStatus().name());
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Transactional
@@ -132,9 +128,9 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setTotalAmount(getTotalAmount(order));
         cartService.update(cart);
-        Order savedOrder = orderRepository.save(order);
-        log.debug("OrderId = {}, ProductId = {} : Product added into the Order ", savedOrder.getOrderId(), productId);
-        return savedOrder;
+        logAttemptToSaveOrder(order);
+
+        return orderRepository.save(order);
     }
 
     @Transactional
@@ -154,9 +150,9 @@ public class OrderServiceImpl implements OrderService {
         orderItem.setQuantity(quantity);
         order.setTotalAmount(getTotalAmount(order));
         cartService.update(cart);
-        Order savedOrder = orderRepository.save(order);
-        log.debug("OrderId = {}, OrderItemId = {}, quantity = {} : OrderItem quantity updated", savedOrder.getOrderId(), orderItemId, quantity);
-        return savedOrder;
+        logAttemptToSaveOrder(order);
+
+        return orderRepository.save(order);
     }
 
     @Override
@@ -169,9 +165,9 @@ public class OrderServiceImpl implements OrderService {
 
         checkOrderNotEmpty(order);
         order.setTotalAmount(getTotalAmount(order));
-        Order savedOrder = orderRepository.save(order);
-        log.debug("OrderId = {}, OrderItemId = {} : OrderItem removed", savedOrder.getOrderId(), orderItemId);
-        return savedOrder;
+        logAttemptToSaveOrder(order);
+
+        return orderRepository.save(order);
     }
 
     @Override
@@ -182,9 +178,7 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderCancellationException("Order cannot be cancelled in current status " + status);
         }
         order.setStatus(OrderStatus.CANCELLED);
-        Order savedOrder = orderRepository.save(order);
-        log.debug("OrderId =  {}: Order canceled", savedOrder.getOrderId());
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     private BigDecimal getTotalAmount(Order order) {
@@ -232,5 +226,13 @@ public class OrderServiceImpl implements OrderService {
         if (order.getStatus() != OrderStatus.CREATED) {
             throw new OrderModificationException("Order cannot be modified in current status " + order.getStatus());
         }
+    }
+
+    private void logAttemptToSaveOrder(Order order) {
+        log.debug("Attempt to save Order = {} with \n{} total amount = {}\nby user {} ",
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
+                order.getTotalAmount(),
+                order.getUser().getEmail());
     }
 }

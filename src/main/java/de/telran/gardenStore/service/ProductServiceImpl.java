@@ -31,8 +31,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final EntityManager entityManager;
 
-    private final UserService userService;
-
     @Override
     public List<Product> getAll(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -83,34 +81,37 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product getProductOfTheDay() {
+        List<Product> discountedProducts = productRepository.findProductsWithHighestDiscount();
+        if (discountedProducts.isEmpty()) {
+            throw new NoDiscountedProductsException("No discounted products available");
+        }
+        return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
+    }
+
+    @Override
     public Product create(Product product) {
         checkCategoryExists(product.getCategory().getCategoryId());
-        Product savedProduct = productRepository.save(product);
-        log.debug("ProductId =  {}: Product created", product.getProductId());
-        return savedProduct;
+        logAttemptToSaveProduct(product);
+
+        return productRepository.save(product);
     }
 
     @Override
     public Product update(Long id, Product product) {
-        Product existing = getById(id);
+        Product productToUpdate = getById(id);
 
         checkCategoryExists(product.getCategory().getCategoryId());
 
-        existing.setName(product.getName());
-        existing.setDescription(product.getDescription());
-        existing.setPrice(product.getPrice());
-        existing.setDiscountPrice(product.getDiscountPrice());
-        existing.setCategory(product.getCategory());
-        existing.setImageUrl(product.getImageUrl());
+        productToUpdate.setName(product.getName());
+        productToUpdate.setDescription(product.getDescription());
+        productToUpdate.setPrice(product.getPrice());
+        productToUpdate.setDiscountPrice(product.getDiscountPrice());
+        productToUpdate.setCategory(product.getCategory());
+        productToUpdate.setImageUrl(product.getImageUrl());
+        logAttemptToSaveProduct(productToUpdate);
 
-        Product savedProduct = productRepository.save(existing);
-        log.debug("ProductId =  {}: Product updated", product.getProductId());
-        return savedProduct;
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        productRepository.delete(getById(id));
+        return productRepository.save(productToUpdate);
     }
 
     @Override
@@ -120,21 +121,21 @@ public class ProductServiceImpl implements ProductService {
                 .multiply(discountPercentage)
                 .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         product.setDiscountPrice(product.getPrice().subtract(discountAmount));
-        Product savedProduct = productRepository.save(product);
-        log.debug("ProductId =  {}, DiscountPercentage = {}, DiscountPrice = {} : DiscountPrice updated", savedProduct.getProductId(), discountPercentage, savedProduct.getDiscountPrice());
-        return savedProduct;
+        logAttemptToSaveProduct(product);
+
+        return productRepository.save(product);
     }
 
     @Override
-    public Product getProductOfTheDay() {
-        List<Product> discountedProducts = productRepository.findProductsWithHighestDiscount();
-        if (discountedProducts.isEmpty()) {
-            throw new NoDiscountedProductsException("No discounted products available");
-        }
-        return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
+    public void deleteById(Long id) {
+        productRepository.delete(getById(id));
     }
 
     private void checkCategoryExists(Long categoryId) {
         categoryService.getById(categoryId);
+    }
+
+    private void logAttemptToSaveProduct(Product product) {
+        log.debug("Attempt to save Product {}", product);
     }
 }

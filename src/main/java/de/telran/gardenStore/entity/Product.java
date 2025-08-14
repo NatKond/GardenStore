@@ -25,13 +25,17 @@ public class Product {
 
     private BigDecimal price;
 
+    @ToString.Exclude
     private String description;
 
+    @ToString.Exclude
     private String imageUrl;
 
+    @ToString.Exclude
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @ToString.Exclude
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 

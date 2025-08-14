@@ -33,22 +33,22 @@ public class CategoryServiceImpl implements CategoryService {
     public Category create(Category category) {
         checkCategoryNameIsUnique(category.getName());
 
-        Category savedCategory = categoryRepository.save(category);
-        log.debug("CategoryId = {}: Category saved", savedCategory.getCategoryId());
-        return savedCategory;
+        logAttemptToSaveCategory(category);
+
+        return categoryRepository.save(category);
     }
 
     @Override
     public Category update(Long categoryId, Category category) {
-        Category existing = getById(categoryId);
-        if (!existing.getName().equals(category.getName())) {
+        Category categoryToUpdate = getById(categoryId);
+        if (!categoryToUpdate.getName().equals(category.getName())) {
             checkCategoryNameIsUnique(category.getName());
         }
-        existing.setName(category.getName());
+        categoryToUpdate.setName(category.getName());
 
-        Category savedCategory = categoryRepository.save(existing);
-        log.debug("CategoryId = {}: Category updated", categoryId);
-        return savedCategory;
+        logAttemptToSaveCategory(category);
+
+        return categoryRepository.save(categoryToUpdate);
     }
 
     @Override
@@ -66,4 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    private void logAttemptToSaveCategory(Category category) {
+        log.debug("Attempt to save Category {}", category);
+    }
 }

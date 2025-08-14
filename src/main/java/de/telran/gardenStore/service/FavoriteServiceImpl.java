@@ -40,12 +40,14 @@ public class FavoriteServiceImpl implements FavoriteService {
             throw new FavoriteAlreadyExistsException("Favorite with userId " + user.getUserId() + " and productId " + productId + " already exists");
         }
 
-        Favorite savedFavorite = favoriteRepository.save(Favorite.builder()
+        Favorite favorite = Favorite.builder()
                 .user(user)
                 .product(productService.getById(productId))
-                .build());
-        log.debug("FavoriteId = {}: Favorite saved", savedFavorite.getFavoriteId());
-        return savedFavorite;
+                .build();
+
+        log.debug("Attempt to save Favorite {}\n{} by user {}", favorite.getFavoriteId(), favorite.getProduct(), user.getEmail());
+
+        return favoriteRepository.save(favorite);
     }
 
     @Override

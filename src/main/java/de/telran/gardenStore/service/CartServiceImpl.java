@@ -12,6 +12,7 @@ import de.telran.gardenStore.exception.CartNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,27 +29,24 @@ public class CartServiceImpl implements CartService {
     public Cart getByUser(AppUser user) {
         return cartRepository.findByUser(user)
                 .orElseThrow(() -> new CartNotFoundException(
-                        "Cart for user " + user.getUserId() + " not found"
-                ));
+                        "Cart for user " + user.getUserId() + " not found"));
     }
 
     @Override
     public Cart create(AppUser user) {
-        Cart savedCart = cartRepository.save(
-                Cart.builder()
-                        .user(user)
-                        .build());
-        log.debug("UserId = {}: Cart created", user.getUserId());
-        return savedCart;
+        return cartRepository.save(Cart.builder()
+                .user(user)
+                .build());
     }
 
     @Override
     public Cart update(Cart cart) {
-        Cart existingCart = getByUser(cart.getUser());
-        existingCart.setItems(cart.getItems());
-        Cart savedCart = cartRepository.save(existingCart);
-        log.debug("CartId = {}: Cart updated", savedCart.getCartId());
-        return savedCart;
+        Cart cartToUpdate = getByUser(cart.getUser());
+        cartToUpdate.setItems(cart.getItems());
+
+        logAttemptToSaveCart(cartToUpdate, "update");
+
+        return cartRepository.save(cartToUpdate);
     }
 
     @Override
@@ -78,11 +76,10 @@ public class CartServiceImpl implements CartService {
                     .build();
             items.add(newItem);
         }
-        log.info("Attempt to save cart to carts table :{}", cart);
 
-        Cart savedCart = cartRepository.save(cart);
-        log.debug("CartId = {}, ProductId = {}: Item added", savedCart.getCartId(), productId);
-        return savedCart;
+        logAttemptToSaveCart(cart, "addItem");
+
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -90,9 +87,10 @@ public class CartServiceImpl implements CartService {
         Cart cart = getByUser(userService.getCurrent());
         CartItem cartItem = findItemInCart(cart.getItems(), cartItemId);
         cartItem.setQuantity(quantity);
-        Cart savedCart = cartRepository.save(cart);
-        log.debug("CartId = {}, CartItemId = {}: Item updated", savedCart.getCartId(), cartItemId);
-        return savedCart;
+
+        logAttemptToSaveCart(cart, "updateItem");
+
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -100,9 +98,10 @@ public class CartServiceImpl implements CartService {
         Cart cart = getByUser(userService.getCurrent());
         CartItem cartItem = findItemInCart(cart.getItems(), cartItemId);
         cart.getItems().remove(cartItem);
-        Cart savedCart = cartRepository.save(cart);
-        log.debug("CartId = {}, CartItemId = {}: Item removed", savedCart.getCartId(), cartItemId);
-        return savedCart;
+
+        logAttemptToSaveCart(cart, "deleteItem");
+
+        return cartRepository.save(cart);
     }
 
     private CartItem findItemInCart(List<CartItem> cartItems, Long cartItemId) {
@@ -110,6 +109,14 @@ public class CartServiceImpl implements CartService {
                 .filter(item -> item.getCartItemId().equals(cartItemId))
                 .findFirst()
                 .orElseThrow(() -> new CartItemNotFoundException("CartItem with id " + cartItemId + " not found"));
+    }
+
+    private void logAttemptToSaveCart(Cart cart, String methodName) {
+        log.debug("Attempt in {} to save Cart = {}\n{}by user {} ",
+                methodName,
+                cart.getCartId(),
+                cart.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
+                cart.getUser().getEmail());
     }
 }
 

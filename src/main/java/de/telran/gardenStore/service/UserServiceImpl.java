@@ -1,6 +1,7 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.AppUser;
+import de.telran.gardenStore.exception.UserDeletionNotAllowedException;
 import de.telran.gardenStore.exception.UserNotFoundException;
 import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;
 import de.telran.gardenStore.repository.UserRepository;
@@ -64,7 +65,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete() {
-        userRepository.delete(getCurrent());
+        AppUser user = getCurrent();
+        if (userRepository.hasOrders(user.getUserId())){
+            throw new UserDeletionNotAllowedException("User cannot be deleted because they have placed orders");
+        }
+        userRepository.delete(user);
     }
 
     private void checkUserEmailIsUnique(String email) {

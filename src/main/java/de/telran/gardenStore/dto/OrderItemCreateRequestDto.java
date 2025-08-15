@@ -14,5 +14,5 @@ public class OrderItemCreateRequestDto {
 
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity should be at least 1")
-    private Integer quantity;
+    private int quantity;
 }

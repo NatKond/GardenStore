@@ -13,5 +13,5 @@ public class CartItemResponseDto {
 
     private ProductShortResponseDto product;
 
-    private Integer quantity;
+    private int quantity;
 }

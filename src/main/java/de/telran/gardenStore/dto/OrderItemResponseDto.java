@@ -19,7 +19,7 @@ public class OrderItemResponseDto {
 
     private ProductShortResponseDto product;
 
-    private Integer quantity;
+    private int quantity;
 
     private BigDecimal priceAtPurchase;
 }

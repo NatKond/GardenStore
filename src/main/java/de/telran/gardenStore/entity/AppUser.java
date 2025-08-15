@@ -43,10 +43,4 @@ public class AppUser {
     @Builder.Default
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Cart cart;
-
 }

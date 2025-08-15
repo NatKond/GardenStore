@@ -57,7 +57,8 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({EntityAlreadyExistsException.class, OrderCancellationException.class, OrderModificationException.class})
+    @ExceptionHandler({EntityAlreadyExistsException.class, EntityDeletionNotAllowedException.class,
+            OrderCancellationException.class, OrderModificationException.class})
     public ResponseEntity<ApiResponse> handleConflictException(RuntimeException exception) {
         log.error(exception.getMessage(), exception);
 

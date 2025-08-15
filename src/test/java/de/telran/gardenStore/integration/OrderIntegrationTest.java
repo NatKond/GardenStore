@@ -242,10 +242,10 @@ public class OrderIntegrationTest extends AbstractTest {
         mockMvc.perform(delete("/v1/orders/{orderId}", orderWithIncorrectStatus)
                         .with(httpBasic("alice.johnson@example.com", "12345")))
                 .andExpectAll(
-                        status().isBadRequest(),
+                        status().isConflict(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.exception").value("OrderCancellationException"),
                         jsonPath("$.message").value("Order cannot be cancelled in current status " + order3.getStatus()),
-                        jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
+                        jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
     }
 }

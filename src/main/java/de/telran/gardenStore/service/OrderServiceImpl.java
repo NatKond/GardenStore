@@ -3,10 +3,7 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
-import de.telran.gardenStore.exception.EmptyOrderException;
-import de.telran.gardenStore.exception.OrderCancellationException;
-import de.telran.gardenStore.exception.OrderModificationException;
-import de.telran.gardenStore.exception.OrderNotFoundException;
+import de.telran.gardenStore.exception.*;
 import de.telran.gardenStore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,15 +56,16 @@ public class OrderServiceImpl implements OrderService {
     public Order create(String deliveryAddress, DeliveryMethod deliveryMethod, String contactPhone, Map<Long, Integer> productIdPerQuantityMap) {
         AppUser user = userService.getCurrent();
 
+        Cart cart = cartService.getByUser(user);
+        checkCartIsNotEmpty(cart);
+        List<CartItem> cartItems = cart.getItems();
+
         Order order = Order.builder()
                 .user(user)
                 .deliveryAddress(deliveryAddress)
                 .contactPhone(contactPhone != null ? contactPhone : user.getPhoneNumber())
                 .deliveryMethod(deliveryMethod)
                 .build();
-
-        Cart cart = cartService.getByUser(user);
-        List<CartItem> cartItems = cart.getItems();
 
         Map<Long, CartItem> productIdPerCartItemMap = cartItems.stream()
                 .collect(Collectors.toMap(cartItem -> cartItem.getProduct().getProductId(), cartItem -> cartItem));
@@ -175,6 +173,12 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
+    }
+
+    private void checkCartIsNotEmpty(Cart cart) {
+        if (cart.getItems().isEmpty()) {
+            throw new CartEmptyException("Cart is empty");
+        }
     }
 
     private BigDecimal getTotalAmount(Order order) {

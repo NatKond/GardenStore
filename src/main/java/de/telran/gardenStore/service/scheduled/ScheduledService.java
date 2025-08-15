@@ -28,7 +28,6 @@ public class ScheduledService {
     @Scheduled(cron = "${scheduled.orders.cron}")
     public void processCreatedOrders() {
         List<Order> ordersCreate = orderService.getByStatusAndTimeAfter(OrderStatus.CREATED, LocalDateTime.now().minusMinutes(orderUpdatedAfter));
-        logOrdersToUpdate(ordersCreate, OrderStatus.CREATED);
         changeOrderStatus(ordersCreate);
     }
 
@@ -36,7 +35,6 @@ public class ScheduledService {
     @Scheduled(cron = "${scheduled.orders.cron}")
     public void processAwaitingPaymentOrders() {
         List<Order> ordersAwaitingPayment = orderService.getByStatusAndTimeAfter(OrderStatus.AWAITING_PAYMENT, LocalDateTime.now().minusMinutes(orderUpdatedAfter));
-        logOrdersToUpdate(ordersAwaitingPayment, OrderStatus.AWAITING_PAYMENT);
         changeOrderStatus(ordersAwaitingPayment);
     }
 
@@ -44,7 +42,6 @@ public class ScheduledService {
     @Scheduled(cron = "${scheduled.orders.cron}")
     public void processPaidOrders() {
         List<Order> ordersPaid = orderService.getByStatusAndTimeAfter(OrderStatus.PAID, LocalDateTime.now().minusMinutes(orderUpdatedAfter));
-        logOrdersToUpdate(ordersPaid, OrderStatus.PAID);
         changeOrderStatus(ordersPaid);
     }
 
@@ -52,20 +49,16 @@ public class ScheduledService {
     @Scheduled(cron = "${scheduled.orders.cron}")
     public void processShippedOrders() {
         List<Order> ordersShipped = orderService.getByStatusAndTimeAfter(OrderStatus.SHIPPED, LocalDateTime.now().minusMinutes(orderUpdatedAfter));
-        logOrdersToUpdate(ordersShipped, OrderStatus.SHIPPED);
         changeOrderStatus(ordersShipped);
     }
 
-    private void logOrdersToUpdate(List<Order> orders, OrderStatus status) {
+    private void changeOrderStatus(List<Order> orders) {
         if (!orders.isEmpty()) {
             log.debug("Scheduled service updating {} Orders with status = {}, Ids : {}",
                     orders.size(),
-                    status,
+                    orders.getFirst().getStatus(),
                     orders.stream().map(order -> String.valueOf(order.getOrderId())).collect(Collectors.joining(", ")));
         }
-    }
-
-    private void changeOrderStatus(List<Order> orders) {
         orders.forEach(order -> {
             order.setStatus(order.getStatus().getNext());
             orderService.update(order);

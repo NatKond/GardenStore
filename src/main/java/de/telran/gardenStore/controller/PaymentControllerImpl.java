@@ -27,7 +27,6 @@ public class PaymentControllerImpl implements PaymentController {
     private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
     @PostMapping()
-
     @Override
     public OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @Positive BigDecimal paymentAmount) {
         return orderConverter.convertEntityToDto(

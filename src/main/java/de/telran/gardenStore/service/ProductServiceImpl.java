@@ -3,6 +3,7 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.NoDiscountedProductsException;
+import de.telran.gardenStore.exception.ProductDeletionNotAllowedException;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -18,7 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -75,18 +76,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id " + productId + " not found"));
+    public Product getById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
     }
 
     @Override
     public Product getProductOfTheDay() {
-        List<Product> discountedProducts = productRepository.findProductsWithHighestDiscount();
-        if (discountedProducts.isEmpty()) {
+        Optional<Product> discountedProduct = productRepository.findProductsWithHighestDiscount();
+        if (discountedProduct.isEmpty()) {
             throw new NoDiscountedProductsException("No discounted products available");
         }
-        return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
+        return discountedProduct.get();
     }
 
     @Override
@@ -115,8 +116,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product setDiscount(Long productId, BigDecimal discountPercentage) {
-        Product product = getById(productId);
+    public Product setDiscount(Long id, BigDecimal discountPercentage) {
+        Product product = getById(id);
         BigDecimal discountAmount = product.getPrice()
                 .multiply(discountPercentage)
                 .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
@@ -128,6 +129,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(Long id) {
+        if (productRepository.isInOrder(id)){
+         throw new ProductDeletionNotAllowedException("Product cannot be deleted because it was added to order");
+        }
+
         productRepository.delete(getById(id));
     }
 

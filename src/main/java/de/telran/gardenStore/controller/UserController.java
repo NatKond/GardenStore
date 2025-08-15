@@ -158,9 +158,21 @@ public interface UserController {
                                               "password": "12345"
                                             }
                                             """),
+                                    @ExampleObject(name = "Eve White(USER)", value = """
+                                            {
+                                              "email": "eve.white@example.com",
+                                              "password": "12345"
+                                            }
+                                            """),
                                     @ExampleObject(name = "Frank Green(USER)", value = """
                                             {
                                               "email": "frank.green@example.com",
+                                              "password": "12345"
+                                            }
+                                            """),
+                                    @ExampleObject(name = "David Black(USER)", value = """
+                                            {
+                                              "email": "david.Black@example.com",
                                               "password": "12345"
                                             }
                                             """)

@@ -20,6 +20,6 @@ public class UserCreateRequestDto {
 
     @ToString.Exclude
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^\\w{5,}$", message = "Password should have at least 5 characters")
+    @Pattern(regexp = "\\w{5,}$", message = "Password should have at least 5 characters")
     private String password;
 }

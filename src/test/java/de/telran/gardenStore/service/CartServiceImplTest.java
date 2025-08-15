@@ -37,7 +37,7 @@ class CartServiceImplTest extends AbstractTest {
     @Test
     void getByUserPositiveCase() {
         AppUser user = user1;
-        Cart expected = user.getCart();
+        Cart expected = cart1;
 
         when(cartRepository.findByUser(user)).thenReturn(Optional.of(expected));
 
@@ -108,7 +108,7 @@ class CartServiceImplTest extends AbstractTest {
         AppUser user = user1;
         Long productId = product3.getProductId();
         Product product = product3;
-        Integer quantity = 1;
+        int quantity = 1;
         Cart cartToCreate = Cart.builder().user(user).build();
         Cart cartCreated = cartToCreate.toBuilder().cartId(1L).build();
 
@@ -184,7 +184,7 @@ class CartServiceImplTest extends AbstractTest {
     void updateItem() {
         AppUser user = user1;
         Long cartItemId = cartItem1.getCartItemId();
-        Integer quantityUpdated = 5;
+        int quantityUpdated = 5;
         CartItem updatedItem =cartItem1.toBuilder().quantity(quantityUpdated).build();
         Cart cart = cart1;
         Cart expected = cart1.toBuilder().build();

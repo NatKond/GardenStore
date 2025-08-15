@@ -274,8 +274,6 @@ public abstract class AbstractTest {
                 .user(user1)
                 .build();
 
-        user1.setCart(cart1);
-
         cartItem1 = CartItem.builder()
                 .cartItemId(1L)
                 .product(product1)
@@ -294,8 +292,6 @@ public abstract class AbstractTest {
                 .cartId(2L)
                 .user(user2)
                 .build();
-
-        user2.setCart(cart2);
 
         cartItem3 = CartItem.builder()
                 .cartItemId(3L)

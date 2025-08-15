@@ -1,6 +1,7 @@
 package de.telran.gardenStore.entity;
 
 import de.telran.gardenStore.enums.Role;
+import de.telran.gardenStore.serializer.SensitiveData;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,8 +27,10 @@ public class AppUser {
 
     private String email;
 
+    @SensitiveData(visibleChars = 4)
     private String phoneNumber;
 
+    @SensitiveData
     private String passwordHash;
 
     @Builder.Default

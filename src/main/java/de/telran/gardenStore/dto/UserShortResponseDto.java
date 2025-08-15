@@ -1,5 +1,6 @@
 package de.telran.gardenStore.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.telran.gardenStore.serializer.SensitiveData;
 import lombok.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class UserShortResponseDto {
 
     private String email;
 
+    @SensitiveData(visibleChars = 4)
     private String phoneNumber;
 
     private List<String> roles;

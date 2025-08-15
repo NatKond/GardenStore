@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.NoLog;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.dto.security.LoginRequest;
@@ -54,6 +55,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @NoLog
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public LoginResponse login(@RequestBody  @Valid LoginRequest loginRequest) {
@@ -61,6 +63,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @NoLog
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public UserResponseDto create(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto) {

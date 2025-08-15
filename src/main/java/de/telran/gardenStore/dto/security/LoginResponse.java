@@ -1,5 +1,6 @@
 package de.telran.gardenStore.dto.security;
 
+import de.telran.gardenStore.serializer.SensitiveData;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,5 +8,6 @@ import lombok.Data;
 @Data
 public class LoginResponse {
 
+    @SensitiveData
     private String token;
 }

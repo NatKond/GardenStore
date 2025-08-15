@@ -1,6 +1,7 @@
 package de.telran.gardenStore.dto;
 
 import de.telran.gardenStore.enums.DeliveryMethod;
+import de.telran.gardenStore.serializer.SensitiveData;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
@@ -14,9 +15,11 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class OrderCreateRequestDto {
 
+    @SensitiveData
     @NotBlank(message = "Delivery address cannot be blank")
     private String deliveryAddress;
 
+    @SensitiveData(visibleChars = 4)
     @Pattern(regexp = "^\\+?[0-9\\s-]{10,}$")
     private String contactPhone;
 

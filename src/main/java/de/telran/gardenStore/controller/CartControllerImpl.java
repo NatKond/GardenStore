@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.ConverterEntityToDtoShort;
 import de.telran.gardenStore.dto.CartResponseDto;
 import de.telran.gardenStore.entity.Cart;
@@ -34,6 +35,7 @@ public class CartControllerImpl implements CartController {
     }
 
     @Override
+    @Loggable
     @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     public CartResponseDto addItem(@PathVariable @Positive Long productId) {
@@ -42,6 +44,7 @@ public class CartControllerImpl implements CartController {
     }
 
     @Override
+    @Loggable
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")
     public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
@@ -51,6 +54,7 @@ public class CartControllerImpl implements CartController {
     }
 
     @Override
+    @Loggable
     @DeleteMapping("/items/{cartItemId}")
     public CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId) {
         return cartConverter.convertEntityToDto(cartService.deleteItem(cartItemId));

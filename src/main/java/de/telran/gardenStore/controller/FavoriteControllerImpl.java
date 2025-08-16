@@ -1,4 +1,5 @@
 package de.telran.gardenStore.controller;
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
@@ -32,6 +33,7 @@ public class FavoriteControllerImpl implements FavoriteController {
     }
 
     @Override
+    @Loggable
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{productId}")
     public FavoriteResponseDto create(@Positive @PathVariable Long productId) {

@@ -1,8 +1,10 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.annotation.NoLog;
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.*;
+import de.telran.gardenStore.dto.UserCreateRequestDto;
+import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.dto.UserShortResponseDto;
 import de.telran.gardenStore.dto.security.LoginRequest;
 import de.telran.gardenStore.dto.security.LoginResponse;
 import de.telran.gardenStore.entity.AppUser;
@@ -55,7 +57,6 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @NoLog
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public LoginResponse login(@RequestBody  @Valid LoginRequest loginRequest) {
@@ -63,7 +64,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @NoLog
+    @Loggable
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public UserResponseDto create(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto) {
@@ -73,6 +74,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @Loggable
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping
     public UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest) {
@@ -82,6 +84,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @Loggable
     @DeleteMapping()
     public void delete() {
         userService.delete();

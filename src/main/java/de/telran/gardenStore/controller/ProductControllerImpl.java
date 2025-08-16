@@ -59,6 +59,14 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
+    @GetMapping("/product-of-the-day")
+    public ProductResponseDto getProductOfTheDay() {
+        return productConverter.convertEntityToDto(
+                productService.getProductOfTheDay());
+    }
+
+    @Override
+    @Loggable
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -68,6 +76,7 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
+    @Loggable
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{productId}")
@@ -78,16 +87,10 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{productId}")
-    public void delete(@PathVariable @Positive Long productId) {
-        productService.deleteById(productId);
-    }
-
-    @PostMapping("/{productId}/discount/{discountPercentage}")
+    @Loggable
+    @PatchMapping("/{productId}/discount/{discountPercentage}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @Override
     public ProductResponseDto setDiscount(@PathVariable @Positive Long productId,
                                           @PathVariable
                                           @Min(value = 1, message = "Discount must be at least 1%")
@@ -97,10 +100,10 @@ public class ProductControllerImpl implements ProductController {
                 productService.setDiscount(productId, discountPercentage));
     }
 
-    @GetMapping("/product-of-the-day")
     @Override
-    public ProductResponseDto getProductOfTheDay() {
-        return productConverter.convertEntityToDto(
-                productService.getProductOfTheDay());
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{productId}")
+    public void delete(@PathVariable @Positive Long productId) {
+        productService.deleteById(productId);
     }
 }

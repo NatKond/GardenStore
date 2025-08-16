@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.*;
@@ -55,6 +56,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
+    @Loggable
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -68,6 +70,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
+    @Loggable
     @PostMapping("/items")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -79,6 +82,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
+    @Loggable
     @PutMapping("/items")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -88,17 +92,19 @@ public class OrderControllerImpl implements OrderController {
                 orderService.updateItem(orderItemId, quantity));
     }
 
+    @Override
+    @Loggable
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")
-    @Override
     public OrderResponseDto removeItem(@PathVariable @Positive Long orderItemId){
         return orderConverter.convertEntityToDto(
                 orderService.removeItem(orderItemId));
     }
 
+    @Override
+    @Loggable
     @DeleteMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
-    @Override
     public OrderResponseDto delete(@PathVariable @Positive Long orderId) {
         return orderConverter.convertEntityToDto(
                 orderService.cancel(orderId));

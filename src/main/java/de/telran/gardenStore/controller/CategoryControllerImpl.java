@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.CategoryCreateRequestDto;
 import de.telran.gardenStore.dto.CategoryResponseDto;
@@ -40,6 +41,7 @@ public class CategoryControllerImpl implements CategoryController {
     }
 
     @Override
+    @Loggable
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -49,6 +51,7 @@ public class CategoryControllerImpl implements CategoryController {
     }
 
     @Override
+    @Loggable
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{categoryId}")
     @PreAuthorize("hasRole('ADMIN')")

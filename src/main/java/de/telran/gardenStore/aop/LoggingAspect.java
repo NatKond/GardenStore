@@ -1,52 +1,47 @@
 package de.telran.gardenStore.aop;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import de.telran.gardenStore.serializer.SensitiveDataSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Slf4j
 @Aspect
 @Component
 public class LoggingAspect {
-    private final ObjectMapper objectMapper;
 
-    public LoggingAspect() {
-        this.objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(new SensitiveDataSerializer());
-        this.objectMapper.registerModule(module);
+    @Pointcut("@annotation(de.telran.gardenStore.annotation.Loggable)")
+    public void loggableMethods() {
     }
 
-    // iskluchaem metody s parolem i tokenom
-    @Pointcut("@annotation(de.telran.gardenStore.annotation.Loggable) && " +
-            "!execution(* *..*.*Password*(..)) && " +
-            "!execution(* *..*.*Token*(..))")
-    public void loggableSafeMethods() {}
-
-    @Before("loggableSafeMethods()")
+    @Before("loggableMethods()")
     public void logMethodInput(JoinPoint joinPoint) {
-        try {
-            String methodName = joinPoint.getSignature().getName();
-            String args = objectMapper.writeValueAsString(joinPoint.getArgs());
-            log.info(">>> {} - args: {}", methodName, args);
-        } catch (Exception e) {
-            log.warn("Failed to log method input", e);
+        String className = joinPoint.getTarget().getClass().getSimpleName();
+        String methodName = joinPoint.getSignature().getName();
+        Object[] args = joinPoint.getArgs();
+
+        log.info(">>> POST request parameters {}.{}(): {}",
+                className, methodName, Arrays.toString(args));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            log.info("User: {}, Roles: {}",
+                    authentication.getName(),
+                    authentication.getAuthorities());
         }
     }
 
-    @AfterReturning(pointcut = "loggableSafeMethods()", returning = "result")
+    @AfterReturning(pointcut = "loggableMethods()", returning = "result")
     public void logMethodOutput(JoinPoint joinPoint, Object result) {
-        try {
-            String methodName = joinPoint.getSignature().getName();
-            String resultJson = objectMapper.writeValueAsString(result);
-            log.info("<<< {} - result: {}", methodName, resultJson);
-        } catch (Exception e) {
-            log.warn("Failed to log method result", e);
-        }
+        log.info("<<< Execution result {}: {}",
+                joinPoint.getSignature().toShortString(),
+                result);
     }
 }
-//izmeneno

@@ -21,27 +21,27 @@ public class ReportControllerImpl implements ReportController {
 
     private final ReportService reportService;
 
-    @GetMapping("/top-purchased-products/{limit}")
     @Override
+    @GetMapping("/top-purchased-products/{limit}")
     public List<ProductReport> getTopPurchasedProducts(@PathVariable @Positive Integer limit) {
         return reportService.getTopPurchasedProducts(limit);
     }
 
-    @GetMapping("/top-canceled-products/{limit}")
     @Override
+    @GetMapping("/top-canceled-products/{limit}")
     public List<ProductReport> getTopCanceledProducts(@PathVariable @Positive Integer limit) {
         return reportService.getTopCanceledProducts(limit);
     }
 
-    @GetMapping("/awaiting-payment-products")
     @Override
+    @GetMapping("/awaiting-payment-products")
     public List<ProductReport> getProductsAwaitingPaymentForDays(@RequestParam @Positive Integer days,
                                                                  @RequestParam @Positive Integer limit) {
         return reportService.getProductsAwaitingPaymentForMoreDays(days, limit);
     }
 
-    @GetMapping("/profit")
     @Override
+    @GetMapping("/profit")
     public List<ProfitReport> getProfitOverPeriod(@RequestParam @Pattern(regexp = "days|months|years") String timeUnit,
                                                   @RequestParam @Positive Integer timeAmount,
                                                   @RequestParam @Pattern(regexp = "hour|day|week|month") String groupBy) {

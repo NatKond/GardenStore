@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
 import de.telran.gardenStore.dto.OrderResponseDto;
 import de.telran.gardenStore.dto.OrderShortResponseDto;
@@ -26,9 +27,9 @@ public class PaymentControllerImpl implements PaymentController {
 
     private final ConverterEntityToDto<Order, OrderResponseDto, OrderShortResponseDto> orderConverter;
 
-    @PostMapping()
-
     @Override
+    @Loggable
+    @PostMapping()
     public OrderResponseDto processPayment(@RequestParam @Positive Long orderId, @Positive BigDecimal paymentAmount) {
         return orderConverter.convertEntityToDto(
                 paymentService.processPayment(orderId, paymentAmount));

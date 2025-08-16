@@ -3,12 +3,10 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.*;
 import de.telran.gardenStore.enums.DeliveryMethod;
 import de.telran.gardenStore.enums.OrderStatus;
-import de.telran.gardenStore.exception.EmptyOrderException;
-import de.telran.gardenStore.exception.OrderCancellationException;
-import de.telran.gardenStore.exception.OrderModificationException;
-import de.telran.gardenStore.exception.OrderNotFoundException;
+import de.telran.gardenStore.exception.*;
 import de.telran.gardenStore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -38,17 +37,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllForCurrentUser() {
+    public List<Order> getAll() {
         return orderRepository.findAllByUser(userService.getCurrent());
     }
 
     @Override
-    public List<Order> getAll(){
-        return orderRepository.findAll();
-    }
-
-    @Override
-    public List<Order> getAllDeliveredForCurrentUser(){
+    public List<Order> getAllDelivered(){
         return orderRepository.findAllByUserAndStatus(userService.getCurrent(), OrderStatus.DELIVERED);
     }
 
@@ -62,15 +56,16 @@ public class OrderServiceImpl implements OrderService {
     public Order create(String deliveryAddress, DeliveryMethod deliveryMethod, String contactPhone, Map<Long, Integer> productIdPerQuantityMap) {
         AppUser user = userService.getCurrent();
 
+        Cart cart = cartService.getByUser(user);
+        checkCartIsNotEmpty(cart);
+        List<CartItem> cartItems = cart.getItems();
+
         Order order = Order.builder()
                 .user(user)
                 .deliveryAddress(deliveryAddress)
                 .contactPhone(contactPhone != null ? contactPhone : user.getPhoneNumber())
                 .deliveryMethod(deliveryMethod)
                 .build();
-
-        Cart cart = cartService.getByUser(user);
-        List<CartItem> cartItems = cart.getItems();
 
         Map<Long, CartItem> productIdPerCartItemMap = cartItems.stream()
                 .collect(Collectors.toMap(cartItem -> cartItem.getProduct().getProductId(), cartItem -> cartItem));
@@ -86,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(getTotalAmount(order));
 
         cartService.update(cart);
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -124,9 +120,9 @@ public class OrderServiceImpl implements OrderService {
             order.getItems().add(createOrderItem(quantity, cartItemExisting, order));
             editCartItemList(cartItemExisting, cartItems, quantity);
         }
-
         order.setTotalAmount(getTotalAmount(order));
         cartService.update(cart);
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -147,8 +143,8 @@ public class OrderServiceImpl implements OrderService {
 
         orderItem.setQuantity(quantity);
         order.setTotalAmount(getTotalAmount(order));
-
         cartService.update(cart);
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -163,6 +159,7 @@ public class OrderServiceImpl implements OrderService {
 
         checkOrderNotEmpty(order);
         order.setTotalAmount(getTotalAmount(order));
+        logAttemptToSaveOrder(order);
 
         return orderRepository.save(order);
     }
@@ -176,6 +173,12 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
+    }
+
+    private void checkCartIsNotEmpty(Cart cart) {
+        if (cart.getItems().isEmpty()) {
+            throw new CartEmptyException("Cart is empty");
+        }
     }
 
     private BigDecimal getTotalAmount(Order order) {
@@ -223,5 +226,13 @@ public class OrderServiceImpl implements OrderService {
         if (order.getStatus() != OrderStatus.CREATED) {
             throw new OrderModificationException("Order cannot be modified in current status " + order.getStatus());
         }
+    }
+
+    private void logAttemptToSaveOrder(Order order) {
+        log.debug("Attempt to save Order = {} with \n{} total amount = {}\nby user {} ",
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
+                order.getTotalAmount(),
+                order.getUser().getEmail());
     }
 }

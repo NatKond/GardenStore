@@ -29,22 +29,15 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @GetMapping("/history")
     @PreAuthorize("hasRole('USER')")
-    public List<OrderShortResponseDto> getAllForCurrentUser() {
-        return orderConverter.convertEntityListToDtoList(orderService.getAllForCurrentUser());
+    public List<OrderShortResponseDto> getAll() {
+        return orderConverter.convertEntityListToDtoList(orderService.getAll());
     }
 
     @GetMapping("/history/delivered")
     @PreAuthorize("hasRole('USER')")
     @Override
-    public List<OrderResponseDto> getAllDeliveredForCurrentUser() {
-        return orderService.getAllDeliveredForCurrentUser().stream().map(orderConverter::convertEntityToDto).toList();
-    }
-
-    @GetMapping()
-    @PreAuthorize("hasRole('ADMIN')")
-    @Override
-    public List<OrderShortResponseDto> getAll(){
-        return orderConverter.convertEntityListToDtoList(orderService.getAll());
+    public List<OrderResponseDto> getAllDelivered() {
+        return orderService.getAllDelivered().stream().map(orderConverter::convertEntityToDto).toList();
     }
 
     @Override

@@ -2,7 +2,7 @@ package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.Category;
-import de.telran.gardenStore.exception.CannotDeleteCategoryException;
+import de.telran.gardenStore.exception.CategoryDeletionNotAllowedException;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.repository.CategoryRepository;
@@ -184,7 +184,7 @@ class CategoryServiceImplTest extends AbstractTest {
 
         when(categoryRepositoryMock.findById(categoryId)).thenReturn(Optional.of(categoryToDelete));
 
-        CannotDeleteCategoryException cannotDeleteCategoryException = assertThrows(CannotDeleteCategoryException.class, () -> categoryService.deleteById(categoryId));
-        assertEquals("Cannot delete category " + categoryToDelete.getName() + " because it contains products.", cannotDeleteCategoryException.getMessage());
+        CategoryDeletionNotAllowedException categoryDeletionNotAllowedException = assertThrows(CategoryDeletionNotAllowedException.class, () -> categoryService.deleteById(categoryId));
+        assertEquals("Cannot delete category " + categoryToDelete.getName() + " because it contains products.", categoryDeletionNotAllowedException.getMessage());
     }
 }

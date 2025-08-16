@@ -1,6 +1,5 @@
 package de.telran.gardenStore.dto;
 
-import de.telran.gardenStore.serializer.SensitiveData;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -20,8 +19,8 @@ public class UserCreateRequestDto {
     @Pattern(regexp = "^\\+?\\d{10,15}$", message = "Phone number should have at least 10 characters")
     private String phoneNumber;
 
-    @SensitiveData
+    @ToString.Exclude
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^\\w{5,}$", message = "Password should have at least 5 characters")
+    @Pattern(regexp = "\\w{5,}$", message = "Password should have at least 5 characters")
     private String password;
 }

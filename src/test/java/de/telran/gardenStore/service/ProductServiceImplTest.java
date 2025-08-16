@@ -169,26 +169,24 @@ class ProductServiceImplTest extends AbstractTest {
     @DisplayName("getProductOfTheDay - Get the product of the day: positive case")
     @Test
     void getProductOfTheDayPositiveCase() {
-        List<Product> discountedProducts = List.of(product1, product2);
+        Optional<Product> discountedProduct = Optional.of(product2);
+        Product expected = product2;
 
-        when(productRepository.findProductsWithHighestDiscount()).thenReturn(discountedProducts);
+        when(productRepository.findProductsWithHighestDiscount()).thenReturn(discountedProduct);
 
-        Product result = productService.getProductOfTheDay();
+        Product actual = productService.getProductOfTheDay();
 
-        assertNotNull(result);
-        assertTrue(discountedProducts.contains(result));
+        assertNotNull(actual);
+        assertEquals(expected, actual);
         verify(productRepository).findProductsWithHighestDiscount();
     }
 
     @DisplayName("getProductOfTheDay - Get the product of the day: negative case")
     @Test
     void getProductOfTheDayNegativeCase() {
-        when(productRepository.findProductsWithHighestDiscount()).thenReturn(List.of());
+        when(productRepository.findProductsWithHighestDiscount()).thenReturn(Optional.empty());
 
-        NoDiscountedProductsException exception = assertThrows(
-                NoDiscountedProductsException.class,
-                () -> productService.getProductOfTheDay()
-        );
+        NoDiscountedProductsException exception = assertThrows(NoDiscountedProductsException.class, () -> productService.getProductOfTheDay());
 
         assertEquals("No discounted products available", exception.getMessage());
         verify(productRepository).findProductsWithHighestDiscount();

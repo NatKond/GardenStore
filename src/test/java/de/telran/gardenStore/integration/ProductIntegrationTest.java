@@ -23,13 +23,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
 @Transactional
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductIntegrationTest extends AbstractTest {
 
     @Autowired
@@ -39,16 +36,157 @@ class ProductIntegrationTest extends AbstractTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("GET /v1/products - Get all products : positive case")
-    void getAll() throws Exception {
-        List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2, productShortResponseDto3);
+    @DisplayName("GET /v1/products — Get all products (without filters)")
+    void getAllNoFilters() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto1,
+                productShortResponseDto2,
+                productShortResponseDto3
+        );
 
         mockMvc.perform(get("/v1/products"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected)));
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (sortBy=price, sortDirection=false)")
+    void getAllSortByPriceAsc() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto3,
+                productShortResponseDto1,
+                productShortResponseDto2
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("sortBy", "price")
+                        .param("sortDirection", "false"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (sortBy=price, sortDirection=true)")
+    void getAllSortByPriceDesc() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto2,
+                productShortResponseDto1,
+                productShortResponseDto3
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("sortBy", "price")
+                        .param("sortDirection", "true"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (categoryId=1)")
+    void getAllFilterByCategory1Ok() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto1,
+                productShortResponseDto2
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("categoryId", "1"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (discount=false (with a non-null discountPrice)")
+    void getAllDiscountTrueOk() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(
+                productShortResponseDto1,
+                productShortResponseDto2,
+                productShortResponseDto3
+        );
+
+        mockMvc.perform(get("/v1/products")
+                        .param("discount", "true"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (discount=false (all without discount)")
+    void getAllDiscountFalseEmptyOk() throws Exception {
+        mockMvc.perform(get("/v1/products")
+                        .param("discount", "false"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json("[]")
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (minPrice=8, maxPrice=12)")
+    void getAllPriceRangeOk() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(productShortResponseDto1);
+
+        mockMvc.perform(get("/v1/products")
+                        .param("minPrice", "8.00")
+                        .param("maxPrice", "12.00")
+                        .param("sortBy", "price")
+                        .param("sortDirection", "false"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (minPrice > maxPrice → 400 Bad Request)")
+    void getAllPriceRangeInvalidBadRequest() throws Exception {
+        mockMvc.perform(get("/v1/products")
+                        .param("minPrice", "20.00")
+                        .param("maxPrice", "10.00"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("GET /v1/products — Get all products (category=1 & minPrice=10 & sortBy=price DESC → product2, product1)")
+    void getAllCombinedFiltersOk() throws Exception {
+        List<ProductShortResponseDto> expected = List.of(productShortResponseDto2, productShortResponseDto1);
+
+        mockMvc.perform(get("/v1/products")
+                        .param("category", "1")
+                        .param("minPrice", "10.00")
+                        .param("sortBy", "price")
+                        .param("sortDirection", "true"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        content().json(objectMapper.writeValueAsString(expected))
+                );
     }
 
     @Test
@@ -125,8 +263,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("DELETE /v1/products/{productId} - Delete product by ID")
-    void deleteProduct() throws Exception {
+    @DisplayName("DELETE /v1/products/{productId} - Delete product by ID : positive case")
+    void deletePositiveCase() throws Exception {
         Long productId = 2L;
 
         mockMvc.perform(delete("/v1/products/{productId}", productId)
@@ -136,8 +274,24 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("POST /v1/products/{productId}/discount/{discountPercentage} - Set discount")
-    void setDiscountPositiveCase() throws Exception {
+    @DisplayName("DELETE /v1/products/{productId} - Delete product by ID : negative case")
+    void deleteNegativeCase() throws Exception {
+        Long productId = 999L;
+
+        mockMvc.perform(delete("/v1/products/{productId}", productId)
+                        .with(httpBasic("alice.johnson@example.com", "12345")))
+                .andDo(print())
+                .andExpectAll(
+                        status().isNotFound(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.exception").value("ProductNotFoundException"),
+                        jsonPath("$.message").value("Product with id " + productId + " not found"),
+                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    @DisplayName("POST /v1/products/{productId}/discount/{%} - Set discount")
+    void setDiscount() throws Exception {
         Long productId = product1.getProductId();
         BigDecimal discountPercentage = new BigDecimal("20");
         BigDecimal originalPrice = product1.getPrice();
@@ -159,8 +313,8 @@ class ProductIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day: positive case")
-    void getProductOfTheDayPositiveCase() throws Exception {
+    @DisplayName("GET /v1/products/product-of-the-day - Get the product of the day")
+    void getProductOfTheDay() throws Exception {
         ProductResponseDto expected = productResponseDto2;
 
         mockMvc.perform(get("/v1/products/product-of-the-day"))
@@ -171,3 +325,5 @@ class ProductIntegrationTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
     }
 }
+
+

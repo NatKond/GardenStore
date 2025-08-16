@@ -1,17 +1,19 @@
 package de.telran.gardenStore.service;
 
 import de.telran.gardenStore.entity.Category;
-import de.telran.gardenStore.exception.CannotDeleteCategoryException;
+import de.telran.gardenStore.exception.CategoryDeletionNotAllowedException;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
 import de.telran.gardenStore.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -30,25 +32,30 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category create(Category category) {
         checkCategoryNameIsUnique(category.getName());
+
+        logAttemptToSaveCategory(category);
+
         return categoryRepository.save(category);
     }
 
     @Override
     public Category update(Long categoryId, Category category) {
-        Category existing = getById(categoryId);
-        if (!existing.getName().equals(category.getName())) {
+        Category categoryToUpdate = getById(categoryId);
+        if (!categoryToUpdate.getName().equals(category.getName())) {
             checkCategoryNameIsUnique(category.getName());
         }
-        existing.setName(category.getName());
+        categoryToUpdate.setName(category.getName());
 
-        return categoryRepository.save(existing);
+        logAttemptToSaveCategory(category);
+
+        return categoryRepository.save(categoryToUpdate);
     }
 
     @Override
     public void deleteById(Long categoryId) {
         Category category = getById(categoryId);
         if (!category.getProducts().isEmpty()) {
-            throw new CannotDeleteCategoryException("Cannot delete category " + category.getName() + " because it contains products.");
+            throw new CategoryDeletionNotAllowedException("Cannot delete category " + category.getName() + " because it contains products.");
         }
         categoryRepository.delete(category);
     }
@@ -59,4 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    private void logAttemptToSaveCategory(Category category) {
+        log.debug("Attempt to save Category {}", category);
+    }
 }

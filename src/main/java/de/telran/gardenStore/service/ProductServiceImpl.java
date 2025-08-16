@@ -1,7 +1,9 @@
 package de.telran.gardenStore.service;
+
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.NoDiscountedProductsException;
+import de.telran.gardenStore.exception.ProductDeletionNotAllowedException;
 import de.telran.gardenStore.exception.ProductNotFoundException;
 import de.telran.gardenStore.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -10,16 +12,18 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -27,8 +31,6 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
 
     private final EntityManager entityManager;
-
-    private final UserService userService;
 
     @Override
     public List<Product> getAll(Long categoryId, Boolean discount, BigDecimal minPrice, BigDecimal maxPrice, String sortBy, Boolean sortDirection) {
@@ -74,59 +76,71 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id " + productId + " not found"));
+    public Product getById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
+    }
+
+    @Override
+    public Product getProductOfTheDay() {
+        Optional<Product> discountedProduct = productRepository.findProductsWithHighestDiscount();
+        if (discountedProduct.isEmpty()) {
+            throw new NoDiscountedProductsException("No discounted products available");
+        }
+        return discountedProduct.get();
     }
 
     @Override
     public Product create(Product product) {
         checkCategoryExists(product.getCategory().getCategoryId());
+        logAttemptToSaveProduct(product);
 
         return productRepository.save(product);
     }
 
     @Override
     public Product update(Long id, Product product) {
-        Product existing = getById(id);
+        Product productToUpdate = getById(id);
 
         checkCategoryExists(product.getCategory().getCategoryId());
 
-        existing.setName(product.getName());
-        existing.setDescription(product.getDescription());
-        existing.setPrice(product.getPrice());
-        existing.setDiscountPrice(product.getDiscountPrice());
-        existing.setCategory(product.getCategory());
-        existing.setImageUrl(product.getImageUrl());
+        productToUpdate.setName(product.getName());
+        productToUpdate.setDescription(product.getDescription());
+        productToUpdate.setPrice(product.getPrice());
+        productToUpdate.setDiscountPrice(product.getDiscountPrice());
+        productToUpdate.setCategory(product.getCategory());
+        productToUpdate.setImageUrl(product.getImageUrl());
+        logAttemptToSaveProduct(productToUpdate);
 
-        return productRepository.save(existing);
+        return productRepository.save(productToUpdate);
     }
 
     @Override
-    public void deleteById(Long id) {
-        productRepository.delete(getById(id));
-    }
-
-    @Override
-    public Product setDiscount(Long productId, BigDecimal discountPercentage) {
-        Product product = getById(productId);
+    public Product setDiscount(Long id, BigDecimal discountPercentage) {
+        Product product = getById(id);
         BigDecimal discountAmount = product.getPrice()
                 .multiply(discountPercentage)
-                .divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
+                .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         product.setDiscountPrice(product.getPrice().subtract(discountAmount));
+        logAttemptToSaveProduct(product);
+
         return productRepository.save(product);
     }
 
     @Override
-    public Product getProductOfTheDay() {
-        List<Product> discountedProducts = productRepository.findProductsWithHighestDiscount();
-        if (discountedProducts.isEmpty()) {
-            throw new NoDiscountedProductsException("No discounted products available");
+    public void deleteById(Long id) {
+        if (productRepository.isInOrder(id)){
+         throw new ProductDeletionNotAllowedException("Product cannot be deleted because it was added to order");
         }
-        return discountedProducts.get(new Random().nextInt(discountedProducts.size()));
+
+        productRepository.delete(getById(id));
     }
 
     private void checkCategoryExists(Long categoryId) {
         categoryService.getById(categoryId);
+    }
+
+    private void logAttemptToSaveProduct(Product product) {
+        log.debug("Attempt to save Product {}", product);
     }
 }

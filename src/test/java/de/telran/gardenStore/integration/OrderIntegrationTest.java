@@ -38,7 +38,7 @@ public class OrderIntegrationTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/orders/history - Get order history for current user")
-    void getAllForCurrentUser() throws Exception {
+    void getAllPositiveCase() throws Exception {
         List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1, orderShortResponseDto3);
 
 
@@ -52,23 +52,10 @@ public class OrderIntegrationTest extends AbstractTest {
 
     @Test
     @DisplayName("GET /v1/orders/history/delivered- Get all delivered orders history for current user")
-    void getAllDeliveredForCurrentUser() throws Exception {
+    void getAllDelivered() throws Exception {
         List<OrderResponseDto> expected = List.of(orderResponseDto3);
 
         mockMvc.perform(get("/v1/orders/history/delivered")
-                        .with(httpBasic("alice.johnson@example.com", "12345")))
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected)));
-    }
-
-    @Test
-    @DisplayName("GET /v1/orders/history/{userId} - Get order history for user")
-    void getAll() throws Exception {
-        List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1, orderShortResponseDto2, orderShortResponseDto3, orderShortResponseDto4);
-
-        mockMvc.perform(get("/v1/orders")
                         .with(httpBasic("alice.johnson@example.com", "12345")))
                 .andExpectAll(
                         status().isOk(),
@@ -255,10 +242,10 @@ public class OrderIntegrationTest extends AbstractTest {
         mockMvc.perform(delete("/v1/orders/{orderId}", orderWithIncorrectStatus)
                         .with(httpBasic("alice.johnson@example.com", "12345")))
                 .andExpectAll(
-                        status().isBadRequest(),
+                        status().isConflict(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.exception").value("OrderCancellationException"),
                         jsonPath("$.message").value("Order cannot be cancelled in current status " + order3.getStatus()),
-                        jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
+                        jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
     }
 }

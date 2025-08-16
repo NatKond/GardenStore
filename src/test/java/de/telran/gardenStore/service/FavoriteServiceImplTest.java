@@ -89,7 +89,7 @@ class FavoriteServiceImplTest extends AbstractTest {
         Long productId = favoriteToCreate.getUser().getUserId();
 
         when(userService.getCurrent()).thenReturn(user1);
-        when(favoriteRepository.findByUserIdAndProductId(user, productId)).thenReturn(Optional.empty());
+        when(favoriteRepository.findByUserAndProductId(user, productId)).thenReturn(Optional.empty());
         when(productService.getById(productId)).thenReturn(product3);
         when(favoriteRepository.save(favoriteToCreate)).thenReturn(favoriteCreated);
 
@@ -109,11 +109,11 @@ class FavoriteServiceImplTest extends AbstractTest {
         Long productId = product3.getProductId();
 
         when(userService.getCurrent()).thenReturn(user);
-        when(favoriteRepository.findByUserIdAndProductId(user, productId)).thenReturn(Optional.of(favoriteCreated));
+        when(favoriteRepository.findByUserAndProductId(user, productId)).thenReturn(Optional.of(favoriteCreated));
 
         RuntimeException runtimeException = assertThrows(FavoriteAlreadyExistsException.class, () -> favoriteService.create(productId));
         assertEquals("Favorite with userId " + user.getUserId() + " and productId " + productId + " already exists", runtimeException.getMessage());
-        verify(favoriteRepository).findByUserIdAndProductId(user, productId);
+        verify(favoriteRepository).findByUserAndProductId(user, productId);
     }
 
     @Test

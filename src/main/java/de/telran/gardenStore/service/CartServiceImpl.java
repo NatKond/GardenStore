@@ -3,21 +3,23 @@ package de.telran.gardenStore.service;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
+import de.telran.gardenStore.exception.CartItemNotFoundException;
 import de.telran.gardenStore.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import de.telran.gardenStore.exception.CartNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
-
-    private final CartItemService cartItemService;
 
     private final UserService userService;
 
@@ -27,25 +29,25 @@ public class CartServiceImpl implements CartService {
     public Cart getByUser(AppUser user) {
         return cartRepository.findByUser(user)
                 .orElseThrow(() -> new CartNotFoundException(
-                        "Cart for user " + user.getUserId() + " not found"
-                ));
+                        "Cart for user " + user.getUserId() + " not found"));
     }
 
     @Override
     public Cart create(AppUser user) {
-        return cartRepository.save(
-                Cart.builder()
+
+        return cartRepository.save(Cart.builder()
                 .user(user)
                 .build());
     }
 
     @Override
     public Cart update(Cart cart) {
-        Cart existingCart = getByUser(cart.getUser());
+        Cart cartToUpdate = getByUser(cart.getUser());
+        cartToUpdate.setItems(cart.getItems());
 
-        existingCart.setItems(cart.getItems());
+        logAttemptToSaveCart(cartToUpdate);
 
-        return cartRepository.save(existingCart);
+        return cartRepository.save(cartToUpdate);
     }
 
     @Override
@@ -70,30 +72,57 @@ public class CartServiceImpl implements CartService {
             item.setQuantity(item.getQuantity() + 1);
         } else {
             CartItem newItem = CartItem.builder()
-                    .cart(cart)
                     .product(productService.getById(productId))
                     .quantity(1)
                     .build();
             items.add(newItem);
         }
 
+        logAttemptToSaveCart(cart);
+
         return cartRepository.save(cart);
     }
 
     @Override
     public Cart updateItem(Long cartItemId, Integer quantity) {
-        CartItem cartItem = cartItemService.getById(cartItemId);
-        Cart cart = cartItem.getCart();
+        Cart cart = getByUser(userService.getCurrent());
+        CartItem cartItem = findItemInCart(cart.getItems(), cartItemId);
         cartItem.setQuantity(quantity);
+
+        logAttemptToSaveCart(cart);
+
         return cartRepository.save(cart);
     }
 
     @Override
     public Cart deleteItem(Long cartItemId) {
-        CartItem cartItem = cartItemService.getById(cartItemId);
-        Cart cart = cartItem.getCart();
+        Cart cart = getByUser(userService.getCurrent());
+        CartItem cartItem = findItemInCart(cart.getItems(), cartItemId);
         cart.getItems().remove(cartItem);
+
+        logAttemptToSaveCart(cart);
+
         return cartRepository.save(cart);
+    }
+
+    private CartItem findItemInCart(List<CartItem> cartItems, Long cartItemId) {
+        return cartItems.stream()
+                .filter(item -> item.getCartItemId().equals(cartItemId))
+                .findFirst()
+                .orElseThrow(() -> new CartItemNotFoundException("CartItem with id " + cartItemId + " not found"));
+    }
+
+    private void logAttemptToSaveCart(Cart cart) {
+        if (cart.getItems().isEmpty()) {
+            log.debug("Attempt to save Cart = {} by user {} ",
+                    cart.getCartId(),
+                    cart.getUser().getEmail());
+        } else {
+            log.debug("Attempt to save Cart = {}\n{}by user {} ",
+                    cart.getCartId(),
+                    cart.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
+                    cart.getUser().getEmail());
+        }
     }
 }
 

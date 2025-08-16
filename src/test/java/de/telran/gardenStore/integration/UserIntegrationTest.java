@@ -6,7 +6,6 @@ import de.telran.gardenStore.dto.UserCreateRequestDto;
 import de.telran.gardenStore.dto.UserResponseDto;
 import de.telran.gardenStore.dto.UserShortResponseDto;
 import de.telran.gardenStore.dto.security.LoginRequest;
-import de.telran.gardenStore.entity.AppUser;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,6 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -90,17 +88,18 @@ public class UserIntegrationTest extends AbstractTest {
                 .email(userCreated.getEmail())
                 .password("12345")
                 .build();
+        String email = loginRequest.getEmail();
 
         mockMvc.perform(post("/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andDo(print())
                 .andExpectAll(
-                        status().isBadRequest(),
+                        status().isNotFound(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        jsonPath("$.exception").value("InternalAuthenticationServiceException"),
-                        jsonPath("$.message").value("User with email " + loginRequest.getEmail() + " not found"),
-                        jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
+                        jsonPath("$.exception").value("UserNotFoundException"),
+                        jsonPath("$.message").value("User with email " + email + " not found"),
+                        jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
     }
 
     @Test
@@ -192,13 +191,18 @@ public class UserIntegrationTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("DELETE /v1/users/{userId} - Delete current user")
+    @DisplayName("DELETE /v1/users/{userId} - Delete current user : negative case")
     void deleteUserByI() throws Exception {
 
         mockMvc.perform(delete("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(httpBasic("alice.johnson@example.com", "12345")))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpectAll(
+                        status().isConflict(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.exception").value("UserDeletionNotAllowedException"),
+                        jsonPath("$.message").value("User cannot be deleted because they have placed orders"),
+                        jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
     }
 }

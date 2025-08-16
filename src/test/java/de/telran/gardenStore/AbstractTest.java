@@ -274,18 +274,14 @@ public abstract class AbstractTest {
                 .user(user1)
                 .build();
 
-        user1.setCart(cart1);
-
         cartItem1 = CartItem.builder()
                 .cartItemId(1L)
-                .cart(cart1)
                 .product(product1)
                 .quantity(2)
                 .build();
 
         cartItem2 = CartItem.builder()
                 .cartItemId(2L)
-                .cart(cart1)
                 .product(product2)
                 .quantity(1)
                 .build();
@@ -297,11 +293,8 @@ public abstract class AbstractTest {
                 .user(user2)
                 .build();
 
-        user2.setCart(cart2);
-
         cartItem3 = CartItem.builder()
                 .cartItemId(3L)
-                .cart(cart2)
                 .product(product1)
                 .quantity(1)
                 .build();

@@ -77,7 +77,7 @@ public class ProductControllerImplTest extends AbstractTest {
                 .andDo(print())
                 .andExpectAll(
                         status().isBadRequest(),
-                        jsonPath("$.exception").value("IllegalArgumentException"),
+                        jsonPath("$.exception").value("InvalidPriceRangeException"),
                         jsonPath("$.message").value("Min price cannot be greater than max price"));
     }
 

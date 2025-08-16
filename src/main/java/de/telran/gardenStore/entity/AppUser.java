@@ -1,7 +1,6 @@
 package de.telran.gardenStore.entity;
 
 import de.telran.gardenStore.enums.Role;
-import de.telran.gardenStore.serializer.SensitiveData;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,10 +26,9 @@ public class AppUser {
 
     private String email;
 
-    @SensitiveData(visibleChars = 4)
     private String phoneNumber;
 
-    @SensitiveData
+    @ToString.Exclude
     private String passwordHash;
 
     @Builder.Default
@@ -45,10 +43,4 @@ public class AppUser {
     @Builder.Default
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Cart cart;
-
 }

@@ -48,7 +48,7 @@ public class CartControllerImpl implements CartController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")
     public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
-                                          @RequestParam @Positive Integer quantity) {
+                                      @RequestParam @Positive Integer quantity) {
         return cartConverter.convertEntityToDto(
                 cartService.updateItem(cartItemId, quantity));
     }

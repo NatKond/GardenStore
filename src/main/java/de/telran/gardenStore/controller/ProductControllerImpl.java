@@ -1,6 +1,5 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Loggable
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/products")
@@ -35,15 +33,15 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @GetMapping
     public List<ProductShortResponseDto> getAll(@RequestParam(required = false) @Positive Long categoryId,
-                                                        @RequestParam(required = false) Boolean discount,
-                                                        @RequestParam(required = false) @Positive BigDecimal minPrice,
-                                                        @RequestParam(required = false) @Positive BigDecimal maxPrice,
-                                                        @RequestParam(required = false)
-                                                        @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
-                                                        @RequestParam(required = false) Boolean sortDirection) {
+                                                @RequestParam(required = false) Boolean discount,
+                                                @RequestParam(required = false) @Positive BigDecimal minPrice,
+                                                @RequestParam(required = false) @Positive BigDecimal maxPrice,
+                                                @RequestParam(required = false)
+                                                @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
+                                                @RequestParam(required = false) Boolean sortDirection) {
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
-            throw new IllegalArgumentException("Min price cannot be greater than max price");
+            throw new InvalidPriceRangeException("Min price cannot be greater than max price");
         }
         return productConverter.convertEntityListToDtoList(
                 productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection)

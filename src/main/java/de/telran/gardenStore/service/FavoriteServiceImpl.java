@@ -45,7 +45,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .product(productService.getById(productId))
                 .build();
 
-        log.debug("Attempt to save Favorite {}\n{} by user {}", favorite.getFavoriteId(), favorite.getProduct(), user.getEmail());
+        log.debug("Attempt to save favorite by user {}\nwith product = {}", user.getEmail(), favorite.getProduct());
 
         return favoriteRepository.save(favorite);
     }

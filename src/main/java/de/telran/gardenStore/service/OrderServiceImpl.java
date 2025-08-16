@@ -81,7 +81,11 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(getTotalAmount(order));
 
         cartService.update(cart);
-        logAttemptToSaveOrder(order);
+        log.debug("Attempt to save order by user {}:\norderId = {} with{}\ntotal amount = {}",
+                order.getUser().getEmail(),
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining("")),
+                order.getTotalAmount());
 
         return orderRepository.save(order);
     }
@@ -112,6 +116,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Cart cart = cartService.getByUser(order.getUser());
+        checkCartIsNotEmpty(cart);
         List<CartItem> cartItems = cart.getItems();
         Optional<CartItem> cartItem = findCartItemByProductId(cartItems, productId);
 
@@ -122,7 +127,12 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setTotalAmount(getTotalAmount(order));
         cartService.update(cart);
-        logAttemptToSaveOrder(order);
+        log.debug("Attempt to add item with product {} to order by user {}:\norderId = {} with{}\ntotal amount = {}",
+                productId,
+                order.getUser().getEmail(),
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining("")),
+                order.getTotalAmount());
 
         return orderRepository.save(order);
     }
@@ -144,13 +154,18 @@ public class OrderServiceImpl implements OrderService {
         orderItem.setQuantity(quantity);
         order.setTotalAmount(getTotalAmount(order));
         cartService.update(cart);
-        logAttemptToSaveOrder(order);
+        log.debug("Attempt to update item {} to order by user {}:\norderId = {} with{}\ntotal amount = {}",
+                orderItemId,
+                order.getUser().getEmail(),
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining("")),
+                order.getTotalAmount());
 
         return orderRepository.save(order);
     }
 
     @Override
-    public Order removeItem(Long orderItemId) {
+    public Order deleteItem(Long orderItemId) {
         OrderItem orderItem = orderItemService.getById(orderItemId);
 
         Order order = orderItem.getOrder();
@@ -159,7 +174,12 @@ public class OrderServiceImpl implements OrderService {
 
         checkOrderNotEmpty(order);
         order.setTotalAmount(getTotalAmount(order));
-        logAttemptToSaveOrder(order);
+        log.debug("Attempt to delete item {} from order by user {}:\norderId = {} with{}\ntotal amount = {}",
+                orderItemId,
+                order.getUser().getEmail(),
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining("")),
+                order.getTotalAmount());
 
         return orderRepository.save(order);
     }
@@ -226,13 +246,5 @@ public class OrderServiceImpl implements OrderService {
         if (order.getStatus() != OrderStatus.CREATED) {
             throw new OrderModificationException("Order cannot be modified in current status " + order.getStatus());
         }
-    }
-
-    private void logAttemptToSaveOrder(Order order) {
-        log.debug("Attempt to save Order = {} with \n{} total amount = {}\nby user {} ",
-                order.getOrderId(),
-                order.getItems().stream().map(item -> "- " + item).collect(Collectors.joining("\n")),
-                order.getTotalAmount(),
-                order.getUser().getEmail());
     }
 }

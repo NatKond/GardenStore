@@ -5,10 +5,13 @@ import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
 import de.telran.gardenStore.exception.OrderPaymentRejectedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
@@ -29,6 +32,11 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IncorrectPaymentAmountException("Payment amount is incorrect");
         }
 
+        log.debug("Attempt to save paid order by user {}:\norderId = {} with {}\ntotal amount = {}",
+                order.getUser().getEmail(),
+                order.getOrderId(),
+                order.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining("")),
+                order.getTotalAmount());
         return orderService.updateStatus(orderId, OrderStatus.PAID);
     }
 }

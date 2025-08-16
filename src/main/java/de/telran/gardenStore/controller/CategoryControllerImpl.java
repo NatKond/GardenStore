@@ -30,13 +30,13 @@ public class CategoryControllerImpl implements CategoryController {
     @Override
     @GetMapping
     public List<CategoryShortResponseDto> getAll() {
-        return categoryConverter.convertEntityListToDtoList(categoryService.getAll());
+        return categoryConverter.toDtoList(categoryService.getAll());
     }
 
     @Override
     @GetMapping("/{categoryId}")
     public CategoryResponseDto getById(@PathVariable @Positive Long categoryId) {
-        return categoryConverter.convertEntityToDto(
+        return categoryConverter.toDto(
                 categoryService.getById(categoryId));
     }
 
@@ -46,8 +46,8 @@ public class CategoryControllerImpl implements CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponseDto create(@RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(categoryService.create(
-                categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+        return categoryConverter.toDto(categoryService.create(
+                categoryConverter.toEntity(categoryCreateRequestDto)));
     }
 
     @Override
@@ -57,8 +57,8 @@ public class CategoryControllerImpl implements CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponseDto update(@PathVariable @Positive Long categoryId,
                                       @RequestBody @Valid CategoryCreateRequestDto categoryCreateRequestDto) {
-        return categoryConverter.convertEntityToDto(
-                categoryService.update(categoryId,  categoryConverter.convertDtoToEntity(categoryCreateRequestDto)));
+        return categoryConverter.toDto(
+                categoryService.update(categoryId,  categoryConverter.toEntity(categoryCreateRequestDto)));
     }
 
     @Override

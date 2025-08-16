@@ -1,6 +1,6 @@
 package de.telran.gardenStore.converter;
 
-public interface ConverterDtoToEntity <Entity, RequestDto>{
+public interface ConverterDtoToEntity<Entity, RequestDto> {
 
-    Entity convertDtoToEntity(RequestDto requestDto);
+    Entity toEntity(RequestDto requestDto);
 }

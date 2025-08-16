@@ -20,15 +20,15 @@ public class CategoryConverter implements Converter<Category,CategoryCreateReque
     private final ProductConverter productConverter;
 
     @Override
-    public Category convertDtoToEntity(CategoryCreateRequestDto categoryCreateRequestDto) {
+    public Category toEntity(CategoryCreateRequestDto categoryCreateRequestDto) {
         return modelMapper.map(categoryCreateRequestDto, Category.class);
     }
 
     @Override
-    public CategoryResponseDto convertEntityToDto(Category category) {
+    public CategoryResponseDto toDto(Category category) {
         modelMapper.typeMap(Category.class, CategoryResponseDto.class).addMappings(
                 mapper -> mapper
-                        .using(context -> productConverter.convertEntityListToDtoList((List<Product>) context.getSource()))
+                        .using(context -> productConverter.toDtoList((List<Product>) context.getSource()))
                         .map(Category::getProducts, CategoryResponseDto::setProducts)
         );
 
@@ -36,7 +36,7 @@ public class CategoryConverter implements Converter<Category,CategoryCreateReque
     }
 
     @Override
-    public List<CategoryShortResponseDto> convertEntityListToDtoList(List<Category> categories) {
-        return ConverterEntityToDto.convertList(categories, category -> modelMapper.map(category, CategoryShortResponseDto.class));
+    public List<CategoryShortResponseDto> toDtoList(List<Category> categories) {
+        return ConverterEntityToDto.toList(categories, category -> modelMapper.map(category, CategoryShortResponseDto.class));
     }
 }

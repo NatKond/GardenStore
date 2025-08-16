@@ -57,7 +57,7 @@ public class ProductControllerImplTest extends AbstractTest {
         List<ProductShortResponseDto> expected = List.of(productShortResponseDto1, productShortResponseDto2, productShortResponseDto3);
 
         when(productService.getAll(null, null, null, null, null, null)).thenReturn(products);
-        when(productConverter.convertEntityListToDtoList(products)).thenReturn(expected);
+        when(productConverter.toDtoList(products)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/products"))
                 .andDo(print())
@@ -87,7 +87,7 @@ public class ProductControllerImplTest extends AbstractTest {
         Long productId = 1L;
 
         when(productService.getById(productId)).thenReturn(product1);
-        when(productConverter.convertEntityToDto(product1)).thenReturn(productResponseDto1);
+        when(productConverter.toDto(product1)).thenReturn(productResponseDto1);
 
         mockMvc.perform(get("/v1/products/{productId}", productId))
                 .andDo(print())
@@ -121,9 +121,9 @@ public class ProductControllerImplTest extends AbstractTest {
     @DisplayName("POST /v1/products - Create new product")
     void create() throws Exception {
 
-        when(productConverter.convertDtoToEntity(productCreateRequestDto)).thenReturn(productToCreate);
+        when(productConverter.toEntity(productCreateRequestDto)).thenReturn(productToCreate);
         when(productService.create(productToCreate)).thenReturn(productCreated);
-        when(productConverter.convertEntityToDto(productCreated)).thenReturn(productResponseCreatedDto);
+        when(productConverter.toDto(productCreated)).thenReturn(productResponseCreatedDto);
 
         mockMvc.perform(post("/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -157,9 +157,9 @@ public class ProductControllerImplTest extends AbstractTest {
                 .build();
 
 
-        when(productConverter.convertDtoToEntity(productUpdateRequestDto)).thenReturn(productToUpdate);
+        when(productConverter.toEntity(productUpdateRequestDto)).thenReturn(productToUpdate);
         when(productService.update(productId, productToUpdate)).thenReturn(productUpdated);
-        when(productConverter.convertEntityToDto(productUpdated)).thenReturn(productResponseUpdatedDto);
+        when(productConverter.toDto(productUpdated)).thenReturn(productResponseUpdatedDto);
 
         mockMvc.perform(put("/v1/products/{productId}", productId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -204,9 +204,9 @@ public class ProductControllerImplTest extends AbstractTest {
                 .build();
 
         when(productService.setDiscount(productId, discountPercentage)).thenReturn(productWithDiscount);
-        when(productConverter.convertEntityToDto(productWithDiscount)).thenReturn(expected);
+        when(productConverter.toDto(productWithDiscount)).thenReturn(expected);
 
-        mockMvc.perform(post("/v1/products/{productId}/discount/{discountPercentage}", productId, discountPercentage))
+        mockMvc.perform(patch("/v1/products/{productId}/discount/{discountPercentage}", productId, discountPercentage))
                 .andDo(print())
                 .andExpectAll(
                         status().isAccepted(),
@@ -221,7 +221,7 @@ public class ProductControllerImplTest extends AbstractTest {
         ProductResponseDto expected = productResponseDto1;
 
         when(productService.getProductOfTheDay()).thenReturn(productOfTheDay);
-        when(productConverter.convertEntityToDto(productOfTheDay)).thenReturn(expected);
+        when(productConverter.toDto(productOfTheDay)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/products/product-of-the-day"))
                 .andDo(print())

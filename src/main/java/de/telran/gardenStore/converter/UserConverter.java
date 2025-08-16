@@ -26,7 +26,7 @@ public class UserConverter implements Converter<AppUser, UserCreateRequestDto, U
     private final FavoriteConverter favoriteConverter;
 
     @Override
-    public AppUser convertDtoToEntity(UserCreateRequestDto userCreateRequestDto) {
+    public AppUser toEntity(UserCreateRequestDto userCreateRequestDto) {
         modelMapper.typeMap(UserCreateRequestDto.class, AppUser.class).addMappings(
                 mapper -> mapper
                         .using(context -> passwordEncoder.encode((String) context.getSource()))
@@ -36,11 +36,11 @@ public class UserConverter implements Converter<AppUser, UserCreateRequestDto, U
     }
 
     @Override
-    public UserResponseDto convertEntityToDto(AppUser user) {
+    public UserResponseDto toDto(AppUser user) {
         modelMapper.typeMap(AppUser.class, UserResponseDto.class).addMappings(
                 mapper -> {
                     mapper
-                            .using(context -> favoriteConverter.convertEntityListToDtoList((List<Favorite>) context.getSource()))
+                            .using(context -> favoriteConverter.toDtoList((List<Favorite>) context.getSource()))
                             .map(AppUser::getFavorites, UserResponseDto::setFavorites);
                     mapper
                             .using(context -> convertRoles((Set<Role>) context.getSource()))
@@ -51,14 +51,14 @@ public class UserConverter implements Converter<AppUser, UserCreateRequestDto, U
     }
 
     @Override
-    public List<UserShortResponseDto> convertEntityListToDtoList(List<AppUser> users) {
+    public List<UserShortResponseDto> toDtoList(List<AppUser> users) {
         modelMapper.typeMap(AppUser.class, UserShortResponseDto.class).addMappings(
                 mapper ->
                         mapper
                                 .using(context -> convertRoles((Set<Role>) context.getSource()))
                                 .map(AppUser::getRoles, UserShortResponseDto::setRoles)
         );
-        return ConverterEntityToDto.convertList(users, user -> modelMapper.map(user, UserShortResponseDto.class));
+        return ConverterEntityToDto.toList(users, user -> modelMapper.map(user, UserShortResponseDto.class));
     }
 
     private List<String> convertRoles(Set<Role> roles) {

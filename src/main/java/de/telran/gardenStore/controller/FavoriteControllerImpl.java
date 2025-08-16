@@ -28,7 +28,7 @@ public class FavoriteControllerImpl implements FavoriteController {
     @Override
     @GetMapping()
     public List<FavoriteResponseDto> getAllForCurrentUser() {
-        return favoriteConverter.convertEntityListToDtoList(
+        return favoriteConverter.toDtoList(
                 favoriteService.getAllForCurrentUser());
     }
 
@@ -37,7 +37,7 @@ public class FavoriteControllerImpl implements FavoriteController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{productId}")
     public FavoriteResponseDto create(@Positive @PathVariable Long productId) {
-        return favoriteConverter.convertEntityToDto(
+        return favoriteConverter.toDto(
                 favoriteService.create(productId));
     }
 

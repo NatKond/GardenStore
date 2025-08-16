@@ -1,7 +1,6 @@
 package de.telran.gardenStore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import de.telran.gardenStore.serializer.SensitiveData;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,11 +13,13 @@ import java.util.Map;
 public class ApiResponse {
 
     private String exception;
-    @SensitiveData
+
     private String message;
-    @SensitiveData
+
     private Map<String, String> messages;
+
     private Integer status;
+
     private LocalDateTime timestamp;
 
     public static ApiResponse error(String message, Integer status) {

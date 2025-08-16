@@ -18,12 +18,12 @@ public class OrderConverter implements ConverterEntityToDto<Order, OrderResponse
     private final OrderItemConverter orderItemConverter;
 
     @Override
-    public OrderResponseDto convertEntityToDto(Order order) {
+    public OrderResponseDto toDto(Order order) {
         modelMapper.typeMap(Order.class, OrderResponseDto.class).addMappings(
                 mapper -> {
                     mapper.map(order1 -> order1.getUser().getUserId(), OrderResponseDto::setUserId);
                     mapper
-                        .using(context -> orderItemConverter.convertEntityListToDtoList((List<OrderItem>) context.getSource()))
+                        .using(context -> orderItemConverter.toDtoList((List<OrderItem>) context.getSource()))
                         .map(Order::getItems, OrderResponseDto::setItems);
                 }
         );
@@ -31,12 +31,12 @@ public class OrderConverter implements ConverterEntityToDto<Order, OrderResponse
     }
 
     @Override
-    public List<OrderShortResponseDto> convertEntityListToDtoList(List<Order> orders) {
+    public List<OrderShortResponseDto> toDtoList(List<Order> orders) {
         modelMapper.typeMap(Order.class, OrderShortResponseDto.class).addMappings(
                 mapper ->
                     mapper.map(order1 -> order1.getUser().getUserId(), OrderShortResponseDto::setUserId)
         );
 
-        return ConverterEntityToDto.convertList(orders, (order) -> modelMapper.map(order, OrderShortResponseDto.class));
+        return ConverterEntityToDto.toList(orders, (order) -> modelMapper.map(order, OrderShortResponseDto.class));
     }
 }

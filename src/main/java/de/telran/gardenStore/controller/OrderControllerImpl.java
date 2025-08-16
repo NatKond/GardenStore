@@ -30,21 +30,21 @@ public class OrderControllerImpl implements OrderController {
     @GetMapping("/history")
     @PreAuthorize("hasRole('USER')")
     public List<OrderShortResponseDto> getAll() {
-        return orderConverter.convertEntityListToDtoList(orderService.getAll());
+        return orderConverter.toDtoList(orderService.getAll());
     }
 
     @GetMapping("/history/delivered")
     @PreAuthorize("hasRole('USER')")
     @Override
     public List<OrderResponseDto> getAllDelivered() {
-        return orderService.getAllDelivered().stream().map(orderConverter::convertEntityToDto).toList();
+        return orderService.getAllDelivered().stream().map(orderConverter::toDto).toList();
     }
 
     @Override
     @GetMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
     public OrderResponseDto getById(@PathVariable @Positive Long orderId) {
-        return orderConverter.convertEntityToDto(
+        return orderConverter.toDto(
                 orderService.getById(orderId));
     }
 
@@ -54,7 +54,7 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderResponseDto create(@RequestBody @Valid OrderCreateRequestDto orderCreateRequestDto) {
-        return orderConverter.convertEntityToDto(
+        return orderConverter.toDto(
                 orderService.create(
                         orderCreateRequestDto.getDeliveryAddress(),
                         orderCreateRequestDto.getDeliveryMethod(),
@@ -70,7 +70,7 @@ public class OrderControllerImpl implements OrderController {
     public OrderResponseDto addItem(@RequestParam @Positive Long orderId,
                                     @RequestParam @Positive Long productId,
                                     @RequestParam @Positive Integer quantity){
-        return orderConverter.convertEntityToDto(
+        return orderConverter.toDto(
                 orderService.addItem(orderId, productId, quantity));
     }
 
@@ -81,7 +81,7 @@ public class OrderControllerImpl implements OrderController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OrderResponseDto updateItem(@RequestParam @Positive Long orderItemId,
                                        @RequestParam @Positive Integer quantity){
-        return orderConverter.convertEntityToDto(
+        return orderConverter.toDto(
                 orderService.updateItem(orderItemId, quantity));
     }
 
@@ -90,7 +90,7 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/items/{orderItemId}")
     public OrderResponseDto removeItem(@PathVariable @Positive Long orderItemId){
-        return orderConverter.convertEntityToDto(
+        return orderConverter.toDto(
                 orderService.removeItem(orderItemId));
     }
 
@@ -99,7 +99,7 @@ public class OrderControllerImpl implements OrderController {
     @DeleteMapping("/{orderId}")
     @PreAuthorize("hasRole('USER')")
     public OrderResponseDto delete(@PathVariable @Positive Long orderId) {
-        return orderConverter.convertEntityToDto(
+        return orderConverter.toDto(
                 orderService.cancel(orderId));
     }
 }

@@ -1,10 +1,12 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
 import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.exception.InvalidPriceRangeException;
 import de.telran.gardenStore.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -43,7 +45,7 @@ public class ProductControllerImpl implements ProductController {
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new InvalidPriceRangeException("Min price cannot be greater than max price");
         }
-        return productConverter.convertEntityListToDtoList(
+        return productConverter.toDtoList(
                 productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection)
         );
     }
@@ -51,7 +53,7 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @GetMapping("/{productId}")
     public ProductResponseDto getById(@PathVariable @Positive Long productId) {
-        return productConverter.convertEntityToDto(
+        return productConverter.toDto(
                 productService.getById(productId)
         );
     }
@@ -59,7 +61,7 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @GetMapping("/product-of-the-day")
     public ProductResponseDto getProductOfTheDay() {
-        return productConverter.convertEntityToDto(
+        return productConverter.toDto(
                 productService.getProductOfTheDay());
     }
 
@@ -69,8 +71,8 @@ public class ProductControllerImpl implements ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductResponseDto create(@RequestBody @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.create(
-                productConverter.convertDtoToEntity(productRequest)));
+        return productConverter.toDto(productService.create(
+                productConverter.toEntity(productRequest)));
     }
 
     @Override
@@ -80,8 +82,8 @@ public class ProductControllerImpl implements ProductController {
     @PutMapping("/{productId}")
     public ProductResponseDto update(@PathVariable @Positive Long productId,
                                      @RequestBody @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.update(productId,
-                productConverter.convertDtoToEntity(productRequest)));
+        return productConverter.toDto(productService.update(productId,
+                productConverter.toEntity(productRequest)));
     }
 
     @Override
@@ -94,7 +96,7 @@ public class ProductControllerImpl implements ProductController {
                                           @Min(value = 1, message = "Discount must be at least 1%")
                                           @Max(value = 99, message = "Discount cannot exceed 99%")
                                           BigDecimal discountPercentage) {
-        return productConverter.convertEntityToDto(
+        return productConverter.toDto(
                 productService.setDiscount(productId, discountPercentage));
     }
 

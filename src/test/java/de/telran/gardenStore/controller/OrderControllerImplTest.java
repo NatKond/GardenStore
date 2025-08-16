@@ -67,7 +67,7 @@ public class OrderControllerImplTest extends AbstractTest {
         List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1, orderShortResponseDto3);
 
         when(orderService.getAll()).thenReturn(userOrders);
-        when(orderConverter.convertEntityListToDtoList(userOrders)).thenReturn(expected);
+        when(orderConverter.toDtoList(userOrders)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/orders/history"))
                 .andExpectAll(
@@ -76,7 +76,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
 
         verify(orderService).getAll();
-        verify(orderConverter).convertEntityListToDtoList(userOrders);
+        verify(orderConverter).toDtoList(userOrders);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class OrderControllerImplTest extends AbstractTest {
         List<OrderResponseDto> expected = List.of(orderResponseDto3);
 
         when(orderService.getAllDelivered()).thenReturn(userOrders);
-        when(orderConverter.convertEntityToDto(order3)).thenReturn(orderResponseDto3);
+        when(orderConverter.toDto(order3)).thenReturn(orderResponseDto3);
 
         mockMvc.perform(get("/v1/orders/history/delivered"))
                 .andExpectAll(
@@ -95,7 +95,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
 
         verify(orderService).getAllDelivered();
-        verify(orderConverter).convertEntityToDto(order3);
+        verify(orderConverter).toDto(order3);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class OrderControllerImplTest extends AbstractTest {
         List<OrderShortResponseDto> expected = List.of(orderShortResponseDto1, orderShortResponseDto2, orderShortResponseDto3, orderShortResponseDto4);
 
         when(orderService.getAll()).thenReturn(userOrders);
-        when(orderConverter.convertEntityListToDtoList(userOrders)).thenReturn(expected);
+        when(orderConverter.toDtoList(userOrders)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/orders/history"))
                 .andExpectAll(
@@ -114,14 +114,14 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
 
         verify(orderService).getAll();
-        verify(orderConverter).convertEntityListToDtoList(userOrders);
+        verify(orderConverter).toDtoList(userOrders);
     }
 
     @Test
     @DisplayName("GET /v1/orders/{orderId} - Get order by ID : positive case")
     void getOrderByIdPositiveCase() throws Exception {
         when(orderService.getById(order1.getOrderId())).thenReturn(order1);
-        when(orderConverter.convertEntityToDto(order1)).thenReturn(orderResponseDto1);
+        when(orderConverter.toDto(order1)).thenReturn(orderResponseDto1);
 
         mockMvc.perform(get("/v1/orders/{orderId}", order1.getOrderId()))
                 .andExpectAll(
@@ -130,7 +130,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(orderResponseDto1)));
 
         verify(orderService).getById(order1.getOrderId());
-        verify(orderConverter).convertEntityToDto(order1);
+        verify(orderConverter).toDto(order1);
     }
 
     @Test
@@ -158,14 +158,14 @@ public class OrderControllerImplTest extends AbstractTest {
                 .orderId(3L)
                 .build();
 
-        when(orderConverter.convertDtoToEntity(orderCreateRequestDto)).thenReturn(orderToCreate);
+        when(orderConverter.toEntity(orderCreateRequestDto)).thenReturn(orderToCreate);
         when(orderService.create(
                 orderToCreate.getDeliveryAddress(),
                 orderToCreate.getDeliveryMethod(),
                 orderToCreate.getContactPhone(),
                 orderToCreate.getItems().stream().collect(Collectors.toMap(orderItem -> orderItem.getProduct().getProductId(), OrderItem::getQuantity))
         )).thenReturn(orderCreated);
-        when(orderConverter.convertEntityToDto(orderCreated)).thenReturn(orderResponseCreatedDto);
+        when(orderConverter.toDto(orderCreated)).thenReturn(orderResponseCreatedDto);
 
         mockMvc.perform(post("/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -180,7 +180,7 @@ public class OrderControllerImplTest extends AbstractTest {
                 orderToCreate.getDeliveryMethod(),
                 orderToCreate.getContactPhone(),
                 orderToCreate.getItems().stream().collect(Collectors.toMap(orderItem -> orderItem.getProduct().getProductId(), OrderItem::getQuantity)));
-        verify(orderConverter).convertEntityToDto(orderCreated);
+        verify(orderConverter).toDto(orderCreated);
     }
 
     @Test
@@ -255,7 +255,7 @@ public class OrderControllerImplTest extends AbstractTest {
                 .build();
 
         when(orderService.addItem(order.getOrderId(), product3.getProductId(), quantity)).thenReturn(orderUpdated);
-        when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
+        when(orderConverter.toDto(orderUpdated)).thenReturn(expected);
 
         mockMvc.perform(post("/v1/orders/items?orderId={orderId}&productId={productId}&quantity={quantity}",
                         order.getOrderId(),
@@ -268,7 +268,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
 
         verify(orderService).addItem(order.getOrderId(), product3.getProductId(), quantity);
-        verify(orderConverter).convertEntityToDto(orderUpdated);
+        verify(orderConverter).toDto(orderUpdated);
     }
 
     @Test
@@ -301,7 +301,7 @@ public class OrderControllerImplTest extends AbstractTest {
                 .build();
 
         when(orderService.updateItem(orderItemId, quantity)).thenReturn(orderUpdated);
-        when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
+        when(orderConverter.toDto(orderUpdated)).thenReturn(expected);
 
         mockMvc.perform(put("/v1/orders/items?orderItemId={orderItemId}&quantity={quantity}",
                         orderItemId,
@@ -313,7 +313,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
 
         verify(orderService).updateItem(orderItemId,quantity);
-        verify(orderConverter).convertEntityToDto(orderUpdated);
+        verify(orderConverter).toDto(orderUpdated);
     }
 
     @Test
@@ -339,7 +339,7 @@ public class OrderControllerImplTest extends AbstractTest {
                 .build();
 
         when(orderService.removeItem(orderItemId)).thenReturn(orderUpdated);
-        when(orderConverter.convertEntityToDto(orderUpdated)).thenReturn(expected);
+        when(orderConverter.toDto(orderUpdated)).thenReturn(expected);
 
         mockMvc.perform(delete("/v1/orders/items/{orderItemId} ", orderItemId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -349,7 +349,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(expected)));
 
         verify(orderService).removeItem(orderItemId);
-        verify(orderConverter).convertEntityToDto(orderUpdated);
+        verify(orderConverter).toDto(orderUpdated);
     }
 
     @Test
@@ -367,7 +367,7 @@ public class OrderControllerImplTest extends AbstractTest {
                 .build();
 
         when(orderService.cancel(orderId)).thenReturn(orderCanceled);
-        when(orderConverter.convertEntityToDto(orderCanceled)).thenReturn(orderCanceledResponseDto);
+        when(orderConverter.toDto(orderCanceled)).thenReturn(orderCanceledResponseDto);
 
         mockMvc.perform(delete("/v1/orders/{orderId}", orderId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -378,7 +378,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().json(objectMapper.writeValueAsString(orderCanceledResponseDto)));
 
         verify(orderService).cancel(orderId);
-        verify(orderConverter).convertEntityToDto(orderCanceled);
+        verify(orderConverter).toDto(orderCanceled);
     }
 
     @Test

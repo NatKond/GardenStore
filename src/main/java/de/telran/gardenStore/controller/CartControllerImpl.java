@@ -29,7 +29,7 @@ public class CartControllerImpl implements CartController {
     @Override
     @GetMapping
     public CartResponseDto getForCurrentUser() {
-        return cartConverter.convertEntityToDto(
+        return cartConverter.toDto(
                 cartService.getByUser(
                         userService.getCurrent()));
     }
@@ -39,7 +39,7 @@ public class CartControllerImpl implements CartController {
     @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     public CartResponseDto addItem(@PathVariable @Positive Long productId) {
-        return cartConverter.convertEntityToDto(
+        return cartConverter.toDto(
                 cartService.addItem(productId));
     }
 
@@ -49,7 +49,7 @@ public class CartControllerImpl implements CartController {
     @PutMapping("/items/{cartItemId}")
     public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
                                       @RequestParam @Positive Integer quantity) {
-        return cartConverter.convertEntityToDto(
+        return cartConverter.toDto(
                 cartService.updateItem(cartItemId, quantity));
     }
 
@@ -57,6 +57,6 @@ public class CartControllerImpl implements CartController {
     @Loggable
     @DeleteMapping("/items/{cartItemId}")
     public CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId) {
-        return cartConverter.convertEntityToDto(cartService.deleteItem(cartItemId));
+        return cartConverter.toDto(cartService.deleteItem(cartItemId));
     }
 }

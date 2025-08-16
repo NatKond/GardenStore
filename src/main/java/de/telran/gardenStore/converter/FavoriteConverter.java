@@ -15,7 +15,7 @@ public class FavoriteConverter implements ConverterEntityToDto<Favorite, Favorit
     private final ModelMapper modelMapper;
 
     @Override
-    public FavoriteResponseDto convertEntityToDto(Favorite favorite) {
+    public FavoriteResponseDto toDto(Favorite favorite) {
         modelMapper.typeMap(Favorite.class, FavoriteResponseDto.class).addMappings(
                 (mapper ->
                         mapper.map(favorite1 ->
@@ -26,7 +26,7 @@ public class FavoriteConverter implements ConverterEntityToDto<Favorite, Favorit
     }
 
     @Override
-    public List<FavoriteResponseDto> convertEntityListToDtoList(List<Favorite> favorites) {
-        return ConverterEntityToDto.convertList(favorites, this::convertEntityToDto);
+    public List<FavoriteResponseDto> toDtoList(List<Favorite> favorites) {
+        return ConverterEntityToDto.toList(favorites, this::toDto);
     }
 }

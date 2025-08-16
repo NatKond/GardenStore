@@ -36,7 +36,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserShortResponseDto> getAll() {
-        return userConverter.convertEntityListToDtoList(
+        return userConverter.toDtoList(
                 userService.getAll());
     }
 
@@ -44,7 +44,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponseDto getById(@PathVariable @Positive Long userId) {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.getById(userId));
     }
 
@@ -52,7 +52,7 @@ public class UserControllerImpl implements UserController {
     @PreAuthorize("hasRole('USER')")
     @Override
     public UserResponseDto getCurrent() {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.getCurrent());
     }
 
@@ -68,9 +68,9 @@ public class UserControllerImpl implements UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public UserResponseDto create(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto) {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.create(
-                        userConverter.convertDtoToEntity(userCreateRequestDto)));
+                        userConverter.toEntity(userCreateRequestDto)));
     }
 
     @Override
@@ -78,9 +78,9 @@ public class UserControllerImpl implements UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping
     public UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest) {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.update(
-                        userConverter.convertDtoToEntity(userRequest)));
+                        userConverter.toEntity(userRequest)));
     }
 
     @Override

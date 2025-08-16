@@ -15,7 +15,7 @@ public class CartItemConverter implements ConverterEntityToDto<CartItem, CartIte
     private final ModelMapper modelMapper;
 
     @Override
-    public CartItemResponseDto convertEntityToDto(CartItem cartItem) {
+    public CartItemResponseDto toDto(CartItem cartItem) {
         modelMapper.typeMap(CartItem.class, CartItemResponseDto.class).addMappings(
                 (mapper ->
                             mapper.map(cartItem1 ->
@@ -24,7 +24,7 @@ public class CartItemConverter implements ConverterEntityToDto<CartItem, CartIte
         return modelMapper.map(cartItem, CartItemResponseDto.class);
     }
     @Override
-    public List<CartItemResponseDto> convertEntityListToDtoList(List<CartItem> products) {
-        return ConverterEntityToDto.convertList(products, this::convertEntityToDto);
+    public List<CartItemResponseDto> toDtoList(List<CartItem> products) {
+        return ConverterEntityToDto.toList(products, this::toDto);
     }
 }

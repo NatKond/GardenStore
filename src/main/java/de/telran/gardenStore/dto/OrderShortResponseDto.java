@@ -1,8 +1,10 @@
 package de.telran.gardenStore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import de.telran.gardenStore.serializer.SensitiveData;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -23,7 +25,6 @@ public class OrderShortResponseDto {
 
     private BigDecimal totalAmount;
 
-    @SensitiveData(visibleChars = 4)
     private String contactPhone;
 
     private String deliveryMethod;

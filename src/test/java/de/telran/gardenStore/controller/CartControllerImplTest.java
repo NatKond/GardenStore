@@ -53,7 +53,7 @@ class CartControllerImplTest extends AbstractTest {
     void getForCurrentUser() throws Exception {
         when(userService.getCurrent()).thenReturn(user1);
         when(cartService.getByUser(user1)).thenReturn(cart1);
-        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDto1);
+        when(cartConverter.toDto(cart1)).thenReturn(cartResponseDto1);
 
         mockMvc.perform(get("/v1/cart"))
                 .andDo(print())
@@ -87,7 +87,7 @@ class CartControllerImplTest extends AbstractTest {
         cartResponseDtoUpdated.getItems().add(cartItemResponseDtoUpdated);
 
         when(cartService.addItem(productId)).thenReturn(cartUpdated);
-        when(cartConverter.convertEntityToDto(cartUpdated)).thenReturn(cartResponseDtoUpdated);
+        when(cartConverter.toDto(cartUpdated)).thenReturn(cartResponseDtoUpdated);
 
 
         mockMvc.perform(post("/v1/cart/items/{productId}", productId))
@@ -124,7 +124,7 @@ class CartControllerImplTest extends AbstractTest {
         cartResponseDtoUpdated.getItems().add(cartItemResponseDtoUpdated);
 
         when(cartService.updateItem(cartItemId, quantity)).thenReturn(cartUpdated);
-        when(cartConverter.convertEntityToDto(cart1)).thenReturn(cartResponseDtoUpdated);
+        when(cartConverter.toDto(cart1)).thenReturn(cartResponseDtoUpdated);
 
         mockMvc.perform(put("/v1/cart/items/{cartItemId}", cartItemId)
                         .param("quantity", quantity.toString()))
@@ -147,7 +147,7 @@ class CartControllerImplTest extends AbstractTest {
         cartResponseDtoUpdated.getItems().remove(cartItemResponseDto1);
 
         when(cartService.deleteItem(cartItemId)).thenReturn(cartUpdated);
-        when(cartConverter.convertEntityToDto(cartUpdated)).thenReturn(cartResponseDtoUpdated);
+        when(cartConverter.toDto(cartUpdated)).thenReturn(cartResponseDtoUpdated);
 
         mockMvc.perform(delete("/v1/cart/items/{cartItemId}", cartItemId))
                 .andDo(print())
@@ -163,7 +163,7 @@ class CartControllerImplTest extends AbstractTest {
         Long cartItemId = 99L;
 
         when(cartService.deleteItem(cartItemId)).thenReturn(cart1);
-        when(cartConverter.convertEntityToDto(cart1)).thenThrow(new CartItemNotFoundException("CartItem with id " + cartItemId + " not found"));
+        when(cartConverter.toDto(cart1)).thenThrow(new CartItemNotFoundException("CartItem with id " + cartItemId + " not found"));
 
         mockMvc.perform(delete("/v1/cart/items/{cartItemId}", cartItemId))
                 .andDo(print())

@@ -303,7 +303,7 @@ class ProductIntegrationTest extends AbstractTest {
                 .discountPrice(discountPrice)
                 .build();
 
-        mockMvc.perform(post("/v1/products/{productId}/discount/{discountPercentage}", productId, discountPercentage)
+        mockMvc.perform(patch("/v1/products/{productId}/discount/{discountPercentage}", productId, discountPercentage)
                         .with(httpBasic("alice.johnson@example.com", "12345")))
                 .andDo(print())
                 .andExpectAll(

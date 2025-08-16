@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
 import de.telran.gardenStore.dto.ProductCreateRequestDto;
 import de.telran.gardenStore.dto.ProductResponseDto;
@@ -44,7 +45,7 @@ public class ProductControllerImpl implements ProductController {
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new InvalidPriceRangeException("Min price cannot be greater than max price");
         }
-        return productConverter.convertEntityListToDtoList(
+        return productConverter.toDtoList(
                 productService.getAll(categoryId, discount, minPrice, maxPrice, sortBy, sortDirection)
         );
     }
@@ -52,35 +53,51 @@ public class ProductControllerImpl implements ProductController {
     @Override
     @GetMapping("/{productId}")
     public ProductResponseDto getById(@PathVariable @Positive Long productId) {
-        return productConverter.convertEntityToDto(
+        return productConverter.toDto(
                 productService.getById(productId)
         );
     }
 
-    @GetMapping("/product-of-the-day")
     @Override
+    @GetMapping("/product-of-the-day")
     public ProductResponseDto getProductOfTheDay() {
-        return productConverter.convertEntityToDto(
+        return productConverter.toDto(
                 productService.getProductOfTheDay());
     }
 
     @Override
+    @Loggable
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductResponseDto create(@RequestBody @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.create(
-                productConverter.convertDtoToEntity(productRequest)));
+        return productConverter.toDto(productService.create(
+                productConverter.toEntity(productRequest)));
     }
 
     @Override
+    @Loggable
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{productId}")
     public ProductResponseDto update(@PathVariable @Positive Long productId,
                                      @RequestBody @Valid ProductCreateRequestDto productRequest) {
-        return productConverter.convertEntityToDto(productService.update(productId,
-                productConverter.convertDtoToEntity(productRequest)));
+        return productConverter.toDto(productService.update(productId,
+                productConverter.toEntity(productRequest)));
+    }
+
+    @Override
+    @Loggable
+    @PatchMapping("/{productId}/discount/{discountPercentage}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ProductResponseDto setDiscount(@PathVariable @Positive Long productId,
+                                          @PathVariable
+                                          @Min(value = 1, message = "Discount must be at least 1%")
+                                          @Max(value = 99, message = "Discount cannot exceed 99%")
+                                          BigDecimal discountPercentage) {
+        return productConverter.toDto(
+                productService.setDiscount(productId, discountPercentage));
     }
 
     @Override
@@ -88,18 +105,5 @@ public class ProductControllerImpl implements ProductController {
     @DeleteMapping("/{productId}")
     public void delete(@PathVariable @Positive Long productId) {
         productService.deleteById(productId);
-    }
-
-    @PostMapping("/{productId}/discount/{discountPercentage}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @Override
-    public ProductResponseDto setDiscount(@PathVariable @Positive Long productId,
-                                          @PathVariable
-                                          @Min(value = 1, message = "Discount must be at least 1%")
-                                          @Max(value = 99, message = "Discount cannot exceed 99%")
-                                          BigDecimal discountPercentage) {
-        return productConverter.convertEntityToDto(
-                productService.setDiscount(productId, discountPercentage));
     }
 }

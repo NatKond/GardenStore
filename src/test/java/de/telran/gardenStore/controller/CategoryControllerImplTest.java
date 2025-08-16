@@ -59,7 +59,7 @@ public class CategoryControllerImplTest extends AbstractTest {
 
         when(categoryService.getAll()).thenReturn(categories);
 
-        when(categoryConverter.convertEntityListToDtoList(categories)).thenReturn(categoriesDto);
+        when(categoryConverter.toDtoList(categories)).thenReturn(categoriesDto);
 
         mockMvc
                 .perform(get("/v1/categories"))
@@ -76,7 +76,7 @@ public class CategoryControllerImplTest extends AbstractTest {
 
         when(categoryService.getById(category1.getCategoryId())).thenReturn(category1);
 
-        when(categoryConverter.convertEntityToDto(category1)).thenReturn(categoryResponseDto1);
+        when(categoryConverter.toDto(category1)).thenReturn(categoryResponseDto1);
 
         mockMvc
                 .perform(get("/v1/categories/{categoryId}", category1.getCategoryId()))
@@ -121,8 +121,8 @@ public class CategoryControllerImplTest extends AbstractTest {
                 .build();
 
         when(categoryService.create(categoryToCreate)).thenReturn(categoryCreated);
-        when(categoryConverter.convertDtoToEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
-        when(categoryConverter.convertEntityToDto(categoryCreated)).thenReturn(categoryResponseCreatedDto);
+        when(categoryConverter.toEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
+        when(categoryConverter.toDto(categoryCreated)).thenReturn(categoryResponseCreatedDto);
 
         mockMvc
                 .perform(post("/v1/categories")
@@ -139,7 +139,7 @@ public class CategoryControllerImplTest extends AbstractTest {
     @Test
     void createNegativeCase() throws Exception {
 
-        when(categoryConverter.convertDtoToEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
+        when(categoryConverter.toEntity(categoryCreateRequestDto)).thenReturn(categoryToCreate);
         when(categoryService.create(categoryToCreate)).thenThrow(new CategoryWithNameAlreadyExistsException("Category with name " + categoryToCreate.getName() + " already exists."));
 
         mockMvc
@@ -176,10 +176,10 @@ public class CategoryControllerImplTest extends AbstractTest {
                 .name(categoryUpdated.getName())
                 .build();
 
-        when(categoryConverter.convertDtoToEntity(categoryUpdateRequestDto)).thenReturn(categoryUpdate);
+        when(categoryConverter.toEntity(categoryUpdateRequestDto)).thenReturn(categoryUpdate);
         when(categoryService.update(categoryUpdated.getCategoryId(), categoryUpdate)).thenReturn(categoryUpdated);
         when(categoryService.getById(categoryUpdated.getCategoryId())).thenReturn(categoryUpdated);
-        when(categoryConverter.convertEntityToDto(categoryUpdated)).thenReturn(categoryResponseUpdatedDto);
+        when(categoryConverter.toDto(categoryUpdated)).thenReturn(categoryResponseUpdatedDto);
 
         mockMvc
                 .perform(put("/v1/categories/{categoryId}", categoryUpdated.getCategoryId())

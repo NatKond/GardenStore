@@ -52,7 +52,7 @@ class FavoriteControllerImplTest  extends AbstractTest {
         List<FavoriteResponseDto> expected = List.of(favoriteResponseDto1, favoriteResponseDto2);
 
         when(favoriteService.getAllForCurrentUser()).thenReturn(favorites);
-        when(favoriteConverter.convertEntityListToDtoList(favorites)).thenReturn(expected);
+        when(favoriteConverter.toDtoList(favorites)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/favorites"))
                 .andExpectAll(
@@ -67,7 +67,7 @@ class FavoriteControllerImplTest  extends AbstractTest {
         Long productId = favoriteToCreate.getProduct().getProductId();
 
         when(favoriteService.create(productId)).thenReturn(favoriteCreated);
-        when(favoriteConverter.convertEntityToDto(favoriteCreated)).thenReturn(favoriteResponseCreatedDto);
+        when(favoriteConverter.toDto(favoriteCreated)).thenReturn(favoriteResponseCreatedDto);
 
         mockMvc.perform(post("/v1/favorites/{productId}",productId))
                 .andExpectAll(

@@ -12,19 +12,17 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class LoggingAspect {
 
-    @Pointcut("within(de.telran.gardenStore.controller..*) && " +
-            "(@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.DeleteMapping))")
-    public void postMethods() {}
+    @Pointcut("@annotation(de.telran.gardenStore.annotation.Loggable)")
+    public void loggableMethods() {
+    }
 
-    @Before("postMethods()")
-    public void logPostMethodInput(JoinPoint joinPoint) {
+    @Before("loggableMethods()")
+    public void logMethodInput(JoinPoint joinPoint) {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
@@ -40,8 +38,8 @@ public class LoggingAspect {
         }
     }
 
-    @AfterReturning(pointcut = "postMethods()", returning = "result")
-    public void logAfterReturning(JoinPoint joinPoint, Object result) {
+    @AfterReturning(pointcut = "loggableMethods()", returning = "result")
+    public void logMethodOutput(JoinPoint joinPoint, Object result) {
         log.info("<<< Execution result {}: {}",
                 joinPoint.getSignature().toShortString(),
                 result);

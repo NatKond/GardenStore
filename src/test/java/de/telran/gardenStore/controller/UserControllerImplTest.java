@@ -59,7 +59,7 @@ class UserControllerImplTest extends AbstractTest {
         List<UserShortResponseDto> expected = List.of(userShortResponseDto1, userShortResponseDto2);
 
         when(userService.getAll()).thenReturn(users);
-        when(userConverter.convertEntityListToDtoList(users)).thenReturn(expected);
+        when(userConverter.toDtoList(users)).thenReturn(expected);
 
         mockMvc.perform(get("/v1/users"))
                 .andDo(print())
@@ -73,7 +73,7 @@ class UserControllerImplTest extends AbstractTest {
     @DisplayName("GET /v1/user/me - Get current user")
     void getCurrent() throws Exception {
         when(userService.getCurrent()).thenReturn(user1);
-        when(userConverter.convertEntityToDto(user1)).thenReturn(userResponseDto1);
+        when(userConverter.toDto(user1)).thenReturn(userResponseDto1);
 
         mockMvc.perform(get("/v1/users/me")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -90,7 +90,7 @@ class UserControllerImplTest extends AbstractTest {
         Long userId = user1.getUserId();
 
         when(userService.getById(userId)).thenReturn(user1);
-        when(userConverter.convertEntityToDto(user1)).thenReturn(userResponseDto1);
+        when(userConverter.toDto(user1)).thenReturn(userResponseDto1);
 
         mockMvc.perform(get("/v1/users/{userId}", userId))
                 .andDo(print())
@@ -122,9 +122,9 @@ class UserControllerImplTest extends AbstractTest {
     @DisplayName("POST /v1/users/register - Create new user : positive case")
     void createPositiveCase() throws Exception {
 
-        when(userConverter.convertDtoToEntity(userCreateRequestDto)).thenReturn(userToCreate);
+        when(userConverter.toEntity(userCreateRequestDto)).thenReturn(userToCreate);
         when(userService.create(userToCreate)).thenReturn(userCreated);
-        when(userConverter.convertEntityToDto(userCreated)).thenReturn(userResponseCreatedDto);
+        when(userConverter.toDto(userCreated)).thenReturn(userResponseCreatedDto);
 
         mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -140,7 +140,7 @@ class UserControllerImplTest extends AbstractTest {
     @DisplayName("POST /v1/users/register - Create new user : negative case")
     void createNegativeCase() throws Exception {
 
-        when(userConverter.convertDtoToEntity(userCreateRequestDto)).thenReturn(userToCreate);
+        when(userConverter.toEntity(userCreateRequestDto)).thenReturn(userToCreate);
         when(userService.create(userToCreate)).thenThrow(new UserWithEmailAlreadyExistsException("User with email " + userToCreate.getEmail() + " already exists"));
 
         mockMvc.perform(post("/v1/users/register")
@@ -179,10 +179,10 @@ class UserControllerImplTest extends AbstractTest {
                 .build();
 
 
-        when(userConverter.convertDtoToEntity(userUpdateRequestDto)).thenReturn(userToUpdate);
+        when(userConverter.toEntity(userUpdateRequestDto)).thenReturn(userToUpdate);
         when(userService.update(userToUpdate)).thenReturn(userUpdated);
         when(userService.getCurrent()).thenReturn(userUpdated);
-        when(userConverter.convertEntityToDto(userUpdated)).thenReturn(userResponseUpdatedDto);
+        when(userConverter.toDto(userUpdated)).thenReturn(userResponseUpdatedDto);
 
         mockMvc.perform(put("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)

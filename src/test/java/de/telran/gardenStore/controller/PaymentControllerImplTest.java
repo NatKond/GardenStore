@@ -56,7 +56,7 @@ public class PaymentControllerImplTest extends AbstractTest {
                 .build();
 
         when(paymentService.processPayment(orderId, paymentAmount)).thenReturn(orderPaid);
-        when(orderConverter.convertEntityToDto(orderPaid)).thenReturn(expected);
+        when(orderConverter.toDto(orderPaid)).thenReturn(expected);
 
 
         mockMvc.perform(post("/v1/payment")

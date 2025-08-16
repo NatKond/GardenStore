@@ -17,7 +17,7 @@ public class OrderItemConverter implements Converter<OrderItem, OrderItemCreateR
     private final ModelMapper modelMapper;
 
     @Override
-    public OrderItem convertDtoToEntity(OrderItemCreateRequestDto orderItemCreateRequestDto) {
+    public OrderItem toEntity(OrderItemCreateRequestDto orderItemCreateRequestDto) {
         modelMapper.typeMap(OrderItemCreateRequestDto.class, OrderItem.class).addMappings(
                 mapper -> {
                     mapper.skip(OrderItem::setOrderItemId);
@@ -31,7 +31,7 @@ public class OrderItemConverter implements Converter<OrderItem, OrderItemCreateR
     }
 
     @Override
-    public OrderItemResponseDto convertEntityToDto(OrderItem orderItem) {
+    public OrderItemResponseDto toDto(OrderItem orderItem) {
         modelMapper.typeMap(OrderItem.class, OrderItemResponseDto.class).addMappings(
                 (mapper ->
                         mapper.map(orderItem1 ->
@@ -41,7 +41,7 @@ public class OrderItemConverter implements Converter<OrderItem, OrderItemCreateR
     }
 
     @Override
-    public List<OrderItemResponseDto> convertEntityListToDtoList(List<OrderItem> orderItems) {
-        return ConverterEntityToDto.convertList(orderItems, this::convertEntityToDto);
+    public List<OrderItemResponseDto> toDtoList(List<OrderItem> orderItems) {
+        return ConverterEntityToDto.toList(orderItems, this::toDto);
     }
 }

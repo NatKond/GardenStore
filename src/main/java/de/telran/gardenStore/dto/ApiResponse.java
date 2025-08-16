@@ -13,9 +13,13 @@ import java.util.Map;
 public class ApiResponse {
 
     private String exception;
+
     private String message;
+
     private Map<String, String> messages;
+
     private Integer status;
+
     private LocalDateTime timestamp;
 
     public static ApiResponse error(String message, Integer status) {

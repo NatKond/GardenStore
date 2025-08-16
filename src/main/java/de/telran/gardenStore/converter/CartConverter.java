@@ -17,11 +17,11 @@ public class CartConverter implements ConverterEntityToDtoShort<Cart, CartRespon
     private final CartItemConverter cartItemConverter;
 
     @Override
-    public CartResponseDto convertEntityToDto(Cart cart) {
+    public CartResponseDto toDto(Cart cart) {
         modelMapper.typeMap(Cart.class, CartResponseDto.class).addMappings(mapper -> {
                     mapper.map(cart1 -> cart1.getUser().getUserId(), CartResponseDto::setUserId);
                     mapper
-                            .using(context -> cartItemConverter.convertEntityListToDtoList((List<CartItem>) context.getSource()))
+                            .using(context -> cartItemConverter.toDtoList((List<CartItem>) context.getSource()))
                             .map(Cart::getItems, CartResponseDto::setItems);
                 });
 

@@ -18,7 +18,7 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
     private final ModelMapper modelMapper;
 
     @Override
-    public Product convertDtoToEntity(ProductCreateRequestDto productCreateRequestDto) {
+    public Product toEntity(ProductCreateRequestDto productCreateRequestDto) {
         modelMapper.typeMap(ProductCreateRequestDto.class, Product.class).addMappings(
                 mapper -> {
                     mapper.skip(Product::setProductId);
@@ -32,7 +32,7 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
     }
 
     @Override
-    public ProductResponseDto convertEntityToDto(Product product) {
+    public ProductResponseDto toDto(Product product) {
         modelMapper.typeMap(Product.class, ProductResponseDto.class).addMappings(
                 (mapper ->
                         mapper.map(productEntity -> productEntity.getCategory().getCategoryId(), ProductResponseDto::setCategoryId)));
@@ -40,11 +40,11 @@ public class ProductConverter implements Converter<Product, ProductCreateRequest
     }
 
     @Override
-    public List<ProductShortResponseDto> convertEntityListToDtoList(List<Product> products) {
+    public List<ProductShortResponseDto> toDtoList(List<Product> products) {
         modelMapper.typeMap(Product.class, ProductShortResponseDto.class).addMappings(
                 (mapper ->
                         mapper.map(productEntity -> productEntity.getCategory().getCategoryId(), ProductShortResponseDto::setCategoryId)));
 
-        return ConverterEntityToDto.convertList(products, (product) ->  modelMapper.map(product, ProductShortResponseDto.class));
+        return ConverterEntityToDto.toList(products, (product) ->  modelMapper.map(product, ProductShortResponseDto.class));
     }
 }

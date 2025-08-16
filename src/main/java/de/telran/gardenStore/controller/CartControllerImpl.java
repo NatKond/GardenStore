@@ -1,5 +1,6 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.ConverterEntityToDtoShort;
 import de.telran.gardenStore.dto.CartResponseDto;
 import de.telran.gardenStore.entity.Cart;
@@ -28,31 +29,34 @@ public class CartControllerImpl implements CartController {
     @Override
     @GetMapping
     public CartResponseDto getForCurrentUser() {
-        return cartConverter.convertEntityToDto(
+        return cartConverter.toDto(
                 cartService.getByUser(
                         userService.getCurrent()));
     }
 
     @Override
+    @Loggable
     @PostMapping("/items/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     public CartResponseDto addItem(@PathVariable @Positive Long productId) {
-        return cartConverter.convertEntityToDto(
+        return cartConverter.toDto(
                 cartService.addItem(productId));
     }
 
     @Override
+    @Loggable
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/items/{cartItemId}")
     public CartResponseDto updateItem(@PathVariable @Positive Long cartItemId,
                                       @RequestParam @Positive Integer quantity) {
-        return cartConverter.convertEntityToDto(
+        return cartConverter.toDto(
                 cartService.updateItem(cartItemId, quantity));
     }
 
     @Override
+    @Loggable
     @DeleteMapping("/items/{cartItemId}")
     public CartResponseDto deleteItem(@PathVariable @Positive Long cartItemId) {
-        return cartConverter.convertEntityToDto(cartService.deleteItem(cartItemId));
+        return cartConverter.toDto(cartService.deleteItem(cartItemId));
     }
 }

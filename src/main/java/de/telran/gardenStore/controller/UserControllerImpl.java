@@ -1,7 +1,10 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.*;
+import de.telran.gardenStore.dto.UserCreateRequestDto;
+import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.dto.UserShortResponseDto;
 import de.telran.gardenStore.dto.security.LoginRequest;
 import de.telran.gardenStore.dto.security.LoginResponse;
 import de.telran.gardenStore.entity.AppUser;
@@ -33,7 +36,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserShortResponseDto> getAll() {
-        return userConverter.convertEntityListToDtoList(
+        return userConverter.toDtoList(
                 userService.getAll());
     }
 
@@ -41,7 +44,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponseDto getById(@PathVariable @Positive Long userId) {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.getById(userId));
     }
 
@@ -49,7 +52,7 @@ public class UserControllerImpl implements UserController {
     @PreAuthorize("hasRole('USER')")
     @Override
     public UserResponseDto getCurrent() {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.getCurrent());
     }
 
@@ -61,24 +64,27 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @Loggable
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public UserResponseDto create(@RequestBody @Valid UserCreateRequestDto userCreateRequestDto) {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.create(
-                        userConverter.convertDtoToEntity(userCreateRequestDto)));
+                        userConverter.toEntity(userCreateRequestDto)));
     }
 
     @Override
+    @Loggable
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping
     public UserResponseDto update(@RequestBody @Valid UserCreateRequestDto userRequest) {
-        return userConverter.convertEntityToDto(
+        return userConverter.toDto(
                 userService.update(
-                        userConverter.convertDtoToEntity(userRequest)));
+                        userConverter.toEntity(userRequest)));
     }
 
     @Override
+    @Loggable
     @DeleteMapping()
     public void delete() {
         userService.delete();

@@ -338,7 +338,7 @@ public class OrderControllerImplTest extends AbstractTest {
                 .items(orderItemResponseDto)
                 .build();
 
-        when(orderService.removeItem(orderItemId)).thenReturn(orderUpdated);
+        when(orderService.deleteItem(orderItemId)).thenReturn(orderUpdated);
         when(orderConverter.toDto(orderUpdated)).thenReturn(expected);
 
         mockMvc.perform(delete("/v1/orders/items/{orderItemId} ", orderItemId)
@@ -348,7 +348,7 @@ public class OrderControllerImplTest extends AbstractTest {
                         content().contentType(MediaType.APPLICATION_JSON),
                         content().json(objectMapper.writeValueAsString(expected)));
 
-        verify(orderService).removeItem(orderItemId);
+        verify(orderService).deleteItem(orderItemId);
         verify(orderConverter).toDto(orderUpdated);
     }
 

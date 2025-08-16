@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category create(Category category) {
         checkCategoryNameIsUnique(category.getName());
 
-        logAttemptToSaveCategory(category);
+        log.debug("Attempt to create {}", category);
 
         return categoryRepository.save(category);
     }
@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
         categoryToUpdate.setName(category.getName());
 
-        logAttemptToSaveCategory(category);
+        log.debug("Attempt to update {} to {}", category, categoryToUpdate);
 
         return categoryRepository.save(categoryToUpdate);
     }
@@ -64,9 +64,5 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRepository.findCategoryByName(name).isPresent()) {
             throw new CategoryWithNameAlreadyExistsException("Category with name " + name + " already exists.");
         }
-    }
-
-    private void logAttemptToSaveCategory(Category category) {
-        log.debug("Attempt to save Category {}", category);
     }
 }

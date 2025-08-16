@@ -27,22 +27,24 @@ public interface ProductController {
                     schema = @Schema(implementation = ProductShortResponseDto.class),
                     examples = @ExampleObject(name = "List of products", value = """
                             [
-                                 {
-                                     "productId": 1,
-                                     "name": "All-Purpose Plant Fertilizer",
-                                     "description": "Balanced NPK formula for all types of plants",
-                                     "price": 15.99,
-                                     "discountPrice": 10.99,
-                                     "categoryId": 1
-                                 },
-                                 {
-                                     "productId": 2,
-                                     "name": "Organic Tomato Feed",
-                                     "description": "Organic liquid fertilizer ideal for tomatoes and vegetables",
-                                     "price": 13.99,
-                                     "discountPrice": 10.49,
-                                     "categoryId": 1
-                                 }
+                              {
+                                "productId": 2,
+                                "name": "Organic Tomato Feed",
+                                "description": "Organic liquid fertilizer ideal for tomatoes and vegetables",
+                                "price": 13.99,
+                                "discountPrice": 10.49,
+                                "categoryId": 1,
+                                "imageUrl": "/product_img/fertilizer_tomato_feed.jpg"
+                              },
+                              {
+                                "productId": 5,
+                                "name": "Espoma Organic Perlite",
+                                "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                "price": 13.95,
+                                "discountPrice": 12.65,
+                                "categoryId": 1,
+                                "imageUrl": "/product_img/organic_perlite.jpeg"
+                              }
                             ]
                             """)))
     List<ProductShortResponseDto> getAll(
@@ -50,7 +52,7 @@ public interface ProductController {
             @Parameter(description = "Filter by discount availability", example = "true") Boolean discount,
             @Parameter(description = "Minimum product price", example = "5") @Positive BigDecimal minPrice,
             @Parameter(description = "Maximum product price", example = "15") @Positive BigDecimal maxPrice,
-            @Parameter(description = "Field to sort by", example = "price") @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
+            @Parameter(description = "Field to sort by (productId|name|price|category|discountPrice|createdAt|updatedAt)", example = "price") @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
             @Parameter(description = "Sort direction: true for ASC, false for DESC", example = "true") Boolean sortDirection);
 
     @Operation(summary = "Get product by ID")
@@ -128,7 +130,7 @@ public interface ProductController {
                                                 "price": 12.50,
                                                 "discountPrice": 9.99,
                                                 "categoryId": 4,
-                                                "imageUrl": "https://example.com/images/garden_trowel.jpg"
+                                                "imageUrl": "https://example.com/product_img/garden_trowel.jpg"
                                             }
                                             """),
                                     @ExampleObject(name = "Pot", value = """
@@ -138,7 +140,7 @@ public interface ProductController {
                                                 "price": 7.75,
                                                 "discountPrice": 6.50,
                                                 "categoryId": 5,
-                                                "imageUrl": "https://example.com/images/terracotta_pot.jpg"
+                                                "imageUrl": "https://example.com/product_img/terracotta_pot.jpg"
                                             }
                                             """),
                                     @ExampleObject(name = "Seeds Pack", value = """
@@ -148,7 +150,7 @@ public interface ProductController {
                                                 "price": 4.99,
                                                 "discountPrice": 3.49,
                                                 "categoryId": 3,
-                                                "imageUrl": "https://example.com/images/lavender_seeds.jpg"
+                                                "imageUrl": "https://example.com/product_img/lavender_seeds.jpg"
                                             }
                                             """),
                                     @ExampleObject(name = "Sprayer", value = """
@@ -158,7 +160,7 @@ public interface ProductController {
                                                 "price": 39.95,
                                                 "discountPrice": 34.99,
                                                 "categoryId": 4,
-                                                "imageUrl": "https://example.com/images/garden_sprayer.jpg"
+                                                "imageUrl": "https://example.com/product_img/garden_sprayer.jpg"
                                             }
                                             """)
                             }))
@@ -176,7 +178,7 @@ public interface ProductController {
                                 "price": 15.99,
                                 "discountPrice": 10.99,
                                 "categoryId": 1,
-                                "imageUrl": "https://example.com/images/fertilizer_all_purpose.jpg",
+                                "imageUrl": "https://example.com/product_img/fertilizer_all_purpose.jpg",
                                 "createdAt": "2025-07-08T20:42:12.980366",
                                 "updatedAt": "2025-07-08T20:50:30.157989"
                             }
@@ -215,12 +217,11 @@ public interface ProductController {
                             examples = {
                                     @ExampleObject(name = "Plant Fertilizer", value = """
                                             {
-                                                "name": "All-Purpose Plant Fertilizer",
-                                                "description": "Balanced NPK formula for all types of plants",
-                                                "price": 15.99,
-                                                "discountPrice": 10.99,
-                                                "categoryId": 1,
-                                                "imageUrl": "https://example.com/images/fertilizer_all_purpose.jpg"
+                                                  "name": "All-Purpose Plant Fertilizer",
+                                                  "description": "Balanced NPK formula for all types of plants",
+                                                  "price": 11.99,
+                                                  "categoryId": 1,
+                                                  "imageUrl": "https://example.com/product_img/fertilizer_all_purpose.jpg"
                                             }
                                             """),
                                     @ExampleObject(name = "Tomato Feed", value = """
@@ -229,7 +230,34 @@ public interface ProductController {
                                                 "description": "Organic liquid fertilizer ideal for tomatoes and vegetables",
                                                 "price": 15.99,
                                                 "categoryId": 1,
-                                                "imageUrl": "https://example.com/images/fertilizer_tomato_feed.jpg"
+                                                "imageUrl": "https://example.com/product_img/fertilizer_tomato_feed.jpg"
+                                            }
+                                            """),
+                                    @ExampleObject(name = "Organic Potting Mix", value = """
+                                            {
+                                              "name": "Espoma Organic Potting Mix23",
+                                              "description": "Organic mix feeds your plant with nutrients and gives roots the space to breathe and grow. See your plants thrive!",
+                                              "price": 6.95,
+                                              "categoryId": 1,
+                                              "imageUrl": "https://example.com/product_img/organic_potting_mix.jpeg"
+                                            }
+                                            """),
+                                    @ExampleObject(name = "Espoma Organic Perlite", value = """
+                                            {
+                                              "name": "Espoma Organic Perlite",
+                                              "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                              "price": 13.95,
+                                              "categoryId": 1,
+                                              "imageUrl": "https://example.com/product_img/organic_perlite.jpeg"
+                                            }
+                                            """),
+                                    @ExampleObject(name = "Espoma Organic Perlite", value = """
+                                            {
+                                              "name": "Espoma Organic Perlite",
+                                              "description": "Porous material to aid soil aeration. Allows water, air, and nutrients to reach roots. Great for propagation.",
+                                              "price": 13.95,
+                                              "categoryId": 1,
+                                              "imageUrl": "https://example.com/product_img/organic_perlite.jpeg"
                                             }
                                             """)
                             }))
@@ -256,29 +284,29 @@ public interface ProductController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ProductResponseDto.class),
                     examples = @ExampleObject(name = "Product with discount applied", value = """
-                        {
-                            "productId": 9,
-                            "name": "Savannah Summer Annual Collection",
-                            "description": "We love this fusion of colorful blossoms, created by combining some of the most floriferous and high performance annuals we know in our Savannah Summer Collection.",
-                            "price": 53.00,
-                            "discountPrice": 37.10,
-                            "categoryId": 3,
-                            "imageUrl": "/product_img/summer_annual_collection.jpeg",
-                            "createdAt": "2025-08-09T11:32:52.345883",
-                            "updatedAt": "2025-08-09T11:48:40.907027"
-                        }
-                        """)))
+                            {
+                                "productId": 9,
+                                "name": "Savannah Summer Annual Collection",
+                                "description": "We love this fusion of colorful blossoms, created by combining some of the most floriferous and high performance annuals we know in our Savannah Summer Collection.",
+                                "price": 53.00,
+                                "discountPrice": 37.10,
+                                "categoryId": 3,
+                                "imageUrl": "https://example.com/product_img/summer_annual_collection.jpeg",
+                                "createdAt": "2025-08-09T11:32:52.345883",
+                                "updatedAt": "2025-08-09T11:48:40.907027"
+                            }
+                            """)))
     @ApiResponse(responseCode = "404", description = "Product not found",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "Product not found", value = """
-                        {
-                            "exception": "ProductNotFoundException",
-                            "message": "Product with id 99 not found",
-                            "status": 404,
-                            "timestamp": "2025-08-09T11:55:22.784321"
-                        }
-                        """)))
+                            {
+                                "exception": "ProductNotFoundException",
+                                "message": "Product with id 99 not found",
+                                "status": 404,
+                                "timestamp": "2025-08-09T11:55:22.784321"
+                            }
+                            """)))
     ProductResponseDto setDiscount(
             @Parameter(description = "ID of the product to apply discount", example = "9") @Positive Long productId,
             @Parameter(description = "Discount percentage to apply", example = "30")
@@ -292,28 +320,28 @@ public interface ProductController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ProductResponseDto.class),
                     examples = @ExampleObject(name = "Product of the day", value = """
-                        {
-                            "productId": 15,
-                            "name": "Hanging Planter Basket",
-                            "description": "Woven hanging basket with metal chain",
-                            "price": 12.50,
-                            "discountPrice": 9.25,
-                            "categoryId": 5,
-                            "imageUrl": "/product_img/hanging_planter.jpg",
-                            "createdAt": "2025-08-09T11:50:27.305166",
-                            "updatedAt": "2025-08-09T11:50:27.305166"
-                        }
-                        """)))
+                            {
+                                "productId": 15,
+                                "name": "Hanging Planter Basket",
+                                "description": "Woven hanging basket with metal chain",
+                                "price": 12.50,
+                                "discountPrice": 9.25,
+                                "categoryId": 5,
+                                "imageUrl": "https://example.com/product_img/hanging_planter.jpg",
+                                "createdAt": "2025-08-09T11:50:27.305166",
+                                "updatedAt": "2025-08-09T11:50:27.305166"
+                            }
+                            """)))
     @ApiResponse(responseCode = "404", description = "Product of the day not set",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiResponse.class),
                     examples = @ExampleObject(name = "No product of the day", value = """
-                        {
-                            "exception": "ProductOfTheDayNotFoundException",
-                            "message": "Product of the day is not set",
-                            "status": 404,
-                            "timestamp": "2025-08-09T12:05:14.112874"
-                        }
-                        """)))
+                            {
+                                "exception": "ProductOfTheDayNotFoundException",
+                                "message": "Product of the day is not set",
+                                "status": 404,
+                                "timestamp": "2025-08-09T12:05:14.112874"
+                            }
+                            """)))
     ProductResponseDto getProductOfTheDay();
 }

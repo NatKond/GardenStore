@@ -93,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product create(Product product) {
         checkCategoryExists(product.getCategory().getCategoryId());
-        logAttemptToSaveProduct(product);
+        log.debug("Attempt to create {}", product);
 
         return productRepository.save(product);
     }
@@ -110,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
         productToUpdate.setDiscountPrice(product.getDiscountPrice());
         productToUpdate.setCategory(product.getCategory());
         productToUpdate.setImageUrl(product.getImageUrl());
-        logAttemptToSaveProduct(productToUpdate);
+        log.debug("Attempt to update {} to {}", product, productToUpdate);
 
         return productRepository.save(productToUpdate);
     }
@@ -122,7 +122,7 @@ public class ProductServiceImpl implements ProductService {
                 .multiply(discountPercentage)
                 .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         product.setDiscountPrice(product.getPrice().subtract(discountAmount));
-        logAttemptToSaveProduct(product);
+        log.debug("Attempt to set discount {} to {}", discountAmount, product);
 
         return productRepository.save(product);
     }
@@ -138,9 +138,5 @@ public class ProductServiceImpl implements ProductService {
 
     private void checkCategoryExists(Long categoryId) {
         categoryService.getById(categoryId);
-    }
-
-    private void logAttemptToSaveProduct(Product product) {
-        log.debug("Attempt to save Product {}", product);
     }
 }

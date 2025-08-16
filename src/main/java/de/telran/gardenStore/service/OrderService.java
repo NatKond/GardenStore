@@ -28,7 +28,7 @@ public interface OrderService {
 
     Order updateItem(Long orderItemId, Integer quantity);
 
-    Order removeItem(Long orderItemId);
+    Order deleteItem(Long orderItemId);
 
     Order cancel(Long orderId);
 }

@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser create(AppUser user) {
         checkUserEmailIsUnique(user.getEmail());
-        logAttemptToSaveUser(user);
+        log.debug("Attempt to create {}", user);
 
         return userRepository.save(user);
     }
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setEmail(user.getEmail());
         userToUpdate.setPhoneNumber(user.getPhoneNumber());
         userToUpdate.setPasswordHash(user.getPasswordHash());
-        logAttemptToSaveUser(userToUpdate);
+        log.debug("Attempt to update {} to {}", user, userToUpdate);
 
         return userRepository.save(userToUpdate);
     }
@@ -76,9 +76,5 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new UserWithEmailAlreadyExistsException("User with email " + email + " already exists");
         }
-    }
-
-    private void logAttemptToSaveUser(AppUser user) {
-        log.debug("Attempt to save User {}", user);
     }
 }

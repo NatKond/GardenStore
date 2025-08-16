@@ -238,7 +238,7 @@ class OrderServiceImplTest extends AbstractTest {
     @Test
     @DisplayName("Add order item : positive case(existing product)")
     void addItemPositiveCaseExistingProduct() {
-        Integer quantity = 2;
+        int quantity = 2;
         Order orderToUpdate = order2;
         Long orderId = orderToUpdate.getOrderId();
 
@@ -306,7 +306,7 @@ class OrderServiceImplTest extends AbstractTest {
 
         Order orderToUpdate = order1.toBuilder().status(OrderStatus.CREATED).build();
 
-        Integer quantityUpdated = 4;
+        int quantityUpdated = 4;
 
         OrderItem orderItemToUpdate = orderItem1.toBuilder().order(orderToUpdate).build();
         Long orderItemId = orderItemToUpdate.getOrderItemId();
@@ -344,7 +344,7 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Remove order item : positive case")
-    void removeItemPositiveCase() {
+    void deleteItemPositiveCase() {
         Order orderToUpdate = order1.toBuilder().status(OrderStatus.CREATED).build();
 
         OrderItem orderItemToRemove = orderItem1.toBuilder().order(orderToUpdate).build();
@@ -364,7 +364,7 @@ class OrderServiceImplTest extends AbstractTest {
         when(orderItemService.getById(orderItemId)).thenReturn(orderItemToRemove);
         when(orderRepository.save(orderUpdated)).thenReturn(orderUpdated);
 
-        Order actual = orderService.removeItem(orderItemId);
+        Order actual = orderService.deleteItem(orderItemId);
 
         assertNotNull(actual);
         assertEquals(orderUpdated, actual);
@@ -374,14 +374,14 @@ class OrderServiceImplTest extends AbstractTest {
 
     @Test
     @DisplayName("Remove order item : negative case")
-    void removeItemNegativeCase() {
+    void deleteItemNegativeCase() {
         OrderItem orderItemToRemove = orderItem3;
         Long orderItemId = orderItemToRemove.getOrderItemId();
 
         when(orderItemService.getById(orderItemId)).thenReturn(orderItemToRemove);
 
         EmptyOrderException exception = assertThrows(EmptyOrderException.class,
-                () -> orderService.removeItem(orderItemId));
+                () -> orderService.deleteItem(orderItemId));
         assertEquals("Order is empty", exception.getMessage());
     }
 

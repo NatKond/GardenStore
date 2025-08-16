@@ -91,7 +91,7 @@ public class OrderControllerImpl implements OrderController {
     @DeleteMapping("/items/{orderItemId}")
     public OrderResponseDto removeItem(@PathVariable @Positive Long orderItemId){
         return orderConverter.toDto(
-                orderService.removeItem(orderItemId));
+                orderService.deleteItem(orderItemId));
     }
 
     @Override

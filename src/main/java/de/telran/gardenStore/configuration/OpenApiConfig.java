@@ -16,12 +16,17 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 description = "OpenApi documentation for graduation project: online garden store",
                 version = "1.0.0",
                 contact = @Contact(
-                        name = "Natalia Kondratenko"
+                        name = "CODE_CATS",
+                        url = "https://github.com/NatKond/GardenStore"
                 )
         ), servers = {
         @Server(
-                description = "Local env",
+                description = "Local environment",
                 url = "http://localhost:8082"
+        ),
+        @Server(
+                description = "Deployed server",
+                url = "http://172.31.30.180:8082"
         )
     },
         security = {

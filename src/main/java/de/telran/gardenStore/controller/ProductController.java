@@ -52,7 +52,7 @@ public interface ProductController {
             @Parameter(description = "Filter by discount availability", example = "true") Boolean discount,
             @Parameter(description = "Minimum product price", example = "5") @Positive BigDecimal minPrice,
             @Parameter(description = "Maximum product price", example = "15") @Positive BigDecimal maxPrice,
-            @Parameter(description = "Field to sort by (productId|name|price|category|discountPrice|createdAt|updatedAt)", example = "price") @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
+            @Parameter(description = "Field to sort by (productId, name, price, category, discountPrice, createdAt, updatedAt)", example = "price") @Pattern(regexp = "productId|name|price|category|discountPrice|createdAt|updatedAt") String sortBy,
             @Parameter(description = "Sort direction: true for ASC, false for DESC", example = "true") Boolean sortDirection);
 
     @Operation(summary = "Get product by ID")

@@ -1,10 +1,9 @@
 package de.telran.gardenStore.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,13 +20,13 @@ public class LoggingAspect {
     public void loggableMethods() {
     }
 
-    @Before("loggableMethods()")
-    public void logMethodInput(JoinPoint joinPoint) {
+    @Around(value = "loggableMethods()", argNames = "joinPoint")
+    public Object logMethodInput(ProceedingJoinPoint joinPoint) throws Throwable {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
 
-        log.info(">>> POST request parameters {}.{}(): {}",
+        log.info(">>> Request parameters {}.{}(): {}",
                 className, methodName, Arrays.toString(args));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -36,12 +35,10 @@ public class LoggingAspect {
                     authentication.getName(),
                     authentication.getAuthorities());
         }
-    }
-
-    @AfterReturning(pointcut = "loggableMethods()", returning = "result")
-    public void logMethodOutput(JoinPoint joinPoint, Object result) {
+        Object result = joinPoint.proceed(args);
         log.info("<<< Execution result {}: {}",
                 joinPoint.getSignature().toShortString(),
                 result);
+        return result;
     }
 }

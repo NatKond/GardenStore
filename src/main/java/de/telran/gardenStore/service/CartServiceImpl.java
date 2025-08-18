@@ -34,6 +34,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart create(AppUser user) {
+
         return cartRepository.save(Cart.builder()
                 .user(user)
                 .build());
@@ -45,9 +46,10 @@ public class CartServiceImpl implements CartService {
         cartToUpdate.setItems(cart.getItems());
 
         log.debug("Attempt to update cart by user {}:\ncartId = {}{}",
-                cart.getCartId(),
+                cart.getUser().getEmail(),
                 cart.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining("")),
-                cart.getUser().getEmail());
+                cart.getCartId()
+        );
 
         return cartRepository.save(cartToUpdate);
     }

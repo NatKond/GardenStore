@@ -4,14 +4,46 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="18-add-constrains-for-carts-table" author="nkond">
+    <changeSet id="10-add-constrains-for-products-table" author="nkond">
+        <addForeignKeyConstraint baseTableName="products" baseColumnNames="category_id"
+                                 constraintName="fk_products_on_category"
+                                 referencedTableName="categories" referencedColumnNames="category_id"
+                                 onDelete="RESTRICT"/>
+    </changeSet>
+
+    <changeSet id="11-add-constrains-for-favorites-table" author="nkond">
+        <addForeignKeyConstraint baseTableName="favorites" baseColumnNames="user_id"
+                                 constraintName="fk_favorites_on_user"
+                                 referencedTableName="app_users" referencedColumnNames="user_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="favorites" baseColumnNames="product_id"
+                                 constraintName="fk_favorites_on_product"
+                                 referencedTableName="products" referencedColumnNames="product_id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="12-add-constraints-to-app_users-role" author="nkond">
+        <addForeignKeyConstraint
+                baseTableName="user_roles" baseColumnNames="user_id"
+                referencedTableName="app_users" referencedColumnNames="user_id"
+                constraintName="fk_user_roles_user"/>
+
+        <sql>
+            ALTER TABLE user_roles
+                ADD CONSTRAINT chk_role_values
+                    CHECK (role IN ('ROLE_USER', 'ROLE_ADMIN'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="13-add-constrains-for-carts-table" author="nkond">
         <addForeignKeyConstraint baseTableName="carts" baseColumnNames="user_id"
                                  constraintName="fk_cart_on_user"
                                  referencedTableName="app_users" referencedColumnNames="user_id"
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet id="19-add-constrains-for-cart_items-table" author="nkond">
+    <changeSet id="14-add-constrains-for-cart_items-table" author="nkond">
         <addForeignKeyConstraint baseTableName="cart_items" baseColumnNames="cart_id"
                                  constraintName="fk_carts_items_on_cart"
                                  referencedTableName="carts" referencedColumnNames="cart_id"
@@ -20,10 +52,10 @@
         <addForeignKeyConstraint baseTableName="cart_items" baseColumnNames="product_id"
                                  constraintName="fk_cart_items_on_product"
                                  referencedTableName="products" referencedColumnNames="product_id"
-                                 onDelete="RESTRICT"/>
+                                 onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet id="20-add-constrains-for-orders-table" author="nkond">
+    <changeSet id="15-add-constrains-for-orders-table" author="nkond">
         <addForeignKeyConstraint baseTableName="orders" baseColumnNames="user_id"
                                  constraintName="fk_orders_on_user"
                                  referencedTableName="app_users" referencedColumnNames="user_id"
@@ -35,7 +67,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="21-add-constrains-for-order_items-table" author="nkond">
+    <changeSet id="16-add-constrains-for-order_items-table" author="nkond">
         <addForeignKeyConstraint baseTableName="order_items" baseColumnNames="order_id"
                                  constraintName="fk_order_items_on_order"
                                  referencedTableName="orders" referencedColumnNames="order_id"
@@ -47,21 +79,21 @@
                                  onDelete="RESTRICT"/>
     </changeSet>
 
-    <changeSet id="22-add-unique-constraint-to-cart_items" author="nkond">
+    <changeSet id="17-add-unique-constraint-to-cart_items" author="nkond">
         <addUniqueConstraint
                 tableName="cart_items"
                 columnNames="cart_id, product_id"
                 constraintName="uc_cart_items_cart_product"/>
     </changeSet>
 
-    <changeSet id="23-add-unique-constraint-to-order_items" author="nkond">
+    <changeSet id="18-add-unique-constraint-to-order_items" author="nkond">
         <addUniqueConstraint
                 tableName="order_items"
                 columnNames="order_id, product_id"
                 constraintName="uc_order_items_order_product"/>
     </changeSet>
 
-    <changeSet id="24-add-check-quantity" author="nkond">
+    <changeSet id="19-add-check-quantity" author="nkond">
         <sql>
             ALTER TABLE cart_items
                 ADD CONSTRAINT chk_cart_items_quantity CHECK (quantity > 0);
@@ -70,13 +102,12 @@
         </sql>
     </changeSet>
 
-    <changeSet id="27-add-check-delivery_method" author="nkond">
+    <changeSet id="20-add-check-delivery_method" author="nkond">
         <sql>
             ALTER TABLE orders
                 ADD CONSTRAINT chk_orders_delivery_method
                     CHECK (delivery_method IN ('COURIER', 'PICKUP', 'POST'));
         </sql>
-
     </changeSet>
 
 </databaseChangeLog>

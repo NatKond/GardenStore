@@ -64,8 +64,6 @@ Garden Store is an online store for gardening, where users can browse, explore, 
 
 ## Team CODE_CATS
 
-## Team CODE_CATS 🐱
-
 - **Natalia Kondratenko**
     *Role:* Team Leader  
     *Contributions:*

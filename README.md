@@ -9,7 +9,6 @@ Garden Store
 
 **Team Name:**  
 ![CODE_CATS Banner](src/main/docs/logo.png)
-CODE_CATS
 
 **Links:**
 -  [Documentation (Project requirements)](https://docs.google.com/document/d/1Xn41eFhdYAJVYzRucsNwpbLJ5lNxdvpfx__SZf5DwXA/edit?tab=t.0)

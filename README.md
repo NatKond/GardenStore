@@ -12,7 +12,7 @@ Garden Store
 CODE_CATS
 
 **Links:**
-- 📝 [Documentation (Requirements](https://docs.google.com/document/d/1Xn41eFhdYAJVYzRucsNwpbLJ5lNxdvpfx__SZf5DwXA/edit?tab=t.0)
+-  [Documentation (Project requirements)](https://docs.google.com/document/d/1Xn41eFhdYAJVYzRucsNwpbLJ5lNxdvpfx__SZf5DwXA/edit?tab=t.0)
 -  [REST API Endpoints](https://confirmed-baron-2e5.notion.site/REST-API-f186cf63a46c4020b2237f73093922ab)
 -  [JIRA (Backlog & Tasks)](https://natzubova.atlassian.net/jira/software/projects/GSP/boards/1)
 -  [Deployed Version](http://51.20.105.119:8080/swagger-ui/index.html#/)

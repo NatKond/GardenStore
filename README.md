@@ -1,14 +1,9 @@
 # Garden Store
 
 _A graduation project by **CODE_CATS** team_
+![CODE_CATS Banner](src/main/docs/logo.png)
 
 ## About the Project
-
-**Project Name:**  
-Garden Store
-
-**Team Name:**  
-![CODE_CATS Banner](src/main/docs/logo.png)
 
 **Links:**
 

@@ -60,15 +60,18 @@ Represents a product in the catalog.
   "name": "string",
   "description": "string",
   "price": 11.99,
-  "discountPrice": 8.99
+  "discountPrice": 8.99,
+  "imageUrl": "string"
 }
 ```
 ## Endpoints
 
-| Method | URL                        | Role Required | Description             |
-|--------|----------------------------|---------------|-------------------------|
-| GET    | `/v1/products`             | —             | Get all products        |
-| GET    | `/v1/products/{productId}` | —             | Get product by ID       |
-| POST   | `/v1/products`             | ADMIN         | Create new product      |
-| PUT    | `/v1/products/{productId}` | ADMIN         | Update product          |
-| DELETE | `/v1/products/{productId}` | ADMIN         | Delete product          |
+| Method | URL                                                      | Role Required | Description                     |
+|--------|----------------------------------------------------------|---------------|---------------------------------|
+| GET    | `/v1/products`                                           | —             | Get all products with filtering |
+| GET    | `/v1/products/{productId}`                               | —             | Get product by ID               |
+| GET    | `/v1/products/product-of-the-day`                        | —             | Get product of the day          |
+| POST   | `/v1/products`                                           | ADMIN         | Create new product              |
+| PUT    | `/v1/products/{productId}`                               | ADMIN         | Update product                  |
+| PATCH  | `/v1/products/{productId}/discount/{discountPercentage}` | ADMIN         | Update product discount         |
+| DELETE | `/v1/products/{productId}`                               | ADMIN         | Delete product                  |

@@ -34,11 +34,3 @@ A product included in an order.
   }
 }
 ```
-
-## Endpoints
-
-| Method | URL                              | Role Required  | Description             |
-|--------|----------------------------------|----------------|-------------------------|
-| POST   | `/v1/orders/items`               | USER/ADMIN     | Add item to order       |
-| PUT    | `/v1/orders/items/{orderItemId}` | USER/ADMIN     | Change item in order    |
-| DELETE | `/v1/orders/items/{orderItemId}` | USER/ADMIN     | Delete items from order |

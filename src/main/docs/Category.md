@@ -8,10 +8,10 @@ Represents a product category.
 
 ## Fields
 
-| Field      | Type   | DB Column     | Description          |
-|------------|--------|---------------|----------------------|
-| categoryId | Long   | category_id   | Primary Key          |
-| name       | String | name          | Category name        |
+| Field      | Type   | DB Column     | Description             |
+|------------|--------|---------------|-------------------------|
+| categoryId | Long   | category_id   | Primary Key             |
+| name       | String | name          | Category name, required |
 
 ## DTOs
 

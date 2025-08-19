@@ -8,14 +8,14 @@ Represents a system user.
 
 ## Fields
 
-| Field       | Type   | DB Column     | Description                    |
-|-------------|--------|---------------|--------------------------------|
-| userId      | Long   | user_id       | Primary Key                    |
-| name        | String | name          | Full name                      |
-| email       | String | email         | Unique, required               |
-| phoneNumber | String | phone_number  | Required                       |
-| password    | String | password_hash | Hashed password                |
-| role        | Enum   | role          | ROLE_USER / ROLE_ADMINISTRATOR |
+| Field    | Type   | DB Column     | Description            |
+|----------|--------|---------------|------------------------|
+| userId   | Long   | user_id       | Primary Key            |
+| name     | String | name          | Full name              |
+| email    | String | email         | Unique, required       |
+| phone    | String | phone_number  | Phone number           |
+| password | String | password_hash | Hashed password        |
+| role     | Enum   | role          | ROLE_USER / ROLE_ADMIN |
 
 ## DTOs
 
@@ -82,6 +82,6 @@ Represents a system user.
 | POST   | `/v1/users/login`    | —             | Authenticate user           |
 | GET    | `/v1/users`          | ADMIN         | Get all users               |
 | GET    | `/v1/users/me`       | USER / ADMIN  | Get current user            |
-| GET    | `/v1/users/{userId}` | USER / ADMIN  | Get user by Id              |
-| PUT    | `/v1/users/{userId}` | USER / ADMIN  | Update current user profile |
-| DELETE | `/v1/users/{userId}` | USER / ADMIN  | Delete current user         |
+| GET    | `/v1/users/{userId}` | ADMIN         | Get user by Id              |
+| PUT    | `/v1/users`          | USER / ADMIN  | Update current user profile |
+| DELETE | `/v1/users`          | USER / ADMIN  | Delete current user         |

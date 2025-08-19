@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = Order.builder()
                 .user(user)
                 .deliveryAddress(deliveryAddress)
-                .contactPhone(contactPhone != null ? contactPhone : user.getPhoneNumber())
+                .contactPhone(contactPhone != null ? contactPhone : user.getPhone())
                 .deliveryMethod(deliveryMethod)
                 .build();
 

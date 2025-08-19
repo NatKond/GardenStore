@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
         userToUpdate.setName(user.getName());
         userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setPhoneNumber(user.getPhoneNumber());
+        userToUpdate.setPhone(user.getPhone());
         userToUpdate.setPasswordHash(user.getPasswordHash());
         log.debug("Attempt to update {} to {}", user, userToUpdate);
 

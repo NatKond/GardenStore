@@ -139,7 +139,7 @@ class UserServiceImplTest extends AbstractTest {
 
         AppUser userToUpdate = user1.toBuilder()
                 .userId(null)
-                .phoneNumber(phoneNumberToUpdate)
+                .phone(phoneNumberToUpdate)
                 .build();
 
         AppUser userUpdated = userToUpdate.toBuilder()
@@ -154,7 +154,7 @@ class UserServiceImplTest extends AbstractTest {
         assertNotNull(actual);
         assertEquals(userUpdated, actual);
         assertEquals(userUpdated.getEmail(), actual.getEmail());
-        assertEquals(userUpdated.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(userUpdated.getPhone(), actual.getPhone());
         verify(userRepository).save(userUpdated);
     }
 

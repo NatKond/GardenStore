@@ -219,7 +219,7 @@ public abstract class AbstractTest {
                 .userId(1L)
                 .name("Alice Johnson")
                 .email("alice.johnson@example.com")
-                .phoneNumber("+1234567890")
+                .phone("+1234567890")
                 .passwordHash("12345")
                 .roles(Set.of(Role.ROLE_USER, Role.ROLE_ADMIN))
                 .build();
@@ -228,7 +228,7 @@ public abstract class AbstractTest {
                 .userId(2L)
                 .name("Bob Smith")
                 .email("bob.smith@example.com")
-                .phoneNumber("+1987654321")
+                .phone("+1987654321")
                 .passwordHash("12345")
                 .favorites(new ArrayList<>())
                 .roles(Set.of(Role.ROLE_USER))
@@ -237,7 +237,7 @@ public abstract class AbstractTest {
         userToCreate = AppUser.builder()
                 .name("Charlie Brown")
                 .email("charlie.brown@example.com")
-                .phoneNumber("+1122334455")
+                .phone("+1122334455")
                 .passwordHash("12345")
                 .roles(Set.of(Role.ROLE_USER))
                 .build();
@@ -305,7 +305,7 @@ public abstract class AbstractTest {
                 .orderId(1L)
                 .user(user1)
                 .deliveryAddress("123 Garden Street")
-                .contactPhone(user1.getPhoneNumber())
+                .contactPhone(user1.getPhone())
                 .deliveryMethod(DeliveryMethod.COURIER)
                 .status(OrderStatus.AWAITING_PAYMENT)
                 .createdAt(LocalDateTime.of(2025, 7, 1, 10, 0, 0))
@@ -336,7 +336,7 @@ public abstract class AbstractTest {
                 .orderId(2L)
                 .user(user2)
                 .deliveryAddress("456 Green Ave")
-                .contactPhone(user2.getPhoneNumber())
+                .contactPhone(user2.getPhone())
                 .deliveryMethod(DeliveryMethod.PICKUP)
                 .status(OrderStatus.CREATED)
                 .createdAt(LocalDateTime.of(2025, 7, 2, 12, 0, 0))
@@ -358,7 +358,7 @@ public abstract class AbstractTest {
                 .orderId(3L)
                 .user(user1)
                 .deliveryAddress("123 Garden Street")
-                .contactPhone(user1.getPhoneNumber())
+                .contactPhone(user1.getPhone())
                 .deliveryMethod(DeliveryMethod.COURIER)
                 .status(OrderStatus.DELIVERED)
                 .createdAt(LocalDateTime.of(2025, 5, 3, 17, 0, 0))
@@ -380,7 +380,7 @@ public abstract class AbstractTest {
                 .orderId(4L)
                 .user(user2)
                 .deliveryAddress("456 Green Ave")
-                .contactPhone(user2.getPhoneNumber())
+                .contactPhone(user2.getPhone())
                 .deliveryMethod(DeliveryMethod.PICKUP)
                 .status(OrderStatus.CANCELLED)
                 .createdAt(LocalDateTime.of(2025, 7, 1, 11, 45, 0))
@@ -401,7 +401,7 @@ public abstract class AbstractTest {
         orderToCreate = Order.builder()
                 .user(user1)
                 .deliveryAddress("123 Garden Street")
-                .contactPhone(user1.getPhoneNumber())
+                .contactPhone(user1.getPhone())
                 .deliveryMethod(DeliveryMethod.COURIER)
                 .status(OrderStatus.CREATED)
                 .build();
@@ -702,7 +702,7 @@ public abstract class AbstractTest {
                 .userId(user1.getUserId())
                 .name(user1.getName())
                 .email(user1.getEmail())
-                .phoneNumber(user1.getPhoneNumber())
+                .phone(user1.getPhone())
                 .roles(user1.getRoles().stream().map(Enum::name).toList())
                 .build();
 
@@ -710,7 +710,7 @@ public abstract class AbstractTest {
                 .userId(user2.getUserId())
                 .name(user2.getName())
                 .email(user2.getEmail())
-                .phoneNumber(user2.getPhoneNumber())
+                .phone(user2.getPhone())
                 .roles(user2.getRoles().stream().map(Enum::name).toList())
                 .build();
 
@@ -718,7 +718,7 @@ public abstract class AbstractTest {
                 .userId(user1.getUserId())
                 .name(user1.getName())
                 .email(user1.getEmail())
-                .phoneNumber(user1.getPhoneNumber())
+                .phone(user1.getPhone())
                 .favorites(List.of(favoriteResponseDto1, favoriteResponseDto2))
                 .roles(user1.getRoles().stream().map(Enum::name).toList())
                 .build();
@@ -726,7 +726,7 @@ public abstract class AbstractTest {
         userCreateRequestDto = UserCreateRequestDto.builder()
                 .name(userToCreate.getName())
                 .email(userToCreate.getEmail())
-                .phoneNumber(userToCreate.getPhoneNumber())
+                .phone(userToCreate.getPhone())
                 .password(userToCreate.getPasswordHash())
                 .build();
 
@@ -734,7 +734,7 @@ public abstract class AbstractTest {
                 .userId(userCreated.getUserId())
                 .name(userCreated.getName())
                 .email(userCreated.getEmail())
-                .phoneNumber(userCreated.getPhoneNumber())
+                .phone(userCreated.getPhone())
                 .roles(userCreated.getRoles().stream().map(Enum::name).toList())
                 .favorites(new ArrayList<>())
                 .build();

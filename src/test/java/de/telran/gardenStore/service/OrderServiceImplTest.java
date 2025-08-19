@@ -147,7 +147,7 @@ class OrderServiceImplTest extends AbstractTest {
         Order orderToCreate = Order.builder()
                 .user(user1)
                 .deliveryAddress("123 Garden Street")
-                .contactPhone(user1.getPhoneNumber())
+                .contactPhone(user1.getPhone())
                 .deliveryMethod(DeliveryMethod.COURIER)
                 .status(OrderStatus.CREATED)
                 .items(orderItems)

@@ -26,7 +26,7 @@ public class AppUser {
 
     private String email;
 
-    private String phoneNumber;
+    private String phone;
 
     @ToString.Exclude
     private String passwordHash;

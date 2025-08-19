@@ -171,12 +171,12 @@ public class UserIntegrationTest extends AbstractTest {
         UserCreateRequestDto userUpdateRequestDto = UserCreateRequestDto.builder()
                 .name(user1.getName())
                 .email(user1.getEmail())
-                .phoneNumber(phoneToUpdate)
+                .phone(phoneToUpdate)
                 .password("12345")
                 .build();
 
         UserResponseDto userResponseUpdatedDto = userResponseDto1.toBuilder()
-                .phoneNumber(phoneToUpdate)
+                .phone(phoneToUpdate)
                 .build();
 
         mockMvc.perform(put("/v1/users")

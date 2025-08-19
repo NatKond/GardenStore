@@ -31,7 +31,7 @@ public interface UserController {
                                     "userId": 1,
                                     "name": "Alice Johnson",
                                     "email": "alice.johnson@example.com",
-                                    "phoneNumber": "+1234509876",
+                                    "phone": "+1234509876",
                                     "roles": [
                                         "ROLE_USER",
                                         "ROLE_ADMIN"
@@ -41,7 +41,7 @@ public interface UserController {
                                     "userId": 2,
                                     "name": "Bob Smith",
                                     "email": "bob.smith@example.com",
-                                    "phoneNumber": "+1987654322",
+                                    "phone": "+1987654322",
                                     "roles": [
                                         "ROLE_USER"
                                     ]
@@ -59,7 +59,7 @@ public interface UserController {
                                 "userId": 1,
                                 "name": "Alice Johnson",
                                 "email": "alice.johnson@example.com",
-                                "phoneNumber": "+1234509876",
+                                "phone": "+1234509876",
                                 "roles": [
                                     "ROLE_USER",
                                     "ROLE_ADMIN"
@@ -102,7 +102,7 @@ public interface UserController {
                                 "userId": 1,
                                 "name": "Alice Johnson",
                                 "email": "alice.johnson@example.com",
-                                "phoneNumber": "+1234509876",
+                                "phone": "+1234509876",
                                 "roles": [
                                     "ROLE_USER",
                                     "ROLE_ADMIN"
@@ -188,7 +188,7 @@ public interface UserController {
                                 "userId": 5,
                                 "name": "Frank Green",
                                 "email": "frank.green@example.com",
-                                "phoneNumber": "+1444555666",
+                                "phone": "+1444555666",
                                 "roles": [
                                     "ROLE_USER"
                                 ],
@@ -202,7 +202,7 @@ public interface UserController {
                                 "exception": "MethodArgumentNotValidException",
                                 "messages": {
                                     "password": "Password should have at least 5 characters",
-                                    "phoneNumber": "Phone number should have at least 10 characters",
+                                    "phone": "Phone number should have at least 10 characters",
                                     "email": "Should be a well-formed email address"
                                 },
                                 "status": 400,
@@ -233,7 +233,7 @@ public interface UserController {
                                             {
                                                 "name": "Eve White",
                                                 "email": "eve.white@example.com",
-                                                "phoneNumber": "+1333444555",
+                                                "phone": "+1333444555",
                                                 "password": "12345"
                                             }
                                             """),
@@ -241,7 +241,7 @@ public interface UserController {
                                             {
                                                 "name": "Frank Green",
                                                 "email": "frank.green@example.com",
-                                                "phoneNumber": "+1444555666",
+                                                "phone": "+1444555666",
                                                 "password": "12345"
                                             }
                                             """),
@@ -249,7 +249,7 @@ public interface UserController {
                                             {
                                                 "name": "David Black",
                                                 "email": "david.Black@example.com",
-                                                "phoneNumber": "+1222333555",
+                                                "phone": "+1222333555",
                                                 "password": "123456"
                                             }
                                             """)
@@ -266,7 +266,7 @@ public interface UserController {
                                 "userId": 1,
                                 "name": "Alice Johnson",
                                 "email": "alice.johnson@example.com",
-                                "phoneNumber": "+1234567899",
+                                "phone": "+1234567899",
                                 "roles": [
                                     "ROLE_ADMIN",
                                     "ROLE_USER"
@@ -281,7 +281,7 @@ public interface UserController {
                                 "exception": "MethodArgumentNotValidException",
                                 "messages": {
                                     "password": "Password should have at least 5 characters",
-                                    "phoneNumber": "Phone number should have at least 10 characters",
+                                    "phone": "Phone number should have at least 10 characters",
                                     "email": "Should be a well-formed email address"
                                 },
                                 "status": 400,
@@ -313,7 +313,7 @@ public interface UserController {
                                             {
                                                 "name": "Alice Johnson",
                                                 "email": "alice@example.com",
-                                                "phoneNumber": "+1234567899",
+                                                "phone": "+1234567899",
                                                 "password": "12345"
                                             }
                                             """),
@@ -321,7 +321,7 @@ public interface UserController {
                                             {
                                                 "name": "Bob Smith",
                                                 "email": "bob.smith@example.com",
-                                                "phoneNumber": "+1987654321",
+                                                "phone": "+1987654321",
                                                 "password": "12345"
                                             }
                                             """),
@@ -329,7 +329,7 @@ public interface UserController {
                                             {
                                                 "name": "Frank Brown",
                                                 "email": "frank.brown@example.com",
-                                                "phoneNumber": "+1444555666",
+                                                "phone": "+1444555666",
                                                 "password": "12345"
                                             }
                                             """)

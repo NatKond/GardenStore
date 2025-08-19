@@ -16,7 +16,7 @@ public class UserCreateRequestDto {
     private String email;
 
     @Pattern(regexp = "^\\+?\\d{10,15}$", message = "Phone number should have at least 10 characters")
-    private String phoneNumber;
+    private String phone;
 
     @ToString.Exclude
     @NotBlank(message = "Password is required")

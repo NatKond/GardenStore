@@ -35,7 +35,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 - 📊 **Reporting & Analytics** – generate sales reports
 
 
-## Entities Overview
+**Entities Overview**
 
 | Entity    | Description                     | Details                                    |
 |-----------|---------------------------------|--------------------------------------------|
@@ -48,7 +48,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 | Order     | Customer orders and reports     | [Orders.md](src/main/docs/Order.md)        |
 | OrderItem | Stores order items details      | [Orders.md](src/main/docs/OrderItem.md)    |
 
-## Tech Stack
+**Tech Stack**
 
 | Technology            | Purpose                                       |
 |-----------------------|-----------------------------------------------|

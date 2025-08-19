@@ -47,8 +47,8 @@ public class CartServiceImpl implements CartService {
 
         log.debug("Attempt to update cart by user {}:\ncartId = {}{}",
                 cart.getUser().getEmail(),
-                cart.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining("")),
-                cart.getCartId()
+                cart.getCartId(),
+                cart.getItems().stream().map(item -> "\n- " + item).collect(Collectors.joining(""))
         );
 
         return cartRepository.save(cartToUpdate);

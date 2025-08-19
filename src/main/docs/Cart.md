@@ -11,7 +11,7 @@ Represents a user's shopping cart.
 | Field   | Type | DB Column | Description                         |
 |---------|------|-----------|-------------------------------------|
 | cartId  | Long | cart_id   | Primary key                         |
-| userId  | Long | user_id   | Foreign key to `users(user_id)`     |
+| userId  | Long | user_id   | Foreign key to `app_users(user_id)` |
 
 ## DTOs
 
@@ -48,11 +48,11 @@ Represents a user's shopping cart.
 
 ## Endpoints
 
-| Method | URL                       | Role Required  | Description           |
-|--------|---------------------------|----------------|-----------------------|
-| GET    | `/v1/cart/{userId}`       | USER           | Get cart by userId    |
-| POST   | `/v1/cart/items`          | USER           | Add item to cart      |
-| PUT    | `/v1/cart/items/{itemId}` | USER           | Update item in cart   |
-| DELETE | `/v1/cart/items/{itemId}` | USER           | Remove item from cart |
+| Method | URL                           | Role Required  | Description               |
+|--------|-------------------------------|----------------|---------------------------|
+| GET    | `/v1/cart`                    | USER           | Get cart for current user |
+| POST   | `/v1/cart/items/{productId}`  | USER           | Add product to cart       |
+| PUT    | `/v1/cart/items/{cartItemId}` | USER           | Update item in cart       |
+| DELETE | `/v1/cart/items/{cartItemId}` | USER           | Remove item from cart     |
 
 

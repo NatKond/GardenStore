@@ -18,6 +18,7 @@ A customer's order.
 | deliveryMethod  | String        | delivery_method  | Delivery method                                                                 |
 | status          | Enum          | status           | Order status CREATED / AWAITING_PAYMENT / PAID / SHIPPED / DELIVERED / CANCELED |
 | updatedAt       | LocalDateTime | updated_at       | Last update timestamp                                                           |
+| totalAmount     | BigDecimal    | total_amount     | Total order amount                                                              |
 
 ## DTOs
 
@@ -33,7 +34,8 @@ A customer's order.
       "productId": 1,
       "quantity": 2
     }
-  ]
+  ],
+  "totalAmount": 28.47
 }
 ```
 
@@ -45,6 +47,7 @@ A customer's order.
   "userId": 3,
   "deliveryAddress": "string",
   "deliveryMethod": "string",
+  "totalAmount": 30.63,
   "contactPhone": "+1444555666",
   "status": "CREATED"
 }
@@ -93,12 +96,13 @@ A customer's order.
 
 ## Endpoints
 
-| Method | URL                              | Role Required | Description                             |
-|--------|----------------------------------|---------------|-----------------------------------------|
-| GET    | `/v1/orders/history`             | USER/ADMIN    | Get all user orders                     |
-| GET    | `/v1/orders/{orderId}`           | USER/ADMIN    | Get order by ID                         |
-| POST   | `/v1/orders`                     | USER          | Create new order                        |
-| POST   | `/v1/orders/items`               | USER          | Add item to order                       |
-| PUT    | `/v1/orders/items`               | USER          | Update item in order                    |
-| DELETE | `/v1/orders/items/{orderItemId}` | USER          | Delete items from order                 |
-| DELETE | `/v1/orders/{orderId}`           | USER/ADMIN    | Cancel order : mark order as CANCELLED. |
+| Method | URL                              | Role Required | Description                                 |
+|--------|----------------------------------|---------------|---------------------------------------------|
+| GET    | `/v1/orders/history`             | USER/ADMIN    | Get all orders for current user             |
+| GET    | `/v1/orders/history/delivered`   | USER/ADMIN    | Get all delivered orders for current user   |
+| GET    | `/v1/orders/{orderId}`           | USER/ADMIN    | Get current user order by ID                |
+| POST   | `/v1/orders`                     | USER          | Create new order                            |
+| POST   | `/v1/orders/items`               | USER          | Add product to order in status `CREATED`    |
+| PUT    | `/v1/orders/items`               | USER          | Update item in order in status `CREATED`    |
+| DELETE | `/v1/orders/items/{orderItemId}` | USER          | Delete items from order in status `CREATED` |
+| DELETE | `/v1/orders/{orderId}`           | USER/ADMIN    | Cancel order : mark order as CANCELLED.     |

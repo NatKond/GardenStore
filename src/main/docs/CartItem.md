@@ -33,11 +33,3 @@ Items added to a shopping cart.
   }
 }
 ```
-
-## Endpoints
-
-| Method | URL                       | Role Required  | Description           |
-|--------|---------------------------|----------------|-----------------------|
-| POST   | `/v1/cart/items`          | USER           | Add item to cart      |
-| PUT    | `/v1/cart/items/{itemId}` | USER           | Update item in cart   |
-| DELETE | `/v1/cart/items/{itemId}` | USER           | Remove item from cart |

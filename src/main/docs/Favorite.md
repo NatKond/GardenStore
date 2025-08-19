@@ -33,8 +33,8 @@ Represents a user's favorite product.
 
 ## Endpoints
 
-| Method | URL                          | Role Required  | Description                     |
-|--------|------------------------------|----------------|---------------------------------|
-| GET    | `/v1/favorites/{userId}`     | USER           | Get favorites product by userId |
-| POST   | `/v1/favorites/{userId}`     | USER           | Add to favorites                |
-| DELETE | `/v1/favorites/{favoriteId}` | USER           | Remove from favorites           |
+| Method | URL                          | Role Required  | Description                               |
+|--------|------------------------------|----------------|-------------------------------------------|
+| GET    | `/v1/favorites`              | USER           | Get favorites for current user            |
+| POST   | `/v1/favorites/{productId}`  | USER           | Add product to favorites for current user |
+| DELETE | `/v1/favorites/{favoriteId}` | USER           | Remove from favorites                     |

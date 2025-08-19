@@ -45,7 +45,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 | Favorite  | Manages user favorite products  | [Favorites.md](src/main/docs/Favorite.md)  |
 | Cart      | Shopping cart with items        | [Cart.md](src/main/docs/Cart.md)           |
 | CartItem  | Stores cart items details       | [Cart.md](src/main/docs/CartItem.md)       |
-| Order     | Customer orders and reports     | [Orders.md](src/main/docs/Order.md)        |
+| Order     | Manages customer orders         | [Orders.md](src/main/docs/Order.md)        |
 | OrderItem | Stores order items details      | [Orders.md](src/main/docs/OrderItem.md)    |
 
 **Tech Stack**

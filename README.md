@@ -70,7 +70,8 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 ## Natalia Kondratenko
   **Role** Team Leader
-  *Contributions:*
+  
+*Contributions:*
 1. [x] Created AppUser entity, created request and response user DTOs and implemented `UserRepository`, `UserService`, `UserController`
 2. [x] Added Liquibase for database initialization
 3. [x] Configured ModelMapper in custom converters
@@ -86,7 +87,8 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 ## Alexendra Kriviz
   **Role** Developer
-  *Contributions:*
+
+*Contributions:*
 1. [x] Created Product entity, created request and response product DTOs and implemented `ProductRepository`, `ProductService`, `ProductController`
 2. [x] Wrote unit tests  for `ProductService`
 3. [x] Refactored method names in services and controllers to remove entity names
@@ -99,7 +101,8 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 ## Maria Shirokova
   **Role** Developer
-  *Contributions:*
+
+*Contributions:*
 1. [x] Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
 2. [x] Wrote unit tests for `FavoriteService` and `FavoriteController`
 3. [x] Implement Favorite API: add, delete, and get by user
@@ -114,7 +117,8 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 ## Dmitrij Rabtsevitch
   **Role** Developer
-  *Contributions:*
+
+*Contributions:*
 1. [x] Created Category entity, created request and response category DTOs and implemented `CategoryRepository`, `CategoryService`, `CategoryController`
 2. [x] Wrote unit tests for `ProductController`
 3. [x] Added abstract test class to store test data

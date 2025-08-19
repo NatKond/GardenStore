@@ -69,7 +69,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 # Team
 
 ## Natalia Kondratenko
-  **Role** Team Leader
+Team Leader
   
 *Contributions:*
 * Created AppUser entity, created request and response user DTOs and implemented `UserRepository`, `UserService`, `UserController`
@@ -86,7 +86,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 
 ## Alexendra Kriviz
-  **Role** Developer
+Developer
 
 *Contributions:*
 * Created Product entity, created request and response product DTOs and implemented `ProductRepository`, `ProductService`, `ProductController`
@@ -100,7 +100,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 
 ## Maria Shirokova
-  **Role** Developer
+Developer
 
 *Contributions:*
 * Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
@@ -116,7 +116,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 
 ## Dmitrij Rabtsevitch
-  **Role** Developer
+Developer
 
 *Contributions:*
 * Created Category entity, created request and response category DTOs and implemented `CategoryRepository`, `CategoryService`, `CategoryController`

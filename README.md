@@ -85,7 +85,7 @@ Team Leader
 * Deployed the project
 
 
-## Alexendra Kriviz
+## Alexandra Kriviz
 Developer
 
 *Contributions:*

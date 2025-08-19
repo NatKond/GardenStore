@@ -2,13 +2,9 @@
 
 _A graduation project by **CODE_CATS** team_
 
-## About the Project
-
-**Project Name:**  
-Garden Store
-
-**Team Name:**  
 ![CODE_CATS Banner](src/main/docs/logo.png)
+
+## About the Project
 
 **Links:**
 
@@ -22,11 +18,11 @@ This graduation project is a backend application built with **Java Spring Boot**
 The application allows customers to browse the catalog, add items to the cart, place orders, and track their order status in real time.  
 For administrators it provides tools to manage the product catalog, promotions, and sales analytics.
 
-## Main Page Screenshot
+**Main Page Screenshot**
 
 ![Main Page Screenshot](src/main/docs/main-page.png)
 
-## Core Features
+**Core Features**
 
 - 👤 **User Account Management** – registration, authentication, and profile handling
 - 🛠️ **Product Catalog Management** (for administrators) – add, edit, and remove products
@@ -39,7 +35,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 - 📊 **Reporting & Analytics** – generate sales reports
 
 
-## Entities Overview
+**Entities Overview**
 
 | Entity    | Description                     | Details                                    |
 |-----------|---------------------------------|--------------------------------------------|
@@ -52,7 +48,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 | Order     | Customer orders and reports     | [Orders.md](src/main/docs/Order.md)        |
 | OrderItem | Stores order items details      | [Orders.md](src/main/docs/OrderItem.md)    |
 
-## Tech Stack
+**Tech Stack**
 
 | Technology            | Purpose                                       |
 |-----------------------|-----------------------------------------------|
@@ -70,58 +66,65 @@ For administrators it provides tools to manage the product catalog, promotions, 
 | Docker                | Deployment & containerization                 |
 | Git + GitHub          | Version control                               |
 
-## Team CODE_CATS
+# Team
 
-- **Natalia Kondratenko**
-  *Role:* Team Leader  
-  *Contributions:*
-    - Created AppUser entity, created request and response user DTOs and implemented `UserRepository`, `UserService`, `UserController`
-    - Added Liquibase for database initialization
-    - Configured ModelMapper in custom converters
-    - Created unified response handling (`ApiResponse`) and global exception handler
-    - Created request and response order DTOs, implemented `OrderController`
-    - Set up authentication with Spring Security + JWT
-    - Created `ReportController` and `ReportService`
-    - Integrated Swagger (OpenAPI) for API documentation
-    - Implemented order status updates via Scheduler
-    - Added JaCoCo for creating test coverage reports
-    - Deployed the project
+## Natalia Kondratenko
+Team Leader
+  
+*Contributions:*
+* Created AppUser entity, created request and response user DTOs and implemented `UserRepository`, `UserService`, `UserController`
+* Added Liquibase for database initialization
+* Configured ModelMapper in custom converters
+* Created unified response handling (`ApiResponse`) and global exception handler
+* Created request and response order DTOs, implemented `OrderController`
+* Set up authentication with Spring Security + JWT
+* Created `ReportController` and `ReportService`
+* Integrated Swagger (OpenAPI) for API documentation
+* Implemented order status updates via Scheduler
+* Added JaCoCo for creating test coverage reports
+* Deployed the project
 
-- **Alexendra Kriviz**  
-  *Role:* Developer  
-  *Contributions:*
-    - Created Product entity, created request and response product DTOs and implemented `ProductRepository`, `ProductService`, `ProductController`
-    - Wrote unit tests  for `ProductService`
-    - Refactored method names in services and controllers to remove entity names
-    - Standardized code across similar methods in different classes
-    - Created Cart, CartItem entities and implemented `CartRepository`, `CartService`
-    - Wrote unit tests for `CartController`
-    - Added integration tests for all parameters in the getAll method in ProductIntegrationTest
-    - Verified that all API endpoints comply with the project documentation
 
-- **Maria Shirokova**  
-  *Role:* Developer  
-  *Contributions:*
-    - Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
-    - Wrote unit tests for `FavoriteService` and `FavoriteController`
-    - Implement Favorite API: add, delete, and get by user
-    - Defined JPA relationships between User, Product, Favorite, and Category entities
-    - Created request and response DTOs and converters, implemented CartController
-    - Write unit tests for `CartService`
-    - Implemented `PaymentController` to handle order payments
-    - Add unit tests for `OrderItemService`
-    - Add unit tests to cover all branches in CartServiceImpl.addItem method
-    - Add logging to the project in all services
+## Alexendra Kriviz
+Developer
 
-- **Dmitrij Rabtsevitch**  
-  *Role:* Developer  
-  *Contributions:*
-  - Created Category entity, created request and response category DTOs and implemented `CategoryRepository`, `CategoryService`, `CategoryController`
-  - Wrote unit tests for `ProductController`
-  - Added abstract test class to store test data
-  - Created Order, OrderItem entities and implemented `OrderRepository` and `OrderService`
-  - Wrote unit tests for `OrderController` and `OrderService`
-  - Added discount and promo functionality to `ProductController` and `ProductService`
-  - Wrote unit tests for `ScheduledService`
-  - Wrote unit tests for setDiscount and getProductOfTheDay methods in `ProductService` and `ProductController`
-  - Implement logging of input data using Aspect-Oriented Programming (AOP)
+*Contributions:*
+* Created Product entity, created request and response product DTOs and implemented `ProductRepository`, `ProductService`, `ProductController`
+* Wrote unit tests  for `ProductService`
+* Refactored method names in services and controllers to remove entity names
+* Standardized code across similar methods in different classes
+* Created Cart, CartItem entities and implemented `CartRepository`, `CartService`
+* Wrote unit tests for `CartController`
+* Added integration tests for all parameters in the getAll method in ProductIntegrationTest
+* Verified that all API endpoints comply with the project documentation
+
+
+## Maria Shirokova
+Developer
+
+*Contributions:*
+* Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
+* Wrote unit tests for `FavoriteService` and `FavoriteController`
+* Implement Favorite API: add, delete, and get by user
+* Defined JPA relationships between User, Product, Favorite, and Category entities
+* Created request and response DTOs and converters, implemented CartController
+* Write unit tests for `CartService`
+* Implemented `PaymentController` to handle order payments
+* Add unit tests for `OrderItemService`
+* Add unit tests to cover all branches in CartServiceImpl.addItem method
+* Add logging to the project in all services
+
+
+## Dmitrij Rabtsevitch
+Developer
+
+*Contributions:*
+* Created Category entity, created request and response category DTOs and implemented `CategoryRepository`, `CategoryService`, `CategoryController`
+* Wrote unit tests for `ProductController`
+* Added abstract test class to store test data
+* Created Order, OrderItem entities and implemented `OrderRepository` and `OrderService`
+* Wrote unit tests for `OrderController` and `OrderService`
+* Added discount and promo functionality to `ProductController` and `ProductService`
+* Wrote unit tests for `ScheduledService`
+* Wrote unit tests for setDiscount and getProductOfTheDay methods in `ProductService` and `ProductController`
+* Implement logging of input data using Aspect-Oriented Programming (AOP)

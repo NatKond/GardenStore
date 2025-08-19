@@ -70,57 +70,61 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 ## Natalia Kondratenko
   **Role** Team Leader
-  *Contributions:*
-1. [x] Created AppUser entity, created request and response user DTOs and implemented `UserRepository`, `UserService`, `UserController`
-2. [x] Added Liquibase for database initialization
-3. [x] Configured ModelMapper in custom converters
-4. [x] Created unified response handling (`ApiResponse`) and global exception handler
-5. [x] Created request and response order DTOs, implemented `OrderController`
-6. [x] Set up authentication with Spring Security + JWT
-7. [x] Created `ReportController` and `ReportService`
-8. [x] Integrated Swagger (OpenAPI) for API documentation
-9. [x] Implemented order status updates via Scheduler
-10. [x] Added JaCoCo for creating test coverage reports
-11. [x] Deployed the project
+  
+*Contributions:*
+* Created AppUser entity, created request and response user DTOs and implemented `UserRepository`, `UserService`, `UserController`
+* Added Liquibase for database initialization
+* Configured ModelMapper in custom converters
+* Created unified response handling (`ApiResponse`) and global exception handler
+* Created request and response order DTOs, implemented `OrderController`
+* Set up authentication with Spring Security + JWT
+* Created `ReportController` and `ReportService`
+* Integrated Swagger (OpenAPI) for API documentation
+* Implemented order status updates via Scheduler
+* Added JaCoCo for creating test coverage reports
+* Deployed the project
 
 
 ## Alexendra Kriviz
   **Role** Developer
-  *Contributions:*
-1. [x] Created Product entity, created request and response product DTOs and implemented `ProductRepository`, `ProductService`, `ProductController`
-2. [x] Wrote unit tests  for `ProductService`
-3. [x] Refactored method names in services and controllers to remove entity names
-4. [x] Standardized code across similar methods in different classes
-5. [x] Created Cart, CartItem entities and implemented `CartRepository`, `CartService`
-6. [x] Wrote unit tests for `CartController`
-7. [x] Added integration tests for all parameters in the getAll method in ProductIntegrationTest
-8. [x] Verified that all API endpoints comply with the project documentation
+
+*Contributions:*
+* Created Product entity, created request and response product DTOs and implemented `ProductRepository`, `ProductService`, `ProductController`
+* Wrote unit tests  for `ProductService`
+* Refactored method names in services and controllers to remove entity names
+* Standardized code across similar methods in different classes
+* Created Cart, CartItem entities and implemented `CartRepository`, `CartService`
+* Wrote unit tests for `CartController`
+* Added integration tests for all parameters in the getAll method in ProductIntegrationTest
+* Verified that all API endpoints comply with the project documentation
 
 
 ## Maria Shirokova
   **Role** Developer
-  *Contributions:*
-1. [x] Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
-2. [x] Wrote unit tests for `FavoriteService` and `FavoriteController`
-3. [x] Implement Favorite API: add, delete, and get by user
-4. [x] Defined JPA relationships between User, Product, Favorite, and Category entities
-5. [x] Created request and response DTOs and converters, implemented CartController
-6. [x] Write unit tests for `CartService`
-7. [x] Implemented `PaymentController` to handle order payments
-8. [x] Add unit tests for `OrderItemService`
-9. [x] Add unit tests to cover all branches in CartServiceImpl.addItem method
-10. [x] Add logging to the project in all services
+
+*Contributions:*
+* Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
+* Wrote unit tests for `FavoriteService` and `FavoriteController`
+* Implement Favorite API: add, delete, and get by user
+* Defined JPA relationships between User, Product, Favorite, and Category entities
+* Created request and response DTOs and converters, implemented CartController
+* Write unit tests for `CartService`
+* Implemented `PaymentController` to handle order payments
+* Add unit tests for `OrderItemService`
+* Add unit tests to cover all branches in CartServiceImpl.addItem method
+* Add logging to the project in all services
 
 
 ## Dmitrij Rabtsevitch
   **Role** Developer
-  *Contributions:*
-1. [x] Created Category entity, created request and response category DTOs and implemented `CategoryRepository`, `CategoryService`, `CategoryController`
-2. [x] Wrote unit tests for `ProductController`
-3. [x] Added abstract test class to store test data
-4. [x] Created Order, OrderItem entities and implemented `OrderRepository` and `OrderService`
-5. [x] Wrote unit tests for `OrderController` and `OrderService`
-6. [x] Added discount and promo functionality to `ProductController` and `ProductService`
-7. [x] Wrote unit tests for `ScheduledService`
-8. [x] Wrote unit tests for setDiscount and getProductOfTheDay methods in `ProductService` and `ProductController`
-9. [x] Implement logging of input data using Aspect-Oriented Programming (AOP)
+
+*Contributions:*
+* Created Category entity, created request and response category DTOs and implemented `CategoryRepository`, `CategoryService`, `CategoryController`
+* Wrote unit tests for `ProductController`
+* Added abstract test class to store test data
+* Created Order, OrderItem entities and implemented `OrderRepository` and `OrderService`
+* Wrote unit tests for `OrderController` and `OrderService`
+* Added discount and promo functionality to `ProductController` and `ProductService`
+* Wrote unit tests for `ScheduledService`
+* Wrote unit tests for setDiscount and getProductOfTheDay methods in `ProductService` and `ProductController`
+* Implement logging of input data using Aspect-Oriented Programming (AOP)

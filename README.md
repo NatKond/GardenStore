@@ -105,14 +105,14 @@ Developer
 *Contributions:*
 * Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
 * Wrote unit tests for `FavoriteService` and `FavoriteController`
-* Implement Favorite API: add, delete, and get by user
+* Implemented Favorite API: add, delete, and get by user
 * Defined JPA relationships between User, Product, Favorite, and Category entities
 * Created request and response DTOs and converters, implemented CartController
-* Write unit tests for `CartService`
+* Wrote unit tests for `CartService`
 * Implemented `PaymentController` to handle order payments
-* Add unit tests for `OrderItemService`
-* Add unit tests to cover all branches in CartServiceImpl.addItem method
-* Add logging to the project in all services
+* Added unit tests for `OrderItemService`
+* Added unit tests to cover all branches in CartServiceImpl.addItem method
+* Added logging to the project in all services
 
 
 ## Dmitrij Rabtsevitch
@@ -127,4 +127,4 @@ Developer
 * Added discount and promo functionality to `ProductController` and `ProductService`
 * Wrote unit tests for `ScheduledService`
 * Wrote unit tests for setDiscount and getProductOfTheDay methods in `ProductService` and `ProductController`
-* Implement logging of input data using Aspect-Oriented Programming (AOP)
+* Implemented logging of input data using Aspect-Oriented Programming (AOP)

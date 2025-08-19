@@ -1,6 +1,7 @@
 # Garden Store
 
 _A graduation project by **CODE_CATS** team_
+
 ![CODE_CATS Banner](src/main/docs/logo.png)
 
 ## About the Project
@@ -17,11 +18,11 @@ This graduation project is a backend application built with **Java Spring Boot**
 The application allows customers to browse the catalog, add items to the cart, place orders, and track their order status in real time.  
 For administrators it provides tools to manage the product catalog, promotions, and sales analytics.
 
-## Main Page Screenshot
+**Main Page Screenshot**
 
 ![Main Page Screenshot](src/main/docs/main-page.png)
 
-## Core Features
+**Core Features**
 
 - 👤 **User Account Management** – registration, authentication, and profile handling
 - 🛠️ **Product Catalog Management** (for administrators) – add, edit, and remove products

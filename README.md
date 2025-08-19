@@ -66,7 +66,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 | Docker                | Deployment & containerization                 |
 | Git + GitHub          | Version control                               |
 
-# Team CODE_CATS
+# Team
 
 ## Natalia Kondratenko
   **Role** Team Leader

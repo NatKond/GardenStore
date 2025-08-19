@@ -70,7 +70,6 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 - **Natalia Kondratenko**
   *Role:* Team Leader
-
   *Contributions:*
 1. [x] Created AppUser entity, created request and response user DTOs and implemented `UserRepository`, `UserService`, `UserController`
 2. [x] Added Liquibase for database initialization
@@ -84,9 +83,9 @@ For administrators it provides tools to manage the product catalog, promotions, 
 10. [x] Added JaCoCo for creating test coverage reports
 11. [x] Deployed the project
 
+
 - **Alexendra Kriviz**  
   *Role:* Developer
-
   *Contributions:*
 1. [x] Created Product entity, created request and response product DTOs and implemented `ProductRepository`, `ProductService`, `ProductController`
 2. [x] Wrote unit tests  for `ProductService`
@@ -97,9 +96,9 @@ For administrators it provides tools to manage the product catalog, promotions, 
 7. [x] Added integration tests for all parameters in the getAll method in ProductIntegrationTest
 8. [x] Verified that all API endpoints comply with the project documentation
 
+
 - **Maria Shirokova**  
   *Role:* Developer
-
   *Contributions:*
 1. [x] Created Favorite entity, created response favorite DTOs and implemented `FavoriteRepository`, `FavoriteService`, `FavoriteController`
 2. [x] Wrote unit tests for `FavoriteService` and `FavoriteController`
@@ -112,9 +111,9 @@ For administrators it provides tools to manage the product catalog, promotions, 
 9. [x] Add unit tests to cover all branches in CartServiceImpl.addItem method
 10. [x] Add logging to the project in all services
 
+
 - **Dmitrij Rabtsevitch**  
   *Role:* Developer
-
   *Contributions:*
 1. [x] Created Category entity, created request and response category DTOs and implemented `CategoryRepository`, `CategoryService`, `CategoryController`
 2. [x] Wrote unit tests for `ProductController`

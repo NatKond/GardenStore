@@ -50,21 +50,21 @@ For administrators it provides tools to manage the product catalog, promotions, 
 
 **Tech Stack**
 
-| Technology            | Purpose                                       |
-|-----------------------|-----------------------------------------------|
-| Java 21               | Programming language                          |
-| Spring Boot 3.5.3     | Application framework                         |
-| Hibernate             | ORM framework                                 |
-| PostgreSQL            | Database                                      |
-| H2 Database           | In-memory DB for testing                      |
-| ModelMapper           | Object mapping (DTO ↔ Entity)                 |
-| Lombok                | Code reduction (getters, setters, builders)   |
-| Liquibase             | Database versioning and migration management) |
-| Spring Security + JWT | Authentication & authorization                |
-| Swagger / OpenAPI     | REST API documentation                        |
-| JUnit + Mockito       | Testing                                       |
-| Docker                | Deployment & containerization                 |
-| Git + GitHub          | Version control                               |
+| Technology            | Purpose                                     |
+|-----------------------|---------------------------------------------|
+| Java 21               | Programming language                        |
+| Spring Boot 3.5.3     | Application framework                       |
+| Hibernate             | ORM framework                               |
+| PostgreSQL            | Database                                    |
+| H2 Database           | In-memory DB for testing                    |
+| ModelMapper           | Object mapping (DTO ↔ Entity)               |
+| Lombok                | Code reduction (getters, setters, builders) |
+| Liquibase             | Database initialization                     |
+| Spring Security + JWT | Authentication & authorization              |
+| Swagger / OpenAPI     | REST API documentation                      |
+| JUnit + Mockito       | Testing                                     |
+| Docker                | Deployment & containerization               |
+| Git + GitHub          | Version control                             |
 
 # Team
 

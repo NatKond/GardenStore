@@ -45,26 +45,26 @@ For administrators it provides tools to manage the product catalog, promotions, 
 | Favorite  | Manages user favorite products  | [Favorites.md](src/main/docs/Favorite.md)  |
 | Cart      | Shopping cart with items        | [Cart.md](src/main/docs/Cart.md)           |
 | CartItem  | Stores cart items details       | [Cart.md](src/main/docs/CartItem.md)       |
-| Order     | Customer orders and reports     | [Orders.md](src/main/docs/Order.md)        |
+| Order     | Manages customer orders         | [Orders.md](src/main/docs/Order.md)        |
 | OrderItem | Stores order items details      | [Orders.md](src/main/docs/OrderItem.md)    |
 
 **Tech Stack**
 
-| Technology            | Purpose                                       |
-|-----------------------|-----------------------------------------------|
-| Java 21               | Programming language                          |
-| Spring Boot 3.5.3     | Application framework                         |
-| Hibernate             | ORM framework                                 |
-| PostgreSQL            | Database                                      |
-| H2 Database           | In-memory DB for testing                      |
-| ModelMapper           | Object mapping (DTO ↔ Entity)                 |
-| Lombok                | Code reduction (getters, setters, builders)   |
-| Liquibase             | Database versioning and migration management) |
-| Spring Security + JWT | Authentication & authorization                |
-| Swagger / OpenAPI     | REST API documentation                        |
-| JUnit + Mockito       | Testing                                       |
-| Docker                | Deployment & containerization                 |
-| Git + GitHub          | Version control                               |
+| Technology            | Purpose                                     |
+|-----------------------|---------------------------------------------|
+| Java 21               | Programming language                        |
+| Spring Boot 3.5.3     | Application framework                       |
+| Hibernate             | ORM framework                               |
+| PostgreSQL            | Database                                    |
+| H2 Database           | In-memory DB for testing                    |
+| ModelMapper           | Object mapping (DTO ↔ Entity)               |
+| Lombok                | Code reduction (getters, setters, builders) |
+| Liquibase             | Database initialization                     |
+| Spring Security + JWT | Authentication & authorization              |
+| Swagger / OpenAPI     | REST API documentation                      |
+| JUnit + Mockito       | Testing                                     |
+| Docker                | Deployment & containerization               |
+| Git + GitHub          | Version control                             |
 
 # Team
 

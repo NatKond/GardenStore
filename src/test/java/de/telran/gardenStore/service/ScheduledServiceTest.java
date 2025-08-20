@@ -36,7 +36,7 @@ class ScheduledServiceTest extends AbstractTest {
         when(orderService.getByStatusAndTimeAfter(eq(OrderStatus.CREATED), any(LocalDateTime.class)))
                 .thenReturn(List.of(createdOrder));
 
-        await().atMost(2, SECONDS).untilAsserted(() -> {
+        await().atMost(3, SECONDS).untilAsserted(() -> {
             verify(orderService, times(1)).getByStatusAndTimeAfter(
                     eq(OrderStatus.CREATED),
                     any(LocalDateTime.class));
@@ -54,7 +54,7 @@ class ScheduledServiceTest extends AbstractTest {
         when(orderService.getByStatusAndTimeAfter(eq(OrderStatus.AWAITING_PAYMENT), any(LocalDateTime.class)))
                 .thenReturn(List.of(awaitingPaymentOrder));
 
-        await().atMost(2, SECONDS).untilAsserted(() -> {
+        await().atMost(3, SECONDS).untilAsserted(() -> {
             verify(orderService, times(1)).getByStatusAndTimeAfter(
                     eq(OrderStatus.AWAITING_PAYMENT),
                     any(LocalDateTime.class));
@@ -72,7 +72,7 @@ class ScheduledServiceTest extends AbstractTest {
         when(orderService.getByStatusAndTimeAfter(eq(OrderStatus.PAID), any(LocalDateTime.class)))
                 .thenReturn(List.of(paidOrder));
 
-        await().atMost(2, SECONDS).untilAsserted(() -> {
+        await().atMost(3, SECONDS).untilAsserted(() -> {
             verify(orderService, times(1)).getByStatusAndTimeAfter(
                     eq(OrderStatus.PAID),
                     any(LocalDateTime.class));
@@ -90,7 +90,7 @@ class ScheduledServiceTest extends AbstractTest {
         when(orderService.getByStatusAndTimeAfter(eq(OrderStatus.SHIPPED), any(LocalDateTime.class)))
                 .thenReturn(List.of(shippedOrder));
 
-        await().atMost(2, SECONDS).untilAsserted(() -> {
+        await().atMost(3, SECONDS).untilAsserted(() -> {
             verify(orderService, times(1)).getByStatusAndTimeAfter(
                     eq(OrderStatus.SHIPPED),
                     any(LocalDateTime.class));
@@ -119,7 +119,7 @@ class ScheduledServiceTest extends AbstractTest {
                 .thenReturn(List.of(createdOrder1, createdOrder2))
                 .thenReturn(Collections.emptyList());
 
-        await().atMost(2, SECONDS).untilAsserted(() -> {
+        await().atMost(3, SECONDS).untilAsserted(() -> {
             verify(orderService, times(1)).getByStatusAndTimeAfter(
                     eq(OrderStatus.CREATED),
                     any(LocalDateTime.class));

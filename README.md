@@ -99,7 +99,7 @@ Developer
 * Verified that all API endpoints comply with the project documentation
 
 
-## Maria Shirokova
+## Mariia Shirokova
 Developer
 
 *Contributions:*
@@ -115,7 +115,7 @@ Developer
 * Added logging to the project in all services
 
 
-## Dmitrij Rabtsevitch
+## Dzmitry Rabtsevitch
 Developer
 
 *Contributions:*

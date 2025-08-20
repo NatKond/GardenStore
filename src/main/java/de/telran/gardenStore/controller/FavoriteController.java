@@ -100,7 +100,7 @@ public interface FavoriteController {
             @Parameter(description = "Add favorite for current user", example = "4") @Positive Long productId);
 
     @Operation(summary = "Delete favorite by ID")
-    @ApiResponse(responseCode = "204", description = "Favorite deleted")
+    @ApiResponse(responseCode = "200", description = "Favorite deleted")
     @ApiResponse(responseCode = "404", description = "Favorite not found",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiResponse.class),

@@ -339,6 +339,6 @@ public interface UserController {
             @Valid UserCreateRequestDto userRequest);
 
     @Operation(summary = "Delete current user")
-    @ApiResponse(responseCode = "204", description = "User successfully deleted")
+    @ApiResponse(responseCode = "200", description = "User successfully deleted")
     void delete();
 }

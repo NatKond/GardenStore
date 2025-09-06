@@ -1,8 +1,8 @@
 package de.telran.gardenStore.repository;
 
+import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Order;
-import de.telran.gardenStore.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,10 +1,11 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.controller.ProductController;
+import de.telran.dto.ProductCreateRequestDto;
+import de.telran.dto.ProductResponseDto;
+import de.telran.dto.ProductShortResponseDto;
 import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.ProductCreateRequestDto;
-import de.telran.gardenStore.dto.ProductResponseDto;
-import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.InvalidPriceRangeException;
 import de.telran.gardenStore.service.ProductService;

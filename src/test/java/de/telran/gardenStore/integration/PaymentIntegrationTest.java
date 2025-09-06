@@ -1,8 +1,8 @@
 package de.telran.gardenStore.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.dto.OrderResponseDto;
 import de.telran.gardenStore.AbstractTest;
-import de.telran.gardenStore.dto.OrderResponseDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

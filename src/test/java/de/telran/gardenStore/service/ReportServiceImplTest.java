@@ -1,9 +1,9 @@
 package de.telran.gardenStore.service;
 
+import de.telran.dto.report.ProductReport;
+import de.telran.dto.report.ProfitReport;
+import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.AbstractTest;
-import de.telran.gardenStore.dto.report.ProductReport;
-import de.telran.gardenStore.dto.report.ProfitReport;
-import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.service.report.ReportServiceImpl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -18,10 +18,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ReportServiceImplTest extends AbstractTest {

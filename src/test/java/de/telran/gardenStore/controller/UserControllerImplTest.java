@@ -1,11 +1,11 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.dto.UserCreateRequestDto;
+import de.telran.dto.UserResponseDto;
+import de.telran.dto.UserShortResponseDto;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.UserCreateRequestDto;
-import de.telran.gardenStore.dto.UserResponseDto;
-import de.telran.gardenStore.dto.UserShortResponseDto;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.exception.UserNotFoundException;
 import de.telran.gardenStore.exception.UserWithEmailAlreadyExistsException;

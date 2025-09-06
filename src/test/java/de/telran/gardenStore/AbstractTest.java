@@ -1,10 +1,10 @@
 package de.telran.gardenStore;
 
-import de.telran.gardenStore.dto.*;
+import de.telran.dto.*;
+import de.telran.enums.DeliveryMethod;
+import de.telran.enums.OrderStatus;
+import de.telran.enums.Role;
 import de.telran.gardenStore.entity.*;
-import de.telran.gardenStore.enums.DeliveryMethod;
-import de.telran.gardenStore.enums.OrderStatus;
-import de.telran.gardenStore.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

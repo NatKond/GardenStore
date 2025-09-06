@@ -1,7 +1,8 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.gardenStore.dto.report.ProductReport;
-import de.telran.gardenStore.dto.report.ProfitReport;
+import de.telran.controller.ReportController;
+import de.telran.dto.report.ProductReport;
+import de.telran.dto.report.ProfitReport;
 import de.telran.gardenStore.service.report.ReportService;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;

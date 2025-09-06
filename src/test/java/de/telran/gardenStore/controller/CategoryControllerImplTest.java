@@ -1,11 +1,11 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.dto.CategoryCreateRequestDto;
+import de.telran.dto.CategoryResponseDto;
+import de.telran.dto.CategoryShortResponseDto;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.CategoryCreateRequestDto;
-import de.telran.gardenStore.dto.CategoryResponseDto;
-import de.telran.gardenStore.dto.CategoryShortResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.exception.CategoryNotFoundException;
 import de.telran.gardenStore.exception.CategoryWithNameAlreadyExistsException;
@@ -22,14 +22,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.List;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoryControllerImpl.class)
 @AutoConfigureMockMvc(addFilters = false)

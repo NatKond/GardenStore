@@ -1,10 +1,9 @@
 package de.telran.gardenStore.service.report;
 
+import de.telran.dto.report.ProductReport;
+import de.telran.dto.report.ProfitReport;
+import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.utils.ReportMapper;
-import de.telran.gardenStore.dto.report.ProductReport;
-import de.telran.gardenStore.dto.report.ProfitReport;
-
-import de.telran.gardenStore.enums.OrderStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;

@@ -8,9 +8,9 @@ _A graduation project by **CODE_CATS** team_
 
 **Links:**
 
-- [Documentation (Project requirements)](https://docs.google.com/document/d/1Xn41eFhdYAJVYzRucsNwpbLJ5lNxdvpfx__SZf5DwXA/edit?tab=t.0)
-- [REST API Endpoints](https://confirmed-baron-2e5.notion.site/REST-API-f186cf63a46c4020b2237f73093922ab)
+- [Documentation (Project requirements)](https://docs.google.com/document/d/17cgeQqU369Tgy-TUUQpTYiU9zmggI6JTXo5-MbPdins/edit?usp=sharing)
 - [JIRA (All completed tasks)](https://natzubova.atlassian.net/issues/?jql=project%20%3D%20GSP%20AND%20status%20%3D%20Done%20ORDER%20BY%20created%20DESC)
+- [Presentation](https://docs.google.com/presentation/d/1MB47kKJ-yrdWYxfldwo9FUYAFlhCY-x1/edit?usp=sharing&ouid=102745317770796690722&rtpof=true&sd=true)
 
 **Description:**  
 This graduation project is a backend application built with **Java Spring Boot** for an online store specializing in home and garden products.  

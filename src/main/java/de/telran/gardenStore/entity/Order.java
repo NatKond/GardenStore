@@ -1,7 +1,7 @@
 package de.telran.gardenStore.entity;
 
-import de.telran.enums.DeliveryMethod;
-import de.telran.enums.OrderStatus;
+import de.telran.gardenStore.enums.DeliveryMethod;
+import de.telran.gardenStore.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

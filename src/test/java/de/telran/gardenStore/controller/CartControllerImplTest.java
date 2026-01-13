@@ -1,10 +1,10 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.telran.dto.CartItemResponseDto;
-import de.telran.dto.CartResponseDto;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.ConverterEntityToDtoShort;
+import de.telran.gardenStore.dto.CartItemResponseDto;
+import de.telran.gardenStore.dto.CartResponseDto;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
 import de.telran.gardenStore.exception.CartItemNotFoundException;

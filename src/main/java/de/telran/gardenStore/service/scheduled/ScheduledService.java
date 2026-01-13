@@ -1,7 +1,7 @@
 package de.telran.gardenStore.service.scheduled;
 
-import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.entity.Order;
+import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

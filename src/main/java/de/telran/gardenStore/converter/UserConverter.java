@@ -1,11 +1,11 @@
 package de.telran.gardenStore.converter;
 
-import de.telran.dto.UserCreateRequestDto;
-import de.telran.dto.UserResponseDto;
-import de.telran.dto.UserShortResponseDto;
-import de.telran.enums.Role;
+import de.telran.gardenStore.dto.UserCreateRequestDto;
+import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.dto.UserShortResponseDto;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.entity.Favorite;
+import de.telran.gardenStore.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;

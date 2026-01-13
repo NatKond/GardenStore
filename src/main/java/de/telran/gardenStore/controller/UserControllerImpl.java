@@ -1,13 +1,12 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.controller.UserController;
-import de.telran.dto.UserCreateRequestDto;
-import de.telran.dto.UserResponseDto;
-import de.telran.dto.UserShortResponseDto;
-import de.telran.dto.security.LoginRequest;
-import de.telran.dto.security.LoginResponse;
 import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
+import de.telran.gardenStore.dto.UserCreateRequestDto;
+import de.telran.gardenStore.dto.UserResponseDto;
+import de.telran.gardenStore.dto.UserShortResponseDto;
+import de.telran.gardenStore.dto.security.LoginRequest;
+import de.telran.gardenStore.dto.security.LoginResponse;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.service.UserService;
 import de.telran.gardenStore.service.security.AuthenticationService;

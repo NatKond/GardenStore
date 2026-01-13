@@ -1,10 +1,9 @@
 package de.telran.gardenStore.controller;
 
-import de.telran.controller.PaymentController;
-import de.telran.dto.OrderResponseDto;
-import de.telran.dto.OrderShortResponseDto;
 import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
+import de.telran.gardenStore.dto.OrderResponseDto;
+import de.telran.gardenStore.dto.OrderShortResponseDto;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.service.PaymentService;
 import jakarta.validation.constraints.Positive;

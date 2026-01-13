@@ -1,8 +1,8 @@
 package de.telran.gardenStore.utils;
 
-import de.telran.dto.ProductShortResponseDto;
-import de.telran.dto.report.ProductReport;
-import de.telran.dto.report.ProfitReport;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
+import de.telran.gardenStore.dto.report.ProductReport;
+import de.telran.gardenStore.dto.report.ProfitReport;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

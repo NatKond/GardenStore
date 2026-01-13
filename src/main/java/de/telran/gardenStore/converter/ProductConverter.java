@@ -1,8 +1,8 @@
 package de.telran.gardenStore.converter;
 
-import de.telran.dto.ProductCreateRequestDto;
-import de.telran.dto.ProductResponseDto;
-import de.telran.dto.ProductShortResponseDto;
+import de.telran.gardenStore.dto.ProductCreateRequestDto;
+import de.telran.gardenStore.dto.ProductResponseDto;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import lombok.RequiredArgsConstructor;

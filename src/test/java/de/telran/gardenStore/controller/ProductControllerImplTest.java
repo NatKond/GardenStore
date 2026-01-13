@@ -1,11 +1,11 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.telran.dto.ProductCreateRequestDto;
-import de.telran.dto.ProductResponseDto;
-import de.telran.dto.ProductShortResponseDto;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.Converter;
+import de.telran.gardenStore.dto.ProductCreateRequestDto;
+import de.telran.gardenStore.dto.ProductResponseDto;
+import de.telran.gardenStore.dto.ProductShortResponseDto;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.NoDiscountedProductsException;
 import de.telran.gardenStore.exception.ProductNotFoundException;

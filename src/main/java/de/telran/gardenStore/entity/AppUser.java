@@ -1,6 +1,6 @@
 package de.telran.gardenStore.entity;
 
-import de.telran.enums.Role;
+import de.telran.gardenStore.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

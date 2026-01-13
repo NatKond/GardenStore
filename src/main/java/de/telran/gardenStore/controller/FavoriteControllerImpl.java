@@ -1,13 +1,12 @@
 package de.telran.gardenStore.controller;
-
-import de.telran.controller.FavoriteController;
-import de.telran.dto.FavoriteResponseDto;
 import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
+import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.service.FavoriteService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;

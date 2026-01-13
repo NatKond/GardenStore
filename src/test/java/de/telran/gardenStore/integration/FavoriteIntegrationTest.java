@@ -1,8 +1,8 @@
 package de.telran.gardenStore.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.telran.dto.FavoriteResponseDto;
 import de.telran.gardenStore.AbstractTest;
+import de.telran.gardenStore.dto.FavoriteResponseDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,9 @@ import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc(printOnlyOnFailure = false)

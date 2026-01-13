@@ -6,6 +6,7 @@
 
     <include file="tables/01-create-tables.xml" relativeToChangelogFile="true" />
     <include file="tables/02-add-constraints.xml" relativeToChangelogFile="true" />
+    <include file="data/04-truncate-tables.xml" relativeToChangelogFile="true" />
     <include file="data/03-add-data.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

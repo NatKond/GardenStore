@@ -1,7 +1,6 @@
 package de.telran.gardenStore.converter;
 
-import de.telran.dto.OrderResponseDto;
-import de.telran.dto.OrderShortResponseDto;
+import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.entity.OrderItem;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,13 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.telran.dto.*;
-import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.Converter;
+import de.telran.gardenStore.dto.*;
 import de.telran.gardenStore.entity.Order;
 import de.telran.gardenStore.entity.OrderItem;
 import de.telran.gardenStore.entity.Product;
+import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.EmptyOrderException;
 import de.telran.gardenStore.exception.OrderNotFoundException;
 import de.telran.gardenStore.service.OrderService;
@@ -28,8 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

@@ -1,8 +1,8 @@
 package de.telran.gardenStore.service;
 
-import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.Order;
+import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.IncorrectPaymentAmountException;
 import de.telran.gardenStore.exception.OrderPaymentRejectedException;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceImplTest extends AbstractTest {

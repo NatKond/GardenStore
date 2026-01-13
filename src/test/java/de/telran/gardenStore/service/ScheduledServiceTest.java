@@ -1,25 +1,24 @@
 package de.telran.gardenStore.service;
 
-import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.entity.Order;
+import de.telran.gardenStore.enums.OrderStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @EnableScheduling

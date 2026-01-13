@@ -1,7 +1,7 @@
 package de.telran.gardenStore.service.security;
 
-import de.telran.dto.security.LoginRequest;
-import de.telran.dto.security.LoginResponse;
+import de.telran.gardenStore.dto.security.LoginRequest;
+import de.telran.gardenStore.dto.security.LoginResponse;
 import de.telran.gardenStore.entity.AppUser;
 import de.telran.gardenStore.service.UserService;
 import lombok.RequiredArgsConstructor;

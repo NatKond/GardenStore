@@ -1,8 +1,8 @@
 package de.telran.gardenStore.service;
 
-import de.telran.enums.DeliveryMethod;
-import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.entity.*;
+import de.telran.gardenStore.enums.DeliveryMethod;
+import de.telran.gardenStore.enums.OrderStatus;
 import de.telran.gardenStore.exception.*;
 import de.telran.gardenStore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;

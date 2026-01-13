@@ -1,6 +1,6 @@
 package de.telran.gardenStore.service.report;
-import de.telran.dto.report.ProductReport;
-import de.telran.dto.report.ProfitReport;
+import de.telran.gardenStore.dto.report.ProductReport;
+import de.telran.gardenStore.dto.report.ProfitReport;
 
 import java.util.List;
 

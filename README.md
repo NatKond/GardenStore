@@ -59,7 +59,7 @@ For administrators it provides tools to manage the product catalog, promotions, 
 | H2 Database           | In-memory DB for testing                    |
 | ModelMapper           | Object mapping (DTO ↔ Entity)               |
 | Lombok                | Code reduction (getters, setters, builders) |
-| Liquibase             | Database initialization                     |
+| Liquibase             | Database initialisation                     |
 | Spring Security + JWT | Authentication & authorization              |
 | Swagger / OpenAPI     | REST API documentation                      |
 | JUnit + Mockito       | Testing                                     |

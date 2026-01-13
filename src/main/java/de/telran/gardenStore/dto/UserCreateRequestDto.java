@@ -12,7 +12,7 @@ public class UserCreateRequestDto {
     private String name;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Should be a well-formed email address")
+    @Email(message = "Email must be in a valid format, e.g., example@example.com")
     private String email;
 
     @Pattern(regexp = "^\\+?\\d{10,15}$", message = "Phone number should have at least 10 characters")
@@ -20,6 +20,6 @@ public class UserCreateRequestDto {
 
     @ToString.Exclude
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "\\w{5,}$", message = "Password should have at least 5 characters")
+    @Size(min = 5, message = "Password should have at least 5 characters")
     private String password;
 }

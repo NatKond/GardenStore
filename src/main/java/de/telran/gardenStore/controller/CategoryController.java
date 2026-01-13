@@ -219,7 +219,7 @@ public interface CategoryController {
 
 
     @Operation(summary = "Delete category by ID (only for role ADMIN)")
-    @ApiResponse(responseCode = "204", description = "Category successfully deleted")
+    @ApiResponse(responseCode = "200", description = "Category successfully deleted")
     @ApiResponse(responseCode = "404", description = "Category not found",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiResponse.class),

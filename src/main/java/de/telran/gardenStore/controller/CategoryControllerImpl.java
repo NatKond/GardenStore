@@ -1,10 +1,11 @@
 package de.telran.gardenStore.controller;
 
+import de.telran.controller.CategoryController;
+import de.telran.dto.CategoryCreateRequestDto;
+import de.telran.dto.CategoryResponseDto;
+import de.telran.dto.CategoryShortResponseDto;
 import de.telran.gardenStore.annotation.Loggable;
 import de.telran.gardenStore.converter.Converter;
-import de.telran.gardenStore.dto.CategoryCreateRequestDto;
-import de.telran.gardenStore.dto.CategoryResponseDto;
-import de.telran.gardenStore.dto.CategoryShortResponseDto;
 import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.service.CategoryService;
 import jakarta.validation.Valid;

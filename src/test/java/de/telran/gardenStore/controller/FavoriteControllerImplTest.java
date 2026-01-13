@@ -1,9 +1,9 @@
 package de.telran.gardenStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.dto.FavoriteResponseDto;
 import de.telran.gardenStore.AbstractTest;
 import de.telran.gardenStore.converter.ConverterEntityToDto;
-import de.telran.gardenStore.dto.FavoriteResponseDto;
 import de.telran.gardenStore.entity.Favorite;
 import de.telran.gardenStore.exception.FavoriteAlreadyExistsException;
 import de.telran.gardenStore.exception.FavoriteNotFoundException;
@@ -12,8 +12,8 @@ import de.telran.gardenStore.service.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;

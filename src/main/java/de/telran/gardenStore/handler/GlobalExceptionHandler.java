@@ -1,6 +1,6 @@
 package de.telran.gardenStore.handler;
 
-import de.telran.gardenStore.dto.ApiResponse;
+import de.telran.dto.ApiResponse;
 import de.telran.gardenStore.exception.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

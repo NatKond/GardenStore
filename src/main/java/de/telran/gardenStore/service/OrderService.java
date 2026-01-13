@@ -1,8 +1,8 @@
 package de.telran.gardenStore.service;
 
+import de.telran.enums.DeliveryMethod;
+import de.telran.enums.OrderStatus;
 import de.telran.gardenStore.entity.Order;
-import de.telran.gardenStore.enums.DeliveryMethod;
-import de.telran.gardenStore.enums.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;

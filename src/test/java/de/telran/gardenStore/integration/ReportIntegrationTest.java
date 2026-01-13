@@ -1,8 +1,8 @@
 package de.telran.gardenStore.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.telran.dto.report.ProductReport;
 import de.telran.gardenStore.AbstractTest;
-import de.telran.gardenStore.dto.report.ProductReport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -29,7 +29,8 @@ public class ProductCreateRequestDto {
     @Positive(message = "Discount price must be positive")
     private BigDecimal discountPrice;
 
-    @NotNull(message = "Category ID is required")
+    @NotNull(message = "Category Id is required")
+    @Positive(message = "Category Id must be positive")
     private Long categoryId;
 
     @URL(message = "Image URL must be valid")

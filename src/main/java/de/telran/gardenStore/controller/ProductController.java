@@ -264,7 +264,7 @@ public interface ProductController {
             @Valid ProductCreateRequestDto productRequest);
 
     @Operation(summary = "Delete product by ID (only for role ADMIN)")
-    @ApiResponse(responseCode = "204", description = "Product successfully deleted")
+    @ApiResponse(responseCode = "200", description = "Product successfully deleted")
     @ApiResponse(responseCode = "404", description = "Product not found",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiResponse.class),

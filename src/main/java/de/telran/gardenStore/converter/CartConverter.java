@@ -1,11 +1,12 @@
 package de.telran.gardenStore.converter;
 
-import de.telran.gardenStore.dto.CartResponseDto;
+import de.telran.dto.CartResponseDto;
 import de.telran.gardenStore.entity.Cart;
 import de.telran.gardenStore.entity.CartItem;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component

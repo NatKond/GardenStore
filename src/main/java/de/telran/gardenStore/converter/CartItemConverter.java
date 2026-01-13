@@ -1,6 +1,6 @@
 package de.telran.gardenStore.converter;
 
-import de.telran.gardenStore.dto.CartItemResponseDto;
+import de.telran.dto.CartItemResponseDto;
 import de.telran.gardenStore.entity.CartItem;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

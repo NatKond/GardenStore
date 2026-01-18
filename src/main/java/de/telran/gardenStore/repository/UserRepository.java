@@ -1,16 +1,35 @@
 package de.telran.gardenStore.repository;
 
 import de.telran.gardenStore.entity.AppUser;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<AppUser, Long> {
 
+    @Override
+    @EntityGraph(attributePaths = {"roles"})
+    List<AppUser> findAll();
+
+    @Override
+    @EntityGraph(attributePaths = {"roles"})
+    Optional<AppUser> findById(Long userId);
+
+    @EntityGraph(attributePaths = {"roles"})
     Optional<AppUser> findByEmail(String email);
+
+    @Query(value = """
+            SELECT u
+            FROM AppUser u
+            WHERE u.email = :email""")
+    @EntityGraph(attributePaths = {"roles", "favorites", "favorites.product"})
+    Optional<AppUser> findByEmailWithFavorites(String email);
+
 
     @Query(value = """
                     SELECT CASE WHEN EXISTS (

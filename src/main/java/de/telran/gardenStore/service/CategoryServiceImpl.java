@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getById(Long categoryId) {
-        return categoryRepository.findById(categoryId)
+        return categoryRepository.findByIdWithProducts(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
     }
 

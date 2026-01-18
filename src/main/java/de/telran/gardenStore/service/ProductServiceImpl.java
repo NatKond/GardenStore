@@ -1,6 +1,5 @@
 package de.telran.gardenStore.service;
 
-import de.telran.gardenStore.entity.Category;
 import de.telran.gardenStore.entity.Product;
 import de.telran.gardenStore.exception.NoDiscountedProductsException;
 import de.telran.gardenStore.exception.ProductDeletionNotAllowedException;
@@ -40,8 +39,7 @@ public class ProductServiceImpl implements ProductService {
         List<Predicate> predicates = new ArrayList<>();
 
         if (categoryId != null) {
-            Category category = categoryService.getById(categoryId);
-            predicates.add(criteriaBuilder.equal(root.get("category"), category));
+            predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
         }
 
         if (discount != null) {

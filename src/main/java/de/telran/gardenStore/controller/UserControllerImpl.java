@@ -53,13 +53,13 @@ public class UserControllerImpl implements UserController {
     @Override
     public UserResponseDto getCurrent() {
         return userConverter.toDto(
-                userService.getCurrent());
+                userService.getCurrentWithFavorites());
     }
 
     @Override
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public LoginResponse login(@RequestBody  @Valid LoginRequest loginRequest) {
+    public LoginResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         return authenticationService.authenticate(loginRequest);
     }
 

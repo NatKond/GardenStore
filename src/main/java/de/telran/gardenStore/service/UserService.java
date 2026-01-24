@@ -12,8 +12,6 @@ public interface UserService {
 
     AppUser getCurrent();
 
-    AppUser getCurrentWithFavorites();
-
     AppUser getByEmail(String email);
 
     AppUser create(AppUser appUser);

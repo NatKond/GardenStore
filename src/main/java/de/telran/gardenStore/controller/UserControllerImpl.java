@@ -53,7 +53,7 @@ public class UserControllerImpl implements UserController {
     @Override
     public UserResponseDto getCurrent() {
         return userConverter.toDto(
-                userService.getCurrentWithFavorites());
+                userService.getCurrent());
     }
 
     @Override

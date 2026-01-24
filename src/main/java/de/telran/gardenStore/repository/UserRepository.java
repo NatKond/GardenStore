@@ -24,14 +24,6 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findByEmail(String email);
 
     @Query(value = """
-            SELECT u
-            FROM AppUser u
-            WHERE u.email = :email""")
-    @EntityGraph(attributePaths = {"roles", "favorites", "favorites.product"})
-    Optional<AppUser> findByEmailWithFavorites(String email);
-
-
-    @Query(value = """
                     SELECT CASE WHEN EXISTS (
                     SELECT 1
                     FROM app_users u

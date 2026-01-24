@@ -70,7 +70,7 @@ public interface CategoryController {
                                 "timestamp": "2025-07-08T22:06:22.675691"
                             }
                             """)))
-    CategoryResponseDto getById(@Parameter(description = "ID of the category", example = "1")
+    CategoryResponseDto getByIdWithProducts(@Parameter(description = "ID of the category", example = "1")
                                         @Positive Long categoryId);
 
     @Operation(summary = "Create a new category (only for role ADMIN)")

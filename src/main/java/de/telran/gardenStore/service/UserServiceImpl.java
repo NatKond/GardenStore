@@ -38,11 +38,6 @@ public class UserServiceImpl implements UserService {
         return getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    public AppUser getCurrentWithFavorites() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmailWithFavorites(email).orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
-    }
-
     @Override
     public AppUser create(AppUser user) {
         checkUserEmailIsUnique(user.getEmail());

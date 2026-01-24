@@ -14,7 +14,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(value = """
             SELECT c
             FROM Category c
-            WHERE categoryId =:categoryId
+            WHERE c.categoryId =:categoryId
             """)
     @EntityGraph(attributePaths = {"products"})
     Optional<Category> findByIdWithProducts(Long categoryId);

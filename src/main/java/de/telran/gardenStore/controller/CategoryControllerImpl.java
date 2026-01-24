@@ -35,7 +35,7 @@ public class CategoryControllerImpl implements CategoryController {
 
     @Override
     @GetMapping("/{categoryId}")
-    public CategoryResponseDto getById(@PathVariable @Positive Long categoryId) {
+    public CategoryResponseDto getByIdWithProducts(@PathVariable @Positive Long categoryId) {
         return categoryConverter.toDto(
                 categoryService.getById(categoryId));
     }

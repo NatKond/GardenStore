@@ -168,7 +168,18 @@ public class OrderIntegrationTest extends AbstractTest {
                 .andExpectAll(
                         status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected)));
+                        jsonPath("$.orderId").value(expected.getOrderId()),
+                        jsonPath("$.userId").value(expected.getUserId()),
+                        jsonPath("$.status").value(expected.getStatus()),
+                        jsonPath("$.deliveryAddress").value(expected.getDeliveryAddress()),
+                        jsonPath("$.contactPhone").value(expected.getContactPhone()),
+                        jsonPath("$.deliveryMethod").value(expected.getDeliveryMethod()),
+                        jsonPath("$.items.length()").value(expected.getItems().size()),
+                        jsonPath("$.items[0].orderItemId").value(expected.getItems().getFirst().getOrderItemId()),
+                        jsonPath("$.items[0].product.productId").value(expected.getItems().getFirst().getProduct().getProductId()),
+                        jsonPath("$.items[0].quantity").value(expected.getItems().getFirst().getQuantity()),
+                        jsonPath("$.items[0].priceAtPurchase").value(expected.getItems().getFirst().getPriceAtPurchase()),
+                        jsonPath("$.totalAmount").value(expected.getTotalAmount()));
     }
 
     @Test
@@ -195,7 +206,18 @@ public class OrderIntegrationTest extends AbstractTest {
                 .andExpectAll(
                         status().isAccepted(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        content().json(objectMapper.writeValueAsString(expected)));
+                        jsonPath("$.orderId").value(expected.getOrderId()),
+                        jsonPath("$.userId").value(expected.getUserId()),
+                        jsonPath("$.status").value(expected.getStatus()),
+                        jsonPath("$.deliveryAddress").value(expected.getDeliveryAddress()),
+                        jsonPath("$.contactPhone").value(expected.getContactPhone()),
+                        jsonPath("$.deliveryMethod").value(expected.getDeliveryMethod()),
+                        jsonPath("$.items.length()").value(expected.getItems().size()),
+                        jsonPath("$.items[0].orderItemId").value(expected.getItems().getFirst().getOrderItemId()),
+                        jsonPath("$.items[0].product.productId").value(expected.getItems().getFirst().getProduct().getProductId()),
+                        jsonPath("$.items[0].quantity").value(expected.getItems().getFirst().getQuantity()),
+                        jsonPath("$.items[0].priceAtPurchase").value(expected.getItems().getFirst().getPriceAtPurchase()),
+                        jsonPath("$.totalAmount").value(expected.getTotalAmount()));
     }
 
     @Test

@@ -48,7 +48,7 @@ class FavoriteServiceImplTest extends AbstractTest {
         assertNotNull(actual);
         assertEquals(2, actual.size());
         assertEquals(expected, actual);
-        verify(favoriteRepository).getAllByUser(user1);
+        verify(userService).getCurrent();
     }
 
     @Test

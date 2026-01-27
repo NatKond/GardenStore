@@ -4,9 +4,12 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="tables/01-create-tables.xml" relativeToChangelogFile="true" />
-    <include file="tables/02-add-constraints.xml" relativeToChangelogFile="true" />
-    <include file="data/04-truncate-tables.xml" relativeToChangelogFile="true" />
-    <include file="data/03-add-data.xml" relativeToChangelogFile="true" />
-
+    <changeSet id="22-truncate-tables" author="nkond" runAlways="true">
+        <sql>
+            TRUNCATE TABLE app_users RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE products RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE categories RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE orders RESTART IDENTITY CASCADE;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

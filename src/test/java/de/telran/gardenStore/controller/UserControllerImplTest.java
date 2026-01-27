@@ -157,7 +157,6 @@ class UserControllerImplTest extends AbstractTest {
     @Test
     @DisplayName("PUT /v1/users - Update current user")
     void update() throws Exception {
-
         String emailToUpdate = "charlie.brown777@example.com";
 
         Long userId = userCreated.getUserId();
